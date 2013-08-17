@@ -1,10 +1,22 @@
 ;;;;;;;;;;;;;;; INIT ;;;;;;;;;;;;;;;;;;;;;;
-(setq LOCAL t)
+(setq HOME "/Users/sambo/")
 
-(when LOCAL
-  (setq AUCTEX nil)
-  (setq HOME "/Users/sambo/")
-)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; Packaging ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Add marmalade repos
+
+(require 'package)
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+(package-initialize)
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
+(defvar my-packages '(starter-kit smex undo-tree magit solarized-theme smart-tabs-mode))
+(dolist (p my-packages)
+  (when (not (package-installed-p p))
+    (package-install p)))
 
 
 ;;;;;;;;;;;;;;; UTIL ;;;;;;;;;;;;;;;;;;;;;;
@@ -27,6 +39,8 @@
 ;(global-set-key (kbd "M-<escape>") 'kmacro-start-macro-or-insert-counter)
 ;(global-set-key (kbd "<escape>") 'kmacro-end-call-mouse)
 (global-set-key (kbd "M-r") 'query-replace)
+;(global-set-key "\C-<right>" 'other-window) ;TODO 'windmove-* maybe?
+;(global-set-key "\C-<right>" 'BACKWARDS-other-window)
 
 (defun indent-and-next () (interactive)
   (move-beginning-of-line 1)
@@ -40,6 +54,11 @@
   (yank))
 (global-set-key "\M-k" 'kill-line-save)
 
+(defun force-kill-buffer ()
+  (interactive)
+  (kill-buffer (buffer-name)))
+
+(global-set-key "\C-x k" 'force-kill-buffer)
 
 ;;;;;;;;;;;;;;; SETTINGS ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -50,13 +69,12 @@
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 
 ;;peek
-(setq scroll-step            1
-      scroll-conservatively  10000)
+(setq scroll-step 1)
+(setq scroll-conservatively 10000)
 
 ;;abbreviations
 ;; tell emacs where to read abbrev definitions from...
-(setq abbrev-file-name
-      "~/.emacs.d/.abbrev_defs")
+(setq abbrev-file-name "~/.emacs.d/.abbrev_defs")
 ;; save abbrevs when files are saved
 ;; you will be asked before the abbreviations are saved
 (setq save-abbrevs t)           
@@ -82,13 +100,10 @@
 ;font-size
 ;(set-face-attribute 'default nil :height 50)
 ;(set-frame-parameter nil 'font "Monospace-2")
-(when LOCAL 
-  (set-default-font "-apple-Monaco-medium-normal-normal-*-18-*-*-*-m-0-iso10646-1"))
+(set-default-font "-apple-Monaco-medium-normal-normal-*-18-*-*-*-m-0-iso10646-1")
 
 (set-background-color "gray")
 
-; reverse video 
-;; (defun black-on-white ()
 ;;   (set-background-color "black")
 ;;   (set-face-background 'default "black")
 ;;   (set-face-background 'region "black")
@@ -96,20 +111,9 @@
 ;;   (set-face-foreground 'region "gray60")
 ;;   (set-foreground-color "white")
 ;;   (set-cursor-color "red")
-;; )
-;; (black-on-white)
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;; PYTHON ;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (defun python-add-breakpoint ()
-;;   (interactive)
-;;   (py-newline-and-indent)
-;;   (insert "import ipdb; ipdb.set_trace()")
-;;   (highlight-lines-matching-regexp "^[ ]*import ipdb; ipdb.set_trace()"))
-
-;; (define-key py-mode-map (kbd "C-c C-t") 'python-add-breakpoint)
 
 (defun python-init () (interactive)
   (insert "#!/usr/bin/python")
@@ -153,6 +157,14 @@
   (newline)
   )
 
+(defun python-debug ()
+  "Insert breakpoint above cursor point." (interactive)
+  (previous-line)
+  (move-end-of-line nil)
+  (newline-and-indent)
+  (insert "import ipdb;ipdb.set_trace()")
+  (save-buffer)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;; COQ ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -160,62 +172,36 @@
 ;(global-set-key (kbd "C-RET") 'proof-add-completions)
 
 ;commenting
-(global-set-key "\C-]" "\C-a(* \C-e *)\C-n")
+;; (global-set-key "\C-]" "\C-a(* \C-e *)\C-n")
 
-(defun coq-mode ()
-  (when (and (stringp buffer-file-name)
-             (string-match "\\.v$'" buffer-file-name))
-    (global-set-key (kbd "M-RET") 'proof-goto-point)))
-(add-hook 'find-file-hook 'note-mode)
+;; (defun coq-mode ()
+;;   (when (and (stringp buffer-file-name)
+;;              (string-match "\\.v$'" buffer-file-name))
+;;     (global-set-key (kbd "M-RET") 'proof-goto-point)))
+;; (add-hook 'find-file-hook 'note-mode)
 
-(global-set-key (kbd "M-RET") 'proof-goto-point)
+;; (global-set-key (kbd "M-RET") 'proof-goto-point)
 
-(when LOCAL
-  (let ((default-directory (concat HOME "bin/ProofGeneral/")))
-    (normal-top-level-add-subdirs-to-load-path))
-  ;(cons! /Users/sambo/bin/ProofGeneral/coq/ex/ex-ssreflect.v ?)
-  (setq auto-mode-alist (cons '("\\.v$" . coq-mode) auto-mode-alist))
-  (autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
-  (load-file (concat HOME "bin/ProofGeneral/generic/proof-site.el"))
-)
+;; (let ((default-directory (concat HOME "bin/ProofGeneral/")))
+;;   (normal-top-level-add-subdirs-to-load-path))
+;; (setq auto-mode-alist (cons '("\\.v$" . coq-mode) auto-mode-alist))
+;; (autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
+;; (load-file (concat HOME "bin/ProofGeneral/generic/proof-site.el"))
 
 ;(load-file "~/course/195x/pg-setup.el")
-;(global-set-key "\C-x k" (lambda ()
-;			   (interactive)
-;			   (kill-buffer (buffer-name))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;; TEX ;;;;;;;;;;;;;;;;;;;;;;;;
 (set-input-method "TeX")
 
 ;;;;;;;;;;;;;;;;;;;;;;;; NOTES ;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;inline latex, insert unicode
-;(add-to-list 'auto-mode-alist '("\\.note$" . text-mode))
+;inline latex. inserts unicode.
 (defun note-mode ()
-  (when (and (stringp buffer-file-name)
-             (string-match "\\.note$'" buffer-file-name))
+  (when (string-match "\\.note$" buffer-file-name)
     (set-input-method "TeX")))
-;syntax; (add-hook 'Hook 'Mode)
 (add-hook 'find-file-hook 'note-mode)
- 
-;; head
-;; (defun goto-head (head)
-;;  "notes"
-;;  )
-;; (global-set-key "\C-h \C-f" 'goto-head)
-
-;; (defun goto-current-head ()
-;;  "notes"
-;;  (isearch-backwards "head:")
-;;  (next-word)
-;;  (next-word)
-;;  (goto-head (current-word)))
-
-
 
 ;;;;;;;;;;;;;;; ??? ;;;;;;;;;;;;;;;;;;;;;;
-
 (defun set-exec-path-from-shell-PATH ()
   (let ((path-from-shell 
       (replace-regexp-in-string "[[:space:]\n]*$" "" 
@@ -226,111 +212,21 @@
 (set-exec-path-from-shell-PATH)
 
 ;;;;;;;;;;;;;;; Haskell ;;;;;;;;;;;;;;;;;;;;;;
-
-(when LOCAL
-  (load "~/bin/emacs/haskell-mode/haskell-mode.el")
-
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-  ;;(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
-  ;;(add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
-
-  (setq auto-mode-alist (cons '("\\.hs$" . haskell-mode) auto-mode-alist))
-  )
+(load "~/.emacs.d/haskell-mode/haskell-mode.el")
+(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+;;(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+;;(add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
+(setq auto-mode-alist (cons '("\\.hs$" . haskell-mode) auto-mode-alist))
 
 ;;;;;;;;;;;;;;; Prolog ;;;;;;;;;;;;;;;;;;;;;;
 (setq auto-mode-alist
   (cons (cons "\\.pl" 'prolog-mode)
      auto-mode-alist))
 
-;(global-set-key "\C-<right>" 'other-window) ;TODO 'windmove-* maybe?
-;(global-set-key "\C-<right>" 'BACKWARDS-other-window)
-
 ;;;;;;;;;;;;;;; Octave ;;;;;;;;;;;;;;;;;;;;;;
 (autoload 'octave-mode "octave-mod" nil t)
 (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-; frame switching
-;(add-to-list 'load-path "/Users/sambo/.emacs.d/frame-tag/")
-;(require 'frame-tag)
-;(frame-tag-mode 1)
-
-;TODO WHY???
-;disable backup
-;(setq backup-inhibited t)
-;disable auto save
-;(setq auto-save-default nil)
-
-;;;;;;;;;;;;;;;;; AUCTEX ;;;;;;;;;;;;;;;;;;;;;
-;(normal-top-level-add-subdirs-to-load-path)
-
-;; must it enumerate, what about recursive above? too slow?
-(when (and LOCAL AUCTEX)
-  (add-to-list 'load-path "~/.emacs.d/auctex/")
-  (add-to-list 'load-path "~/.emacs.d/auctex/images/")
-  (add-to-list 'load-path "~/.emacs.d/auctex/doc/")
-  (add-to-list 'load-path "~/.emacs.d/auctex/style/")
-
-  (add-to-list 'load-path "~/.emacs.d/auctex/preview/")
-  (add-to-list 'load-path "~/.emacs.d/auctex/preview/images/")
-  (add-to-list 'load-path "/Users/sambo/.emacs.d/auctex/preview/auctex/images/")
-  (add-to-list 'load-path "~/.emacs.d/auctex/preview/latex/")
-  (add-to-list 'load-path "~/.emacs.d/auctex/preview/auto/")
-  (add-to-list 'load-path "~/.emacs.d/auctex/preview/")
-  
-  (load "auctex.el" nil t t)
-  (load "preview-latex.el" nil t t)
-  
-  (setq load-path (cons "/Users/sambo/notes" load-path))
-  
-					;debug
-  (defun display (f)
-    "debug"
-    (message "%s: %s" f (eval (list f))))
-  
-  (defun test ()
-    "debug"
-    (interactive)
-    
-    (message "\n")
-    (display 'current-left-margin)
-    (message "current-column:\t\t %s" (current-column))
-    (message "current-indentation:\t %s" (current-indentation))
-    (message "current-word:\t\t %s" (current-word)))
-  (global-set-key "\C-q" 'test)
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  (setq TeX-save-query nil)
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(preview-gs-options (quote ("-q" "-dSAFER" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted"))))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(tool-bar-mode nil))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
- )
-)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; PySmell ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -349,3 +245,7 @@
 ;;           '(lambda ()             
 ;;              (set (make-local-variable 'ac-sources) (append ac-sources '(ac-source-pysmell)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; Remote Access ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq tramp-default-method "ssh")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; section ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
