@@ -1,0 +1,11 @@
+auto-save-list/
+backups/
+elpa/
+places
+tramp
+.smex-items
+
+.DS_Store
+\#*\#
+*~
+*.log
