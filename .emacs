@@ -1,5 +1,6 @@
+;;;;;;;;;;;;;;; reed's init.el ;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;; reed's .emacs ;;;;;
+;;;;;;;;;;;;;;; packages
 
 ;; Add marmalade repos
 (require 'package)
@@ -14,8 +15,6 @@
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
-
-
 
 ;; Use smex for M-x
 (global-set-key [(meta x)] (lambda ()
@@ -41,10 +40,7 @@
 (setq require-final-newline nil)
 
 
-
-
-
-;; cheetah mode
+;;;;;;;;;;;;;;; cheetah mode
 (define-derived-mode cheetah-mode html-mode "Cheetah"
   (make-face 'cheetah-variable-face)
   (font-lock-add-keywords
@@ -63,8 +59,7 @@
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . sass-mode))
 
 
-
-;; yelp tabs
+;;;;;;;;;;;;;;; yelp tabs
 (add-to-list 'load-path "~/.emacs.d/scripts")
 (require 'smart-tabs-mode)
 (smart-tabs-advice python-indent-line-1 python-indent)
@@ -94,148 +89,3 @@
 
 (add-hook 'python-mode-hook 'my-yelp-python-mode-hook)
 
-
-;;;;; my .emacs ;;;;;
-
-
-(global-set-key "\C-w" 'clipboard-kill-region)
-(setq mac-option-modifier 'super)
-(setq mac-command-modifier 'meta)
-
-
-;; Helpers
-; ~ add-to-list
-(defun cons! (x xs)
-  (setq xs (cons x xs)))
-
-(setq LOCAL t)
-
-(when LOCAL
-  (setq AUCTEX nil)
-  (setq HOME "/Users/sambo/")
-)
-
-;(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-;(global-set-key [(control x) (control b)] 'electric-buffer-list)
-
-;;peek
-;; like C-n C-l C-l C-l
-;;recenter-top-bottom
-(global-set-key "\M-n" "\C-n\C-l\C-l\C-l")
-(setq scroll-step            1
-      scroll-conservatively  10000)
-
-;commenting
-(global-set-key "\C-]" "\C-a(* \C-e *)\C-n")
-;(cond major-mode
-;      []
-;      []
-;)
-
-(defun python-init () (interactive)
-  (insert "#!/usr/bin/python")
-  (newline)
-  (insert "from __future__ import division")
-  (newline)
-  (insert "from sam.sam import *")
-  (newline)
-  (newline)
-  )
-
-(defun python-init-math () (interactive)
-    (python-init)
-    (insert "from numpy import *")
-    (newline)
-    (insert "from matplotlib.pyplot import *")
-    (newline)
-    (insert "import nltk")
-    (newline)
-    (insert "import numpy.random as sample")
-    (newline)
-    (insert "import scipy.stats as pdf")
-    (newline)
-    (newline)
-    (newline)
-)
-
-(defun python-init-script () (interactive)
-  (python-init)
-  (insert "from glob import *")
-  (newline)
-  (insert "import argparse")
-  (newline)
-  (newline)
-  (insert "p = argparse.ArgumentParser()")
-  (newline)
-  (insert "p.add_argument('file')")
-  (newline)
-  (insert "args = p.parse_args()")
-  (newline)
-  (newline)
-  )
-
-
-(global-set-key [C-return] 'dabbrev-expand)
-
-(setq inhibit-splash-screen t)
-
-(global-set-key (kbd "<escape>") 'save-buffer)
-(global-set-key "\C-\\" 'find-file)
-
-(defun indent-and-next () (interactive)
-  (move-beginning-of-line 1)
-  (insert " ")
-  (next-line)
-  (move-beginning-of-line 1))
-(global-set-key "\M-j" 'indent-and-next)
-
-(defun kill-line-save () (interactive)
-  (kill-line)
-  (yank))
-(global-set-key "\M-k" 'kill-line-save)
-
-(global-set-key (kbd "M-r") 'query-replace)
-
-(global-set-key (kbd "C-;") 'backward-kill-word)
-
-(set-face-attribute 'default nil :height 130)
-
-;disable backup
-(setq backup-inhibited t)
-
-(setq keyboard-coding-system nil)
-(setq mac-option-key-is-meta nil)
-(setq mac-command-key-is-meta t)
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier nil)
-(setq visible-bell t)
-
-;;;;;;;;;;;;;;; SHORTUCTS ;;;;;;;;;;;;;;;;;;;;;;
-
-(global-set-key "\M-g" 'goto-line)
-(global-set-key "\M-\-" "\C-a-  -  -  -  -  -  -  -  -  -  -  -  -  -  -\C-o\C-a\C-n\C-o\C-o")
-(global-set-key "\M-`" "\C-xb")
-(global-set-key (kbd "M-<up>") 'beginning-of-buffer)
-(global-set-key (kbd "M-<down>") 'end-of-buffer)
-
-(set-background-color "gray")
-
-; reverse video
-(defun black-on-white ()
-  (set-background-color "black")
-  (set-face-background 'default "black")
-  (set-face-background 'region "black")
-  (set-face-foreground 'default "white")
-  (set-face-foreground 'region "gray60")
-  (set-foreground-color "white")
-  (set-cursor-color "red")
-)
-;(black-on-white)
-
-(defun python-debug ()
-  "Insert breakpoint above cursor point."
-  (interactive)
-  (beginning-of-line)
-  (open-line)
-  (insert "import ipdb;ipdb.set_trace()")
-  )
