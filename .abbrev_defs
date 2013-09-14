@@ -39,9 +39,13 @@
 
 (define-abbrev-table 'python-mode-abbrev-table
   '(
-    ("pr" "print" nil 1)
-    ("ret" "return" nil 5)
+    ("r" "return")
    ))
+
+(define-abbrev python-mode-abbrev-table
+               "p"
+               "print()"
+               'after-abbrev-expand-hook)
 
 (define-abbrev-table 'select-tags-table-mode-abbrev-table '())
 
@@ -52,4 +56,3 @@
 (define-abbrev-table 'text-mode-abbrev-table '())
 
 (define-abbrev-table 'vc-git-log-view-mode-abbrev-table '())
-
