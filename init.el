@@ -307,6 +307,7 @@
    ("M-d" . term-send-forward-kill-word)
    ("M-DEL" . term-send-backward-kill-word)
 
+   ("M-v" . term-paste)
    ))
 
 (setq
@@ -314,16 +315,44 @@
  '(
    "C-z"
    "C-x"
-;   "C-c"
    "C-h"
    "C-y"
    "<ESC>"
+
+   ; copy and paste
+   "M-v"
+   "M-c"
    ))
 
 
-;;;;;;;;;;;;;;; WindMove ;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;; Windows ;;;;;;;;;;;;;;;;;;;;;;
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
+
+;;;;;;;;;;;;;;; Frames ;;;;;;;;;;;;;;;;;;;;;;
+(custom-set-variables
+ '(initial-frame-alist (quote ((fullscreen . maximized)))))
+
+;;;;;;;;;;;;;;; Applications ;;;;;;;;;;;;;;;;;;;;;;
+
+(defun terminal-app ()
+  (split-window-horizontally)
+  (multi-term)
+  (other-window 1)
+  (multi-term)
+;  (insert "ipy3")
+;  (newline)
+  (other-window 1)
+)
+(if (string-match "Terminal\\.app" (getenv "EMACSPATH"))
+    (terminal-app))
+
+(defun notes-app ()
+  (find-file "~/Dropbox/.note")
+  (end-of-buffer)
+)
+(if (string-match "Notes\\.app" (getenv "EMACSPATH"))
+    (notes-app))
 
 
 ;;;;;;;;;;;;;;; SHORTUCTS ;;;;;;;;;;;;;;;;;;;;;;
@@ -377,7 +406,8 @@
 (global-set-key (kbd "<escape>") 'save-buffer)
 (global-set-key "\C-\\" 'find-file)
 
-(global-set-key "\M--" "\C-a-  -  -  -  -  -  -  -\C-o\C-a\C-n")
+;(global-set-key "\C--" "\C-a-  -  -  -  -  -  -  -\C-o\C-a\C-n")
+(global-set-key "\M--" "\C-a-  -  -  -  -  -  -  -\C-o\C-a\C-n\C-o\C-o")
 (global-set-key (kbd "M-0") nil)
 
 (global-set-key [C-return] 'dabbrev-expand)
@@ -392,3 +422,4 @@
 (global-set-key "\C-r" 'isearch-backward-regexp)
 
 (global-set-key "\M-z" 'undo)
+
