@@ -14,9 +14,9 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(starter-kit smex undo-tree magit solarized-theme smart-tabs-mode))
-(dolist (p my-packages)
-  (when (not (package-installed-p p))
+(defvar packages '(starter-kit smex undo-tree magit solarized-theme smart-tabs-mode)) ; scala-mode
+(dolist (p packages)
+  (unless (package-installed-p p)
     (package-install p)))
 
 
@@ -124,6 +124,9 @@
 
   (setq-default show-trailing-whitespace t)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+  (setq py-indent-comments nil)
+  (setq py-electric-comment-p nil)
 )
 (add-hook 'python-mode-hook 'my-python-mode-hook)
 
@@ -215,7 +218,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;; NOTES ;;;;;;;;;;;;;;;;;;;;;;;;
 ;inline latex. inserts unicode.
 (defun note-mode ()
-  (when (string-match "\\.note$" buffer-file-name)
+  (when (or (string-match "\\.note$" buffer-file-name)
+            (string-match "\\.md$" buffer-file-name))
     (set-input-method "TeX")))
 (add-hook 'find-file-hook 'note-mode)
 
@@ -242,6 +246,10 @@
 ;; ;;;;;;;;;;;;;;; Octave ;;;;;;;;;;;;;;;;;;;;;;
 ;; (autoload 'octave-mode "octave-mod" nil t)
 ;; (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
+
+;; ;;;;;;;;;;;;;;; Scala ;;;;;;;;;;;;;;;;;;;;;;
+(add-to-list 'load-path (concat HOME ".emacs.d/scala-mode2/"))
+(require 'scala-mode2)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; Remote Access ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -324,6 +332,9 @@
    "M-c"
    ))
 
+;unicode
+;(set-terminal-coding-system 'utf-8-unix)
+;(setq default-process-coding-system '((utf-8-unix . utf-8-unix)))
 
 ;;;;;;;;;;;;;;; Windows ;;;;;;;;;;;;;;;;;;;;;;
 (when (fboundp 'windmove-default-keybindings)
@@ -353,6 +364,30 @@
 )
 (if (string-match "Notes\\.app" (getenv "EMACSPATH"))
     (notes-app))
+
+(defun obs-app ()
+  (find-file "~/Dropbox/.obs")
+  (next-line)
+)
+(if (string-match "Obs\\.app" (getenv "EMACSPATH"))
+    (obs-app))
+
+(defun diary-app ()
+  (find-file "~/diary/do")
+)
+(if (string-match "Diary\\.app" (getenv "EMACSPATH"))
+    (diary-app))
+
+(defun work-app ()
+  (split-window-horizontally)
+  (find-file "~/notes/TODO")
+  (other-window 1)
+  (find-file "~/notes/TODO")
+  (shrink-window-horizontally 10)
+  (other-window 1)
+)
+(if (string-match "Work\\.app" (getenv "EMACSPATH"))
+    (work-app))
 
 
 ;;;;;;;;;;;;;;; SHORTUCTS ;;;;;;;;;;;;;;;;;;;;;;
@@ -406,9 +441,9 @@
 (global-set-key (kbd "<escape>") 'save-buffer)
 (global-set-key "\C-\\" 'find-file)
 
-;(global-set-key "\C--" "\C-a-  -  -  -  -  -  -  -\C-o\C-a\C-n")
-(global-set-key "\M--" "\C-a-  -  -  -  -  -  -  -\C-o\C-a\C-n\C-o\C-o")
+(global-set-key "\M--" "\C-a-  -  -  -  -  -  -  -\C-o\C-a\C-n")
 (global-set-key (kbd "M-0") nil)
+(global-set-key "\M-i" 'ucs-insert)
 
 (global-set-key [C-return] 'dabbrev-expand)
 
@@ -417,9 +452,8 @@
 ;(global-set-key "\C-<right>" 'other-window) ;TODO 'windmove-* maybe?
 ;(global-set-key "\C-<right>" 'BACKWARDS-other-window)
 
-(global-set-key (kbd "M-r") 'query-replace)
+(global-set-key "\M-r" 'query-replace-regexp)
 (global-set-key "\C-s" 'isearch-forward-regexp)
 (global-set-key "\C-r" 'isearch-backward-regexp)
 
 (global-set-key "\M-z" 'undo)
-
