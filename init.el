@@ -373,7 +373,7 @@
     (obs-app))
 
 (defun diary-app ()
-  (find-file "~/diary/do")
+  (find-file "~/diary/sleep")
 )
 (if (string-match "Diary\\.app" (getenv "EMACSPATH"))
     (diary-app))
@@ -388,6 +388,13 @@
 )
 (if (string-match "Work\\.app" (getenv "EMACSPATH"))
     (work-app))
+
+
+;;;;;;;;;;;;;;; AUTOSAVE ;;;;;;;;;;;;;;;;;;;;;;
+;(setq auto-save-timeout 1)
+;(setq auto-save-interval 20)
+
+(run-with-idle-timer 5 t 'save-buffer)
 
 
 ;;;;;;;;;;;;;;; SHORTUCTS ;;;;;;;;;;;;;;;;;;;;;;
@@ -439,6 +446,7 @@
 (global-set-key "\C-x\C-b" 'electric-buffer-list)
 (global-set-key "\M-m" 'switch-to-buffer)
 (global-set-key (kbd "<escape>") 'save-buffer)
+(global-set-key "\M-s" 'save-buffer)
 (global-set-key "\C-\\" 'find-file)
 
 (global-set-key "\M--" "\C-a-  -  -  -  -  -  -  -\C-o\C-a\C-n")
