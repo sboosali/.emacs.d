@@ -2,6 +2,8 @@
 (setq HOME "/Users/sambo/")
 (add-to-list 'load-path "~/.emacs.d/packages/")
 
+(defun key (key act)
+  (global-set-key key act))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; Packaging ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Add marmalade repos
@@ -19,6 +21,18 @@
   (unless (package-installed-p p)
     (package-install p)))
 
+(add-to-list 'load-path "~/.emacs.d/")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; Deft ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'deft)
+
+(setq deft-extension "txt")
+(setq deft-directory "~/Dropbox/deft")
+
+(setq deft-text-mode 'markdown-mode)
+
+(global-set-key [f8] 'deft)
 
 ;;;;;;;;;;;;;;; UTIL ;;;;;;;;;;;;;;;;;;;;;;
 (defun cons! (x xs) ; ~ add-to-list
@@ -123,7 +137,7 @@
   (setq py-smart-indentation nil)
 
   (setq-default show-trailing-whitespace t)
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  ;(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
   (setq py-indent-comments nil)
   (setq py-electric-comment-p nil)
@@ -187,41 +201,17 @@
   (save-buffer)
   )
 
-;;;;;;;;;;;;;;;;;;;;;; COQ ;;;;;;;;;;;;;;;;;;;;;;
-
-;(global-unset-key (kbd "C-RET"))
-;(global-set-key (kbd "C-RET") 'proof-add-completions)
-
-;commenting
-;; (global-set-key "\C-]" "\C-a(* \C-e *)\C-n")
-
-;; (defun coq-mode ()
-;;   (when (and (stringp buffer-file-name)
-;;              (string-match "\\.v$'" buffer-file-name))
-;;     (global-set-key (kbd "M-RET") 'proof-goto-point)))
-;; (add-hook 'find-file-hook 'note-mode)
-
-;; (global-set-key (kbd "M-RET") 'proof-goto-point)
-
-;; (let ((default-directory (concat HOME "bin/ProofGeneral/")))
-;;   (normal-top-level-add-subdirs-to-load-path))
-;; (setq auto-mode-alist (cons '("\\.v$" . coq-mode) auto-mode-alist))
-;; (autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
-;; (load-file (concat HOME "bin/ProofGeneral/generic/proof-site.el"))
-
-;(load-file "~/course/195x/pg-setup.el")
-
-
-;;;;;;;;;;;;;;;;;;;;;;;; TEX ;;;;;;;;;;;;;;;;;;;;;;;;
-(set-input-method "TeX")
 
 ;;;;;;;;;;;;;;;;;;;;;;;; NOTES ;;;;;;;;;;;;;;;;;;;;;;;;
 ;inline latex. inserts unicode.
 (defun note-mode ()
   (when (or (string-match "\\.note$" buffer-file-name)
-            (string-match "\\.md$" buffer-file-name))
-    (set-input-method "TeX")))
+            (string-match "\\.md$" buffer-file-name)
+            (string-match "\\.agda$" buffer-file-name))
+   (set-input-method "TeX")))
 (add-hook 'find-file-hook 'note-mode)
+
+
 
 ;;;;;;;;;;;;;;; ??? ;;;;;;;;;;;;;;;;;;;;;;
 (defun set-exec-path-from-shell-PATH ()
@@ -234,18 +224,14 @@
 (set-exec-path-from-shell-PATH)
 
 ;; ;;;;;;;;;;;;;;; Haskell ;;;;;;;;;;;;;;;;;;;;;;
-;; (load "~/.emacs.d/packages/haskell-mode/haskell-site-file")
-;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
-;; (add-to-list 'auto-mode-alist '("\\.hs$" . haskell-mode))
+(load "~/.emacs.d/packages/haskell-mode/haskell-site-file")
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+(add-to-list 'auto-mode-alist '("\\.hs$" . haskell-mode))
 
 
 ;; ;;;;;;;;;;;;;;; Prolog ;;;;;;;;;;;;;;;;;;;;;;
-;; (add-to-list 'auto-mode-alist '("\\.pl" . 'prolog-mode))
+(add-to-list 'auto-mode-alist '("\\.pl$" . prolog-mode))
 
-
-;; ;;;;;;;;;;;;;;; Octave ;;;;;;;;;;;;;;;;;;;;;;
-;; (autoload 'octave-mode "octave-mod" nil t)
-;; (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
 
 ;; ;;;;;;;;;;;;;;; Scala ;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'load-path (concat HOME ".emacs.d/scala-mode2/"))
@@ -256,11 +242,6 @@
 (setq tramp-default-method "ssh")
 
 
-;;;;;;;;;;;;;;; e.g. ;;;;;;;;;;;;;;;;;;;;;;
-
-;(string-match "/path/to/file" (buffer-file-name))
-
-
 ;;;;;;;;;;;;;;; Abbreviations ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun after-abbrev-expand-hook ()
@@ -268,6 +249,7 @@
     (backward-char 1))
   t)
 (put 'after-abbrev-expand-hook 'no-self-insert t)
+
 
 ;;;;;;;;;;;;;;; Terminal ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -340,9 +322,16 @@
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
 
+(global-set-key (kbd "C-<left>") 'windmove-left)
+(global-set-key (kbd "C-<left>") 'windmove-left)
+(global-set-key (kbd "C-S-<left>") 'windmove-left)
+(global-set-key (kbd "C-S-<right>") 'windmove-right)
+
+
 ;;;;;;;;;;;;;;; Frames ;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
  '(initial-frame-alist (quote ((fullscreen . maximized)))))
+
 
 ;;;;;;;;;;;;;;; Applications ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -379,12 +368,14 @@
     (diary-app))
 
 (defun work-app ()
-  (split-window-horizontally)
-  (find-file "~/notes/TODO")
-  (other-window 1)
-  (find-file "~/notes/TODO")
-  (shrink-window-horizontally 10)
-  (other-window 1)
+  (find-file "~/TODO")
+  (end-of-buffer)
+
+  ;; (split-window-horizontally)
+  ;; (find-file "/Users/sambo/Library/Application Support/LightTable/plugins/Claire/README.md")
+  ;; (find-file "/Users/sambo/poc/README")
+  ;; (other-window 1)
+  ;; (find-file "~/poc_everything/example-lighttable-plugin/README.md")
 )
 (if (string-match "Work\\.app" (getenv "EMACSPATH"))
     (work-app))
@@ -454,6 +445,7 @@
 (global-set-key "\M-i" 'ucs-insert)
 
 (global-set-key [C-return] 'dabbrev-expand)
+(global-set-key (kbd "<tab>") 'dabbrev-expand)
 
 ;(global-set-key (kbd "M-<escape>") 'kmacro-start-macro-or-insert-counter)
 ;(global-set-key (kbd "<escape>") 'kmacro-end-call-mouse)
@@ -465,3 +457,11 @@
 (global-set-key "\C-r" 'isearch-backward-regexp)
 
 (global-set-key "\M-z" 'undo)
+
+(defun transpose-paragraph () (interactive)
+ (backward-paragraph)
+ (kill-paragraph)
+ (backward-paragraph)
+ (yank))
+
+(global-set-key "\M-T" 'transpose-paragraph)
