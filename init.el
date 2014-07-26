@@ -224,9 +224,9 @@
 (set-exec-path-from-shell-PATH)
 
 ;; ;;;;;;;;;;;;;;; Haskell ;;;;;;;;;;;;;;;;;;;;;;
-(load "~/.emacs.d/packages/haskell-mode/haskell-site-file")
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
-(add-to-list 'auto-mode-alist '("\\.hs$" . haskell-mode))
+;(add-to-list 'load-path "~/lib/emacs/haskell-mode/")
+;(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+;(add-to-list 'auto-mode-alist '("\\.hs$" . haskell-mode))
 
 
 ;; ;;;;;;;;;;;;;;; Prolog ;;;;;;;;;;;;;;;;;;;;;;
