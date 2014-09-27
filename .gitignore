@@ -1,11 +1,12 @@
-
 ignore/*
-
 .DS_Store
+
+# Emacs
 \#*\#
 *~
 *.log
 
+# state
 auto-save-list/
 backups/
 elpa/
@@ -14,4 +15,6 @@ tramp
 .smex-items
 .abbrev_defs
 saved-places
+.emacs.desktop
+.emacs.desktop.lock
 

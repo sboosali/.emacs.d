@@ -41,6 +41,7 @@
  solarized-theme
  smart-tabs-mode
  ido-complete-space-or-hyphen
+; elscreen
 ))
 
 (dolist (p packages)
@@ -55,6 +56,12 @@
 ;; (smex-initialize)
 ;; (turn-on-haskell-simple-indent)
 ;; (load "haskell-mode-autoloads.el")
+
+
+;;;;;;;;;;;;;;; Persist ;;;;;;;;;;;;;;;;;;;;;;
+; reopens the open buffers when Emacs last closed
+; make it work for multiple applications
+;(desktop-save-mode 1)
 
 
 ;;;;;;;;;;;;;;; IDO ;;;;;;;;;;;;;;;;;;;;;;
@@ -404,7 +411,7 @@
 (defun obs-app ()
 ;  (find-file "~/Dropbox/.obs")
   (find-file "~/things")
-  (next-line)
+  (end-of-buffer)
 )
 (if (string-match "Obs\\.app" (getenv "EMACSPATH"))
     (obs-app))
@@ -416,15 +423,16 @@
     (diary-app))
 
 (defun work-app ()
-  (find-file "~/Haskell")
+  (find-file "~/Haskell/TODO")
   (find-file "~/TODO")
   (find-file "~/dragon/Haskell-DragonNaturallySpeaking/TODO")
   (end-of-buffer)
-  ;; (split-window-horizontally)
-  ;; (find-file "/Users/sambo/Library/Application Support/LightTable/plugins/Claire/README.md")
-  ;; (find-file "/Users/sambo/poc/README")
-  ;; (other-window 1)
-  ;; (find-file "~/poc_everything/example-lighttable-plugin/README.md")
+  (split-window-vertically)
+  (shell)
+  ;(other-window 1)
+
+  ;(push #'elscreen-store kill-emacs-hook)
+  ;(elscreen-restore)
 )
 (if (string-match "Work\\.app" (getenv "EMACSPATH"))
     (work-app))
@@ -516,7 +524,8 @@
 (global-set-key "\M-q" 'save-buffers-kill-terminal)
 (global-set-key "\C-xk" 'kill-this-buffer)
 (global-set-key "\C-x\C-k" 'kill-this-buffer)
-(global-set-key "\C-x\C-b" 'electric-buffer-list)
+;(global-set-key "\C-x\C-b" 'electric-buffer-list)
+(global-set-key "\C-x\C-b" 'buffer-menu)
 (global-set-key "\M-m" 'switch-to-buffer)
 (global-set-key "\M-`" "\C-xb")
 (global-set-key "\M-s" 'save-buffer)
