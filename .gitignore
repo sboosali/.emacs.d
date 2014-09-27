@@ -1,11 +1,17 @@
+
+ignore/*
+
+.DS_Store
+\#*\#
+*~
+*.log
+
 auto-save-list/
 backups/
 elpa/
 places
 tramp
 .smex-items
+.abbrev_defs
+saved-places
 
-.DS_Store
-\#*\#
-*~
-*.log
