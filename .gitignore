@@ -1,5 +1,8 @@
 ignore/*
+
+# OS X
 .DS_Store
+# remove */.DS_Store
 
 # Emacs
 \#*\#
