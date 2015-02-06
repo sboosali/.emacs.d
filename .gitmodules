@@ -1,3 +1,6 @@
 [submodule "packages/haskell-mode"]
 	path = packages/haskell-mode
 	url = https://github.com/haskell/haskell-mode
+[submodule "back-button"]
+	path = back-button
+	url = https://github.com/rolandwalker/back-button.git

@@ -13,6 +13,7 @@ elpa/
 places
 tramp
 .smex-items
+smex-items
 .abbrev_defs
 saved-places
 .emacs.desktop
