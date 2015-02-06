@@ -1,7 +1,8 @@
 ;;;;;;;;;;;;;;; Dependencies ;;;;;;;;;;;;;;;;;;;;;;
-; ~/.templates/*.tplemacs
+; ~/.templates/*.tpl
 ;;;;;;;;;;;;;;; INIT ;;;;;;;;;;;;;;;;;;;;;;
 (require 'cl)
+;(require 'cl-lib)
 
 (setq HOME (expand-file-name "~/.emacs.d/"))
 
@@ -10,8 +11,12 @@
 
 (defvar load-paths '(
  "."
- "packages"
+ "my"                                   ; utilities or wrappers around libraries
+ "apps"                                 ; initialization depending on <X>.app
 
+ "packages"                             ; package files that were copied and pasted
+
+ "back-button"                          ; etc.
  "structured-haskell-mode/elisp"
  "ghc-server/elisp"
  "hindent/elisp"
@@ -25,15 +30,22 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; Packaging ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'package)
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+(setq package-archives '(
+ ("melpa" . "http://melpa.milkbox.net/packages/")
+ ("gnu" . "http://elpa.gnu.org/packages/")
+))
+
+(setq package-enable-at-startup nil)
 (package-initialize)
 
 (when (not package-archive-contents)
   (package-refresh-contents))
 
+; run this every week
+;(package-refresh-contents)
+
 (defvar packages '(
+ cl-lib
  starter-kit
  smex
  undo-tree
@@ -42,6 +54,9 @@
  smart-tabs-mode
  ido-complete-space-or-hyphen
 ; elscreen
+; async
+; helm
+; edit-server
 ))
 
 (dolist (p packages)
@@ -57,6 +72,15 @@
 ;; (turn-on-haskell-simple-indent)
 ;; (load "haskell-mode-autoloads.el")
 
+ ;; (when (require 'dired-aux)
+ ;;   (require 'dired-async))
+
+;; (when (require 'helm-config)
+;;  (helm-mode 1))
+
+;;;;;;;;;;;;;;; edit-server
+;(require 'edit-server)
+
 
 ;;;;;;;;;;;;;;; Persist ;;;;;;;;;;;;;;;;;;;;;;
 ; reopens the open buffers when Emacs last closed
@@ -65,8 +89,22 @@
 
 
 ;;;;;;;;;;;;;;; IDO ;;;;;;;;;;;;;;;;;;;;;;
+(require 'ido)
+
 (require 'ido-complete-space-or-hyphen)
 (ido-mode t)
+
+
+(setq ido-ignore-buffers '(
+ "^ "
+ "*Completions*"
+ "*Shell Command Output*"
+ "*Messages*"
+ "Async Shell Command"
+ "*scratch*"
+ "*Messages*"
+ "*Quail Completions*"
+))
 
 
 ;;;;;;;;;;;;;;; UTIL ;;;;;;;;;;;;;;;;;;;;;;
@@ -128,6 +166,21 @@
 ;; or make Emacs ask about missing newline
 (setq require-final-newline nil)
 
+(setq fill-column -1)
+; disable splitting long lines into short lines
+(auto-fill-mode -1)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; Command Examples
+
+; replace-regexp
+; Parsable\(\w+\)
+; \1Grammar
+;
+; ParsableType -> GrammarType
+
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; ParEdit ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (autoload 'enable-paredit-mode "paredit" "" t)
@@ -170,12 +223,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; Deft ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'deft)
 
-(setq deft-extension "txt")
-(setq deft-directory (concat HOME "deft"))
+(setq deft-extension "note")
+(setq deft-directory "~/Dropbox")
 
-(setq deft-text-mode 'markdown-mode)
+(setq deft-use-filename-as-title t)
+;(setq deft-text-mode 'markdown-mode)
+(setq deft-separator "")
 
 (global-set-key [f9] 'deft)
+
+; dynamic scope...
+(defun deft-parse-summary (contents title) "")
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;; Smex ;;;;;;;;;;;;;;;;;;;;;;;;
@@ -260,6 +318,7 @@
  (goto-address-mode)
  (setq comment-start ".")
  (setq comment-end "")
+ (setq coding-system 'utf-8)
 )
 
 (defun is-note-file ()
@@ -283,11 +342,7 @@
 
 
 ;; ;;;;;;;;;;;;;;; Haskell ;;;;;;;;;;;;;;;;;;;;;;
-;(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
-(add-to-list 'auto-mode-alist '("\\.elm$" . haskell-mode))
-(add-to-list 'auto-mode-alist '("\\.curry$" . haskell-mode))
-(add-to-list 'auto-mode-alist '("\\.idr$" . haskell-mode))
-
+(require 'my-haskell)
 
 ;; ;;;;;;;;;;;;;;; Prolog ;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'auto-mode-alist '("\\.pl$" . prolog-mode))
@@ -391,62 +446,25 @@
  '(initial-frame-alist (quote ((fullscreen . maximized)))))
 
 
+;;;;;;;;;;;;;;; Compilation mode ;;;;;;;;;;;;;;;;;;;;;;
+(require 'compile)
+
+
+;; (defun compile-haskell ()
+;;  (set (make-local-variable 'compile-command)
+;;   "cd ~/dragon/Haskell-DragonNaturallySpeaking; cabal build")
+;;  (set 'compilation-scroll-output t)
+;; )
+
+
 ;;;;;;;;;;;;;;; Applications ;;;;;;;;;;;;;;;;;;;;;;
 
-(defun server-app ()
- (server-start)
-; undo with:
-;  (server-force-delete)
-)
-(if (string-match "Emacs\\.app" (getenv "EMACSPATH"))
-    (server-app))
-
-(defun notes-app ()
-  (find-file "~/Dropbox/.note")
-  (end-of-buffer)
-)
-(if (string-match "Notes\\.app" (getenv "EMACSPATH"))
-    (notes-app))
-
-(defun obs-app ()
-;  (find-file "~/Dropbox/.obs")
-  (find-file "~/things")
-  (end-of-buffer)
-)
-(if (string-match "Obs\\.app" (getenv "EMACSPATH"))
-    (obs-app))
-
-(defun diary-app ()
-  (find-file "~/diary/sleep")
-)
-(if (string-match "Diary\\.app" (getenv "EMACSPATH"))
-    (diary-app))
-
-(defun work-app ()
-  (find-file "~/Haskell/TODO")
-  (find-file "~/TODO")
-  (find-file "~/dragon/Haskell-DragonNaturallySpeaking/TODO")
-  (end-of-buffer)
-  (split-window-vertically)
-  (shell)
-  ;(other-window 1)
-
-  ;(push #'elscreen-store kill-emacs-hook)
-  ;(elscreen-restore)
-)
-(if (string-match "Work\\.app" (getenv "EMACSPATH"))
-    (work-app))
-
-(defun terminal-app ()
-  (split-window-horizontally)
-  (multi-term)
-  (other-window 1)
-  (multi-term)
-  (other-window 1)
-)
-(if (string-match "Terminal\\.app" (getenv "EMACSPATH"))
-    (terminal-app))
-
+(require 'notes-app)
+(require 'work-app)
+(require 'diary-app)
+(require 'observations-app)
+(require 'server-app)
+(require 'terminal-app)
 
 ;;;;;;;;;;;;;;; AUTOSAVE ;;;;;;;;;;;;;;;;;;;;;;
 ; saves the buffer to a backup file
@@ -466,104 +484,29 @@
  (not (string-match "^\\*.*\\*$" buffer-file-name)))
 
 
-;;;;;;;;;;;;;;; Shortucts ;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;; back-button ;;;;;;;;;;;;;;;;;;;;;;
+(require 'back-button)
+(back-button-mode 1)
 
-(defun indent-and-next () (interactive)
-  (move-beginning-of-line 1)
-  (insert " ")
-  (next-line)
-  (move-beginning-of-line 1))
-(global-set-key "\M-j" 'indent-and-next)
+;;;;;;;;;;;;;;; buffer ;;;;;;;;;;;;;;;;;;;;;;
 
-(defun kill-line-save () (interactive)
-  (kill-line)
-  (yank))
-(global-set-key "\M-k" 'kill-line-save)
+;(global-set-key (kbd "C-x C-b") 'ibuffer)
 
-(defun force-kill-buffer () (interactive)
-  (kill-buffer (buffer-name)))
-(global-set-key "\C-x k" 'force-kill-buffer)
+;;;;;;;;;;;;;;; dired-details-+ ;;;;;;;;;;;;;;;;;;;;;;
+(require 'dired-details)
+(dired-details-install)
 
-(defun delete-line ()
-  "Deletes a line, but preserves the kill-ring."
-  (interactive)
-  (if (not (equal (point) (point-max))) ; end of buffer
-      (kill-line)
-    (setq kill-ring (cdr kill-ring))))
+;;;;;;;;;;;;;;; shortcuts ;;;;;;;;;;;;;;;;;;;;;;
 
-(defun new-note () (interactive)
-  (end-of-buffer)
-  (backward-paragraph)
-  (forward-paragraph)
-  (delete-line) (delete-line) (delete-line) (delete-line)
-  (newline) (newline))
-(global-set-key "\M-n" 'new-note)
-
-(defun transpose-paragraph () (interactive)
- (backward-paragraph)
- (kill-paragraph)
- (backward-paragraph)
- (yank))
-(global-set-key "\M-T" 'transpose-paragraph)
-
-(global-set-key "\M-c" 'kill-ring-save)
-(global-set-key "\M-v" 'yank)
-
-(global-set-key "\M-x" 'kill-region)
-(global-set-key "\C-w" 'execute-extended-command)
-
-(global-set-key "\M-w" 'capitalize-word)
-
-(global-set-key "\M-g" 'goto-line)
-
-(global-set-key [(meta up)] 'beginning-of-buffer)
-(global-set-key [(meta down)] 'end-of-buffer)
-
-(global-set-key "\C-x\C-o" 'other-window)
-
-(global-set-key "\M-q" 'save-buffers-kill-terminal)
-(global-set-key "\C-xk" 'kill-this-buffer)
-(global-set-key "\C-x\C-k" 'kill-this-buffer)
-;(global-set-key "\C-x\C-b" 'electric-buffer-list)
-(global-set-key "\C-x\C-b" 'buffer-menu)
-(global-set-key "\M-m" 'switch-to-buffer)
-(global-set-key "\M-`" "\C-xb")
-(global-set-key "\M-s" 'save-buffer)
-
-(global-set-key "\C-\\" 'find-file)
-
-(global-set-key "\M--" "\C-a-  -  -  -  -  -  -  -\C-o\C-a\C-n")
-(global-set-key (kbd "M-0") nil)
-
-(global-set-key "\M-i" 'ucs-insert)
-
-(global-set-key [C-return] 'dabbrev-expand)
-(global-set-key (kbd "<tab>") 'dabbrev-expand)
-
-;(global-set-key (kbd "M-<escape>") 'kmacro-start-macro-or-insert-counter)
-;(global-set-key (kbd "<escape>") 'kmacro-end-call-mouse)
-;(global-set-key "\C-<right>" 'other-window) ;TODO 'windmove-* maybe?
-;(global-set-key "\C-<right>" 'BACKWARDS-other-window)
-
-(global-set-key "\M-r" 'query-replace-regexp)
-(global-set-key "\C-s" 'isearch-forward-regexp)
-(global-set-key "\C-r" 'isearch-backward-regexp)
-
-(global-set-key "\M-z" 'undo)
-
-(global-set-key [S-mouse-2] 'browse-url-at-mouse)
-
-
-;;;;;;;;;;;;;;; Commands ;;;;;;;;;;;;;;;;;;;;;;
-;browse-url-at-mouse
-
-
-;;;;;;;;;;;;;;; Functions ;;;;;;;;;;;;;;;;;;;;;;
-
+(require 'my-shortcuts)
+(require 'my-functions)
 
 ;;;;;;;;;;;;;;; Macros ;;;;;;;;;;;;;;;;;;;;;;
 ; from
 ;; kmacro-start-macro
 ;; kmacro-name-last-macro
 ;; insert-kbd-macro
+
+(fset 'munge-facebook-songs
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([down 5 M-left M-left left 11 18 98 121 67108896 1 134217848 down 11 11 down] 0 "%d")) arg)))
 
