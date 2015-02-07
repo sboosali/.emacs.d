@@ -4,3 +4,9 @@
 [submodule "back-button"]
 	path = back-button
 	url = https://github.com/rolandwalker/back-button.git
+[submodule "emacs_chrome"]
+	path = emacs_chrome
+	url = https://github.com/stsquad/emacs_chrome
+[submodule "edit-server-htmlize"]
+	path = edit-server-htmlize
+	url = https://github.com/frobtech/edit-server-htmlize

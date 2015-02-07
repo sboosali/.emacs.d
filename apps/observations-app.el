@@ -1,4 +1,6 @@
 (provide 'observations-app)
+(require 'edit-server)
+(require 'my-edit-server)
 
 (defun obs-app ()
 ;  (find-file "~/Dropbox/.obs")
@@ -16,7 +18,7 @@
   (find-file "~/things")
   (end-of-buffer)
 
-  ;(edit-server-start)
+  (edit-server-start)
 )
 
 (if (string-match "Obs\\.app" (getenv "EMACSPATH"))

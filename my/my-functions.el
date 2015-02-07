@@ -120,3 +120,8 @@
             "end tell\n")))
     (start-process "osascript-getinfo" nil "osascript" "-e" script)))
 
+(defun show-dot-emacs-structure ()
+      "Show the outline-mode structure of ~/.emacs"
+      (interactive)
+      (occur "^;;;;+"))
+

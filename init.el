@@ -18,9 +18,13 @@
  "packages"                             ; package files that were copied and pasted
 
  "back-button"                          ; etc.
- "structured-haskell-mode/elisp"
+
+ "structured-haskell-mode/elisp"        ; Haskell
  "ghc-server/elisp"
  "hindent/elisp"
+
+ "emacs_chrome/servers"                 ; Emacs in chromium
+ "edit-server-htmlize"
 
 ) "load paths that don't obey the normal package-name/module-name.el format.")
 
@@ -79,8 +83,10 @@
 ;; (when (require 'helm-config)
 ;;  (helm-mode 1))
 
-;;;;;;;;;;;;;;; edit-server
-;(require 'edit-server)
+;;;;;;;;;;;;;;; SETTINGS ;;;;;;;;;;;;;;;;;;;;;;
+(require 'my-settings)
+
+
 
 ;;;;;;;;;;;;;;; utilities
 (require 'etc)
@@ -109,57 +115,6 @@
  "*Messages*"
  "*Quail Completions*"
 ))
-
-
-;;;;;;;;;;;;;;; SETTINGS ;;;;;;;;;;;;;;;;;;;;;;
-
-(setq inhibit-splash-screen t)
-
-; hide menu bar
-;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-;(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-
-;;peek
-(setq scroll-step 1)
-(setq scroll-conservatively 10000)
-
-
-(set-face-attribute 'default nil :height 140)
-
-(setq keyboard-coding-system nil)
-(setq mac-option-key-is-meta nil)
-(setq mac-command-key-is-meta t)
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier nil)
-
-(setq visible-bell t)
-
-;font-size
-;(set-face-attribute 'default nil :height 50)
-;(set-frame-parameter nil 'font "Monospace-2")
-(set-default-font "-apple-Monaco-medium-normal-normal-*-18-*-*-*-m-0-iso10646-1")
-
-(set-background-color "gray")
-
-;;   (set-background-color "black")
-;;   (set-face-background 'default "black")
-;;   (set-face-background 'region "black")
-;;   (set-face-foreground 'default "white")
-;;   (set-face-foreground 'region "gray60")
-;;   (set-foreground-color "white")
-;;   (set-cursor-color "red")
-
-;; Prevent Emacs from extending file when
-;; pressing down arrow at end of buffer.
-(setq next-line-add-newlines nil)
-;; Silently ensure newline at end of file
-;; (setq require-final-newline t)
-;; or make Emacs ask about missing newline
-(setq require-final-newline nil)
-
-(setq fill-column -1)
-; disable splitting long lines into short lines
-(auto-fill-mode -1)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; Command Examples
