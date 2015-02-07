@@ -1,6 +1,10 @@
 (provide 'work-app)
 
+(require 'my-speedbar)
+
 (defun work-app ()
+  (set-frame-position (selected-frame) 70 0)
+
   (find-file "~/voice/commands-core/commands-core.cabal")
   (end-of-buffer)
   (split-window-vertically)
@@ -17,6 +21,12 @@
   (sleep-for 5)
   (other-window 1)
   (switch-to-buffer "*shell*")
+
+  (speedbar)
+  (set-frame-position (selected-frame) 0 0)
+  (speedbar-expand-most)
+
+  (other-frame 1)
 
   ;(compilation-minor-mode)
   ;(other-window 1)

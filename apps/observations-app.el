@@ -2,11 +2,16 @@
 
 (defun obs-app ()
 ;  (find-file "~/Dropbox/.obs")
-  (find-file "~/.emacs.d/init.el")
   (find-file "~/config/.profile")
   (find-file "~/Haskell")
+  (find-file "~/.emacs.d/init.el")
 
   (shell)
+(insert "find apps")
+(comint-send-input)
+(insert "find my")
+(comint-send-input)
+
   (split-window-vertically)
   (find-file "~/things")
   (end-of-buffer)

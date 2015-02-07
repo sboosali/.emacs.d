@@ -1,5 +1,6 @@
 ;;;;;;;;;;;;;;; Dependencies ;;;;;;;;;;;;;;;;;;;;;;
 ; ~/.templates/*.tpl
+
 ;;;;;;;;;;;;;;; INIT ;;;;;;;;;;;;;;;;;;;;;;
 (require 'cl)
 ;(require 'cl-lib)
@@ -81,6 +82,9 @@
 ;;;;;;;;;;;;;;; edit-server
 ;(require 'edit-server)
 
+;;;;;;;;;;;;;;; utilities
+(require 'etc)
+
 
 ;;;;;;;;;;;;;;; Persist ;;;;;;;;;;;;;;;;;;;;;;
 ; reopens the open buffers when Emacs last closed
@@ -105,19 +109,6 @@
  "*Messages*"
  "*Quail Completions*"
 ))
-
-
-;;;;;;;;;;;;;;; UTIL ;;;;;;;;;;;;;;;;;;;;;;
-(defun cons! (x xs) ; ~ add-to-list
-  (setq xs (cons x xs)))
-
-(defun print-list (list)
-  "Print each element of LIST on a line of its own."
-   (print (car list))
-   (print-list (cdr list)))
-
-(defun key (key act)
-  (global-set-key key act))
 
 
 ;;;;;;;;;;;;;;; SETTINGS ;;;;;;;;;;;;;;;;;;;;;;
@@ -467,21 +458,11 @@
 (require 'terminal-app)
 
 ;;;;;;;;;;;;;;; AUTOSAVE ;;;;;;;;;;;;;;;;;;;;;;
-; saves the buffer to a backup file
-(setq auto-save-timeout 1) ; save after this many seconds of idle time
-(setq auto-save-interval 20) ; save after this many input events
 
-; run callback after this many idle seconds with repeats
-(run-with-idle-timer 1 t 'save-file-buffer)
+(require 'my-autosave)
 
-(defun save-file-buffer ()
- (when (is-file-buffer)
-  (save-buffer)))
-
-; (is-file-buffer "todo")    => true
-; (is-file-buffer "*shell*") => false
-(defun is-file-buffer ()
- (not (string-match "^\\*.*\\*$" buffer-file-name)))
+(require 'my-speedbar)
+(require 'my-frame)
 
 
 ;;;;;;;;;;;;;;; back-button ;;;;;;;;;;;;;;;;;;;;;;

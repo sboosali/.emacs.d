@@ -1,10 +1,21 @@
 (provide 'my-haskell)
+(require 'etc)
+(require 'align)
+(require 'speedbar)
+
+; package-install flycheck
+; Symbol's function definition is void: "macroexp-progn"
+
+; git clone https://github.com/nilcons/hi2
+
+(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+(add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
 
 ; haskell-interactive-bring
 ; haskell-session
 
-(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-(add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
+; haskell-process-do-type
+; haskell-process-do-info
 
 (add-to-list 'auto-mode-alist '("\\.elm$" . haskell-mode))
 (add-to-list 'auto-mode-alist '("\\.curry$" . haskell-mode))
@@ -30,18 +41,22 @@
 ;;   (setq tab-width 1))
 ;; (add-hook 'haskell-mode-hook 'haskell-style)
 
-;; rebind inferior mode to interactive mode
-(eval-after-load "haskell-mode"
-  '(progn
-     (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
-     (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
-     (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
-     (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
-     (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-     (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
-     (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
-(define-key haskell-mode-map (kbd "M-.") 'haskell-mode-jump-to-def)
-     (define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)))
+(eval-after-load "haskell-mode" '(progn
+ ;; rebind inferior mode to interactive mode
+ (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
+ (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
+ (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
+ (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
+ (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+ (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
+ (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
+ (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-jump-to-def)
+ (define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)
+ ;; my bindings
+ (define-key haskell-cabal-mode-map (kbd "M-u") 'haskell-process-cabal-build)
+))
+
+(key (kbd "M-u") 'haskell-process-cabal-build)
 
 ;; custom haskell-mode settings
 (custom-set-variables
@@ -50,9 +65,32 @@
  '(haskell-process-suggest-remove-import-lines t)
  '(haskell-process-auto-import-loaded-modules t)
  '(haskell-process-suggest-hoogle-imports t)
+ '(haskell-stylish-on-save t)
+ '(haskell-tags-on-save t)
 )
+
+; put cursor at my place and run: align
+(add-to-list 'align-rules-list
+             '(haskell-types
+               (regexp . "\\(\\s-+\\)\\(::\\|∷\\)\\s-+")
+               (modes quote (haskell-mode literate-haskell-mode))))
+(add-to-list 'align-rules-list
+             '(haskell-assignment
+               (regexp . "\\(\\s-+\\)=\\s-+")
+               (modes quote (haskell-mode literate-haskell-mode))))
+(add-to-list 'align-rules-list
+             '(haskell-arrows
+               (regexp . "\\(\\s-+\\)\\(->\\|→\\)\\s-+")
+               (modes quote (haskell-mode literate-haskell-mode))))
+(add-to-list 'align-rules-list
+             '(haskell-left-arrows
+               (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
+               (modes quote (haskell-mode literate-haskell-mode))))
 
 (defun my-haskell-mode-hook ()
  (haskell-session)
+ (haskell-process-cabal-build)
+ ;(turn-on-haskell-indentation)
 )
 
+(speedbar-add-supported-extension ".hs")
