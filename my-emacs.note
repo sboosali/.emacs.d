@@ -1,0 +1,7 @@
+
+replace-regexp
+Parsable\(\w+\)
+\1Grammar
+
+ParsableType -> GrammarType
+

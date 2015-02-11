@@ -18,18 +18,18 @@
 ; later, should parse .cabal, or at least extract hs-source-dirs
 ; or have a white list of files/directories, for example the Makefile
 ; good to expand.
-(defun speedbar-expand-most ()
- "Expand most items under the current selection in the speedbar buffer."
- (interactive)
- (goto-char (point-min))
- (forward-line) ; skip the already-expanded current directory
+;; (defun speedbar-expand-most ()
+;;  "Expand most items under the current selection in the speedbar buffer."
+;;  (interactive)
+;;  (goto-char (point-min))
+;;  (forward-line) ; skip the already-expanded current directory
 
- (while (not (eobp))
-  (if (and (not (string/ends-with (current-line) "dist"))
-           (not (string/ends-with (current-line) "ignore")))
-      (speedbar-expand-line))
-  (forward-line))
+;;  (while (not (eobp))
+;;   (if (and (not (string/ends-with (current-line) "dist"))
+;;            (not (string/ends-with (current-line) "ignore")))
+;;       (speedbar-expand-line))
+;;   (forward-line))
 
- (goto-char (point-max))
-)
+;;  (goto-char (point-max))
+;; )
 

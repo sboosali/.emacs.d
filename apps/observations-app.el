@@ -2,6 +2,7 @@
 (require 'edit-server)
 (require 'my-edit-server)
 
+
 (defun obs-app ()
 ;  (find-file "~/Dropbox/.obs")
   (find-file "~/config/.profile")
@@ -19,6 +20,7 @@
   (end-of-buffer)
 
   (edit-server-start)
+
 )
 
 (if (string-match "Obs\\.app" (getenv "EMACSPATH"))

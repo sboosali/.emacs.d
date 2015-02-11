@@ -22,9 +22,13 @@
   (other-window 1)
   (switch-to-buffer "*shell*")
 
+  (insert "cd sources")
+  (comint-send-input)
   (speedbar)
   (set-frame-position (selected-frame) 0 0)
   (speedbar-expand-most)
+  (insert "cd ..")
+  (comint-send-input)
 
   (other-frame 1)
 

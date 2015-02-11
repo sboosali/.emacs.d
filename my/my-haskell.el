@@ -65,7 +65,7 @@
  '(haskell-process-suggest-remove-import-lines t)
  '(haskell-process-auto-import-loaded-modules t)
  '(haskell-process-suggest-hoogle-imports t)
- '(haskell-stylish-on-save t)
+ ;'(haskell-stylish-on-save t)
  '(haskell-tags-on-save t)
 )
 
@@ -89,8 +89,10 @@
 
 (defun my-haskell-mode-hook ()
  (haskell-session)
- (haskell-process-cabal-build)
+ (haskell-process-cabal-build)          ; compilation-shell-minor-mode
+ ;(turn-on-haskell-simple-indent)
  ;(turn-on-haskell-indentation)
+ ;(turn-on-haskell-doc-mode)
 )
 
 (speedbar-add-supported-extension ".hs")
