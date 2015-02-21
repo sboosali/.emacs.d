@@ -23,13 +23,22 @@
 ;;  (interactive)
 ;;  (goto-char (point-min))
 ;;  (forward-line) ; skip the already-expanded current directory
-
 ;;  (while (not (eobp))
 ;;   (if (and (not (string/ends-with (current-line) "dist"))
 ;;            (not (string/ends-with (current-line) "ignore")))
 ;;       (speedbar-expand-line))
 ;;   (forward-line))
-
 ;;  (goto-char (point-max))
 ;; )
+
+(defun speedbar-expand-all ()
+ "Expand all items under the current selection in the speedbar buffer."
+ (interactive)
+ (goto-char (point-min))
+ (forward-line) ; skip the already-expanded current directory
+ (while (not (eobp))
+  (speedbar-expand-line)
+  (forward-line))
+ (goto-char (point-max))
+)
 

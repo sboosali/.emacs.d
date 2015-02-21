@@ -64,9 +64,9 @@
  '(haskell-process-type 'cabal-repl)
  '(haskell-process-suggest-remove-import-lines t)
  '(haskell-process-auto-import-loaded-modules t)
- '(haskell-process-suggest-hoogle-imports t)
+ ;'(haskell-process-suggest-hoogle-imports t)
  ;'(haskell-stylish-on-save t)
- '(haskell-tags-on-save t)
+ ;'(haskell-tags-on-save t)
 )
 
 ; put cursor at my place and run: align
@@ -89,10 +89,13 @@
 
 (defun my-haskell-mode-hook ()
  (haskell-session)
- (haskell-process-cabal-build)          ; compilation-shell-minor-mode
+ ;(haskell-process-cabal-build)          ; compilation-shell-minor-mode
  ;(turn-on-haskell-simple-indent)
  ;(turn-on-haskell-indentation)
  ;(turn-on-haskell-doc-mode)
+ ;(global-linum-mode 1)
 )
 
 (speedbar-add-supported-extension ".hs")
+
+;(global-set-key [mouse-1] 'haskell-process-do-info)

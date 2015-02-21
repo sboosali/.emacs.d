@@ -9,17 +9,19 @@
   (find-file "~/Haskell")
   (find-file "~/.emacs.d/init.el")
 
+  (edit-server-start)
+
+  (require 'my-erc)
+
   (shell)
-(insert "find apps")
-(comint-send-input)
-(insert "find my")
-(comint-send-input)
+  (insert "find apps")
+  (comint-send-input)
+  (insert "find my")
+  (comint-send-input)
 
   (split-window-vertically)
   (find-file "~/things")
   (end-of-buffer)
-
-  (edit-server-start)
 
 )
 

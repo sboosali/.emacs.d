@@ -64,3 +64,7 @@
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
+;;; ?
+;; (setq left-margin-width nil)
+;; (setq right-margin-width nil)
+

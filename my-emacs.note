@@ -1,7 +1,41 @@
+-  -  -  -  -  -  -  -
+Todo
 
+stop Haskell mode from prompting for session
+-> work.app starts session from cabal automatically (without four props)
+-> bind haskell-process-do-info to mouse click events (global-set-key [mouse-1] 'haskell-process-do-info)
+
+stop Haskell mode from inserting haskell-process-do-info into shell, as user input, rather than repl output
+
+
+-  -  -  -  -  -  -  -
+https://github.com/haskell/haskell-mode/issues/463
+
+don't prompt for session on `haskell-process-do-info` etc.
+
+when run, `haskell-process-do-info`, always prompts me to `choose Haskell session: [my-haskell-session]`, with the correct default, and I have to hit enter. This stops me from binding it as a callback to mousedown. I'm new to haskell-mode, but most things work, and in particular a session is active and my project compiles.
+
+the relevant call graph seems to be:
+
+       (haskell-process-do-info nil)
+    -> (haskell-process-do-simple-echo ...)
+    -> (haskell-interactive-process)
+    -> (haskell-interactive-session)
+    -> (or (haskell-session-maybe) (... (or (haskell-session-from-buffer) (haskell-session-choose))))
+
+the calls between `(haskell-interactive-process)` and `(haskell-session-maybe)`, inclusively, return non-nil when evaluated in any `.hs` file in my project.
+
+can't haskell mode infer the right session from a project (there is one session per project, yes?), as there is one project per module. Or can I assert that I only have one session open in any Emacs thing (I know the architecture can handle multiple)?
+
+Thank you
+
+
+-  -  -  -  -  -  -  -
 replace-regexp
 Parsable\(\w+\)
 \1Grammar
 
 ParsableType -> GrammarType
 
+
+-  -  -  -  -  -  -  -

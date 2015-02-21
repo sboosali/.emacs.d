@@ -13,9 +13,10 @@
  (setq comment-start ".")
  (setq comment-end "")
  (setq coding-system 'utf-8)
+ (end-of-buffer)
 )
 
 (defun is-note-file ()
  (or
-  (not (string-match "\\." buffer-file-name)) 
+  (not (string-match "\\." buffer-file-name)) ;?
   (string-match "\\.note$" buffer-file-name)))

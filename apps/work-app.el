@@ -9,28 +9,18 @@
   (end-of-buffer)
   (split-window-vertically)
 
+  (shell)
+  (insert "find sources")
+  ;(comint-send-input)
+
+  (find-file "~/voice/commands-core/sources/*/*.hs" t)
+  (find-file "~/voice/commands-core/sources/*/*/*.hs" t)
+  (find-file "~/voice/commands-core/sources/*/*/*/*.hs" t)
+
   (find-file "~/voice/commands-core/notes")
   (end-of-buffer)
 
-  (shell)
-  (insert "find sources")
-  (comint-send-input)
-
-  (find-file "~/voice/commands-core/sources/Commands/Etc.hs")
-
-  (sleep-for 5)
-  (other-window 1)
-  (switch-to-buffer "*shell*")
-
-  (insert "cd sources")
-  (comint-send-input)
-  (speedbar)
-  (set-frame-position (selected-frame) 0 0)
-  (speedbar-expand-most)
-  (insert "cd ..")
-  (comint-send-input)
-
-  (other-frame 1)
+  (switch-to-buffer "Etc.hs")
 
   ;(compilation-minor-mode)
   ;(other-window 1)

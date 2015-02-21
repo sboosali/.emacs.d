@@ -19,5 +19,6 @@
   (setq py-electric-comment-p nil)
 )
 
-(add-hook 'python-mode-hook 'my-python-mode-hook)
+;;; How to only enable for BUffers under Python mode
+;(add-hook 'python-mode-hook 'my-python-mode-hook)
 

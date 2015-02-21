@@ -61,6 +61,7 @@
  solarized-theme
  smart-tabs-mode
  ido-complete-space-or-hyphen
+ tabbar
 
 ; elscreen
 ; async
@@ -78,7 +79,6 @@
 
 (require 'etc)
 (require 'my-functions)
-(require 'my-shortcuts)
 (require 'my-settings)
 
 
@@ -98,6 +98,9 @@
 (require 'saveplace)
 (setq-default save-place t) ;can't use setq because the variable is buffer-local.
 (setq save-place-file "~/.emacs.d/saved-places") ;your saved places are written to this file
+
+(require 'tabbar)
+(tabbar-mode) ; tab on each window  not one per frame)
 
 
 ;;;;;;;;;;;;;;; complex configuration
@@ -120,6 +123,8 @@
 ;(require 'my-persist)  ; disabled because all apps share the same state
 ;(require 'my-shm) ; structured haskell mode doesn't work
 ;(require 'my-helm) ; helm won't install
+(require 'my-tabbar)
+;(require 'my-commands)
 
 
 ;;;;;;;;;;;;;;; Apps
@@ -132,6 +137,11 @@
 (require 'terminal-app)
 
 
+;;;;;;;;;;;;;;; last
+
+(require 'my-shortcuts) ; overrides everything above
+
+
 ;;;;;;;;;;;;;;; Macros ;;;;;;;;;;;;;;;;;;;;;;
 ; from
 ;; kmacro-start-macro
@@ -141,3 +151,21 @@
 (fset 'munge-facebook-songs
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([down 5 M-left M-left left 11 18 98 121 67108896 1 134217848 down 11 11 down] 0 "%d")) arg)))
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(haskell-process-auto-import-loaded-modules t)
+ '(haskell-process-log t)
+ '(haskell-process-suggest-hoogle-imports t)
+ '(haskell-process-suggest-remove-import-lines t)
+ '(haskell-process-type (quote cabal-repl))
+ '(haskell-tags-on-save t)
+ '(org-startup-folded nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
