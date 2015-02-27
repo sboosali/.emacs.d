@@ -1,6 +1,7 @@
 (provide 'work-app)
-
 (require 'my-speedbar)
+(require 'my-compilation)
+
 
 (defun work-app ()
   (set-frame-position (selected-frame) 70 0)
@@ -10,8 +11,9 @@
   (split-window-vertically)
 
   (shell)
-  (insert "find sources")
-  ;(comint-send-input)
+  (insert "make")
+  (comint-send-input)
+  (compilation-shell-minor-mode)
 
   (find-file "~/voice/commands-core/sources/*/*.hs" t)
   (find-file "~/voice/commands-core/sources/*/*/*.hs" t)
@@ -21,6 +23,7 @@
   (end-of-buffer)
 
   (switch-to-buffer "Etc.hs")
+  (key (kbd "M-u") 'compile)
 
   ;(compilation-minor-mode)
   ;(other-window 1)

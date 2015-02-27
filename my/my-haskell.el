@@ -56,7 +56,7 @@
  (define-key haskell-cabal-mode-map (kbd "M-u") 'haskell-process-cabal-build)
 ))
 
-(key (kbd "M-u") 'haskell-process-cabal-build)
+;(key (kbd "M-u") 'haskell-process-cabal-build) ; bound to 'compile instead
 
 ;; custom haskell-mode settings
 (custom-set-variables
