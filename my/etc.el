@@ -32,3 +32,9 @@
                          string)
            t))
 
+(defun my/ends-with (string suffix)
+ (let
+  ((n (length string))
+   (k (length suffix)))
+  (string-equal suffix (substring string (- n k) n))))
+

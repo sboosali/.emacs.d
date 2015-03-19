@@ -6,8 +6,12 @@
 ;(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 
 ;; peek
-(setq scroll-step 1)
-(setq scroll-conservatively 10000)
+(setq
+ redisplay-dont-pause t
+ scroll-margin 10
+ scroll-step 1
+ scroll-conservatively 10000
+ scroll-preserve-screen-position 1)
 
 ;; command as meta, not option
 (setq mac-option-key-is-meta nil)

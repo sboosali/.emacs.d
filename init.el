@@ -62,6 +62,8 @@
  smart-tabs-mode
  ido-complete-space-or-hyphen
  tabbar
+ smooth-scrolling
+ centered-cursor-mode
 
 ; elscreen
 ; async
@@ -101,6 +103,8 @@
 
 (require 'tabbar)
 (tabbar-mode) ; tab on each window  not one per frame)
+
+;(require 'smooth-scrolling)
 
 
 ;;;;;;;;;;;;;;; complex configuration

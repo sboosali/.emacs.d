@@ -1,5 +1,6 @@
 (provide 'my-tabbar)
 (require 'tabbar)
+(require 'etc)
 
 
 (tabbar-mode t)
@@ -7,25 +8,22 @@
 (defun tabbar-buffer-groups ()
   "Return the list of group names the current buffer belongs to.
 This function is a custom function for tabbar-mode's tabbar-buffer-groups.
-This function group all buffers into 3 groups:
-Those Dired, those user buffer, and those emacs buffer.
-Emacs buffer are those starting with “*”."
+This function group all buffers into a number of groups equal to the number
+ of cases, each named by the results of its case."
   (list
    (cond
-    ((let ((n (length (buffer-name))))
-      (string-equal ".hs" (substring (buffer-name) (- n 3) n)))
-     "Haskell"
-     )
+    ((my/ends-with (buffer-name) ".hs")
+     "Haskell")
+    ((my/ends-with (buffer-name) ".note")
+     "Notes")
     ((eq major-mode 'dired-mode)
-     "Dired"
-     )
-    ;; ((string-equal "*" (substring (buffer-name) 0 1))
-    ;;  "Emacs"
-    ;;  )
+     "Dired")
     (t
-     "User"
-     )
+     "User")
     )))
+
+
+
 
 (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 

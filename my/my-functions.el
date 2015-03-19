@@ -125,3 +125,8 @@
       (interactive)
       (occur "^;;;;+"))
 
+(defun my/find-file () (interactive)
+ (if (= 1 (count-windows))
+  (ido-find-file)
+  (ido-find-file-other-window)))
+

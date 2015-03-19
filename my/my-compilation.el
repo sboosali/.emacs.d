@@ -3,7 +3,7 @@
 (setq compilation-auto-jump-to-first-error t)
 (setq next-error-highlight t)
 (setq next-error-follow-minor-mode t)
-(setq compile-command "make")
+(setq compile-command "cd ~/voice/commands-core/; make")
 (setq compilation-read-command nil)
 
 ;;; compilation-minor-mode

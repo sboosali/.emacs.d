@@ -1,6 +1,7 @@
 (provide 'my-shortcuts)
 (require 'my-functions)
 
+
 (global-set-key "\M-T" 'transpose-paragraph)
 
 (global-set-key "\M-c" 'kill-ring-save)
@@ -29,7 +30,7 @@
 (global-set-key "\M-`" '"\C-xb")
 (global-set-key "\M-s" 'save-buffer)
 
-(global-set-key "\C-\\" 'find-file-other-window)
+(global-set-key "\C-\\" 'my/find-file)
 
 (global-set-key "\M--" "\C-a\f-  -  -  -  -  -  -  -\C-o\C-a\C-n")
 (global-set-key (kbd "M-0") nil)
