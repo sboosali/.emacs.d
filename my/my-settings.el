@@ -1,6 +1,7 @@
 (provide 'my-settings)
 (require 'recentf)
 
+
 ;; hide menu bar
 ;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 ;(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -53,7 +54,8 @@
 (setq require-final-newline nil)
 
 ;;; lines can be any length
-(setq fill-column -1)
+;; http://stackoverflow.com/questions/11061453/in-emacs-how-to-disable-comment-auto-indent-in-c-c
+(setq-default fill-column 1000)
 
 ; disable splitting long lines into short lines
 (auto-fill-mode -1)
@@ -71,4 +73,31 @@
 ;;; ?
 ;; (setq left-margin-width nil)
 ;; (setq right-margin-width nil)
+
+; prevent stupid disabling pop-up
+(put 'upcase-region 'disabled nil)
+
+;; must only be set once (because it writes not appends?)
+;; (custom-set-faces
+;;   '(font-lock-comment-face ((t (:foreground "MediumAquamarine")))))
+
+;; http://www.gnu.org/software/emacs/manual/html_node/elisp/Output-Variables.html
+(setq print-length nil)
+
+; delete seleted text when typing
+; (delete-selection-mode 1)
+
+; http://stackoverflow.com/questions/11380918/clean-way-to-perform-commands-in-the-emacs-minibuffer
+; for commands' evalEmacs
+(setq enable-recursive-minibuffers t)
+(minibuffer-depth-indicate-mode t)
+
+;;; make Emacs' path environment variable, i.e. (getenv "PATH"), consistent with your shell's
+;;; from exec-path-from-shell
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
+; http://emacswiki.org/emacs/EvaluatingExpressions
+(global-set-key [remap eval-expression] 'pp-eval-expression)
+(global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
 

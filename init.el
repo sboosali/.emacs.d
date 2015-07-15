@@ -49,7 +49,7 @@
 (package-initialize)
 
 (when (not package-archive-contents)
-  (package-refresh-contents)) ; run this every week or so
+  (package-refresh-contents)) ; Run this every week or so
 
 (defvar packages '(
  cl-lib
@@ -64,11 +64,13 @@
  tabbar
  smooth-scrolling
  centered-cursor-mode
-
+ haskell-mode
+ ;web-server
+ htmlize
 ; elscreen
 ; async
 ; helm
-
+ exec-path-from-shell
 ; edit-server
 ))
 
@@ -173,3 +175,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'upcase-region 'disabled nil)

@@ -10,6 +10,7 @@
 
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
+;; (add-hook 'haskell-mode-hook 'haskell-indentation-mode) ;; still sucks
 
 ; haskell-interactive-bring
 ; haskell-session

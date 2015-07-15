@@ -38,3 +38,8 @@
    (k (length suffix)))
   (string-equal suffix (substring string (- n k) n))))
 
+(defun string/starts-with (s begins)
+      "Return non-nil if string S starts with BEGINS."
+      (cond ((>= (length s) (length begins))
+             (string-equal (substring s 0 (length begins)) begins))
+            (t nil)))
