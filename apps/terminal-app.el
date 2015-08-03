@@ -8,6 +8,5 @@
   (other-window 1)
 )
 
-(if (string-match "Terminal\\.app" (getenv "EMACSPATH"))
-    (terminal-app))
+(when-app "Terminal\\.app" 'terminal-app)
 

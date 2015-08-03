@@ -14,6 +14,5 @@
 
 )
 
-(if (string-match "Notes\\.app" (getenv "EMACSPATH"))
-    (notes-app))
+(when-app "Notes\\.app" 'notes-app)
 

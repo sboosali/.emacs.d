@@ -6,5 +6,5 @@
 ;  (server-force-delete)
 )
 
-(if (string-match "Emacs\\.app" (getenv "EMACSPATH"))
-    (server-app))
+(when-app "\\Server.app" 'server-app)
+

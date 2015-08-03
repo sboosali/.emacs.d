@@ -13,8 +13,8 @@
   (find-file "~/config/.profile")
   (find-file "~/Haskell")
   (find-file "~/chrome_extensions/commands-context-chrome/manifest.json")
-  (find-file "~/.emacs.d/init.el") ; sets $PWD
-  (find-file "~/Dropbox/any.note")
+  (find-file "~/.emacs.d/init.el")
+  ; last sets $PWD
 
   (shell)
   (insert (concat "find " HOME "apps"))  (comint-send-input)
@@ -34,6 +34,5 @@
 
 )
 
-(if (string-match "Obs\\.app" (getenv "EMACSPATH"))
-    (obs-app))
+(when-app "Obs\\.app" 'obs-app)
 

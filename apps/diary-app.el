@@ -23,6 +23,4 @@
 
 )
 
-(if (string-match "Diary\\.app" (getenv "EMACSPATH"))
-    (diary-app))
-
+(when-app "Diary\\.app" 'diary-app)

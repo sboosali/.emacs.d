@@ -29,7 +29,6 @@
 
 (defun force-kill-buffer () (interactive)
   (kill-buffer (buffer-name)))
-(global-set-key "\C-x k" 'force-kill-buffer)
 
 (defun delete-line ()
   "Deletes a line, but preserves the kill-ring."
@@ -129,4 +128,9 @@
  (if (= 1 (count-windows))
   (ido-find-file)
   (ido-find-file-other-window)))
+
+;; before: (getenv "EMACSPATH")
+(defun when-app (name initialize)
+  (if (string-match name (expand-file-name invocation-name invocation-directory))
+    (funcall initialize)))
 

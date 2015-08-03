@@ -5,11 +5,10 @@
 (setq auto-save-interval 20) ; save after this many input events
 
 ; run callback after this many idle seconds with repeats
-(run-with-idle-timer 1 t 'save-file-buffer)
+;(run-with-idle-timer 1 t 'save-all-file-buffers-no-prompt)
 
-(defun save-file-buffer ()
- (when (is-file-buffer)
-  (basic-save-buffer)))
+(defun save-all-file-buffers-no-prompt ()
+ (save-some-buffers t))
 
 ; (is-file-buffer "todo")    => true
 ; (is-file-buffer "*shell*") => false

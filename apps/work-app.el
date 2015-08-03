@@ -42,9 +42,6 @@
   ;(elscreen-restore)
 )
 
-(if (string-match "Work\\.app" (getenv "EMACSPATH"))
-    (work-app))
-
 (defun work/tabbar-buffer-groups ()
   "overrides tabbar-buffer-groups defined in my-tabbar.
  puts \".note\" files into User not Notes"
@@ -57,3 +54,7 @@
     (t
      "User")
     )))
+
+
+(when-app "Work\\.app" 'work-app)
+
