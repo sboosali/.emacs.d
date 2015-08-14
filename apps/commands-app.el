@@ -1,5 +1,7 @@
 (provide 'commands-app)
 (require 'my-compilation)
+(require 'my-haskell)
+
 (require 's)
 
 (defun commands-app ()
@@ -8,17 +10,17 @@
   )
 
 (defvar project-directory "~/commands-spiros")
-(defvar project-file (file)
-   (concat project "/" file))
+(defun project-file (filename)
+   (concat project "/" filename))
 
 (defun commands-at-work ()
-  (setq tabbar-buffer-groups 'commands/tabbar-buffer-groups)                               
+  (setq tabbar-buffer-groups 'haskell/tabbar-buffer-groups)                               
   (key (kbd "M-u") 'compile)
 
   (find-file (project-file "notes"))
   (end-of-buffer)
 
-  (find-file (project-file "commands-core.cabal"))
+  (find-file (project-file "commands-spiros.cabal"))
   (end-of-buffer)
   (split-window-vertically)
 
@@ -33,18 +35,5 @@
   (insert "cabal run")  (comint-send-input)
 
   )
-
-(defun commands/tabbar-buffer-groups ()
-  "overrides tabbar-buffer-groups defined in my-tabbar.
- puts \".note\" files into User not Notes"
-  (list
-   (cond
-    ((s-matches? "\.hs" (buffer-name))  ;;(my/ends-with (buffer-name) ".hs") ;; e.g. "Etc.hs<Commands>"
-     "Haskell")
-    ((eq major-mode 'dired-mode)
-     "Dired")
-    (t
-     "User")
-    )))
 
 (when-app "Commands\\.app" 'commands-app)

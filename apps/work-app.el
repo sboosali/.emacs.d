@@ -1,7 +1,7 @@
 (provide 'work-app)
-
 (require 'my-speedbar)
 (require 'my-compilation)
+(require 'my-haskell)
 
 (defun work-app ()
   (when-host "odysseus" 'work-at-home)
@@ -13,7 +13,7 @@
   (set-frame-position (selected-frame) 10 0)
   ; does order matter with dynamic scope? if its rebound before files
   ; are opened?
-  (setq tabbar-buffer-groups 'work/tabbar-buffer-groups)                               
+  (setq tabbar-buffer-groups 'haskell/tabbar-buffer-groups)                               
 
   (find-file "~/voice/commands-core/commands-core.cabal")
   (end-of-buffer)
@@ -45,19 +45,6 @@
   ;(push #'elscreen-store kill-emacs-hook)
   ;(elscreen-restore)
 )
-
-(defun work/tabbar-buffer-groups ()
-  "overrides tabbar-buffer-groups defined in my-tabbar.
- puts \".note\" files into User not Notes"
-  (list
-   (cond
-    ((my/ends-with (buffer-name) ".hs")
-     "Haskell")
-    ((eq major-mode 'dired-mode)
-     "Dired")
-    (t
-     "User")
-    )))
 
 (defun work-at-work ()
 )
