@@ -1,4 +1,7 @@
 (provide 'my-functions)
+(require 'dash)
+(require 's)
+;; (require 'cl)
 
 
 (put 'downcase-region 'disabled nil)
@@ -57,10 +60,6 @@
  (align-regexp start end 
   (concat "\\(\\s-*\\)" regexp) 1 1 t))
 
-(defun lines-region (start end)
- (let ((region (buffer-substring start end)))
-  (split-string region "[\n]")))
-
 (defun google-region (start end)
  (interactive "r")
  (let ((lines (lines-region start end)))
@@ -69,6 +68,11 @@
 (defun google-it (it)
  (browse-url (concat "http://www.google.com/search?q=" it))
  (sit-for (+ 3 (random 1))))
+
+(defun lines-region (start end)
+ (let ((region (buffer-substring start end)))
+   (--filter (s-present? (s-trim it))
+	     (s-lines region))))
 
 (defun spiros-log () (message "post-command-hook"))
 ;(add-to-list 'post-command-hook 'spiros-log)
@@ -124,13 +128,31 @@
       (interactive)
       (occur "^;;;;+"))
 
-(defun my/find-file () (interactive)
- (if (= 1 (count-windows))
-  (ido-find-file)
-  (ido-find-file-other-window)))
+;; (defun my/find-file () (interactive)
+;;  (if (= 1 (count-windows))
+;;   (ido-find-file)
+;;   (ido-find-file-other-window)))
+
+;; (defun my/find-file () (interactive)
+;;  (if (= 1 (count-windows))
+;;      (find-file-at-point)
+;;    (let ((filename (ffap-file-at-point)))
+;;      (if filename
+;; 	 (progn
+;; 	   (other-window 1)
+;; 	   (find-file filename))
+;;         (find-file)))))
+
+(defun my/find-file ()
+  (interactive)
+  (ido-find-file))
 
 ;; before: (getenv "EMACSPATH")
 (defun when-app (name initialize)
   (if (string-match name (expand-file-name invocation-name invocation-directory))
-    (funcall initialize)))
+      (funcall initialize)))
+
+(defun when-host (name initialize)
+  (if (string-match name (system-name))
+      (funcall initialize)))
 

@@ -74,14 +74,26 @@
  htmlize
 ; elscreen
 ; async
-; helm
+ helm
  exec-path-from-shell
 ; edit-server
-))
+ dash
+ s
+ ))
 
+(defvar all-packages-installed t)
 (dolist (p packages)
-  (unless (package-installed-p p)
-    (package-install p)))
+    (unless (package-installed-p p)
+      (setq all-packages-installed nil)))
+
+(unless all-packages-installed
+  (package-refresh-contents)
+  (dolist (p packages)
+    (unless (package-installed-p p)
+      (package-install p))))
+
+
+
 
 
 ;;;;;;;;;;;;;;; SETTINGS ;;;;;;;;;;;;;;;;;;;;;;

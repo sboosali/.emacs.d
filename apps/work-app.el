@@ -3,8 +3,12 @@
 (require 'my-speedbar)
 (require 'my-compilation)
 
-
 (defun work-app ()
+  (when-host "odysseus" 'work-at-home)
+  (when-host "c02m71hdfd58" 'work-at-work)
+  )
+
+(defun work-at-home ()
   (set-frame-size (selected-frame) 128 35)
   (set-frame-position (selected-frame) 10 0)
   ; does order matter with dynamic scope? if its rebound before files
@@ -55,6 +59,7 @@
      "User")
     )))
 
+(defun work-at-work ()
+)
 
 (when-app "Work\\.app" 'work-app)
-

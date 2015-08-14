@@ -28,10 +28,11 @@
 (global-set-key "\C-x\C-o" 'other-window)
 
 (global-set-key "\M-q" 'save-buffers-kill-terminal)
-;(global-set-key "\C-xk" 'kill-this-buffer)
-;(global-set-key "\C-x\C-k" 'kill-this-buffer)
-;; ;;(global-set-key "\C-x\C-b" 'electric-buffer-list)
-;(global-set-key "\C-x\C-b" 'buffer-menu)
+(global-set-key "\C-xk" 'kill-this-buffer)
+(global-set-key "\C-x\C-k" 'kill-this-buffer)
+(global-set-key "\C-x\C-b" 'ido-switch-buffer)
+;;; (global-set-key "\C-x\C-b" 'electric-buffer-list)
+;;; (global-set-key "\C-x\C-b" 'buffer-menu)ido-switch-buffer
 (global-set-key "\M-m" 'switch-to-buffer)
 (global-set-key "\M-`" '"\C-xb")
 (global-set-key "\M-s" 'save-buffer)
