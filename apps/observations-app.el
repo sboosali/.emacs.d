@@ -1,11 +1,12 @@
 (provide 'observations-app)
-(require 'edit-server)
-(require 'my-edit-server)
+;(require 'edit-server)
+;(require 'my-edit-server)
+
 
 
 (defun obs-app ()
 
-  (edit-server-start)
+;  (edit-server-start)
 
   (require 'my-erc)
 
@@ -35,4 +36,3 @@
 )
 
 (when-app "Obs\\.app" 'obs-app)
-

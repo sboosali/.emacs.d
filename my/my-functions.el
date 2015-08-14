@@ -149,7 +149,7 @@
 
 ;; before: (getenv "EMACSPATH")
 (defun when-app (name initialize)
-  (if (string-match name (expand-file-name invocation-name invocation-directory))
+  (if (string-match name (expand-file-name invocation-directory))
       (funcall initialize)))
 
 (defun when-host (name initialize)

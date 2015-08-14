@@ -27,7 +27,7 @@
  "hindent/elisp"
 
  "emacs_chrome/servers"                 ; Emacs in chromium
- "edit-server-htmlize"
+; "edit-server-htmlize"
 
  "mu/mu4e"
 
@@ -108,7 +108,7 @@
 (require 'compile)
 (set 'compilation-scroll-output t)
 
-(require 'back-button)
+;(require 'back-button)
 ;(back-button-mode 1)
 
 (require 'dired-details)
@@ -158,6 +158,7 @@
 (require 'observations-app)
 (require 'server-app)
 (require 'terminal-app)
+(require 'commands-app)
 
 
 ;;;;;;;;;;;;;;; last
