@@ -1,4 +1,6 @@
 (provide 'my-settings)
+(require 'my-functions)
+
 (require 'recentf)
 
 
@@ -94,8 +96,11 @@
 
 ;;; make Emacs' path environment variable, i.e. (getenv "PATH"), consistent with your shell's
 ;;; from exec-path-from-shell
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
+;; (when (memq window-system '(mac ns))
+;;  (exec-path-from-shell-initialize))
+
+(when (equal system-type 'darwin)
+  (set-exec-path-from-shell-path))
 
 ; http://emacswiki.org/emacs/EvaluatingExpressions
 (global-set-key [remap eval-expression] 'pp-eval-expression)

@@ -1,19 +1,11 @@
 (provide 'multi-term)
+(require 'my-functions)
 
 (setq multi-term-program "/bin/bash")
 
-; I forget why
-(defun set-exec-path-from-shell-path ()
-  (let ((path-from-shell
-         (replace-regexp-in-string
-          "[[:space:]\n]*$"
-          ""
-          (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
 
-(when (equal system-type 'darwin)
- (set-exec-path-from-shell-path))
+;; (when (equal system-type 'darwin)
+;;   (set-exec-path-from-shell-path))
 
 ;; describe-variable term-bind-key-alist
 ;; (("C-c C-c" . term-interrupt-subjob)
