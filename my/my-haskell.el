@@ -2,6 +2,7 @@
 (require 'etc)
 
 (require 's)
+(require 'dash)
 (require 'align)
 (require 'speedbar)
 
@@ -105,15 +106,3 @@
 
 ;(global-set-key [mouse-1] 'haskell-process-do-info)
 
-(defun haskell/tabbar-buffer-groups ()
-  "overrides tabbar-buffer-groups defined in my-tabbar.
- puts \".note\" files into User not Notes"
-  (list
-   (cond
-    ((s-matches? "\.hs" (buffer-name))  ;;(my/ends-with (buffer-name) ".hs") ;; e.g. "Etc.hs<Commands>"
-     "Haskell")
-    ((eq major-mode 'dired-mode)
-     "Dired")
-    (t
-     "User")
-    )))

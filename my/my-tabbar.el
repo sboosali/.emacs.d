@@ -1,32 +1,28 @@
 (provide 'my-tabbar)
 (require 'tabbar)
 (require 'etc)
+(require 's)
+(require 'dash)
 
-
-(tabbar-mode t)
-
-(defun tabbar-buffer-groups ()
-  "Return the list of group names the current buffer belongs to.
-This function is a custom function for tabbar-mode's tabbar-buffer-groups.
-This function group all buffers into a number of groups equal to the number
- of cases, each named by the results of its case."
+(defun haskell/tabbar-buffer-groups ()
+  "overrides tabbar-buffer-groups defined in my-tabbar.
+ puts \".note\" files into User not Notes" 
   (list
    (cond
-    ((my/ends-with (buffer-name) ".hs")
+    ((s-matches? "\.hs" (buffer-name))  ;;(my/ends-with (buffer-name) ".hs") ;; e.g. "Etc.hs<Commands>"
      "Haskell")
-    ((my/ends-with (buffer-name) ".note")
-     "Notes")
     ((eq major-mode 'dired-mode)
      "Dired")
+    ((-contains? (list "*Quail Completions*" "*Messages*" "*haskell-process-log*" "*scratch*") (buffer-name))
+     "etc")
     (t
      "User")
     )))
 
-
-
-
-(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+(setq tabbar-buffer-groups-function 'haskell/tabbar-buffer-groups)
 
 (global-set-key [M-s-left] 'tabbar-backward)
 (global-set-key [M-s-right] 'tabbar-forward)
 
+;last
+(tabbar-mode t)

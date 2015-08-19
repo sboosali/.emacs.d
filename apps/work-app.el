@@ -44,6 +44,8 @@
 
   ;(push #'elscreen-store kill-emacs-hook)
   ;(elscreen-restore)
+
+;  (tabbar-mode) ; tab on each window (not one per frame)
 )
 
 (defun work-at-work ()

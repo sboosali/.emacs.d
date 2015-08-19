@@ -12,10 +12,11 @@
 
 ;  (find-file "~/Dropbox/.obs")
   (find-file "~/config/.profile")
-  (find-file "~/Haskell")
-  (find-file "~/chrome_extensions/commands-context-chrome/manifest.json")
+;  (find-file "~/Haskell")
+;  (find-file "~/chrome_extensions/commands-context-chrome/manifest.json")
   (find-file "~/.emacs.d/init.el")
   ; last sets $PWD
+  (find-file "~/.emacs.d/apps/commands-app.el")
 
   (shell)
   (insert (concat "find " HOME "apps"))  (comint-send-input)

@@ -120,15 +120,13 @@
 (setq-default save-place t) ;can't use setq because the variable is buffer-local.
 (setq save-place-file "~/.emacs.d/saved-places") ;your saved places are written to this file
 
-(require 'tabbar)
-(tabbar-mode) ; tab on each window  not one per frame)
-
 ;(require 'smooth-scrolling)
 
 
 ;;;;;;;;;;;;;;; complex configuration
 
 (require 'my-frame)
+(require 'my-tabbar)
 (require 'my-haskell)
 (require 'my-autosave)
 (require 'my-speedbar)
@@ -146,7 +144,6 @@
 ;(require 'my-persist)  ; disabled because all apps share the same state
 ;(require 'my-shm) ; structured haskell mode doesn't work
 ;(require 'my-helm) ; helm won't install
-(require 'my-tabbar)
 ;(require 'my-commands)
 
 

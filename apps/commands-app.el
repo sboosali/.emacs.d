@@ -15,23 +15,32 @@
   (find-file (project-file "notes"))
   (end-of-buffer)
 
+  (shell)
+  (compilation-shell-minor-mode)
+  (insert "make check")  (comint-send-input)
+  (insert "find config")  (comint-send-input)
+  (end-of-buffer)
+
+  (shell "*shell-commands*")
+  (compilation-shell-minor-mode)
+  (insert "cabal run")  (comint-send-input)
+
+  (find-file "~/.emacs.d/apps/commands-app.el") ; this file
+
   (find-file (project-file "commands-spiros.cabal"))
   (end-of-buffer)
   (split-window-vertically)
 
-  (shell)
-  (compilation-shell-minor-mode)
-  (insert "make")  (comint-send-input)
-  (insert "find .. -maxdepth 1")  (comint-send-input)
-  (end-of-buffer)
-
-  (shell "*commands-server*")
-  (compilation-shell-minor-mode)
-  (insert "cabal run")  (comint-send-input)
-
-  (find-file (project-file "config/Commands/Plugins/Spiros/Root.hs")) ; loads Haskell-mode
+; opening files must come after opening the cabal file which loads Haskell mode 
+;  (find-file (project-file "config/Commands/Plugins/Spiros/*.hs"))
+  (find-file (project-file "config/Commands/Plugins/Spiros/Root.hs"))
+  (find-file (project-file "config/Commands/Plugins/Spiros/Phrase.hs"))
+  (find-file (project-file "config/Commands/Plugins/Spiros/Shortcut.hs"))
+  (find-file (project-file "config/Commands/Plugins/Spiros/Shim.hs"))
+  (find-file (project-file "config/Commands/Plugins/Spiros.hs")) ; loads Haskell-mode
   (run-with-idle-timer 5 nil (lambda () (shell))) ; go back to buff, after Haskell-mode loads
 
+;  (tabbar-mode) ; tab on each window (not one per frame)
   )
 
 (defun commands-app ()
