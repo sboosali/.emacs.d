@@ -31,6 +31,7 @@
 
  "mu/mu4e"
 
+ "emacs-web-server"
 ) "load paths that don't obey the normal package-name/module-name.el format.")
 
 (loop for location in load-paths
@@ -79,7 +80,10 @@
 ; edit-server
  dash
  s
- ))
+
+
+; web-server
+))
 
 (defvar all-packages-installed t)
 (dolist (p packages)

@@ -147,6 +147,10 @@
   (interactive)
   (ido-find-file))
 
+;; (defun my/find-file ()
+;;   (interactive)
+;;   (ffap))
+
 ;; before: (getenv "EMACSPATH")
 (defun when-app (name initialize)
   (if (string-match name (expand-file-name invocation-directory))
