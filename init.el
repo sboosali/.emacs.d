@@ -1,6 +1,8 @@
 ;;;;;;;;;;;;;;; Dependencies ;;;;;;;;;;;;;;;;;;;;;;
 ; ~/.templates/*.tpl
 
+;; to debug, with bisect:
+;;  (error "STOP")
 
 ;;;;;;;;;;;;;;; INIT ;;;;;;;;;;;;;;;;;;;;;;
 (require 'cl)
@@ -59,7 +61,6 @@
 
 (defvar packages '(
  cl-lib
- starter-kit
  org
  ;; smex
  undo-tree
@@ -80,7 +81,6 @@
 ; edit-server
  dash
  s
-
 
 ; web-server
 ))
@@ -135,7 +135,7 @@
 (require 'my-frame)
 (require 'my-haskell)
 (require 'my-autosave)
-(require 'my-speedbar)
+;; (require 'my-speedbar) ;; disabled for the Emacs daemon
 (require 'my-windmove)
 (require 'my-tramp)
 (require 'my-deft)

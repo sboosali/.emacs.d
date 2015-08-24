@@ -1,9 +1,12 @@
 (provide 'work-app)
-(require 'my-speedbar)
+
+(defun work-imports ()
 (require 'my-compilation)
 (require 'my-haskell)
+)
 
 (defun work-app ()
+  (work-imports)                         ; must call this first
   (when-host "odysseus" 'work-at-home)
   (when-host "c02m71hdfd58" 'work-at-work)
   )
