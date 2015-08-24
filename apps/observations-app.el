@@ -16,7 +16,6 @@
 ;  (find-file "~/chrome_extensions/commands-context-chrome/manifest.json")
   (find-file "~/.emacs.d/init.el")
   ; last sets $PWD
-  (find-file "~/.emacs.d/apps/commands-app.el")
 
   (shell)
   (insert (concat "find " HOME "apps"))  (comint-send-input)
@@ -34,6 +33,7 @@
   ;; (find-file "~/things")
   ;; (end-of-buffer)
 
+  (find-file "~/.emacs.d/apps/commands-app.el")
 )
 
 (when-app "Obs\\.app" 'obs-app)

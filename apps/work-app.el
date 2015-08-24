@@ -36,7 +36,8 @@
   (find-file "~/voice/commands-core/tests/*.hs" t)
   (find-file "~/voice/commands-core/executables/*.hs" t)
 
-  (switch-to-buffer "Plugins/Example.hs")
+  (find-file "~/voice/commands-core/sources/Commands/Plugins/Example.hs" t)
+  
   (key (kbd "M-u") 'compile)
 
   ;(compilation-minor-mode)
