@@ -6,5 +6,5 @@
 ;  (server-force-delete)
 )
 
-(when-app "\\Server.app" 'server-app)
+(when-app "\\Emacs.app" 'server-app)
 
