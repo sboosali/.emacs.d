@@ -16,6 +16,7 @@
   (end-of-buffer)
 
   (shell)
+  (insert "cabal build")  (comint-send-input)
   (compilation-shell-minor-mode)
   (insert "make check")  (comint-send-input)
   (insert "find config")  (comint-send-input)

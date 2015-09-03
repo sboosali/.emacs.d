@@ -109,4 +109,5 @@
 ;?
 (put 'upcase-region 'disabled nil)
 
-
+; disabled. otherwise, when enabled, it awkwardly reindents the preceding line
+(electric-indent-mode -1)

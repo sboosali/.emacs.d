@@ -20,16 +20,12 @@
 
  "packages"                             ; package files that were copied and pasted
 
- "back-button"                          ; etc.
-
  "structured-haskell-mode/elisp"        ; Haskell
  "ghc-server/elisp"
  "hindent/elisp"
 
  "emacs_chrome/servers"                 ; Emacs in chromium
 ; "edit-server-htmlize"
-
- "mu/mu4e"
 
 ) "load paths that don't obey the normal package-name/module-name.el format.")
 
@@ -79,7 +75,10 @@
 ; edit-server
  dash
  s
- ))
+
+
+; web-server
+))
 
 (defvar all-packages-installed t)
 (dolist (p packages)

@@ -147,6 +147,10 @@
   (interactive)
   (ido-find-file))
 
+;; (defun my/find-file ()
+;;   (interactive)
+;;   (ffap))
+
 ;; before: (getenv "EMACSPATH")
 (defun when-app (name initialize)
   (if (string-match name (expand-file-name invocation-directory))
@@ -165,3 +169,9 @@
           (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
     (setenv "PATH" path-from-shell)
     (setq exec-path (split-string path-from-shell path-separator))))
+
+(defun any-buffers-modified? ()
+ (--any? (buffer-modified-p it)
+  (--filter (buffer-file-name it)	; non-nil if the buffer is visiting a file
+   (buffer-list))))
+

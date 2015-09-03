@@ -1,13 +1,15 @@
 (provide 'my-ido)
+
+(require 'dash)
 (require 'ido)
 (require 'ido-complete-space-or-hyphen)
 
 ; http://www.masteringemacs.org/article/introduction-to-ido-mode
 
-
+(setq ido-use-filename-at-point 'guess)
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
-(ido-mode 1)
+(setq ido-default-file-method 'other-window)
 
 (setq ido-ignore-buffers '(
  "^ "
@@ -27,8 +29,7 @@
 
 ; enable IDO to use completion-ignored-extensions
 (setq ido-ignore-extensions t)
+(--each '(".DS_Store" "#" "Icon" "testingtesting")
+ (add-to-list 'completion-ignored-extensions it))
 
-(add-to-list 'completion-ignored-extensions ".DS_Store")
-(add-to-list 'completion-ignored-extensions "#")
-(add-to-list 'completion-ignored-extensions "Icon")
-
+(ido-mode 1)
