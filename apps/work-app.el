@@ -1,25 +1,26 @@
 (provide 'work-app)
 
-(defun work-imports ()
- (require 'my-speedbar)
- (require 'my-compilation)
- (require 'my-haskell)
-)
+(require 'my-speedbar)
+(require 'my-compilation)
+(require 'my-haskell)
+
 
 (defun work-app ()
-  (work-imports)                         ; must call this first
   (when-host "odysseus" 'work-at-home)
   (when-host "c02m71hdfd58" 'work-at-work)
   )
 
-(defun work-at-home ()
+(defun work-file (filename)
+  (concat work-directory "/" filename))
+
+(defun work-setup ()
   (set-frame-size (selected-frame) 128 35)
   (set-frame-position (selected-frame) 10 0)
   ; does order matter with dynamic scope? if its rebound before files
   ; are opened?
   (setq tabbar-buffer-groups 'haskell/tabbar-buffer-groups)                               
 
-  (find-file "~/voice/commands-core/commands-core.cabal")
+  (find-file (work-file "commands-core.cabal"))
   (end-of-buffer)
   (split-window-vertically)
 
@@ -30,17 +31,17 @@
   (end-of-buffer)
   (comint-previous-input 1)
 
-  (find-file "~/voice/commands-core/notes")
+  (find-file (work-file "notes"))
   (end-of-buffer)
 
-  (find-file "~/voice/commands-core/sources/*/*.hs" t)
-  (find-file "~/voice/commands-core/sources/*/*/*.hs" t)
-  (find-file "~/voice/commands-core/sources/*/*/*/*.hs" t)
+  (find-file (work-file "sources/*/*.hs") t)
+  (find-file (work-file "sources/*/*/*.hs") t)
+  (find-file (work-file "sources/*/*/*/*.hs") t)
 
-  (find-file "~/voice/commands-core/tests/*.hs" t)
-  (find-file "~/voice/commands-core/executables/*.hs" t)
+  (find-file (work-file "tests/*.hs") t)
+  (find-file (work-file "executables/*.hs") t)
 
-  (find-file "~/voice/commands-core/sources/Commands/Plugins/Example.hs" t)
+  (find-file (work-file "sources/Commands/Plugins/Example.hs") t)
   
   (key (kbd "M-u") 'compile)
 
@@ -53,7 +54,12 @@
 ;  (tabbar-mode) ; tab on each window (not one per frame)
 )
 
+(defun work-at-home ()
+  (defvar work-directory "~/voice/commands-core")
+  (work-setup))
+
 (defun work-at-work ()
-)
+  (defvar work-directory "~/commands-core")
+  (work-setup))
 
 (when-app "Work\\.app" 'work-app)
