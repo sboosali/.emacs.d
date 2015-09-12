@@ -12,3 +12,20 @@
   (setq last-post-command-position (point)))
 
 (add-to-list 'post-command-hook #'echo-if-moved-post-command)
+
+; e.g. (get-symbols)
+(defun get-symbols ()
+ (let ((symbols ()))
+  (mapatoms (lambda (s) (push s symbols)))
+  symbols))
+
+; e.g. (-count 'identity (get-commands)) ; 4209
+(defun get-commands ()
+ (-map 'symbol-name (-filter 'commandp (get-symbols))))
+
+(defun insert-commands ()
+ (--each (-map (lambda (s) (s-replace "-" " " s)) (get-commands))
+  (progn
+   (insert it)
+   (insert "\n"))))
+

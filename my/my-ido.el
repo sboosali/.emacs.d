@@ -22,7 +22,8 @@
  "*Quail Completions*"
 ))
 
-(setq confirm-nonexistent-file-or-buffer nil)
+;;; http://stackoverflow.com/questions/2373333/how-can-i-get-emacs-to-open-a-new-buffer-quickly
+(setq confirm-nonexistent-file-or-buffer 'after-completion)
 
 ;; (setq ido-file-extensions-order
 ;;  '(".org" ".txt" ".py" ".emacs" ".xml" ".el" ".ini" ".cfg" ".cnf"))
