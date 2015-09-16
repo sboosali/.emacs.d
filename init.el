@@ -19,6 +19,7 @@
  "."
  "my"                                   ; utilities or wrappers around libraries
  "apps"                                 ; initialization depending on <X>.app
+ "secret"                               ; super secret data files
 
  "packages"                             ; package files that were copied and pasted
 
@@ -78,6 +79,12 @@
  s
 
 ; web-server
+ projectile
+ flx-ido
+
+ evil
+ help-fns+ 
+
 ))
 
 (defvar all-packages-installed t)
@@ -121,6 +128,8 @@
 
 ;(require 'smooth-scrolling)
 
+(require 'help-fns+)
+
 
 ;;;;;;;;;;;;;;; complex configuration
 
@@ -144,6 +153,9 @@
 ;(require 'my-shm) ; structured haskell mode doesn't work
 ;(require 'my-helm) ; helm won't install
 ;(require 'my-commands)
+(require 'my-projectile)
+(require 'my-evil)
+;; (require 'my-linum)
 
 
 ;;;;;;;;;;;;;;; Apps

@@ -1,4 +1,5 @@
 ignore/*
+secret/*
 
 # OS X
 .DS_Store
