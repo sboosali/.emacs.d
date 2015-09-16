@@ -24,6 +24,10 @@
   (end-of-buffer)
   (split-window-vertically)
 
+  ;; projectile 
+  ;; (add-hook 'haskell-mode-hook 'projectile-mode)
+  ;; 
+
   (shell)
   (compilation-shell-minor-mode)
   (insert "find .. -maxdepth 1")  (comint-send-input)
@@ -38,6 +42,7 @@
   (find-file (work-file "sources/*/*/*.hs") t)
   (find-file (work-file "sources/*/*/*/*.hs") t)
 
+  (find-file (work-file "cbits/*.*") t)
   (find-file (work-file "tests/*.hs") t)
   (find-file (work-file "executables/*.hs") t)
 
@@ -63,3 +68,4 @@
   (work-setup))
 
 (when-app "Work\\.app" 'work-app)
+
