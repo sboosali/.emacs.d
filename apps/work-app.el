@@ -48,8 +48,6 @@
 
   (find-file (work-file "sources/Commands/Plugins/Example.hs") t)
   
-  (key (kbd "M-u") 'compile)
-
   ;(compilation-minor-mode)
   ;(other-window 1)
 

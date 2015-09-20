@@ -4,8 +4,12 @@
 
 ; shrink font
 (make-face 'speedbar-face)
-(set-face-font 'speedbar-face "Inconsolata-12")
 (setq speedbar-mode-hook '(lambda () (buffer-face-set 'speedbar-face)))
+
+; http://stackoverflow.com/questions/5795451/how-to-detect-that-emacs-is-in-terminal-mode
+(add-hook 'after-make-frame-functions (lambda()
+ (if (display-graphic-p) (set-face-font 'speedbar-face "Inconsolata-12"))))
+
 
 ; exclude patterns to allow speedbar-expand-all to be blindly
 ; recursive, because I couldn't get a predicate in the while loop to

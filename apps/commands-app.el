@@ -10,7 +10,6 @@
 
 (defun commands-at-work ()
   (setq tabbar-buffer-groups 'haskell/tabbar-buffer-groups)                               
-  (key (kbd "M-u") 'compile)
 
   (find-file (commands-file "notes"))
   (end-of-buffer)

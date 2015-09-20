@@ -34,7 +34,11 @@
 ;; font-size
 ;(set-face-attribute 'default nil :height 50)
 ;(set-frame-parameter nil 'font "Monospace-2")
-(set-default-font "-apple-Monaco-medium-normal-normal-*-18-*-*-*-m-0-iso10646-1")
+
+; http://stackoverflow.com/questions/5795451/how-to-detect-that-emacs-is-in-terminal-mode
+(add-hook 'after-make-frame-functions (lambda() (if (display-graphic-p)
+ (set-default-font "-apple-Monaco-medium-normal-normal-*-18-*-*-*-m-0-iso10646-1"))))
+
 (setq keyboard-coding-system nil)
 
 ;; Save a list of recent files visited.
@@ -111,3 +115,7 @@
 
 ; disabled. otherwise, when enabled, it awkwardly reindents the preceding line
 (electric-indent-mode -1)
+
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; mouse scroll one line at a time 
+(setq scroll-step 1) ;; keyboard scroll one line at a time
+

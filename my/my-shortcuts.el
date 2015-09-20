@@ -59,3 +59,6 @@
 (global-set-key "\M-z" 'undo)
 
 (global-set-key [S-mouse-2] 'browse-url-at-mouse)
+
+(global-set-key (kbd "C-x C-y c") 'compile)
+
