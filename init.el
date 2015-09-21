@@ -84,7 +84,7 @@
 
  evil
  help-fns+ 
-
+ window-purpose
 ))
 
 (defvar all-packages-installed t)
@@ -153,9 +153,11 @@
 ;(require 'my-shm) ; structured haskell mode doesn't work
 ;(require 'my-helm) ; helm won't install
 ;(require 'my-commands)
+(require 'my-register)
 (require 'my-projectile)
 (require 'my-evil)
 ;; (require 'my-linum)
+;; (require 'my-purpose) 
 
 
 ;;;;;;;;;;;;;;; Apps
@@ -172,7 +174,27 @@
 ;;;;;;;;;;;;;;; last
 
 (require 'my-shortcuts) ; overrides everything above
+(require 'my-keymaps) 
 
 (require 'my-macros)
 (require 'my-customization)
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(haskell-process-auto-import-loaded-modules t)
+ '(haskell-process-log t)
+ '(haskell-process-suggest-hoogle-imports t)
+ '(haskell-process-suggest-remove-import-lines t)
+ '(haskell-process-type (quote cabal-repl))
+ '(haskell-tags-on-save t)
+ '(magit-diff-options nil)
+ '(org-startup-folded nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

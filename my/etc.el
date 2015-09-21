@@ -8,7 +8,7 @@
 (defun cons! (x xs) ; ~ add-to-list
   (setq xs (cons x xs)))
 
-(defun key (key act)
+(defun key (key act)                    ;deprecate 
   (global-set-key key act))
 
 (defun configuration ()

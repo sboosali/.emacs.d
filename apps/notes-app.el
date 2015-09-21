@@ -5,6 +5,7 @@
 
 (defun notes-app ()
   ;(if (fboundp 'menu-bar-mode) (menu-bar-mode 1))
+  (find-file "~/Dropbox/*.note" t)
   (find-file "~/Dropbox/any.note")
   ;(split-window-vertically)
 

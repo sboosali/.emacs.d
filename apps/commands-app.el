@@ -21,16 +21,16 @@
   (insert "find config")  (comint-send-input)
   (end-of-buffer)
 
-  (shell "*shell2*")
-  (compilation-shell-minor-mode)
-  (insert "make serve")  (comint-send-input)
-  (end-of-buffer)
+  ;; (shell "*shell2*")
+  ;; (compilation-shell-minor-mode)
+  ;; (insert "make serve")  (comint-send-input)
+  ;; (end-of-buffer)
 
   (find-file "~/.emacs.d/apps/commands-app.el") ; this file
 
   (find-file (commands-file "commands-spiros.cabal"))
   (end-of-buffer)
-  (split-window-vertically)
+  ;; (split-window-vertically)
 
 ; opening files must come after opening the cabal file which loads Haskell mode 
   (find-file (commands-file "config/Commands/Plugins/Spiros/*.hs") t)

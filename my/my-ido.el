@@ -1,17 +1,18 @@
 (provide 'my-ido)
 
-(require 'dash)
 (require 'ido)
 (require 'ido-complete-space-or-hyphen)
+(require 'dash)
+(require 's)
 
 ; http://www.masteringemacs.org/article/introduction-to-ido-mode
+
+
 
 (setq ido-use-filename-at-point 'guess)
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (setq ido-default-file-method 'other-window)
-;; (add-hook 'ido-make-file-list-hook 'ido-sort-on-stars-to-end)
-
 (setq ido-ignore-buffers '(
  "^ "
  "*Completions*"
@@ -34,20 +35,10 @@
 (--each '(".DS_Store" "#" "Icon" "testingtesting")
  (add-to-list 'completion-ignored-extensions it))
 
-;; (defun ido-sort-on-stars-to-end ()
-;;     (message ido-current-directory)
-;;     (setq ido-temp-list
-;;         (sort ido-temp-list
-;;             (lambda (a b)
-;;                (if (not (or (char-equal (string-to-char a) ?*) (char-equal (string-to-char b) ?*)))
-;;                    (time-less-p
-;;                     (sixth (file-attributes (concat ido-current-directory b))
-;;                      (sixth (file-attributes (concat ido-current-directory a)))))
-;;              nil))))
-;;                   (ido-to-end
-;;                    (delq nil (mapcar
-;;                               (lambda (x) (and (string-match-p "^\\.." x) x))
-;;                               ido-temp-list))))
+(defun my/ido-stars-to-end ()
+  "Put \"*starred*\" buffers at the end of the ido candidates list."
+  (ido-to-end (--filter (and (s-starts-with-p "*" it) (s-ends-with-p "*" it))
+                        ido-temp-list)))
+(add-hook 'ido-make-buffer-list-hook 'my/ido-stars-to-end)
 
 (ido-mode 1)
-

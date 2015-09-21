@@ -36,15 +36,19 @@
 ;(set-frame-parameter nil 'font "Monospace-2")
 
 ; http://stackoverflow.com/questions/5795451/how-to-detect-that-emacs-is-in-terminal-mode
+; problem: font stays small
+; problem: new file opens (up to four) new windows 
 (add-hook 'after-make-frame-functions (lambda() (if (display-graphic-p)
  (set-default-font "-apple-Monaco-medium-normal-normal-*-18-*-*-*-m-0-iso10646-1"))))
+;;; solution: 
+(set-default-font "-apple-Monaco-medium-normal-normal-*-18-*-*-*-m-0-iso10646-1")
 
 (setq keyboard-coding-system nil)
 
 ;; Save a list of recent files visited.
 (recentf-mode 1)
 (setq recentf-max-saved-items 100) ;; just 20 is too recent
-(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+(global-set-key "\C-x \C-r" 'recentf-open-files)
 
 ;;;  look and feel
 (set-background-color "gray")
@@ -108,9 +112,9 @@
 
 ; http://emacswiki.org/emacs/EvaluatingExpressions
 (global-set-key [remap eval-expression] 'pp-eval-expression)
-(global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
+(global-set-key [remap eval-last-sexp]  'pp-eval-last-sexp)
 
-;?
+; don't warn 
 (put 'upcase-region 'disabled nil)
 
 ; disabled. otherwise, when enabled, it awkwardly reindents the preceding line
@@ -118,4 +122,7 @@
 
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; mouse scroll one line at a time 
 (setq scroll-step 1) ;; keyboard scroll one line at a time
+
+;; {{$ open -a Emacs file.txt}} now opens the file in the current frame 
+(setq ns-pop-up-frames nil)
 

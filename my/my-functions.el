@@ -143,9 +143,9 @@
 ;; 	   (find-file filename))
 ;;         (find-file)))))
 
-(defun my/find-file ()
-  (interactive)
-  (ido-find-file))
+;; (defun my/find-file ()
+;;   (interactive)
+;;   (ido-find-file))
 
 ;; (defun my/find-file ()
 ;;   (interactive)

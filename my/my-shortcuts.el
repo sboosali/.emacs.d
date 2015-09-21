@@ -37,7 +37,7 @@
 (global-set-key "\M-`" '"\C-xb")
 (global-set-key "\M-s" 'save-buffer)
 
-(global-set-key "\C-\\" 'my/find-file)
+(global-set-key "\C-\\" 'ido-find-file)
 
 (global-set-key "\M--" "\C-a\f-  -  -  -  -  -  -  -\C-o\C-a\C-n")
 (global-set-key (kbd "M-0") nil)
@@ -59,6 +59,4 @@
 (global-set-key "\M-z" 'undo)
 
 (global-set-key [S-mouse-2] 'browse-url-at-mouse)
-
-(global-set-key (kbd "C-x C-y c") 'compile)
 
