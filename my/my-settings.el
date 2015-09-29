@@ -126,3 +126,11 @@
 ;; {{$ open -a Emacs file.txt}} now opens the file in the current frame 
 (setq ns-pop-up-frames nil)
 
+;; disable "double hyphen as dash" TeX input
+;; input method 
+;; M-x input-method-function TeX
+;; (quail-defrule "-" "-" "TeX")           ;doesn't work, ignored  
+;; (global-set-key "-" '(lambda () (interactive) (insert "-")))           ;doesn't work, ignored 
+;; (global-set-key "-" "-<spc><del>")           ;doesn't work, infinite recursion 
+;; post-self-insert-hook           ;? 
+
