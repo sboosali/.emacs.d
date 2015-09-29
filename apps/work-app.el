@@ -20,6 +20,8 @@
   ; are opened?
   (setq tabbar-buffer-groups 'haskell/tabbar-buffer-groups)                               
 
+  (find-file "~/.emacs.d/apps/work-app.el")
+
   (find-file (work-file "commands-core.cabal"))
   (end-of-buffer)
   (split-window-vertically)
@@ -46,7 +48,7 @@
   (find-file (work-file "tests/*.hs") t)
   (find-file (work-file "executables/*.hs") t)
 
-  (find-file (work-file "sources/Commands/Plugins/Example.hs") t)
+  (find-file (work-file "sources/Commands/Main.hs") t)
   
   ;(compilation-minor-mode)
   ;(other-window 1)

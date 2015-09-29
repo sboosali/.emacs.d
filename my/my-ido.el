@@ -35,10 +35,10 @@
 (--each '(".DS_Store" "#" "Icon" "testingtesting")
  (add-to-list 'completion-ignored-extensions it))
 
-(defun my/ido-stars-to-end ()
-  "Put \"*starred*\" buffers at the end of the ido candidates list."
-  (ido-to-end (--filter (and (s-starts-with-p "*" it) (s-ends-with-p "*" it))
-                        ido-temp-list)))
-(add-hook 'ido-make-buffer-list-hook 'my/ido-stars-to-end)
+;; (defun my/ido-stars-to-end ()
+;;   "Put \"*starred*\" buffers at the end of the ido candidates list."
+;;   (ido-to-end (--filter (and (s-starts-with-p "*" it) (s-ends-with-p "*" it))
+;;                         ido-temp-list)))
+;; (add-hook 'ido-make-buffer-list-hook 'my/ido-stars-to-end)
 
 (ido-mode 1)

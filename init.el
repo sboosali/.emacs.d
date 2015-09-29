@@ -85,6 +85,8 @@
  evil
  help-fns+ 
  window-purpose
+
+ replace+
 ))
 
 (defvar all-packages-installed t)
