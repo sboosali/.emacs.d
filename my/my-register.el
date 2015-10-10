@@ -16,3 +16,4 @@
 (global-set-key (kbd "C-x C-y r v") 'my-register-insert) 
 (global-set-key (kbd "C-x C-y r d") 'my-register-clear) 
 
+

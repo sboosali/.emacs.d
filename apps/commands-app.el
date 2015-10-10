@@ -35,7 +35,8 @@
 ; opening files must come after opening the cabal file which loads Haskell mode 
   (find-file (commands-file "config/Commands/Plugins/Spiros/*.hs") t)
   (find-file (commands-file "config/Commands/Plugins/Spiros/*/*.hs") t)
-  (find-file (commands-file "config/Commands/Plugins/Spiros.hs")) ; loads Haskell-mode
+  (find-file (commands-file "config/Commands/Plugins/Spiros/*/*/*.hs") t)
+  (find-file (commands-file "config/Commands/Plugins/Spiros/Main.hs")) ; loads Haskell-mode
   (run-with-idle-timer 5 nil (lambda () (shell))) ; go back to buff, after Haskell-mode loads
 
 ;  (tabbar-mode) ; tab on each window (not one per frame)
