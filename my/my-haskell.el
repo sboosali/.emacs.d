@@ -1,6 +1,6 @@
 (provide 'my-haskell)
 (require 'etc)
-(require 'my-prog)
+;; (require 'my-prog)
 
 (require 's)
 (require 'dash)
@@ -14,7 +14,7 @@
 
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
-(add-hook 'haskell-mode-hook 'my-prog-mode-hook)
+;; (add-hook 'haskell-mode-hook 'my-prog-mode-hook)
 ;; (add-hook 'haskell-mode-hook 'haskell-indentation-mode) ;; still sucks
 ;; TODO compilation-shell-minor-mode in repl 
 

@@ -4,6 +4,7 @@
 
 (require 's)
 
+
 (defvar commands-directory "~/commands-spiros")
 (defun commands-file (filename)
   (concat commands-directory "/" filename))
