@@ -21,8 +21,9 @@
 
 (setq tabbar-buffer-groups-function 'haskell/tabbar-buffer-groups)
 
-(global-set-key [M-s-left] 'tabbar-backward)
-(global-set-key [M-s-right] 'tabbar-forward)
+;; like chrome 
+(global-set-key (kbd "C-S-<tab>") 'tabbar-backward-tab)
+(global-set-key (kbd "C-<tab>") 'tabbar-forward-tab)
 
 ;last
 (tabbar-mode t)

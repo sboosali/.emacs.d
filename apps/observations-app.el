@@ -14,6 +14,8 @@
   (find-file "~/config/.profile")
 ;  (find-file "~/Haskell")
 ;  (find-file "~/chrome_extensions/commands-context-chrome/manifest.json")
+  (find-file "~/.emacs.d/my/*" t)
+  (find-file "~/.emacs.d/app/*" t)
   (find-file "~/.emacs.d/init.el")
   ; last sets $PWD
 
@@ -32,8 +34,6 @@
 
   ;; (find-file "~/things")
   ;; (end-of-buffer)
-
-  (find-file "~/.emacs.d/apps/commands-app.el")
 )
 
 (when-app "Obs\\.app" 'obs-app)

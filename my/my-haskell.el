@@ -7,6 +7,24 @@
 (require 'align)
 (require 'speedbar)
 
+;; https://github.com/serras/emacs-haskell-tutorial/blob/master/tutorial.md
+
+;; ghc-mod
+;; cabal update 
+;; time cabal install -j4 stylish-haskell hasktags present ghc-mod hlint hoogle hindent
+
+; package-install ghc 
+
+(add-to-list 'load-path "~/.emacs.d/.cabal-sandbox/share/x86_64-osx-ghc-7.10.1/ghc-mod-5.4.0.0")
+
+(autoload 'ghc-init  "ghc" nil t)
+(autoload 'ghc-debug "ghc" nil t)
+;; (add-hook 'haskell-mode-hook 'my-ghc-mod-hook)
+;; ghc-mod doesn't work: it accuses the modules and the test stanza of not being in the build-depends 
+
+(defun my-ghc-mod-hook ()
+ (ghc-init))
+
 ; package-install flycheck
 ; Symbol's function definition is void: "macroexp-progn"
 
@@ -16,7 +34,12 @@
 (add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
 ;; (add-hook 'haskell-mode-hook 'my-prog-mode-hook)
 ;; (add-hook 'haskell-mode-hook 'haskell-indentation-mode) ;; still sucks
-;; TODO compilation-shell-minor-mode in repl 
+(add-hook 'interactive-haskell-mode-hook 'my-interactive-haskell-hook)
+
+;; https://github.com/haskell/haskell-mode/wiki/Haskell-Interactive-Mode-Querying
+(defun my-interactive-haskell-hook()
+ (compilation-shell-minor-mode)) 
+;; the default regex (for hyperlinking filenames) isn't quite right 
 
 ;;; sub word mode lets you navigate (e.g. M-b) between "sub words" of a camelcased word
 ;; (add-hook 'haskell-mode-hook 'subword-mode)
@@ -25,6 +48,8 @@
 ; haskell-session
 
 ; haskell-process-do-type
+;; prints out in *haskell-process-log* 
+
 ; haskell-process-do-info
 
 (add-to-list 'auto-mode-alist '("\\.elm$" . haskell-mode))

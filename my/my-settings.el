@@ -46,7 +46,7 @@
 (setq keyboard-coding-system nil)
 
 ;; Save a list of recent files visited.
-(recentf-mode 1)
+;; (recentf-mode 1) ;;; all the apps share the same recent file. disabled to prevent opening an old random file, from the voice command "buffer _" 
 (setq recentf-max-saved-items 100) ;; just 20 is too recent
 (global-set-key "\C-x \C-r" 'recentf-open-files)
 
