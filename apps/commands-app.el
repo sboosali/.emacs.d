@@ -33,6 +33,12 @@
   (end-of-buffer)
   ;; (split-window-vertically)
 
+
+
+
+
+
+
 ; opening files must come after opening the cabal file which loads Haskell mode 
   (find-file (commands-file "config/Commands/Plugins/Spiros/*.hs") t)
   (find-file (commands-file "config/Commands/Plugins/Spiros/*/*.hs") t)

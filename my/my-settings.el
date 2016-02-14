@@ -134,3 +134,5 @@
 ;; (global-set-key "-" "-<spc><del>")           ;doesn't work, infinite recursion 
 ;; post-self-insert-hook           ;? 
 
+(global-set-key "\C-o" 'compile) 
+

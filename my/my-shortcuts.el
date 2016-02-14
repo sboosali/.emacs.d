@@ -39,7 +39,8 @@
 
 (global-set-key "\C-\\" 'ido-find-file)
 
-(global-set-key "\M--" "\C-a\f-  -  -  -  -  -  -  -\C-o\C-a\C-n")
+
+(global-set-key "\M--" "\C-a-  -  -  -  -  -  -  -\C-j\C-q\C-l\C-e\C-j\C-j")
 (global-set-key (kbd "M-0") nil)
 
 (global-set-key "\M-i" 'ucs-insert)
