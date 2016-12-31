@@ -1,0 +1,42 @@
+ignore/*
+secret/*
+
+#nix
+result
+
+# OS X
+.DS_Store
+# remove */.DS_Store
+
+# Emacs
+\#*\#
+*~
+*.log
+
+# state
+auto-save-list/
+backups/
+elpa/
+places
+tramp
+.smex-items
+smex-items
+.abbrev_defs
+saved-places
+.emacs.desktop
+.emacs.desktop.lock
+
+# Haskell
+dist
+cabal-dev
+*.o
+*.hi
+*.chi
+*.chs.h
+.hsenv
+.cabal-sandbox/
+cabal.sandbox.config
+cabal.config
+report.html
+.ghci
+
