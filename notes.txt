@@ -1,0 +1,6 @@
+"q" quits most pop up windows
+C-x 0 will also close the focused window
+
+,a ^tool-bar
+,more/ ,dump
+

@@ -59,7 +59,12 @@
 (global-set-key "\C-s" 'isearch-forward-regexp)
 (global-set-key "\C-r" 'isearch-backward-regexp)
 
-(global-set-key "\M-z" 'undo)
+(global-set-key "\M-z" 'undo) ;; f5 in xmonad
+(global-set-key (kbd "<f6>") 'keyboard-quit)
+;(global-set-key (kbd "<f7>") 'flycheck-next-error)
+(global-set-key (kbd "<f7>") 'flycheck-list-errors)
+(global-set-key (kbd "<f8>") 'find-file-existing)
+;(global-set-key (kbd "<f8>") 'find-file-at-point) 
 
 (global-set-key [S-mouse-2] 'browse-url-at-mouse)
 

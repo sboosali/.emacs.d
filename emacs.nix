@@ -31,7 +31,10 @@ in
 
   emacsWithPackages (epkgs: ([
   
-  ]) ++ (with epkgs.melpaPackages; [ 
+  ]) ++ (with epkgs.melpaPackages; [
+
+# intero
+
  magit          # ; Integrate git <C-x g>
  helm
  undo-tree      # ; <C-x u> to show the undo tree
@@ -41,7 +44,6 @@ in
  haskell-mode
  nix-mode
  projectile
- # intero
  multi-term
  magit
  # ido-complete-space-or-hyphen
@@ -67,6 +69,29 @@ in
     
   ]) ++ (with epkgs.elpaPackages; [
     auctex         # ; LaTeX mode
+    # vlfi
 
   ]))
+
+# intero = callPackage ({ company, emacs, fetchFromGitHub, fetchurl, flycheck, haskell-mode, lib, melpaBuild }:
+#     melpaBuild {
+#         pname = "intero";
+#         version = "20161218.917";
+#         src = fetchFromGitHub {
+#           owner = "commercialhaskell";
+#           repo = "intero";
+#           rev = "59ad0002b16a77c2de0cc18862e8e1842c00d6c4";
+#           sha256 = "1678zjrdawks59l95x6qsp01man8k7r3si6qk1bb6dz261dh9adl";
+#         };
+#         recipeFile = fetchurl {
+#           url = "https://raw.githubusercontent.com/milkypostman/melpa/1b56ca344ad944e03b669a9974e9b734b5b445bb/recipes/intero";
+#           sha256 = "15n7ipsq8ylmq4blsycpszkx034j9sb92vqvaz30j5v307fmvs99";
+#           name = "intero";
+#         };
+#         packageRequires = [ company emacs flycheck haskell-mode ];
+#         meta = {
+#           homepage = "https://melpa.org/#/intero";
+#           license = lib.licenses.free;
+#         };
+#       }) {};
 

@@ -1,8 +1,13 @@
 (provide 'my-settings)
 (require 'my-functions)
-
 (require 'recentf)
 
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+(setq mode-require-final-newline nil)
+(setq require-final-newline nil)
+
+(set-background-color "gray")
 
 ;; hide menubar and toolbar
 ;; (menu-bar-mode -1)
@@ -44,12 +49,6 @@
 (setq recentf-max-saved-items 100) ;; just 20 is too recent
 (global-set-key "\C-l" nil)
 (global-set-key "\C-l \C-r" 'recentf-open-files)
-
-;;;  look and feel
-(set-background-color "gray")
-;;   (set-face-background 'default "black")
-;;   (set-face-background 'region "black")
-;;   (set-cursor-color "red")
 
 ;; Prevent Emacs from extending file when
 ;; pressing down arrow at end of buffer.

@@ -23,6 +23,8 @@
 ;;;;;;;;;;;;;;; Per-package configuration
 
 (require 'my-frame)
+(require 'my-widget)
+
 (require 'my-tabbar)
 (require 'my-haskell)
 (require 'my-autosave)
@@ -51,6 +53,8 @@
 (require 'my-desktop)
 (require 'my-nix)
 (require 'my-erc)
+(require 'my-company)
+;(require 'my-svg)
 
 ;;;;;;;;;;;;;;; final configuration
 
@@ -67,9 +71,16 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(haskell-process-auto-import-loaded-modules t)
+ '(haskell-process-log t)
+ '(haskell-process-suggest-hoogle-imports t)
+ '(haskell-process-suggest-remove-import-lines t)
+ '(haskell-process-type (quote cabal-repl))
+ '(haskell-tags-on-save t)
+ '(org-startup-folded nil)
  '(package-selected-packages
    (quote
-    (intero idris-mode window-purpose tabbar solarized-theme smooth-scrolling smart-tabs-mode s replace+ projectile magit ido-complete-space-or-hyphen htmlize help-fns+ helm flx-ido exec-path-from-shell evil company-ghc centered-cursor-mode))))
+    (intero-mode intero idris-mode window-purpose tabbar solarized-theme smooth-scrolling smart-tabs-mode s replace+ projectile magit ido-complete-space-or-hyphen htmlize help-fns+ helm flx-ido exec-path-from-shell evil company-ghc centered-cursor-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

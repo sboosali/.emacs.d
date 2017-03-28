@@ -7,13 +7,33 @@
 (require 'align)
 (require 'speedbar)
 
+;;TODO (intero-mode)
+(add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
+
+(defun my-haskell-mode-hook ()
+ (intero-mode)
+)
+
+(defun compile-haskell ()
+ (interactive)
+ (desperately-compile "stack.yaml" "stack build && stack exec -- example")
+)
+
+; M-. Jump to definition
+; M-, Jump back
+
 ;; time cabal install -j4 stylish-haskell hasktags present ghc-mod hlint hoogle hindent
 
 ;(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 ;(add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
 ;; (add-hook 'haskell-mode-hook 'my-prog-mode-hook)
 ;; (add-hook 'haskell-mode-hook 'haskell-indentation-mode) ;; still sucks
-(add-hook 'interactive-haskell-mode-hook 'my-interactive-haskell-hook)
+;(add-hook 'interactive-haskell-mode-hook 'my-interactive-haskell-hook)
+
+;; (setq haskell-process-type 'ghci
+;;       haskell-process-path-ghci "nix-shell"
+;;       haskell-process-args-ghci '("-I" "." "shell.nix" "--pure" "--command" "cabal configure; cabal repl")
+;; )
 
 ;; https://github.com/haskell/haskell-mode/wiki/Haskell-Interactive-Mode-Querying
 (defun my-interactive-haskell-hook()
@@ -61,7 +81,7 @@
  (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
  (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
  (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-jump-to-def)
- (define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)
+ ;(define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)
  ;; my bindings
  (define-key haskell-cabal-mode-map (kbd "M-u") 'haskell-process-cabal-build)
 ))
@@ -97,16 +117,17 @@
                (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
                (modes quote (haskell-mode literate-haskell-mode))))
 
-(defun my-haskell-mode-hook ()
- (haskell-session)
- ;(haskell-process-cabal-build)          ; compilation-shell-minor-mode
- ;(turn-on-haskell-simple-indent)
- ;(turn-on-haskell-indentation)
- ;(turn-on-haskell-doc-mode)
- ;(global-linum-mode 1)
-)
+;; (defun my-haskell-mode-hook ()
+;;  (haskell-session)
+;;  ;(haskell-process-cabal-build)          ; compilation-shell-minor-mode
+;;  ;(turn-on-haskell-simple-indent)
+;;  ;(turn-on-haskell-indentation)
+;;  ;(turn-on-haskell-doc-mode)
+;;  ;(global-linum-mode 1)
+;; )
 
-(speedbar-add-supported-extension ".hs")
+;(speedbar-add-supported-extension ".hs")
+
 
 ;(global-set-key [mouse-1] 'haskell-process-do-info)
 

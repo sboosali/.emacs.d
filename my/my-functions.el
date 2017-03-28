@@ -243,3 +243,12 @@
 ;; (add-hook 'haskell-mode-hook (lambda()
 ;; 			       (unless (string= "/home/sboo/.xmonad/xmonad.hs" (buffer-file-name (current-buffer)))
 ;; 				 (intero-mode))))
+
+; (desperately-compile "Makefile" "make -k")
+(defun desperately-compile (f c)
+  "Traveling up the path, find a Makefile and `compile'."
+  (interactive)
+  (when (locate-dominating-file default-directory f)
+  (with-temp-buffer
+    (cd (locate-dominating-file default-directory f))
+    (compile c))))

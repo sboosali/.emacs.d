@@ -8,6 +8,10 @@ result
 .DS_Store
 # remove */.DS_Store
 
+# storage in .emacs.d/
+ido.last
+packages/
+
 # Emacs
 \#*\#
 *~
