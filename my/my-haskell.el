@@ -6,18 +6,37 @@
 (require 'dash)
 (require 'align)
 (require 'speedbar)
+(require 'use-package)
+(require 'dante)
 
 ;;TODO (intero-mode)
-(add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
+;; (add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
 
-(defun my-haskell-mode-hook ()
- (intero-mode)
+;; (defun my-haskell-mode-hook ()
+;;  (intero-mode)
+;; )
+
+(defun my-dante () (interactive)
+(add-hook 'haskell-mode-hook 'dante-mode)
+(add-hook 'haskell-mode-hook 'flycheck-mode)
 )
+(my-dante)
+
+;; (use-package dante
+;;     :ensure t
+;; ;    :load-path "dante/"
+;;     :commands 'dante-mode
+;;     :init
+;;     (add-hook 'haskell-mode-hook 'dante-mode)
+;;     (add-hook 'haskell-mode-hook 'flycheck-mode))
 
 (defun compile-haskell ()
  (interactive)
  (desperately-compile "stack.yaml" "stack build && stack exec -- example")
 )
+
+;(setq intero-blacklist '("~/.xmonad" "~/magic-card-search")) ; ghcjs
+;(add-hook 'haskell-mode-hook 'intero-mode-blacklist)
 
 ; M-. Jump to definition
 ; M-, Jump back
@@ -71,20 +90,21 @@
 ;;   (setq tab-width 1))
 ;; (add-hook 'haskell-mode-hook 'haskell-style)
 
-(eval-after-load "haskell-mode" '(progn
- ;; rebind inferior mode to interactive mode
- (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
- (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
- (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
- (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
- (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
- (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
- (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
- (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-jump-to-def)
- ;(define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)
- ;; my bindings
- (define-key haskell-cabal-mode-map (kbd "M-u") 'haskell-process-cabal-build)
-))
+;; commented for dante
+;; (eval-after-load "haskell-mode" '(progn
+;;  ;; rebind inferior mode to interactive mode
+;;  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
+;;  (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
+;;  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
+;;  (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
+;;  (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+;;  (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
+;;  (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
+;;  (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-jump-to-def)
+;;  ;(define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)
+;;  ;; my bindings
+;;  (define-key haskell-cabal-mode-map (kbd "M-u") 'haskell-process-cabal-build)
+;; ))
 
 ;(key (kbd "M-u") 'haskell-process-cabal-build) ; bound to 'compile instead
 

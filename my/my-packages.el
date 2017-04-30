@@ -7,5 +7,11 @@
 (package-initialize)
 (package-refresh-contents)
 
-(package-install 'intero)
+;(package-install 'intero)
+
+
+;; (use-package company
+;;   :ensure t
+;;   :defer t
+;;   :idle (global-company-mode))
 

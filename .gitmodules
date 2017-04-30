@@ -1,0 +1,3 @@
+[submodule "vendor/dante"]
+	path = vendor/dante
+	url = https://github.com/jyp/dante

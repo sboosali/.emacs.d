@@ -9,10 +9,24 @@
  "my"                                   ; utilities or wrappers around libraries
  "secret"                               ; super secret data files
  "packages"                             ; package files that were copied and pasted
+
+
+
+;; Warning (initialization): Your ‘load-path’ seems to contain
+;; your ‘.emacs.d’ directory: /home/sboo/.emacs.d/.
+;; This is likely to cause problems...
+;; Consider using a subdirectory instead, e.g.: /home/sboo/.emacs.d/lisp
+;; "."
+
 ) "load paths that don't obey the normal package-name/module-name.el format.")
 
+;;
 (loop for location in my-load-paths
       do (add-to-list 'load-path (concat HOME location)))
+
+;; git clone, package-name/module-name.el
+(let ((default-directory  "~/.emacs.d/vendor/"))
+  (normal-top-level-add-subdirs-to-load-path))
 
 ;;;;;;;;;;;;;;;;;;;
 
@@ -31,7 +45,7 @@
 ;; (require 'my-speedbar) ;; disabled for the Emacs daemon
 (require 'my-windmove)
 (require 'my-tramp)
-(require 'my-deft)
+;(require 'my-deft); crashed after NixOS 17.03 upgrade
 ;(require 'my-template)
 ;(require 'my-python)
 (require 'my-notes)
@@ -80,7 +94,7 @@
  '(org-startup-folded nil)
  '(package-selected-packages
    (quote
-    (intero-mode intero idris-mode window-purpose tabbar solarized-theme smooth-scrolling smart-tabs-mode s replace+ projectile magit ido-complete-space-or-hyphen htmlize help-fns+ helm flx-ido exec-path-from-shell evil company-ghc centered-cursor-mode))))
+    (dante intero idris-mode window-purpose tabbar solarized-theme smooth-scrolling smart-tabs-mode s replace+ projectile magit ido-complete-space-or-hyphen htmlize help-fns+ helm flx-ido exec-path-from-shell evil company-ghc centered-cursor-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

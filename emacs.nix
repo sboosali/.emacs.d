@@ -33,13 +33,13 @@ in
   
   ]) ++ (with epkgs.melpaPackages; [
 
-# intero
+ #intero
 
  magit          # ; Integrate git <C-x g>
- helm
+# helm
  undo-tree      # ; <C-x u> to show the undo tree
- zoom-frm       # ; increase/decrease font size for all buffers %lt;C-x C-+>
- idris-mode
+# zoom-frm       # ; increase/decrease font size for all buffers %lt;C-x C-+>
+# idris-mode
  # erc # builtin
  haskell-mode
  nix-mode
@@ -59,8 +59,11 @@ in
  #help-fns-plus  # aka help-fns+ 
  window-purpose
  #replace-plus
- deft
+# deft
  paredit
+ color-theme
+use-package
+flycheck
  
   ]) ++ (with epkgs.melpaStablePackages; [
   
