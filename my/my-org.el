@@ -3,6 +3,7 @@
 
 ; http://orgmode.org/worg/org-tutorials/orgtutorial_dto.html
 
+(setq org-startup-truncated nil)
 
 (setq org-log-done t)
 

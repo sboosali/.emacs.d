@@ -68,3 +68,7 @@
 
 (global-set-key [S-mouse-2] 'browse-url-at-mouse)
 
+;(global-set-key "\M-/" 'pop-global-mark)  ;; M-. is "jump to def"
+(global-set-key (kbd "<f11>") 'pop-tag-mark)
+(global-set-key (kbd "<f12>") 'intero-goto-definition)
+

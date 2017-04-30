@@ -2,6 +2,8 @@
 (require 'my-functions)
 (require 'recentf)
 
+(add-hook 'text-mode-hook #'turn-on-visual-line-mode)
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (setq mode-require-final-newline nil)
