@@ -1,6 +1,81 @@
+----------------------------------------
+
 "q" quits most pop up windows
 C-x 0 will also close the focused window
 
 ,a ^tool-bar
 ,more/ ,dump
 
+----------------------------------------
+
+https://github.com/NixOS/nixpkgs/blob/master/pkgs/top-level/emacs-packages.nix
+
+
+e.g. non-default package-description
+
+  pdf-tools = melpaBuild rec {
+    pname = "pdf-tools";
+    version = "0.80";
+    src = fetchFromGitHub {
+      owner = "politza";
+      repo = "pdf-tools";
+      rev = "v${version}";
+      sha256 = "1i4647vax5na73basc5dz4lh9kprir00fh8ps4i0l1y3ippnjs2s";
+    };
+    nativeBuildInputs = [ external.pkgconfig ];
+    buildInputs = with external; [ autoconf automake libpng zlib poppler ];
+    preBuild = "make server/epdfinfo";
+    fileSpecs = [ "lisp/pdf-*.el" "server/epdfinfo" ];
+    packageRequires = [ tablist let-alist ];
+
+i.e. needs 
+
+    nativeBuildInputs = [ external.pkgconfig ];
+    buildInputs = with external; [ autoconf automake libpng zlib poppler ];
+    packageRequires = [ tablist let-alist ];
+    preBuild = "make server/epdfinfo";
+    fileSpecs = [ "lisp/pdf-*.el" "server/epdfinfo" ];
+
+
+
+e.g. non-default package-description
+
+  ghc-mod = melpaBuild rec {
+    pname = "ghc";
+    version = external.ghc-mod.version;
+    src = external.ghc-mod.src;
+    packageRequires = [ haskell-mode ];
+    propagatedUserEnvPkgs = [ external.ghc-mod ];
+    fileSpecs = [ "elisp/*.el" ];
+    meta = {
+      description = "An extension of haskell-mode that provides completion of symbols and documentation browsing";
+      license = bsd3;
+    };
+  };
+
+i.e. needs ghc-mod
+
+  ghc-mod = melpaBuild rec {
+    packageRequires = [ haskell-mode ];
+    propagatedUserEnvPkgs = [ external.ghc-mod ];
+    fileSpecs = [ "elisp/*.el" ];
+  };
+
+
+e.g. sourced
+
+  find-file-in-project = melpaBuild rec {
+    ...
+    src = fetchFromGitHub {
+      owner  = "technomancy";
+      repo   = pname;
+      rev    = "53a8d8174f915d9dcf5ac6954b1c0cae61266177";
+      sha256 = "0wky8vqg08iw34prbz04bqmhfhj82y93swb8zkz6la2vf9da0gmd";
+    };
+
+i.e. not 
+
+    src = external.find-file-in-project.src;
+
+
+----------------------------------------

@@ -34,7 +34,8 @@ in
   ]) ++ (with epkgs.melpaPackages; [
 
  #intero
-
+ dante
+# dhall-mode
  magit          # ; Integrate git <C-x g>
 # helm
  undo-tree      # ; <C-x u> to show the undo tree
