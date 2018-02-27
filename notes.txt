@@ -1,4 +1,65 @@
 ----------------------------------------
+Open a file at line with “filename:line” syntax
+
+
+
+
+----------------------------------------
+emacs2nix
+
+
+melpa package metadata
+
+;; Package-Requires: ((PACKAGE VERSION) ...)
+;; Version:          VERSION
+;; URL:              URL
+;; Maintainer:       PERSON_NAME
+
+e.g.
+
+;;; dante.el --- Development mode for Haskell -*- lexical-binding: t -*-
+;;
+;; Copyright (c) 2016 Jean-Philippe Bernardy
+;; Author: Jean-Philippe Bernardy <jeanphilippe.bernardy@gmail.com>
+;; Maintainer: Jean-Philippe Bernardy <jeanphilippe.bernardy@gmail.com>
+;; URL: https://github.com/jyp/dante
+;; Created: October 2016
+;; Keywords: haskell, tools
+;; Package-Requires: ((dash "2.12.0") (emacs "25.1") (f "0.19.0") (flycheck "0.30") (haskell-mode "13.14") (s "1.11.0") (lcr "0.9"))
+;; Version: 
+
+
+
+e.g.
+
+    dante = callPackage ({ dash, emacs, f, fetchFromGitHub, fetchurl, flycheck, haskell-mode, lib, melpaBuild, s }:
+    melpaBuild {
+        pname = "dante";
+        version = "2018218.1249";
+        src = fetchFromGitHub {
+          owner = "jyp";
+          repo = "dante";
+          rev = "8c94ff8cba64d5afda82a486b51f1e439663c3ba";
+          sha256 = "1ni445wrlrif4z03lxl5vwwx8falnh43vzxf27m5f7aqx167kbxi";
+        };
+        recipeFile = fetchurl {
+          url = "https://raw.githubusercontent.com/milkypostman/melpa/5afa8226077cbda4b76f52734cf8e0b745ab88e8/recipes/dante";
+          sha256 = "1j0qwjshh2227k63vd06bvrsccymqssx26yfzams1xf7bp6y0krs";
+          name = "dante";
+        };
+        packageRequires = [ dash emacs f flycheck haskell-mode s ];
+        meta = {
+          homepage = "https://melpa.org/#/dante";
+          license = lib.licenses.free;
+        };
+      }) {};
+
+
+
+./melpa-packages.sh --melpa ~/melpa -o ~/nixpkgs/pkgs/applications/editors/emacs-modes/melpa-generated.nix
+
+
+----------------------------------------
 
 "q" quits most pop up windows
 C-x 0 will also close the focused window
