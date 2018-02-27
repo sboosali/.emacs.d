@@ -1,6 +1,7 @@
 (provide 'my-desktop)
 
-(desktop-save-mode)
+(desktop-save-mode 1)
+(setq desktop-auto-save-timeout 5) ;; in seconds 
 
 ;; To suppress this warning:
 ;;    warning: desktop file appears to be in use by PID 200.

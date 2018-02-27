@@ -1,5 +1,6 @@
 (provide 'my-server)
 
-(server-start)
+;; TODO unless running already
+;; (server-start)
 ; for emacsclient
 
