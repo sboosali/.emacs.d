@@ -34,10 +34,68 @@ See:
     https://nixos.org/wiki/Emacs_configuration
 */
 
+/* nixpkgs/pkgs/build-support/emacs/wrapper.nix:
+
+# Usage
+
+`emacsWithPackages` takes a single argument: a function from a package
+set to a list of packages (the packages that will be available in
+Emacs). For example,
+```
+emacsWithPackages (epkgs: [ epkgs.evil epkgs.magit ])
+```
+All the packages in the list should come from the provided package
+set. It is possible to add any package to the list, but the provided
+set is guaranteed to have consistent dependencies and be built with
+the correct version of Emacs.
+
+# Overriding
+
+`emacsWithPackages` inherits the package set which contains it, so the
+correct way to override the provided package set is to override the
+set which contains `emacsWithPackages`. For example, to override
+`emacsPackagesNg.emacsWithPackages`,
+```
+let customEmacsPackages =
+      emacsPackagesNg.overrideScope (super: self: {
+        # use a custom version of emacs
+        emacs = ...;
+        # use the unstable MELPA version of magit
+        magit = self.melpaPackages.magit;
+      });
+in customEmacsPackages.emacsWithPackages (epkgs: [ epkgs.evil epkgs.magit ])
+```
+
+*/
+
+
 ########################################
 let
 
-emacsPackages = nixpkgs.emacsPackagesNgGen emacs;
+originalEmacsPackages = nixpkgs.emacsPackagesNgGen emacs;
+
+customEmacsPackages = scopedEmacsPackages;
+
+scopedEmacsPackages = originalEmacsPackages.overrideScope emacsScope; 
+
+emacsScope = super: self: {
+
+  #NOTE the dynamic modules flag is already given in the contemporary nixpkgs
+  # emacs = super.emacs.overrideAttrs (attributes: { 
+  #   attributes.configureFlags ++ [ "--with-modules" ] ; 
+  # }); 
+
+  # use a custom emacs (newer version, extra flags, etc)
+  # emacs = ...;
+
+  # use a custom package 
+  # e.g. the unstable MELPA version of magit
+  # magit = self.melpaPackages.magit;
+};
+
+# customEmacsPackages.emacsWithPackages (epkgs: [ epkgs.evil epkgs.magit ])
+
+# emacsPackages = nixpkgs.emacsPackagesNgGen emacs;
 
 /* 
  *
@@ -47,7 +105,7 @@ emacsPackages = nixpkgs.emacsPackagesNgGen emacs;
  *
  */
 emacsWith = withRepositories: 
-  emacsPackages.emacsWithPackages (epkgs: 
+  customEmacsPackages.emacsWithPackages (epkgs: 
     withRepositories 
         epkgs.melpaPackages
         epkgs.melpaStablePackages
@@ -56,8 +114,9 @@ emacsWith = withRepositories:
 
 in
 ########################################
+let
 
-emacsWith (melpa: stable: elpa: org: with melpa; [
+myEmacs = emacsWith (melpa: stable: elpa: org: with melpa; [
 
  # melpa...
 
@@ -91,6 +150,9 @@ emacsWith (melpa: stable: elpa: org: with melpa; [
 
  elpa.auctex
 
- ])
+ ]);
 
+in
 ########################################
+
+myEmacs
