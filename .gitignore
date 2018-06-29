@@ -1,13 +1,11 @@
-ignore/*
+ignore/
+
 secret/*
 private/
 
-#nix
+# nix
 result
-
-# OS X
-.DS_Store
-# remove */.DS_Store
+result-*
 
 # storage in .emacs.d/
 ido.last
@@ -45,4 +43,7 @@ cabal.sandbox.config
 cabal.config
 report.html
 .ghci
+
+# OS X
+.DS_Store
 

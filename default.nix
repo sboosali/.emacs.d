@@ -1,12 +1,110 @@
 { nixpkgs ? import <nixpkgs> {}
-, emacs ? nixpkgs.emacs25
-}: 
+, emacs         ? nixpkgs.emacs
+, emacsPackages ? nixpkgs.emacs26Packages
+}:
+
+########################################
+let
+
+originalEmacsPackages = emacsPackages emacs;
+
+customEmacsPackages = scopedEmacsPackages;
+
+scopedEmacsPackages = originalEmacsPackages.overrideScope emacsScope; 
+
+emacsScope = super: self: {
+
+  # # [1] use a custom emacs.
+  # # e.g. newer version, extra flags, etc.
+  # emacs = ...;
+
+  #^ NOTE 
+  # the dynamic modules flag is already given in the contemporary nixpkgs:
+  # emacs = super.emacs.overrideAttrs (attributes: { 
+  #   attributes.configureFlags ++ [ "--with-modules" ] ; 
+  # }); 
+
+  # # [2] use a custom package.
+  # # e.g. the unstable MELPA version of magit:
+  # magit = self.melpaPackages.magit;
+
+};
+
+# customEmacsPackages.emacsWithPackages (epkgs: [ epkgs.evil epkgs.magit ])
+
+# emacsPackages = nixpkgs.emacsPackagesNgGen emacs;
+
+/* 
+ *
+ * withRepositories :: [PackageSet] -> [PackageSet] -> [PackageSet] -> [PackageSet] -> [PackageSet] 
+ *
+ * takes callback/continuation for scoping
+ *
+ */
+emacsWith = withRepositories: 
+  customEmacsPackages.emacsWithPackages (epkgs: 
+    withRepositories 
+        epkgs.melpaPackages
+        epkgs.melpaStablePackages
+        epkgs.elpaPackages
+        epkgs.orgPackages);
+
+in
+########################################
+let
+
+myEmacs = emacsWith (melpa: stable: elpa: org: with melpa; [
+
+ # melpa...
+
+ avy
+
+ dante
+ haskell-mode 
+
+ markdown-mode
+ 
+ nix-mode
+ paredit
+
+ magit          # <C-x g>
+ flycheck
+ projectile
+ multi-term
+
+ helm
+ real-auto-save
+
+ tabbar
+ smooth-scrolling
+ centered-cursor-mode
+
+ use-package
+ dash
+ s
+
+ # org...
+
+ org.org
+
+ # elpa...
+
+ elpa.auctex
+
+ ]);
+
+in
+########################################
+
+myEmacs
+
+########################################
 
 /* NOTES...
 
 Arguments:
 
-    The emacs version/configuration is `emacs25` by default.
+    The emacs version/configuration is `emacs26`, i.e. "Emacs 26.1", by default.
 
 Querying:
 
@@ -33,6 +131,8 @@ See:
 
     https://nixos.org/wiki/Emacs_configuration
 */
+
+########################################
 
 /* nixpkgs/pkgs/build-support/emacs/wrapper.nix:
 
@@ -70,89 +170,3 @@ in customEmacsPackages.emacsWithPackages (epkgs: [ epkgs.evil epkgs.magit ])
 
 
 ########################################
-let
-
-originalEmacsPackages = nixpkgs.emacsPackagesNgGen emacs;
-
-customEmacsPackages = scopedEmacsPackages;
-
-scopedEmacsPackages = originalEmacsPackages.overrideScope emacsScope; 
-
-emacsScope = super: self: {
-
-  #NOTE the dynamic modules flag is already given in the contemporary nixpkgs
-  # emacs = super.emacs.overrideAttrs (attributes: { 
-  #   attributes.configureFlags ++ [ "--with-modules" ] ; 
-  # }); 
-
-  # use a custom emacs (newer version, extra flags, etc)
-  # emacs = ...;
-
-  # use a custom package 
-  # e.g. the unstable MELPA version of magit
-  # magit = self.melpaPackages.magit;
-};
-
-# customEmacsPackages.emacsWithPackages (epkgs: [ epkgs.evil epkgs.magit ])
-
-# emacsPackages = nixpkgs.emacsPackagesNgGen emacs;
-
-/* 
- *
- * withRepositories :: [PackageSet] -> [PackageSet] -> [PackageSet] -> [PackageSet] -> [PackageSet] 
- *
- * takes callback/continuation for scoping
- *
- */
-emacsWith = withRepositories: 
-  customEmacsPackages.emacsWithPackages (epkgs: 
-    withRepositories 
-        epkgs.melpaPackages
-        epkgs.melpaStablePackages
-        epkgs.elpaPackages
-        epkgs.orgPackages);
-
-in
-########################################
-let
-
-myEmacs = emacsWith (melpa: stable: elpa: org: with melpa; [
-
- # melpa...
-
- dante
- haskell-mode 
-
- nix-mode
- paredit
-
- magit          # <C-x g>
- flycheck
- projectile
- multi-term
-
- helm
- real-auto-save
-
- tabbar
- smooth-scrolling
- centered-cursor-mode
-
- use-package
- dash
- s
-
- # org...
-
- org.org
-
- # elpa...
-
- elpa.auctex
-
- ]);
-
-in
-########################################
-
-myEmacs
