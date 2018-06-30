@@ -9,20 +9,18 @@ with melpa;
  # melpa...
 
  haskell-mode
-
- markdown-mode
- 
+ markdown-mode 
  nix-mode
  paredit
 
  magit          # <C-x g>
- flycheck
  projectile
+
+ flycheck
  multi-term
 
- helm
  real-auto-save
-
+ color-theme
  tabbar
  smooth-scrolling
  centered-cursor-mode
@@ -30,11 +28,6 @@ with melpa;
  use-package
  dash
  s
-
- ####################
- # org...
-
- org.org
  
 ]
 ########################################
