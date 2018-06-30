@@ -1,38 +1,19 @@
-{ nixpkgs ? import <nixpkgs> {}
-
+{ nixpkgs           ? import <nixpkgs> {}
 , emacsWithPackages ? nixpkgs.emacs26WithPackages
-
-# , emacs             ? nixpkgs.emacs
-# , emacsPackages     ? nixpkgs.emacs26Packages
 }:
 
 ########################################
 let
 
-####################
+utilities = (import ./utilities.nix) emacsWithPackages;
 
-/* 
- *
- * withRepositories :: [PackageSet] -> [PackageSet] -> [PackageSet] -> [PackageSet] -> [PackageSet] 
- *
- * takes callback/continuation for scoping.
- *
- */
-emacsWith = withRepositories: 
-  emacsWithPackages (epkgs: 
-    withRepositories 
-        epkgs.melpaPackages
-        epkgs.melpaStablePackages
-        epkgs.elpaPackages
-        epkgs.orgPackages);
-
-####################
+packages = import ./packages.nix;
 
 in
 ########################################
 let
 
-myEmacs = emacsWith (import ./packages.nix);
+myEmacs = utilities.emacsWith packages;
 
 in
 ########################################
