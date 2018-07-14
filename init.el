@@ -1,4 +1,3 @@
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;VARIABLES
 
@@ -23,7 +22,8 @@
 ;; > user-emacs-directory 
 ;; "c:/Users/Spiros/AppData/Roaming/.emacs.d/" 
 
-(setq my-profile-name "emacs-minimal")
+;;(setq my-profile-name "emacs-minimal")
+(setq my-profile-name "emacs-default")
 ;; ^ distinguish this "profile" from others.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -50,11 +50,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;OTHER CUSTOMIZATION FILES
 
-(require 'use-package)
+;;(require 'use-package)
 
 (add-to-list 'load-path (concat user-emacs-directory "elisp/"))
 ;; e.g.
-;; "~/.emacs.d/profiles/minimal/emacs/elisp/*.el"
+;; "~/.emacs.d/profiles/default/emacs/elisp/*.el"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; AUTO-SAVING
@@ -64,9 +64,9 @@
 
 (require 'real-auto-save)
 
-(add-hook 'fundamental-mode 'real-auto-save-mode)
-(add-hook 'prog-mode-hook 'real-auto-save-mode)
-(add-hook 'text-mode-hook 'real-auto-save-mode)
+(add-hook 'find-file-hook        'real-auto-save-mode)
+(add-hook 'fundamental-mode-hook 'real-auto-save-mode)
+(add-hook 'prog-mode-hook        'real-auto-save-mode)
 
 (setq real-auto-save-interval 1) ;; in seconds
 
@@ -236,8 +236,9 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; "EFFECTS"
 
-
+(server-start)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MORE SHORTCUTS (this is later to be defined after its dependent definitions)
