@@ -180,4 +180,32 @@ A numeric ARG serves as a repeat count."
 ;; e.g. ???
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; MODAL: SHELL-MODE
+
+
+
+(progn
+
+  ;; the `shell-mode` major-mode has 
+  ;; the `shell-mode-map` keymap.
+
+  (define-key comint-mode-map (kbd "<kp-prior>") 'comint-previous-input)
+  (define-key  shell-mode-map (kbd "<kp-prior>") 'comint-previous-input)
+  ;; <prior> is the page-up key
+
+  (define-key comint-mode-map  (kbd "<kp-next>") 'comint-next-input)
+  (define-key  shell-mode-map  (kbd "<kp-next>") 'comint-next-input)
+  ;; <next> is the page-down key
+
+)
+
+;; `comint-mode-map`
+;; ^ many shell modes inherit from `comint-mode`,
+;; like the (simple, built-in) `shell-mode`.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; MODAL: 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'keybindings)

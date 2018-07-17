@@ -29,8 +29,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;SIMPLE CUSTOMIZATION
 
-;; I want these few settings to be alwyas present,
-;; if the rest of this file fails, 
+;; I want these few settings to be always present,
+;; even if the rest of this file fails, 
 ;; for easier debugging.
 
 ;; This section must not have any errors itself,
@@ -40,7 +40,7 @@
 ;; ^ the standard keybindings: C-c, C-x, C-v, C-z.
 
 (setq cua-keep-region-after-copy t) 
-;; ^ Standard Windows behaviour
+;; ^ Standard Windows behaviour.
 
 (transient-mark-mode 1) 
 ;; ^ No region when nothing is highlighted.
@@ -52,9 +52,12 @@
 
 ;;(require 'use-package)
 
-(add-to-list 'load-path (concat user-emacs-directory "elisp/"))
-;; e.g.
-;; "~/.emacs.d/profiles/default/emacs/elisp/*.el"
+(add-to-list
+ 'load-path
+ (concat user-emacs-directory "elisp/"))
+
+ ;; e.g.
+ ;; "~/.emacs.d/profiles/default/emacs/elisp/*.el"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; AUTO-SAVING
