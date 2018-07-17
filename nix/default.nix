@@ -1,7 +1,7 @@
+########################################
 { nixpkgs           ? import <nixpkgs> {}
 , emacsWithPackages ? nixpkgs.emacs26WithPackages
 }:
-
 ########################################
 let
 
@@ -21,8 +21,9 @@ in
 myEmacs
 
 ########################################
+## NOTES
 
-/* NOTES
+/*
 
 Arguments:
 
@@ -86,7 +87,7 @@ non-repository emacs-package (e.g. `intero` from GitHub):
 
 ########################################
 
-/* NOTES
+/*
 
 - custom emacs executable, e.g.:
 
