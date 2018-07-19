@@ -1,4 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;VARIABLES
 
 ;; '''The way I use to maintain several .emacs.d directories in parallel is the following.
@@ -27,14 +28,17 @@
 ;; ^ distinguish this "profile" from others.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;SIMPLE CUSTOMIZATION
 
+;;NOTE
+;;
 ;; I want these few settings to be always present,
 ;; even if the rest of this file fails, 
 ;; for easier debugging.
-
-;; This section must not have any errors itself,
-;; including not doing anything complicated.
+;;
+;; Thus, this section must not have any errors itself,
+;; nor do anything too complicated.
 
 (cua-mode t)
 ;; ^ the standard keybindings: C-c, C-x, C-v, C-z.
@@ -45,8 +49,70 @@
 (transient-mark-mode 1) 
 ;; ^ No region when nothing is highlighted.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(prefer-coding-system 'utf-8)
+;; ^ TODO
 
+(setq
+ ;; "peeking" behavior when scrolling.
+ redisplay-dont-pause t
+ ;; ^
+ ;; scroll-margin 10
+ ;; ^
+ scroll-step 1
+ ;; ^
+ ;; scroll-conservatively 10000
+ ;; ^
+ scroll-preserve-screen-position 1)
+ ;; ^
+
+(defalias 'yes-or-no-p
+  'y-or-n-p)
+  ;; ^
+  ;; so you can just press one key for prompts
+  ;; (i.e. the single character "y",
+  ;; instead of typing out the phrase "yes").
+
+(setq
+ require-final-newline      nil
+ ;; ^ 
+ mode-require-final-newline nil)
+ ;; ^ 
+
+(set-background-color "#f4f4f4")
+ ;; ^
+ ;; i.e. R=xF4 G=xF4 B=xF4 
+ ;; i.e. rgb(244, 244, 244)
+ ;; i.e. faint gray (near-white)
+ ;;
+ ;; see:
+ ;;     https://ux.stackexchange.com/questions/8153/what-are-the-negative-and-positive-aspects-of-dark-color-scheme
+ 
+(setq
+ visible-bell              t)
+ ;; ^ on user errors,
+ ;; flash a black square on to the screen
+ ;; instead of honking loudly through your speakers.
+
+(setq
+ ;; fewer startup buffers
+ inhibit-splash-screen     t
+ ;; ^ 
+ initial-scratch-message nil)
+ ;; ^ 
+
+(progn
+ ;; minibuffer settings.
+ (setq
+  enable-recursive-minibuffers t)
+  ;; ^
+  ;; e.g. you can press "M-x" within a "M-x".
+  ;; e.g. you can search through (via a second "C-s") the minibuffer of a search command for the (non-mini) buffer (having pressed the first "C-s").
+ (minibuffer-depth-indicate-mode t))
+ ;; ^
+ ;; e.g. displays "M-x [2]" when you've
+ ;; (often accidentally) double-{M-x}'d.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;OTHER CUSTOMIZATION FILES
 
@@ -56,7 +122,7 @@
  'load-path
  (concat user-emacs-directory "elisp/"))
 
- ;; e.g.
+ ;; ^ e.g.
  ;; "~/.emacs.d/profiles/default/emacs/elisp/*.el"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -68,8 +134,8 @@
 (require 'real-auto-save)
 
 (add-hook 'find-file-hook        'real-auto-save-mode)
-(add-hook 'fundamental-mode-hook 'real-auto-save-mode)
-(add-hook 'prog-mode-hook        'real-auto-save-mode)
+;;(add-hook 'fundamental-mode-hook 'real-auto-save-mode)
+;;(add-hook 'prog-mode-hook        'real-auto-save-mode)
 
 (setq real-auto-save-interval 1) ;; in seconds
 
@@ -80,25 +146,56 @@
 
 (desktop-save-mode 1)
 
-(setq desktop-auto-save-timeout 5) ;; in seconds 
+(setq
+ desktop-auto-save-timeout 5)
+ ;; ^ unit of time is seconds.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EFFECTS
 
-(find-file user-init-file) 
-;; ^ should be this file itself, e.g. ".../init.el"
+(progn
+  (find-file user-init-file)
+  ;; ^ which should open this file itself,
+  ;; e.g. ".../init.el".
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; KEYBINDINGS
+;; "SBOO", my configurations and utilities
 
-(require 'keybindings)
+;;TODO
+;(require 'sboo-install)
+
+(add-to-list 'load-path
+ (concat user-emacs-directory "elisp/sboo/"))
+
+(add-to-list 'load-path
+ (concat user-emacs-directory "elisp/sboo/utilities/"))
+
+(add-to-list 'load-path
+ (concat user-emacs-directory "elisp/sboo/configurations/"))
+
+;; (add-to-list 'load-path
+;;  (concat user-emacs-directory "elisp/sboo/applications/"))
+
+(require 'sboo)
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;; KEYBINDINGS
+
+;; (require 'sboo-keybindings)
+
+;; ;; ^ my keybindings. 
+;; ;; "sboo" is my username.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BUFFERS 
 
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq
+ ediff-window-setup-function 'ediff-setup-windows-plain)
 
-(setq Buffer-menu-name-width 30) ;; (setq Buffer-menu-size-width 6)
+(setq
+ Buffer-menu-name-width 30)
+;; (setq Buffer-menu-size-width 6)
 
 (add-hook 'Buffer-menu-mode-hook (lambda() 
   (setq Buffer-menu-files-only t)
@@ -112,68 +209,16 @@
 
 (ffap-bindings)
 
-(setq-default indent-tabs-mode nil)
-;; ^ Prevent Extraneous Tabs
-;; '''Note that this line uses setq-default rather than the setq command that we have seen before;
-;; The setq-default command sets values only 
-;; in buffers that do not have their own local values for the variable.'''
-
-(when (fboundp 'electric-indent-mode)
- (electric-indent-mode -1))
-;; ^ disable automatic indentation on newlines(/ pressing return).
-
-(prefer-coding-system 'utf-8)
-;; ^ 
-
-(setq
- redisplay-dont-pause t
-;;  scroll-margin 10
- scroll-step 1
-;;  scroll-conservatively 10000
- scroll-preserve-screen-position 1)
-;; ^ 
-
-(defalias 'yes-or-no-p 'y-or-n-p)
-;; ^ can just press the Single Character "y",
-;; instead of typing out "yes", 
-;; for prompts.
-
-(setq mode-require-final-newline nil)
-(setq require-final-newline      nil)
-;; ^ 
-
-(set-background-color "#f4f4f4")
-;; ^ i.e. R=xF4 G=xF4 B=xF4 
-;; i.e. rgb(244, 244, 244)
-;; i.e. faint gray (near-white)
-;; 
-;; https://ux.stackexchange.com/questions/8153/what-are-the-negative-and-positive-aspects-of-dark-color-scheme
-
-;;; hide menubar and toolbar
-;; (menu-bar-mode -1)
-;; (tool-bar-mode -1)
-
-;; peek
-;; (setq
-;;  redisplay-dont-pause t
-;;  scroll-margin 10
-;;  scroll-step 1
-;;  scroll-conservatively 10000
-;;  scroll-preserve-screen-position 1)
-
-(setq visible-bell              t)
-(setq inhibit-splash-screen     t)
-;; ^ suppresses obnoxious sights and sounds
-
-(setq initial-scratch-message nil)
-;; 
-
-(setq enable-recursive-minibuffers t)
-;; ^ e.g. can press "M-x" within a "M-x"
-;; e.g. can search through (via a second "C-s") the minibuffer of a 
-;; search command for the (non-mini) buffer (having pressed the first "C-s").
-(minibuffer-depth-indicate-mode t)
-;; ^ e.g. displays "M-x [2]" when you've double-{M-x}'d.
+(setq-default
+ indent-tabs-mode nil)
+ ;; ^ Prevent Extraneous Tabs
+ ;; '''Note that this line uses setq-default rather than the setq command that we have seen before;
+ ;; The setq-default command sets values only 
+ ;; in buffers that do not have their own local values for the variable.'''
+ 
+;; (when (fboundp 'electric-indent-mode)
+;;  (electric-indent-mode -1))
+;;  ;; ^ disable automatic indentation on newlines(/ pressing return).
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FRAMES AND WINDOWS 
@@ -246,7 +291,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MORE SHORTCUTS (this is later to be defined after its dependent definitions)
 
-(require 'utilities)
+;;(require 'sboo-utilities)
 (global-set-key "\M-w" 'eval-region-or-last-sexp) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

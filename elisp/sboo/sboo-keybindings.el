@@ -1,4 +1,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; IMPORTS
+
+(require 'sboo-utilities "utilities")
+
+(require 'shell)
+;;;;(require 'comint)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; CUSTOM FUNCTIONS BOUND BY THE KEYBINDINGS BELOW
 
 (defun switch-to-previous-buffer ()
@@ -189,11 +197,11 @@ A numeric ARG serves as a repeat count."
   ;; the `shell-mode` major-mode has 
   ;; the `shell-mode-map` keymap.
 
-  (define-key comint-mode-map (kbd "<kp-prior>") 'comint-previous-input)
+  ;;;;(define-key comint-mode-map (kbd "<kp-prior>") 'comint-previous-input)
   (define-key  shell-mode-map (kbd "<kp-prior>") 'comint-previous-input)
   ;; <prior> is the page-up key
 
-  (define-key comint-mode-map  (kbd "<kp-next>") 'comint-next-input)
+  ;;;;(define-key comint-mode-map  (kbd "<kp-next>") 'comint-next-input)
   (define-key  shell-mode-map  (kbd "<kp-next>") 'comint-next-input)
   ;; <next> is the page-down key
 
@@ -208,4 +216,4 @@ A numeric ARG serves as a repeat count."
 ;; MODAL: 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'keybindings)
+(provide 'sboo-keybindings)
