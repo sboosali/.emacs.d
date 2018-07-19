@@ -9,6 +9,7 @@ with melpa;
  # melpa...
 
  use-package
+
  dash
  s
  
@@ -23,12 +24,17 @@ with melpa;
  multi-term
 
  haskell-mode
- markdown-mode 
  nix-mode
+ markdown-mode 
  paredit
 
  magit          # <C-x g>
  projectile
+
+ helm
+ helm-core
+ helm-dash
+ helm-make
 
 ]
 ########################################

@@ -16,6 +16,7 @@ packages/
 *~
 *.log
 eshell/history
+session.*
 
 # state
 auto-save-list/
