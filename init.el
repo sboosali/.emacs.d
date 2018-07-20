@@ -286,7 +286,36 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; "EFFECTS"
 
-(server-start)
+(defun server-start-once ()
+  "Start an Emacs Server for the `emacsclient` command, 
+  unless a server is already running.
+  We check for the presence of another Emacs Server 
+  via the existence of a specific socket; for example,
+  named \"/tmp/emacs1001/server\".
+  `server-start-once` is idempotent, modulo race conditions."
+  (interactive)
+  (let 
+      ( (server-socket-file "/tmp/emacs1001/server") ;;TODO shell out for "$UID"
+         ;; ^
+         ;; e.g. "/tmp/emacs1001/server"
+         ;; i.e. "/tmp/emacs<UserId>/<ServerName>"
+         ;; 
+         ;; NOTE when evaluated from a running Emacs Server,
+         ;; `server-socket-file` should equal `(concat server-socket-dir server-name)`
+         ;; (otherwise, some `server-*` variables are undefined).
+      )
+    (unless (file-exists-p server-socket-file)
+      ;; ^ check whether another server (named `server-name`) is already running.
+      (server-start)))
+)
+
+(server-start-once)
+
+;;
+;; https://emacs.stackexchange.com/questions/31224/how-to-test-programmatically-whether-the-current-emacs-session-among-several
+;; 
+;; "server-running-p predicate will evaluate to t if the Emacs server is running, irrespective of which Emacs session currently "owns" the server process."
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MORE SHORTCUTS (this is later to be defined after its dependent definitions)
