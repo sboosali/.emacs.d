@@ -142,13 +142,66 @@
 (setq auto-save-visited-file-name t) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; "SESSIONS"
+;;;; DESKTOP
+;; 
+;; (Multiple) Desktop "Sessions"
+;; 
 
-(desktop-save-mode 1)
+;;;; `desktop` builtin:
+(progn
+  (setq
+   desktop-auto-save-timeout 5)
+   ;; ^ unit of time is seconds.
+  (desktop-save-mode 1)
+   ;; ^ (enable a mode after configuring its variables).
+)
 
-(setq
- desktop-auto-save-timeout 5)
- ;; ^ unit of time is seconds.
+;; NOTES relevant `desktop-*` functions and variables:
+;;
+;; desktop-read
+;; desktop-save
+;; desktop-save-mode
+;; desktop-save-hook
+;; desktop-enable 
+;; desktop-base-file-name
+;; desktop-auto-save-timeout
+;; desktop-auto-save-timer
+;; desktop-buffers-not-to-save
+;; desktop-files-not-to-save
+;; desktop-modes-not-to-save
+;; desktop-path
+;; desktop-restore-eager
+;; desktop-restore-frames
+;; desktop-load-locked-desktop
+;;
+;; NOTE
+;; 
+;; To manually interact with your desktop session at any time, use:
+;; - the command ‘M-x desktop-save’ to save it.
+;; - the command ‘M-x desktop-read’ to load it.
+;;
+;; 
+	
+;;;; the `desktop+` package:
+;; 
+;; (require 'desktop+)
+;; (defconst sboo-desktop-name-default
+;;  "sboo")
+;; (desktop-create sboo-desktop-name-default)
+;; (desktop+-load   sboo-desktop-name-default)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; HISTORY
+;; the builtin `savehist` library.
+;; 
+
+(require 'savehist)
+
+(progn
+
+  
+
+  (savehist-mode 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EFFECTS
@@ -165,14 +218,21 @@
 ;;TODO
 ;(require 'sboo-install)
 
-(add-to-list 'load-path
- (concat user-emacs-directory "elisp/sboo/"))
+(progn
 
-(add-to-list 'load-path
- (concat user-emacs-directory "elisp/sboo/utilities/"))
+ (add-to-list 'load-path
+  (concat user-emacs-directory "elisp/sboo/"))
+ 
+ (add-to-list 'load-path
+  (concat user-emacs-directory "elisp/sboo/utilities/"))
+ 
+ (add-to-list 'load-path
+  (concat user-emacs-directory "elisp/sboo/packages/"))
+ 
+ (add-to-list 'load-path
+  (concat user-emacs-directory "elisp/sboo/configurations/"))
 
-(add-to-list 'load-path
- (concat user-emacs-directory "elisp/sboo/configurations/"))
+)
 
 ;; (add-to-list 'load-path
 ;;  (concat user-emacs-directory "elisp/sboo/applications/"))
