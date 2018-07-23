@@ -200,9 +200,10 @@
 (progn
 
   (setq savehist-additional-variables
-        '(
+        '(search-ring
           regexp-search-ring
-          search-ring))
+          compile-history
+          kill-ring))
   ;; ^ 
   ;; By default, Savehist mode saves only your minibuffer histories.
   ;; The line above saves your search strings, etc, too.
@@ -376,36 +377,57 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; "EFFECTS"
 
-(defun server-start-once ()
-  "Start an Emacs Server for the `emacsclient` command, 
-  unless a server is already running.
-  We check for the presence of another Emacs Server 
-  via the existence of a specific socket; for example,
-  named \"/tmp/emacs1001/server\".
-  `server-start-once` is idempotent, modulo race conditions."
+;; (defun server-start-once ()
+;;   "Start an Emacs Server for the `emacsclient` command, 
+;;   unless a server is already running.
+;;   We check for the presence of another Emacs Server 
+;;   via the existence of a specific socket; for example,
+;;   named \"/tmp/emacs1001/server\".
+;;   `server-start-once` is idempotent, modulo race conditions."
+;;   (interactive)
+;;   (let 
+;;       ( (server-socket-file "/tmp/emacs1001/server") ;;TODO shell out for "$UID"
+;;          ;; ^
+;;          ;; e.g. "/tmp/emacs1001/server"
+;;          ;; i.e. "/tmp/emacs<UserId>/<ServerName>"
+;;          ;; 
+;;          ;; NOTE when evaluated from a running Emacs Server,
+;;          ;; `server-socket-file` should equal `(concat server-socket-dir server-name)`
+;;          ;; (otherwise, some `server-*` variables are undefined).
+;;       )
+;;     (unless (file-exists-p server-socket-file)
+;;       ;; ^ check whether another server (named `server-name`) is already running.
+;;       (server-start)))
+;; )
+
+(defun server-start-unless-running ()
+  "Run `server-start`,
+   unless another Emacs Server is already running (for the same user).
+   Platform-compability: only Unix."
   (interactive)
-  (let 
-      ( (server-socket-file "/tmp/emacs1001/server") ;;TODO shell out for "$UID"
-         ;; ^
-         ;; e.g. "/tmp/emacs1001/server"
-         ;; i.e. "/tmp/emacs<UserId>/<ServerName>"
-         ;; 
-         ;; NOTE when evaluated from a running Emacs Server,
-         ;; `server-socket-file` should equal `(concat server-socket-dir server-name)`
-         ;; (otherwise, some `server-*` variables are undefined).
-      )
-    (unless (file-exists-p server-socket-file)
-      ;; ^ check whether another server (named `server-name`) is already running.
-      (server-start)))
-)
+  (let* ((tmp
+          (getenv "TMPDIR"))
+          ;; ^ i.e. "$TMPDIR"
+         (uid
+          (number-to-string (user-real-uid)))
+          ;; ^ i.e. "$UID"
+         (server-socket-file
+          (concat tmp "emacs" uid "/server")))
+          ;; ^
+          ;; e.g. "/tmp/emacs1001/server"
+          ;; i.e. "/tmp/emacs<UserId>/<ServerName>"
+  (unless (file-exists-p server-socket-file)
+    (server-start))))
+  ;; ^ via @markhellewell
 
-(server-start-once)
+(server-start-unless-running)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; https://emacs.stackexchange.com/questions/31224/how-to-test-programmatically-whether-the-current-emacs-session-among-several
 ;; 
 ;; "server-running-p predicate will evaluate to t if the Emacs server is running, irrespective of which Emacs session currently "owns" the server process."
-
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MORE SHORTCUTS (this is later to be defined after its dependent definitions)

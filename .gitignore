@@ -17,6 +17,7 @@ packages/
 *.log
 eshell/history
 session.*
+.emacs-buffers
 
 # state
 auto-save-list/
