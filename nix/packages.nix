@@ -10,11 +10,13 @@ with melpa;
 
  use-package
 
- dash
- s
+ dash  # (the `-` prefix)
+ s     # `s`trings
+ f     # `f`iles
  
  real-auto-save
  tabbar
+ ## desktop-plus
 
  color-theme
  smooth-scrolling
@@ -24,8 +26,12 @@ with melpa;
  multi-term
 
  haskell-mode
+ dante
+
  nix-mode
+
  markdown-mode 
+
  paredit
 
  magit          # <C-x g>
