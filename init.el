@@ -1,34 +1,11 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;VARIABLES
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;CONSTANTS/VARIABLES
 
-;; '''The way I use to maintain several .emacs.d directories in parallel is the following.
-
-;; emacs is started like this:
-
-;; alias emacs-windows='./result/bin/emacs -q --load "~/.emacs.d-windows/init.el"'
-;; alias emacs-here='./result/bin/emacs -q --load "./init.el"' # relative filepath
-
-;; Each init.el file begins like this, to correctly set up the user-init-file and user-emacs-directory variables:
-
+;;TODO defvar
 (setq user-init-file       (or load-file-name (buffer-file-name)))
 (setq user-emacs-directory (file-name-directory user-init-file))
 
-;; The patch which allows you to specify .emacs.d location via `EMACS_USER_DIRECTORY' environment variable is available but not merged.'''
-
-;; e.g.
-;; > M-: user-init-file
-
-;; e.g. on Windows: 
-;; > user-emacs-directory 
-;; "c:/Users/Spiros/AppData/Roaming/.emacs.d/" 
-
-;;(setq my-profile-name "emacs-minimal")
-(setq my-profile-name "emacs-default")
-;; ^ distinguish this "profile" from others.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;SIMPLE CUSTOMIZATION
 
 ;;NOTE
@@ -224,15 +201,12 @@
 ;; NOTE, Emacs truncates minibuffer history automatically,
 ;; so the file shouldn't grow indefinitely.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; `savehist`
+;;;;NOTES:
 ;;
-;; Persists arbitrary `read`able `elisp` variables.
+;; `savehist` Persists arbitrary `read`able `elisp` variables.
 ;;
 ;; Values which can't be read back can't be saved and restored, but anything else could be persisted.
 ;; savehist doesn't care whether or not a variable "changes regularly", but if the variable doesn't contain a history of values then savehist isn't necessarily very useful -- savehist doesn't track the sequence of values of a variable over time; it just saves the current value of the variables it's interested in. Obviously that's fine for variables containing a list of historical values. For variables with a single changing value, you would just be remembering the most recent one of those (and any changes to that value which occurred between savehist saves wouldn't be noticed at all).
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EFFECTS
@@ -321,7 +295,7 @@
 (defun maximize-frame () (interactive) 
   (set-frame-parameter nil 'fullscreen 'maximized))
 
-(set-frame-parameter nil 'title my-profile-name)
+(set-frame-parameter nil 'title "SBoo's Emacs")
 ;; the title of the operating-system-window 
 ;; `my-frame-title`
 
@@ -373,6 +347,65 @@
       (winner-mode 1))
 ;; ^
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; `compilation-mode`
+
+;;TODO
+(setq compilation-always-kill t)
+;; ^
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; `use(d)-package(s)`
+
+(require 'use-package)
+
+(use-package term
+  :bind
+  (("C-c t" . term)
+   :map term-mode-map
+   ("<kp-prior>" . term-send-up)
+   ("<kp-next>"  . term-send-down)
+   ("<tab>"      . self-insert-command)));;TODO
+   ;; ^ "Keys defined by global-set-key are shadowed by any local binding."
+
+
+;; see:
+;;      https://github.com/jwiegley/use-package/
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; `hl-line` Highlighting the Current Line
+
+(set-face-background 'hl-line "#dedede")
+  ;; ^ Set a color as the background face of the current line.
+  ;; "#dedede" is Light-Gray.
+
+(set-face-foreground 'highlight nil)
+  ;; ^ keep syntax highlighting in the current line.
+
+(global-hl-line-mode 1)
+  ;; ^ enable hl-line.
+  ;; i.e. continuously highlight the current line of the active window (of the topmost frame?)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; registers
+
+;; (setq register-separator ?+)
+;; (set-register register-separator "\n\n")
+;;
+;; (defun yank-register() 
+;;  (interactive)
+;; )
+
+(defun sboo-paste-from-register (register-character)
+  (interactive "cPaste from Register:")
+  (insert-register register-character 't))
+
+(defun sboo-copy-into-register (register-character)
+  (interactive "cCopy to Register:")
+  (copy-to-register register-character (region-beginning) (region-end))
+  (cua-cancel))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; "EFFECTS"
@@ -406,13 +439,14 @@
    Platform-compability: only Unix."
   (interactive)
   (let* ((tmp
-          (getenv "TMPDIR"))
-          ;; ^ i.e. "$TMPDIR"
+          "/tmp")
+          ;; (getenv "TMPDIR"))
+          ;; ;; ^ i.e. "$TMPDIR"
          (uid
           (number-to-string (user-real-uid)))
           ;; ^ i.e. "$UID"
          (server-socket-file
-          (concat tmp "emacs" uid "/server")))
+          (concat tmp "/" "emacs" uid "/" "server")))
           ;; ^
           ;; e.g. "/tmp/emacs1001/server"
           ;; i.e. "/tmp/emacs<UserId>/<ServerName>"
@@ -436,24 +470,8 @@
 (global-set-key "\M-w" 'eval-region-or-last-sexp) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; automatically inserted by emacs via customize-variable:
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (use-package)))
- '(safe-local-variable-values
-   (quote
-    ((dante-repl-command-line "nix-shell" "/home/sboo/haskell/cards/default.nix" "-A" "shells.ghc" "--run" "cabal new-repl cards-frontend")
-     (dante-repl-command-line "nix-shell" "/home/sboo/haskell/magic-card-search/shell.nix" "--run" "cabal repl magic-card-search")))))
-
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(put 'erase-buffer 'disabled nil)
+(setq custom-file "~/.emacs.d/custom.el")
+;; ^ the `custom-file` is automatically managed (i.e. inserted into) by emacs,
+;; via `customize-variable`.
+(load custom-file)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

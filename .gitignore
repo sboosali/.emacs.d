@@ -19,6 +19,9 @@ eshell/history
 session.*
 .emacs-buffers
 
+# my Emacs
+persisted/
+
 # state
 auto-save-list/
 backups/
