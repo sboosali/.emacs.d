@@ -4,9 +4,11 @@
 ;;(require ')
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; for sboo-keybindings
+;;
 
-
+(defun sboo-find-user-init-file ()
+  (interactive)
+  (find-file user-init-file))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
