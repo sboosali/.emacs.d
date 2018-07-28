@@ -1,8 +1,148 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'haskell-mode)
+;;(require 'haskell-mode)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Configuration
 
+;; (defgroup ghcid nil
+;;   "GHCiD, a.k.a. the 'GHCi daemon' a.k.a. 'GHC interactive development'."
+;;   :group 'haskell)
 
+;; (defcustom ghcid-debug nil
+;;   "Show debug output."
+;;   :group 'ghcid
+;;   :type '(set (const inputs) (const outputs) (const responses) (const command-line)))
+
+;; (defcustom ghcid-repl-command-line nil
+;;   "Command line to start GHCi, as a list: the executable and its arguments.
+;; When nil, ghcid will guess the value depending on
+;; `ghcid-project-root' contents.  This should usually be customized
+;; as a file or directory variable.  Each element of the list is a
+;; sexp which is evaluated to a string before being passed to the
+;; shell."
+;;   :group 'ghcid
+;;   :type '(repeat sexp))
+
+;; (defcustom ghcid-project-root nil
+;;   "The project root, as a string or nil.
+;; When nil, ghcid will guess the value by looking for a cabal file.
+;; Customize as a file or directory variable."
+;;   :group 'ghcid
+;;   :type '(choice (const nil) string))
+
+;; (put 'ghcid-project-root 'safe-local-variable #'stringp)
+
+;; (defcustom ghcid-target nil
+;;   "The target to demand from cabal repl, as a string or nil.
+;; Customize as a file or directory variable.  Different targets
+;; will be in different GHCi sessions."
+;;   :group 'ghcid
+;;   :type '(choice (const nil) string))
+
+;; (put 'ghcid-target 'safe-local-variable #'stringp)
+
+;; (defun ghcid-project-root ()
+;;   "Get the root directory for the project.
+;; If `ghcid-project-root' is set as a variable, return that,
+;; otherwise look for a .cabal file, or use the current dir."
+;;   (file-name-as-directory
+;;    (or ghcid-project-root
+;;        (set (make-local-variable 'ghcid-project-root)
+;;             (file-name-directory (or (ghcid-cabal-find-file) (ghcid-buffer-file-name)))))))
+
+;; (defun ghcid-repl-by-file (root files cmdline)
+;;   "Return if ROOT / file exists for any file in FILES, return CMDLINE."
+;;   (when (-any? (lambda (file) (file-exists-p (concat root file))) files) cmdline))
+
+;; (defcustom ghcid-repl-command-line-methods-alist
+;;   `((styx  . ,(lambda (root) (ghcid-repl-by-file root '("styx.yaml") '("styx" "repl" ghcid-target))))
+;;     (nix   . ,(lambda (root) (ghcid-repl-by-file root '("shell.nix" "default.nix")
+;;                                                       '("nix-shell" "--run" (concat "cabal repl " (or ghcid-target "") " --builddir=dist/ghcid")))))
+;;     (stack . ,(lambda (root) (ghcid-repl-by-file root '("stack.yaml") '("stack" "repl" ghcid-target))))
+;;     (mafia . ,(lambda (root) (ghcid-repl-by-file root '("mafia") '("mafia" "repl" ghcid-target))))
+;;     (new-build . ,(lambda (root) (when (or (directory-files root nil ".+\\.cabal$") (file-exists-p "cabal.project"))
+;;                                    '("cabal" "new-repl" ghcid-target "--builddir=dist/ghcid"))))
+;;     (bare  . ,(lambda (_) '("cabal" "repl" ghcid-target "--builddir=dist/ghcid"))))
+;; "GHCi launch command lines.
+;; This is an alist from method name to a function taking the root
+;; directory and returning either a command line or nil if the
+;; method should not apply.  The first non-nil result will be used as
+;; a command line.  Customize this if you do not want certain methods
+;; to be used by default by ghcid.  If you want a specific
+;; configuration for your project, customize
+;; `ghcid-repl-command-line' directly, f as a directory-local
+;; variable."
+;;   :type '(alist :key-type symbol :value-type function))
+
+;; (defvar ghcid-command-line "command line used to start GHCi")
+
+;; (defun ghcid-repl-command-line ()
+;;   "Return the command line for running GHCi.
+;; If the custom variable `ghcid-repl-command-line' is non-nil, it
+;; will be returned.  Otherwise, use
+;; `ghcid-repl-command-line-methods-alist'."
+;;   (or ghcid-repl-command-line
+;;       (let ((root (ghcid-project-root)))
+;;         (--first it (--map (funcall (cdr it) root)
+;;                            ghcid-repl-command-line-methods-alist)))))
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;; Mode
+
+;; (defvar ghcid-mode-map (make-sparse-keymap) "Ghcid minor mode's map.")
+
+;; (defun ghcid-status ()
+;;   "Return ghcid's status for the current source buffer."
+;;   (let ((buf (ghcid-buffer-p)))
+;;     (if (not buf) "stopped"
+;;       (with-current-buffer buf
+;;         (s-join ":"
+;;            (-non-nil
+;;             (list (format "%s" ghcid-state)
+;;                   (when lcr-process-callback (format "busy(%s)" (1+ (length ghcid-queue)))))))))))
+
+;; ;;;###autoload
+;; (define-minor-mode ghcid-mode
+;;   "Minor mode for Ghcid.
+;; `ghcid-mode' takes one optional (prefix) argument.
+;; Interactively with no prefix argument, it toggles ghcid.
+;; A prefix argument enables ghcid if the argument is positive,
+;; and disables it otherwise.
+;; When called from Lisp, the `ghcid-mode' toggles ghcid if the
+;; argument is `toggle', disables ghcid if the argument is a
+;; non-positive integer, and enables ghcid otherwise (including
+;; if the argument is omitted or nil or a positive integer).
+;; \\{ghcid-mode-map}"
+;;   :lighter (:eval (concat " Danté:" (ghcid-status)))
+;;   :keymap ghcid-mode-map
+;;   :group ghcid
+;;   (if ghcid-mode
+;;       (progn (flycheck-select-checker 'haskell-ghcid))
+;;       (progn (flycheck-select-checker nil))))
+
+;; (define-key ghcid-mode-map (kbd "C-c .") 'ghcid-type-at)
+;; (define-key ghcid-mode-map (kbd "C-c ,") 'ghcid-info)
+;; (define-key ghcid-mode-map (kbd "C-c /") 'attrap-attrap) ;; deprecated keybinding
+;; (define-key ghcid-mode-map (kbd "C-c \"") 'ghcid-eval-block)
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;;
+
+;; (defun ghcid-project-root ()
+;;   "Get the root directory for the project.
+;; If `ghcid-project-root' is set as a variable, return that,
+;; otherwise look for a .cabal file, or use the current dir."
+;;   (file-name-as-directory
+;;    (or ghcid-project-root
+;;        (set (make-local-variable 'ghcid-project-root)
+;;             (file-name-directory (or (ghcid-cabal-find-file) (ghcid-buffer-file-name)))))))
+
+;; (defun ghcid--cabal-new-build-command()
+;;  ("cabal" "new-repl" ghcid-target "--builddir=dist/ghcid"))))
+
+;; ;; e.g.
+;; ;;
+;; ;;    `(new-build . ,(lambda (root) (when (or (directory-files root nil ".+\\.cabal$") (file-exists-p "cabal.project"))
+;; ;;                                    '("cabal" "new-repl" dante-target "--builddir=dist/dante"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Constants

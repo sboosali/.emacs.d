@@ -1,9 +1,9 @@
 melpa: stable: elpa: org: 
 
 ########################################
-with melpa; 
+let
 
-[
+officialPackages = with melpa; [
 
  ####################
  # melpa...
@@ -42,5 +42,14 @@ with melpa;
  helm-dash
  helm-make
 
-]
+];
+
+unofficialPackages = [
+];
+
+in
+########################################
+
+officialPackages ++ unofficialPackages
+
 ########################################

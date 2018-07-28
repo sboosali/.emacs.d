@@ -135,7 +135,9 @@ A numeric ARG serves as a repeat count."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NUMPAD
 
-;(global-set-key (kbd "<kp-insert>") 'electric-buffer-list) 
+(global-set-key (kbd "<kp-insert>") 'electric-buffer-list)
+
+(global-set-key (kbd "<kp-delete>") 'flycheck-list-errors)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; META-MODIFIER
@@ -188,9 +190,14 @@ A numeric ARG serves as a repeat count."
 ;; e.g. ???
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; MODAL: SHELL-MODE
+;; MODAL: SHELL-MODES
 
-
+;; (require 'eshell)
+;; (progn
+;;   (define-key eshell-mode-map
+;;     (kbd "<kp-prior>") 'eshell-previous-input)
+;;   (define-key eshell-mode-map
+;;     (kbd "<kp-next>") 'eshell-next-input))
 
 (progn
 

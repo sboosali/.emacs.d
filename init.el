@@ -4,8 +4,7 @@
 ;;TODO defvar
 (setq user-init-file       (or load-file-name (buffer-file-name)))
 (setq user-emacs-directory (file-name-directory user-init-file))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;SIMPLE CUSTOMIZATION
 
 ;;NOTE
@@ -215,6 +214,7 @@
   (find-file user-init-file)
   ;; ^ which should open this file itself,
   ;; e.g. ".../init.el".
+  (find-file "~/haskell/")
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -376,17 +376,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; `hl-line` Highlighting the Current Line
 
+(global-hl-line-mode 1)
+  ;; ^ enable hl-line.
+  ;; i.e. continuously highlight the current line of the active window (of the topmost frame?)
+
 (set-face-background 'hl-line "#dedede")
   ;; ^ Set a color as the background face of the current line.
   ;; "#dedede" is Light-Gray.
 
 (set-face-foreground 'highlight nil)
   ;; ^ keep syntax highlighting in the current line.
-
-(global-hl-line-mode 1)
-  ;; ^ enable hl-line.
-  ;; i.e. continuously highlight the current line of the active window (of the topmost frame?)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; registers

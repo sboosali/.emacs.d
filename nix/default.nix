@@ -7,13 +7,13 @@ let
 
 utilities = (import ./utilities.nix) emacsWithPackages;
 
-packages = import ./packages.nix;
+myPackages = import ./packages.nix;
 
 in
 ########################################
 let
 
-myEmacs = utilities.emacsWith packages;
+myEmacs = utilities.emacsWith myPackages;
 
 in
 ########################################
@@ -142,7 +142,4 @@ in customEmacsPackages.emacsWithPackages (epkgs: [ epkgs.evil epkgs.magit ])
 ```
 
 */
-
-########################################
-
 ########################################
