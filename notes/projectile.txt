@@ -1,0 +1,46 @@
+========================================
+Projectile Exclusions
+
+https://emacs.stackexchange.com/questions/16497/how-to-exclude-files-from-projectile
+
+----------------------------------------
+
+projectile offers four customizations for *globally* ignoring files/directories:
+
+- projectile-globally-ignored-files
+
+A list of files globally ignored by projectile.
+
+- projectile-globally-ignored-directories
+
+A list of directories globally ignored by projectile.
+
+- projectile-globally-ignored-file-suffixes
+
+A list of file suffixes globally ignored by projectile.
+
+- projectile-globally-ignored-modes
+
+A list of regular expressions for major modes ignored by projectile.
+
+If a buffer is using a given major mode, projectile will ignore it for functions working with buffers.
+
+----------------------------------------
+
+projectile offers customizations for *locally* (i.e. project-specifically) ignoring files/directories via a config-file:
+
+- add a `.projectile` file to the project's root
+
+- add any paths-to-ignore, each prefixed with `-`, e.g.
+
+    # .projectile
+    -/CMake
+
+----------------------------------------
+
+========================================
+
+
+
+
+========================================
