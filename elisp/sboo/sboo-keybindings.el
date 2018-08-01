@@ -34,7 +34,51 @@ A numeric ARG serves as a repeat count."
 
 ;;;;;;;;;;
 
+(defun sboo-split-window-left-right ()
+  ".
+  "
+  (interactive)
+  
+  (delete-other-windows)
+  (split-window-horizontally)
+  (other-window 1)
+  (switch-to-next-buffer)
+  (other-window 1)
 
+)
+;; ^
+
+;;;;;;;;;;
+
+(defun launch-shell ()
+  (interactive)
+  (switch-to-buffer "*shell*" nil 'force-same-window))
+
+(defun launch-term ()
+  (interactive)
+  (term "/bin/bash"))
+
+;;;;;;;;;;
+
+;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Management / Navigation, for Buffers / Windows / Frames.
+
+(global-set-key (kbd "s-o") 'other-window);;TODO
+
+(global-set-key (kbd "s-s") 'launch-shell)
+(global-set-key (kbd "s-t") 'launch-term)
+
+(global-set-key (kbd "s-h") 'sboo-split-window-left-right)
+
+;;TODO
+;; (global-set-key (kbd "s-s") 'shell)
+;; (global-set-key (kbd "s-t") 'term)
+
+;;TODO
+;; (defun launch-shell ()
+;;   (switch-to-buffer "*shell*" nil 'force-same-window))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UNSET
@@ -76,9 +120,8 @@ A numeric ARG serves as a repeat count."
 ;; (delete-other-windows &optional WINDOW)
 ;; OR 'redo
 
-(global-set-key (kbd "<f7>")  'electric-buffer-list)
+(global-set-key (kbd "<f7>")  'helm-buffers-list)
 ;; ^ like [C-x C-b] (but not the default).
-;; (electric-buffer-list ARG)
 
 (global-set-key (kbd "<f8>")  'switch-to-previous-buffer)
 ;; ^ like M-` (alluding to M-<tab>) within other applications.
@@ -115,8 +158,9 @@ A numeric ARG serves as a repeat count."
 ;; see https://stackoverflow.com/questions/275842/is-there-a-repeat-last-command-in-emacs
 ;; "similar to M-x M-p, except that repeat-complex-command repeats previous arguments."
 
-(global-set-key (kbd "<f12>") 'execute-extended-command)
+(global-set-key (kbd "<f12>") 'helm-M-x)
 ;; ^ M-x
+;; a.k.a.'execute-extended-command
 
 ;; NOTES:
 ;; (global-set-key (kbd "<f1>")  ')
@@ -133,12 +177,45 @@ A numeric ARG serves as a repeat count."
 ;; (global-set-key (kbd "<f12>") ')
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; WEIRD KEYS
+
+(global-set-key (kbd "<insert>") 'yank)
+
+(global-set-key (kbd "<print>") 'kill-ring-save)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NUMPAD
 
-(global-set-key (kbd "<kp-insert>") 'electric-buffer-list)
+(global-set-key (kbd "<kp-insert>") 'helm-buffer-list)
+  ;; ^ alternatives:
+  ;;
+  ;; - buffer-list
+  ;; - electric-buffer-list
+  ;; - helm-buffers-list
+  ;;
 
-(global-set-key (kbd "<kp-delete>") 'flycheck-list-errors)
+(global-set-key (kbd "<kp-enter>") 'helm-find-files)
+  ;; ^ alternatives:
+  ;;
+  ;; - find-file
+  ;; - find-file-existing
+  ;; - find-file-at-point
+  ;; - helm-find-files
+  ;; 
 
+(global-set-key (kbd "<kp-add>") 'projectile-find-file)
+  ;; ^ alternatives:
+  ;;
+
+(global-set-key (kbd "<kp-subtract>") 'projectile-grep)
+  ;; ^ 
+
+(global-set-key (kbd "<kp-delete>") 'set-mark-command)
+;; 'flycheck-list-errors
+
+(global-set-key (kbd "<kp-multiply>") 'launch-shell)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; META-MODIFIER
 
@@ -160,13 +237,20 @@ A numeric ARG serves as a repeat count."
 
 ; (global-set-key (kbd "<f9>") 'pop-tag-mark)
 
+(global-set-key (kbd "C-o") 'other-window)
+;;;(global-set-key (kbd "C-x C-o") 'other-window)
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; KEYBOARD-SPECIFIC 
 
-(global-set-key (kbd "<pause>")        'set-mark-command)
-
-(global-set-key (kbd "<apps>") 'execute-extended-command)
+(global-set-key (kbd "<apps>") 'helm-buffers-list)
+(global-set-key (kbd "<menu>") 'helm-buffers-list)
 ;; ^ Windows(-keyboard)-specific.
+;;
+;; both keys, "<apps>" and "<menu>" looked the same key;
+;; same location/icon, on different keyboards.
+;;
 ;; the <apps> key looks like: a rectangle; a mouse clicking on a menu item of a menu.
 ;; it's on right at the bottom row.
 
