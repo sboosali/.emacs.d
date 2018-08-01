@@ -3,10 +3,8 @@
 ;;; CONSTANTS/VARIABLES
 
 ;;TODO defvar
-(setq user-init-file       (or load-file-name (buffer-file-name)))
-(setq user-emacs-directory (file-name-directory user-init-file))
-
-;;SIMPLE CUSTOMIZATION
+(setq sboo-init-file       (or load-file-name (buffer-file-name)))
+(setq sboo-emacs-directory (file-name-directory sboo-init-file))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15,33 +13,33 @@
 (progn
 
   (add-to-list 'load-path
-    user-emacs-directory);;TODO remove, emacs warned me against this.
+    sboo-emacs-directory);;TODO remove, emacs warned me against this.
     ;; ^ e.g. "~/.emacs.d/*.el"
 
   (add-to-list 'load-path
-    (concat user-emacs-directory "elisp/"))
+    (concat sboo-emacs-directory "elisp/"))
     ;; ^ e.g. "~/.emacs.d/elisp/*.el"
 )
 
 (progn
 
  (add-to-list 'load-path
-  (concat user-emacs-directory "elisp/sboo/"))
+  (concat sboo-emacs-directory "elisp/sboo/"))
  
  (add-to-list 'load-path
-  (concat user-emacs-directory "elisp/sboo/utilities/"))
+  (concat sboo-emacs-directory "elisp/sboo/utilities/"))
  
  (add-to-list 'load-path
-  (concat user-emacs-directory "elisp/sboo/initialization/"))
+  (concat sboo-emacs-directory "elisp/sboo/initialization/"))
  
  (add-to-list 'load-path
-  (concat user-emacs-directory "elisp/sboo/configurations/"))
+  (concat sboo-emacs-directory "elisp/sboo/configurations/"))
 
  (add-to-list 'load-path
-  (concat user-emacs-directory "elisp/sboo/packages/"))
+  (concat sboo-emacs-directory "elisp/sboo/packages/"))
 
 ;; (add-to-list 'load-path
-;;  (concat user-emacs-directory "elisp/sboo/applications/"))
+;;  (concat sboo-emacs-directory "elisp/sboo/applications/"))
  
 )
 
@@ -55,6 +53,9 @@
 (require 'sboo-init-with-installed-packages-too)
 
 (require 'sboo)
+
+;;TODO
+(require 'haskell--projectile-compile--direnv-nixshell)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

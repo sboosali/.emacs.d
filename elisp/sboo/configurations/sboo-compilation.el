@@ -4,8 +4,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq compilation-always-kill t)
-;; ^TODO
+(setq
+ compilation-always-kill t)
+ ;; ^TODO
 
 ;;;(use-package compilation-mode)
 

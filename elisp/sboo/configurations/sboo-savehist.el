@@ -23,7 +23,8 @@
   ;; 
 
   (setq savehist-file
-        (concat user-emacs-directory "persisted/savehist/savehist.el"))
+        (concat sboo-emacs-directory
+                "persisted/savehist/savehist.el"))
 
   (savehist-mode 1)
   ;; ^ enabling `savehist-mode` must come after all `savehist-*` customizations

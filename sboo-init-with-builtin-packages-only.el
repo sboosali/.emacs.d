@@ -28,9 +28,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'sboo-desktop)
-
-;; (sboo-config-)
+(progn
+  (require 'sboo-desktop)
+  (sboo-config-desktop))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

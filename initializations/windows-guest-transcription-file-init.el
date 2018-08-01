@@ -200,10 +200,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; init.el
-;; user-init-file is .emacs
-;; user-emacs-directory is:
-;; c:/Users/IEUser/AppData/Roaming/.emacs.d/.emacs.d/
-(find-file (concat user-emacs-directory "init.el"))
+;;
+;; `sboo-init-file` is:
+;;     .emacs
+;;
+;; `sboo-emacs-directory` is:
+;;
+;;     C:/Users/IEUser/AppData/Roaming/.emacs.d/.emacs.d/
+;;
+(find-file (concat sboo-emacs-directory "init.el"))
 
 (find-file shared-folder-transcription-file)
 (erase-buffer)

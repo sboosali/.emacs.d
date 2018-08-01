@@ -1,4 +1,4 @@
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; DESKTOP
 ;; 
@@ -6,13 +6,29 @@
 ;;
 ;; (Multiple) Desktop "Sessions"
 ;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn
-  (setq
-   desktop-auto-save-timeout 5)
-   ;; ^ unit of time is seconds.
-  (desktop-save-mode 1)
-   ;; ^ (enable a mode after configuring its variables).
+(defvar sboo-desktop-directory
+  (if (boundp 'sboo-emacs-directory)
+      sboo-emacs-directory
+    default-directory))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-config-desktop ()
+  "
+  "
+  (interactive)
+
+  (progn
+    (setq desktop-auto-save-timeout 5)
+    ;; ^ unit of time is seconds.
+    (desktop-save-mode 1)
+    ;; ^ (enable a mode after configuring its variables).
+    )
+
+  (desktop-read )
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

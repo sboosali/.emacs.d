@@ -12,10 +12,10 @@
 ;; The patch which allows you to specify .emacs.d location via `EMACS_USER_DIRECTORY' environment variable is available but not merged.'''
 
 ;; e.g.
-;; > M-: user-init-file
+;; > M-: sboo-init-file
 
 ;; e.g. on Windows: 
-;; > user-emacs-directory 
+;; > sboo-emacs-directory 
 ;; "c:/Users/Spiros/AppData/Roaming/.emacs.d/" 
 
 (setq my-profile-name "emacs-sboo")

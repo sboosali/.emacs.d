@@ -210,10 +210,15 @@ A numeric ARG serves as a repeat count."
 (global-set-key (kbd "<kp-subtract>") 'projectile-grep)
   ;; ^ 
 
-(global-set-key (kbd "<kp-delete>") 'set-mark-command)
-;; 'flycheck-list-errors
-
 (global-set-key (kbd "<kp-multiply>") 'launch-shell)
+  ;; ^ 
+
+(global-set-key (kbd "<kp-divide>") 'launch-term)
+  ;; ^ 
+
+(global-set-key (kbd "<kp-delete>") 'set-mark-command)
+  ;; ^ 
+;; 'flycheck-list-errors
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
