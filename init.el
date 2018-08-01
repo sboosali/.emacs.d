@@ -12,12 +12,38 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; LOAD PATHS
 
-(add-to-list 'load-path
-  user-emacs-directory);;TODO remove, emacs warned me against this.
-  ;; ^ e.g.
-  ;; "~/.emacs.d/*.el"
+(progn
 
-(require 'init-load-paths);;TODO no, this should be in init.el
+  (add-to-list 'load-path
+    user-emacs-directory);;TODO remove, emacs warned me against this.
+    ;; ^ e.g. "~/.emacs.d/*.el"
+
+  (add-to-list 'load-path
+    (concat user-emacs-directory "elisp/"))
+    ;; ^ e.g. "~/.emacs.d/elisp/*.el"
+)
+
+(progn
+
+ (add-to-list 'load-path
+  (concat user-emacs-directory "elisp/sboo/"))
+ 
+ (add-to-list 'load-path
+  (concat user-emacs-directory "elisp/sboo/utilities/"))
+ 
+ (add-to-list 'load-path
+  (concat user-emacs-directory "elisp/sboo/initialization/"))
+ 
+ (add-to-list 'load-path
+  (concat user-emacs-directory "elisp/sboo/configurations/"))
+
+ (add-to-list 'load-path
+  (concat user-emacs-directory "elisp/sboo/packages/"))
+
+;; (add-to-list 'load-path
+;;  (concat user-emacs-directory "elisp/sboo/applications/"))
+ 
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
