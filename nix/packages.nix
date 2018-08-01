@@ -10,13 +10,14 @@ officialPackages = with melpa; [
 
  use-package
 
- dash  # (the `-` prefix)
- s     # `s`trings
- f     # `f`iles
+ dash           # (the `-` prefix)
+ s              # `s`trings
+ f              # `f`iles
  
  real-auto-save
  tabbar
- ## desktop-plus
+ shackle
+ window-purpose
 
  color-theme
  smooth-scrolling
@@ -26,7 +27,7 @@ officialPackages = with melpa; [
  multi-term
 
  haskell-mode
- dante
+ dante           # needs `ghc` (or `cabal`, or `stack`, etc) system-package
 
  nix-mode
 
@@ -36,6 +37,7 @@ officialPackages = with melpa; [
 
  magit          # <C-x g>
  projectile
+ direnv         # needs `direnv` system-package
 
  helm
  helm-core
