@@ -60,6 +60,15 @@ A numeric ARG serves as a repeat count."
 
 ;;;;;;;;;;
 
+(defun sboo-projectile-find-file ()
+  (interactive)
+  (projectile-find-file))
+  ;;OLD (projectile-find-file (make-hash-table))
+
+;; (defun sboo-projectile-grep ()
+;;   (interactive)
+;;   (projectile-grep))
+
 ;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -203,7 +212,7 @@ A numeric ARG serves as a repeat count."
   ;; - helm-find-files
   ;; 
 
-(global-set-key (kbd "<kp-add>") 'projectile-find-file)
+;;TODO BROKEN (global-set-key (kbd "<kp-add>") 'sboo-projectile-find-file)
   ;; ^ alternatives:
   ;;
 
