@@ -164,37 +164,6 @@
 ;; (global-set-key (kbd "<kp-KEY>")	'dante-eval-block)	; C-c ”
 ;; (global-set-key (kbd "<kp-KEY>") 'dante-auto-fix) 		; C-c /
 
-;; <kp-0>		0
-;; <kp-1>		1
-;; <kp-2>		2
-;; <kp-3>		3
-;; <kp-4>		4
-;; <kp-5>		5
-;; <kp-6>		6
-;; <kp-7>		7
-;; <kp-8>		8
-;; <kp-9>		9
-;; <kp-add>	+
-;; <kp-begin>	<begin>
-;; <kp-decimal>	.
-;; <kp-delete>	<deletechar>
-;; <kp-divide>	/
-;; <kp-down>	<down>
-;; <kp-end>	<end>
-;; <kp-enter>	RET
-;; <kp-equal>	=
-;; <kp-home>	<home>
-;; <kp-insert>	<insert>
-;; <kp-left>	<left>
-;; <kp-multiply>	*
-;; <kp-next>	<next>
-;; <kp-prior>	<prior>
-;; <kp-right>	<right>
-;; <kp-separator>	,
-;; <kp-space>	SPC
-;; <kp-subtract>	-
-;; <kp-tab>	TAB
-;; <kp-up>		<up>
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MARK RING 

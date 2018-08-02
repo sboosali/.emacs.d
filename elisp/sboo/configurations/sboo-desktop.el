@@ -37,14 +37,18 @@
   "
   (interactive)
 
-  (setq desktop-auto-save-timeout 5)
-  ;; ^ unit of time is seconds.
-  
-  (desktop-save-mode 1)
-  ;; ^ (enable a mode after configuring its variables).
+  (setq
+   desktop-load-locked-desktop t
+   ;; ^ `t` means "load the desktop (on startup) without asking"
+   desktop-auto-save-timeout 5)
+   ;; ^ unit of time is seconds.
+   ;; auto-saves to a separate file.
 
   (desktop-read sboo-desktop-directory)
   ;; ^
+
+  (desktop-save-mode 1)
+  ;; ^ (enable a mode after configuring its variables).
 )
 
 ;; TODO auto-save this every so-often (or on  buffer create/delete change events).
@@ -58,18 +62,27 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; `desktop-path`
+;;
 ;; default value is `("~/.emacs.d/" "~")`
 ;;
 ;; > List of directories to search for the desktop file.
 ;; > The base name of the file is specified in ‘desktop-base-file-name’.
 ;;
 
-;; `desktop-base-file-name is a variable defined in ‘desktop.el’.
-;; Its value is ".emacs.desktop"
-;; Name of file for Emacs desktop, excluding the directory part.
+;; `desktop-base-file-name`
+;;
+;; default value is `".emacs.desktop"`
+;;
+;; > Name of file for Emacs desktop, excluding the directory part.
+;;
 
+;; `desktop-load-locked-desktop`:
+;; 
+;; > The file in which Emacs saves the desktop is locked while the session runs, to avoid inadvertently overwriting it from another Emacs session. That lock is normally removed when Emacs exits, but if Emacs or your system crashes, the lock stays, and when you restart Emacs, it will by default ask you whether to use the locked desktop file. 
+;; > You can avoid the question by customizing the variable desktop-load-locked-desktop to either nil, which means never load the desktop in this case, or t, which means load the desktop without asking.
+;; 
 
-;; relevant `desktop-*` functions and variables:
+;; other `desktop-*` functions and variables:
 ;;
 ;; desktop-read
 ;; desktop-save

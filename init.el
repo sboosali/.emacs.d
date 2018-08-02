@@ -71,24 +71,10 @@
 
 (require 'use-package)
 
-(use-package term
-  :bind
-  (("C-c t" . term)
-   :map term-mode-map
-   ("<kp-prior>" . term-send-up)
-   ("<kp-next>"  . term-send-down)
-   ("<tab>"      . self-insert-command)));;TODO
-   ;; ^ "Keys defined by global-set-key are shadowed by any local binding."
-
 ;; see:
 ;;      https://github.com/jwiegley/use-package/
 
-;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; https://emacs.stackexchange.com/questions/31224/how-to-test-programmatically-whether-the-current-emacs-session-among-several
-;; 
-;; "server-running-p predicate will evaluate to t if the Emacs server is running, irrespective of which Emacs session currently "owns" the server process."
-;;
+;; (use-package )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MORE SHORTCUTS (this is later to be defined after its dependent definitions)

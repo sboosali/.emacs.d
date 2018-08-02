@@ -115,8 +115,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq
- (column-number-mode 1))
+;TODO
+(column-number-mode 1)
  ;; ^ show column numbers.
  ;; only row numbers are shown by default.
 
