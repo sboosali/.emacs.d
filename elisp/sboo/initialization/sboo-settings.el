@@ -114,6 +114,13 @@
 ;;  ;; ^ disable automatic indentation on newlines(/ pressing return).
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq
+ (column-number-mode 1))
+ ;; ^ show column numbers.
+ ;; only row numbers are shown by default.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BUFFERS 
 
 (setq

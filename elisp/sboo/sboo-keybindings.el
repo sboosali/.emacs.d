@@ -50,13 +50,20 @@ A numeric ARG serves as a repeat count."
 
 ;;;;;;;;;;
 
+;;TODO
 (defun launch-shell ()
   (interactive)
-  (switch-to-buffer "*shell*" nil 'force-same-window))
+  ;;(switch-to-buffer "*shell*" nil 'force-same-window)
+  (shell "*shell*"))
+  ;; ^
+  ;; '''Run an inferior shell, with I/O through BUFFER (which defaults to ‘*shell*’).
+  ;; If BUFFER exists but shell process is not running, make new shell.
+  ;; If BUFFER exists and shell process is running, just switch to BUFFER.
+  ;;;
 
 (defun launch-term ()
   (interactive)
-  (term "/bin/bash"))
+   (term "/bin/bash"))
 
 ;;;;;;;;;;
 
@@ -220,7 +227,7 @@ A numeric ARG serves as a repeat count."
   ;; ^ 
 
 (global-set-key (kbd "<kp-multiply>") 'launch-shell)
-  ;; ^ 
+  ;; ^ TODO
 
 (global-set-key (kbd "<kp-divide>") 'launch-term)
   ;; ^ 
