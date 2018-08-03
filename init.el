@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Constants / Variables ;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Constants / Variables / Functions ;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -13,6 +13,8 @@
 
 (setq sboo-emacs-directory
       (file-name-directory sboo-init-file))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-emacs-file (FILENAME)
   "Like `(concat '~/.emacs.d/' FILENAME)`, but rather than being hard-coded, the emacs base directory is configured by `sboo-emacs-directory`. This safely falls back to the default location if, for whatever reason, this function has been called despite the variable it references not being bound."
@@ -35,6 +37,8 @@
       (sboo-emacs-file "db/"))
  ;;^ e.g. "~/.emacs.d/db/"
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun sboo-database-file (NAMESPACE FILENAME)
   "For the many files that various emacs packages persist, I: [1] relocate them, to not spam `~/` or `~/.emacs.d/`; and \"namespace\" them per their \"client\" package, to help myself keep track of them. 
 
@@ -52,6 +56,37 @@
       (concat user-emacs-directory FILENAME)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-add-to-load-path (FILEPATH)
+  "`add-to-list` FILEPATH to the `load-path`."
+  (add-to-list 'load-path
+               (sboo-emacs-file FILEPATH)))
+               ;; ^ i.e. the filepath `EMACSD/FILEPATH`
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-add-subdirs-to-load-path (FILEPATH SUBDIRS)
+  "Register each subdirectory (of FILEPATH) in SUBDIRS, relative to `sboo-emacs-directory`, to the `load-path`.
+
+  Trailing slashes (i.e. `\"sboo/\"` versus `\"sboo\"`) should be accepted.
+
+  Relative-paths in SUBDIRS (e.g. `'(\"./\")`) should work.
+
+  e.g.
+      (sboo-add-subdirs-to-load-path \"sboo\" '(\"initialization\" \"configuration\"))
+  "
+
+  (mapc (lambda (d)
+          (add-to-list 'load-path
+                       (sboo-emacs-file (concat FILEPATH "/" d))))
+                       ;; ^ i.e. the filepath `EMACSD/FILEPATH/SUBDIR`
+
+        (reverse SUBDIRS)))
+
+  ;; ^ 
+  ;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Load Paths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -59,50 +94,67 @@
 
 (progn
 
-  (add-to-list 'load-path
-    sboo-emacs-directory);;TODO remove, emacs warned me against this.
+  (add-to-list 'load-path sboo-emacs-directory);;TODO remove, emacs warned me against this.
     ;; ^ e.g. "~/.emacs.d/*.el"
 
-  (add-to-list 'load-path
-    (concat sboo-emacs-directory "elisp/"))
+  (sboo-add-to-load-path "elisp/")
     ;; ^ e.g. "~/.emacs.d/elisp/*.el"
 )
 
-(progn
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
- (add-to-list 'load-path
-  (concat sboo-emacs-directory "elisp/sboo/"))
- 
- (add-to-list 'load-path
-  (concat sboo-emacs-directory "elisp/sboo/utilities/"))
- 
- (add-to-list 'load-path
-  (concat sboo-emacs-directory "elisp/sboo/initialization/"))
- 
- (add-to-list 'load-path
-  (concat sboo-emacs-directory "elisp/sboo/configurations/"))
+(defun sboo-register-sboo-load-paths! ()
+  "Register `sboo`'s sub-directories to the `load-path`.
 
- (add-to-list 'load-path
-  (concat sboo-emacs-directory "elisp/sboo/packages/"))
+  e.g.
 
-;; (add-to-list 'load-path
-;;  (concat sboo-emacs-directory "elisp/sboo/applications/"))
- 
-)
+      ~/.emacs.d/sboo/*.el
+      ~/.emacs.d/sboo/initialization/*.el
+      ~/.emacs.d/sboo/configuration/*.el
+      ...
+
+  "
+  (interactive)
+
+  (sboo-add-subdirs-to-load-path "elisp/sboo"
+                                   '("./"
+                                     "utilities/"
+                                     "initialization/"
+                                     "configurations/"
+                                     "packages/")))
+
+  ;; (progn
+  ;;   (sboo-add-to-load-path "elisp/sboo/")
+
+  ;;   (sboo-add-subdirs-to-load-path "elisp/sboo/utilities/")
+
+  ;;   (sboo-add-subdirs-to-load-path "elisp/sboo/initialization/")
+
+  ;;   (sboo-add-subdirs-to-load-path "elisp/sboo/configurations/")
+
+  ;;   (sboo-add-subdirs-to-load-path "elisp/sboo/packages/")))    
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; my configs (namespaced under "sboo").
 
-(require 'sboo-settings)
+(sboo-register-sboo-load-paths!)
+;; ^ register all `sboo-*` `load-path`s before `load`ing any `sboo-*` package.
 
+(require 'sboo-settings)
+;; ^ `sboo-settings` should always succeed,
+;; even if the `load-path` is corrupt, since:
+;; [1] only packages built into Emacs25+ are imported; and
+;; [2] only simple configurations are performed, e.g. `(setq ...)`.
+;;
+
+;(require 'sboo-init)
 (require 'sboo-init-with-builtin-packages-only)
 (require 'sboo-init-with-installed-packages-too)
 
 (require 'sboo)
 
-;;TODO
-(require 'haskell--projectile-compile--direnv-nixshell)
+;;TODO (require 'haskell--projectile-compile--direnv-nixshell)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -120,6 +172,10 @@
 
 ;; see:
 ;;      https://github.com/jwiegley/use-package/
+
+;; (use-package )
+
+;; (use-package )
 
 ;; (use-package )
 

@@ -35,7 +35,7 @@
   ;; ^ enabling `savehist-mode` must come after all `savehist-*` customizations
   ;; (otherwise, they will be ignored).
 
-  )
+)
 ;; ^
 ;; NOTE, Emacs truncates minibuffer history automatically,
 ;; so the file shouldn't grow indefinitely.
