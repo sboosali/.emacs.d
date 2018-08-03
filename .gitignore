@@ -27,7 +27,7 @@ ido.last
 
 # Emacs: miscellaneous
 # (miscellaneous state stored in .emacs.d/ by default)
-packages/
+./packages/
 auto-save-list/
 backups/
 elpa/
