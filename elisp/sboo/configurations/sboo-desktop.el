@@ -23,7 +23,7 @@
 (defvar sboo-desktop-directory
   (if (boundp 'sboo-database-file)
       (sboo-database-file "desktop" "")
-    default-directory))
+    user-emacs-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

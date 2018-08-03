@@ -7,6 +7,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
+;;TODO auto-save-interval nil
+
 (setq
 
  ;; auto-save-file-name-transforms

@@ -17,8 +17,17 @@
 (defun sboo-emacs-file (FILENAME)
   "Like `(concat '~/.emacs.d/' FILENAME)`, but rather than being hard-coded, the emacs base directory is configured by `sboo-emacs-directory`. This safely falls back to the default location if, for whatever reason, this function has been called despite the variable it references not being bound."
 
-  (let ((d (or sboo-emacs-directory default-directory)))
+  (let ((d (or sboo-emacs-directory user-emacs-directory)))
     (concat d FILENAME)))
+
+;; ^
+;;
+;; `user-emacs-directory`:
+;;
+;; Default value is "~/.emacs.d/"
+;; Defined in ‘subr.el’.
+;;
+;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -37,10 +46,10 @@
   "
   
   (if (boundp 'sboo-database-directory)
-      (concat sboo-database-directory "/" NAMESPACE "/" FILENAME)
+      (concat sboo-database-directory NAMESPACE "/" FILENAME)
       ;; ^ e.g.
       ;; `(concat  "~/.emacs.d/db"  "/"  "desktop"  "/"  ".emacs.desktop")
-      (concat default-directory "/" FILENAME)))
+      (concat user-emacs-directory FILENAME)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -121,8 +130,9 @@
 (global-set-key "\M-w" 'eval-region-or-last-sexp) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq custom-file "~/.emacs.d/custom.el")
+;;TODO rm
+;;(setq custom-file "~/.emacs.d/custom.el")
 ;; ^ the `custom-file` is automatically managed (i.e. inserted into) by emacs,
 ;; via `customize-variable`.
-(load custom-file)
+;;(load custom-file)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

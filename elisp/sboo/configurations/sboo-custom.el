@@ -6,10 +6,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package custom
+(use-package emacs
 
   :init
-  (setq sboo-custom-file (sboo-emacs-directory-file "custom.el"))
+  (setq sboo-custom-file (sboo-database-file "custom" "custom.el"))
 
   :config
   (load sboo-custom-file)
