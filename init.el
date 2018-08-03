@@ -93,13 +93,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (progn
-
-  (add-to-list 'load-path sboo-emacs-directory);;TODO remove, emacs warned me against this.
-    ;; ^ e.g. "~/.emacs.d/*.el"
-
-  (sboo-add-to-load-path "elisp/")
-    ;; ^ e.g. "~/.emacs.d/elisp/*.el"
-  )
+  (sboo-add-to-load-path "elisp/"))
+  ;; ^ e.g. "~/.emacs.d/elisp/*.el"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -123,17 +118,7 @@
                                      "configurations/"
                                      "packages/")))
 
-  ;; (progn
-  ;;   (sboo-add-to-load-path "elisp/sboo/")
-
-  ;;   (sboo-add-subdirs-to-load-path "elisp/sboo/utilities/")
-
-  ;;   (sboo-add-subdirs-to-load-path "elisp/sboo/initialization/")
-
-  ;;   (sboo-add-subdirs-to-load-path "elisp/sboo/configurations/")
-
-  ;;   (sboo-add-subdirs-to-load-path "elisp/sboo/packages/")))    
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; my configs (namespaced under "sboo").
@@ -142,17 +127,20 @@
 ;; ^ register all `sboo-*` `load-path`s before `load`ing any `sboo-*` package.
 
 (require 'sboo-settings)
-;; ^ `sboo-settings` should always succeed,
+;; ^
+;; `sboo-settings` should always succeed,
 ;; even if the `load-path` is corrupt, since:
 ;; [1] only packages built into Emacs25+ are imported; and
 ;; [2] only simple configurations are performed, e.g. `(setq ...)`.
 ;;
 
-;(require 'sboo-init)
-(require 'sboo-init-with-builtin-packages-only)
-(require 'sboo-init-with-installed-packages-too)
+(require 'sboo-init)
+;; ^
+;; First configure builtin-packages,
+;; then if able, configure installed(/ third-party) packages.
 
 (require 'sboo)
+;; ^
 
 ;;TODO (require 'haskell--projectile-compile--direnv-nixshell)
 
@@ -160,15 +148,20 @@
 
 (when (require 'sboo-server nil t)
   (server-start-unless-running))
+  ;; ^
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'sboo-init-effects)
+;; ^
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; `use(d)-package(s)`
 
 (require 'use-package)
+;; ^
 
 ;; see:
 ;;      https://github.com/jwiegley/use-package/
@@ -179,6 +172,8 @@
 
 ;; (use-package )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MORE SHORTCUTS (this is later to be defined after its dependent definitions)
 
