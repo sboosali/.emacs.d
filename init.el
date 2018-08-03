@@ -4,15 +4,20 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;TODO defvar
-
-(setq sboo-init-file
-      (or load-file-name (buffer-file-name)))
+(defvar sboo-emacs-initialized nil
+ "Whether Emacs has finished initializing. i.e. It's `t` when `init.el` has reached last line (of this file); it's `nil` or unbound otherwise")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq sboo-emacs-directory
-      (file-name-directory sboo-init-file))
+(defvar sboo-init-file
+  (or load-file-name (buffer-file-name))
+  "")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar sboo-emacs-directory
+  (file-name-directory sboo-init-file)
+  "")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -33,9 +38,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq sboo-database-directory
-      (sboo-emacs-file "db/"))
- ;;^ e.g. "~/.emacs.d/db/"
+(defvar sboo-database-directory
+  (sboo-emacs-file "db/")
+  "")
+  ;;^ e.g. "~/.emacs.d/db/"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -116,6 +122,7 @@
                                      "utilities/"
                                      "initialization/"
                                      "configurations/"
+                                     "settings/"
                                      "packages/")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -126,9 +133,9 @@
 (sboo-register-sboo-load-paths!)
 ;; ^ register all `sboo-*` `load-path`s before `load`ing any `sboo-*` package.
 
-(require 'sboo-settings)
+(require 'sboo-settings-safe)
 ;; ^
-;; `sboo-settings` should always succeed,
+;; `sboo-settings-safe` should always succeed,
 ;; even if the `load-path` is corrupt, since:
 ;; [1] only packages built into Emacs25+ are imported; and
 ;; [2] only simple configurations are performed, e.g. `(setq ...)`.
@@ -138,6 +145,9 @@
 ;; ^
 ;; First configure builtin-packages,
 ;; then if able, configure installed(/ third-party) packages.
+
+(require 'sboo-settings)
+;; ^ Further settings.
 
 (require 'sboo)
 ;; ^
@@ -174,16 +184,20 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; MORE SHORTCUTS (this is later to be defined after its dependent definitions)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; MORE SHORTCUTS
+;; (this is later to be defined after its dependent definitions)
 
-;;(require 'sboo-utilities)
+(require 'sboo-utilities)
 (global-set-key "\M-w" 'eval-region-or-last-sexp) 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;TODO rm
-;;(setq custom-file "~/.emacs.d/custom.el")
-;; ^ the `custom-file` is automatically managed (i.e. inserted into) by emacs,
-;; via `customize-variable`.
-;;(load custom-file)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq
+ sboo-emacs-initialized t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

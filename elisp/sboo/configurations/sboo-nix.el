@@ -26,10 +26,13 @@
 
 (use-package nix-mode
 
-  :config
-  (nix-mode)
- 
-  )
+ ;; :config (nix-mode)
+
+)
+;; ^ For editing `.nix`s.
+
+(use-package nix-repl)
+;; ^ Emacs `comint` for the `nix repl`.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-nix)

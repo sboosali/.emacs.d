@@ -14,7 +14,16 @@
   :config
   (load sboo-custom-file)
 
-)
+  )
+
+;; ^
+;;
+;; `custom-file`:
+;;
+;; The `custom-file` is automatically managed (i.e. inserted into) by emacs,
+;; via `customize-variable`.
+;;
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-custom)

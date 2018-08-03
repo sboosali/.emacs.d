@@ -49,9 +49,10 @@
 ;;;TODO helm [1] ignores mouse clicks and [2] doesn't respect CUA-mode. [3] overrides my f9 binding.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Haskell
 
 (require 'sboo-haskell)
-;; ^ my `haskell-mode` configuration. 
+;; ^ my `haskell`-language configuration. 
 
 (require 'sboo-dante)
 ;; ^ my `dante` configuration.
@@ -59,6 +60,12 @@
 
 ;(require 'sboo-ghcid)
 ;; ^ my custom `ghcid`-mode.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Nix
+
+(require 'sboo-nix)
+;; ^ my `nix`-language configuration.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
