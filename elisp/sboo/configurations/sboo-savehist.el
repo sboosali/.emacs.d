@@ -1,18 +1,23 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; HISTORY
 ;; the builtin `savehist` library.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'savehist)
+(require 'use-package)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn
+(use-package savehist
 
-  (setq savehist-additional-variables
+  :init
+
+  (setq
+
+   savehist-additional-variables
         '(search-ring
           regexp-search-ring
           compile-history
-          kill-ring))
+          kill-ring)
   ;; ^ 
   ;; By default, Savehist mode saves only your minibuffer histories.
   ;; The line above saves your search strings, etc, too.
@@ -22,14 +27,15 @@
   ;; `savehist-additional-variables` list.
   ;; 
 
-  (setq savehist-file
-        (concat sboo-emacs-directory
-                "persisted/savehist/savehist.el"))
+   savehist-file
+        (sboo-database-file "savehist" "savehist.el"))
 
+  :config
   (savehist-mode 1)
   ;; ^ enabling `savehist-mode` must come after all `savehist-*` customizations
   ;; (otherwise, they will be ignored).
-)
+
+  )
 ;; ^
 ;; NOTE, Emacs truncates minibuffer history automatically,
 ;; so the file shouldn't grow indefinitely.

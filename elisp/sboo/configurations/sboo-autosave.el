@@ -9,11 +9,11 @@
 
 (setq
 
- backup-directory-alist
-     `((".*" . ,temporary-file-directory))
+ ;; auto-save-file-name-transforms
+ ;; `((".*" ,temporary-file-directory t)))
  
- auto-save-file-name-transforms
- `((".*" ,temporary-file-directory t)))
+ backup-directory-alist
+   `((".*" . ,temporary-file-directory)))
 
  ;; ^ store all backup and autosave files in the system temporary directory, and not in the current folder.
  ;;

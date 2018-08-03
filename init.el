@@ -1,14 +1,52 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; CONSTANTS/VARIABLES
+;;; Constants / Variables ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;TODO defvar
-(setq sboo-init-file       (or load-file-name (buffer-file-name)))
-(setq sboo-emacs-directory (file-name-directory sboo-init-file))
+
+(setq sboo-init-file
+      (or load-file-name (buffer-file-name)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq sboo-emacs-directory
+      (file-name-directory sboo-init-file))
+
+(defun sboo-emacs-file (FILENAME)
+  "Like `(concat '~/.emacs.d/' FILENAME)`, but rather than being hard-coded, the emacs base directory is configured by `sboo-emacs-directory`. This safely falls back to the default location if, for whatever reason, this function has been called despite the variable it references not being bound."
+
+  (let ((d (or sboo-emacs-directory default-directory)))
+    (concat d FILENAME)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq sboo-database-directory
+      (sboo-emacs-file "db/"))
+ ;;^ e.g. "~/.emacs.d/db/"
+
+(defun sboo-database-file (NAMESPACE FILENAME)
+  "For the many files that various emacs packages persist, I: [1] relocate them, to not spam `~/` or `~/.emacs.d/`; and \"namespace\" them per their \"client\" package, to help myself keep track of them. 
+
+  e.g. 
+
+    M-: (sboo-database-file \"desktop\" \".emacs.desktop\")
+    \"~/.emacs.d/db/desktop/.emacs.desktop\"
+
+  "
+  
+  (if (boundp 'sboo-database-directory)
+      (concat sboo-database-directory "/" NAMESPACE "/" FILENAME)
+      ;; ^ e.g.
+      ;; `(concat  "~/.emacs.d/db"  "/"  "desktop"  "/"  ".emacs.desktop")
+      (concat default-directory "/" FILENAME)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; LOAD PATHS
+;;; Load Paths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (progn
 

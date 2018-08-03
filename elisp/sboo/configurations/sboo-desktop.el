@@ -21,14 +21,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar sboo-desktop-directory
-  (if (boundp 'sboo-emacs-directory)
-      sboo-emacs-directory
+  (if (boundp 'sboo-database-file)
+      (sboo-database-file "desktop" "")
     default-directory))
-
-;;TODO
-;; $ mkdir -p "~/.emacs.d/persisted/desktop/.emacs.desktop"
-;; (concat sboo-emacs-directory "/persisted/desktop")
-;; "/.emacs.desktop"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -56,6 +51,7 @@
 ; ;; ^
 
 ;; TODO `desktop-save` on emacs exit (i.e. `C-x C-c`).
+;; (desktop-save (sboo-database-file "desktop" ""))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; NOTES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

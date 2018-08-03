@@ -1,28 +1,33 @@
+########################################
+# my (i.e. sboosali's) local files
 ignore/
-
 secret/*
 private/
 
+########################################
 # nix
 result
 result-*
 
-# storage in .emacs.d/
-ido.last
-packages/
-
+########################################
 # Emacs
 \#*\#
 *~
 *.log
-eshell/history
-session.*
-.emacs-buffers
 
-# my Emacs
-persisted/
+# Emacs: `savehist`
+savehist.el
 
-# state
+# Emacs: `desktop`
+.emacs.desktop
+.emacs.desktop.lock
+
+# Emacs: `ido`
+ido.last
+
+# Emacs: miscellaneous
+# (miscellaneous state stored in .emacs.d/ by default)
+packages/
 auto-save-list/
 backups/
 elpa/
@@ -32,23 +37,15 @@ tramp
 smex-items
 .abbrev_defs
 saved-places
-.emacs.desktop
-.emacs.desktop.lock
+eshell/history
+session.*
+.emacs-buffers
 
+########################################
 # Haskell
-dist
-cabal-dev
-*.o
-*.hi
-*.chi
-*.chs.h
-.hsenv
-.cabal-sandbox/
-cabal.sandbox.config
-cabal.config
-report.html
-.ghci
 
+########################################
 # OS X
 .DS_Store
 
+########################################
