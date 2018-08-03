@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-config-winner-mode ()
-  "Enable Winner-Mode."
+  "Configurte and activate Winner-Mode."
   (interactive)
   (winner-mode 1))
 

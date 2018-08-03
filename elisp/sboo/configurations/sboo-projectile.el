@@ -20,7 +20,7 @@
 
 (setq
  sboo-exclusions--emacs--directories       '("db" "auto-save-list" "backups" "elpa" "eshell" "smex-items")
- sboo-exclusions--emacs--file-names        '(".emacs.desktop" ".emacs.desktop.lock" ".emacs-buffers" "places" "saved-places" "ido.last" "tramp" ".abbrev_defs" ".smex-items")
+ sboo-exclusions--emacs--file-names        '(".emacs.desktop" ".emacs.desktop.lock" "savehist.el" ".emacs-buffers" "places" "saved-places" "ido.last" "tramp" ".abbrev_defs" ".smex-items")
  sboo-exclusions--emacs--file-extensions   '("elc"))
   ;;TODO `session.*` (prefix, not suffix)
 

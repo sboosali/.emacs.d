@@ -14,16 +14,27 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;(use-package emacs ...)
+(use-package desktop
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar sboo-desktop-directory
-  (if (boundp 'sboo-database-file)
+  (if (fboundp 'sboo-database-file)
       (sboo-database-file "desktop" "")
     user-emacs-directory))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-desktop-save ()
+    (interactive)
+    ;; Don't call desktop-save-in-desktop-dir, as it prints a message.
+    ;;
+    ;; See 
+    ;;     https://www.emacswiki.org/emacs/Desktop
+    ;;
+    (if (eq (desktop-owner) (emacs-pid))
+        (desktop-save sboo-desktop-save)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -33,18 +44,33 @@
   (interactive)
 
   (setq
+
+   desktop-dirname sboo-desktop-directory
+   ;; ^
+   
    desktop-load-locked-desktop t
    ;; ^ `t` means "load the desktop (on startup) without asking"
    desktop-auto-save-timeout 5)
    ;; ^ unit of time is seconds.
    ;; auto-saves to a separate file.
 
-  (desktop-read sboo-desktop-directory)
-  ;; ^
+  (progn
 
-  (desktop-save-mode 1)
-  ;; ^ (enable a mode after configuring its variables).
-)
+    (add-to-list 'desktop-modes-not-to-save 'dired-mode)
+    (add-to-list 'desktop-modes-not-to-save 'Info-mode)
+    (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
+    ;; ^ You can specify buffers which should not be saved, by name or by mode.
+
+    (setq desktop-path (cons sboo-desktop-directory desktop-path))
+    
+    (add-hook 'auto-save-hook 'sboo-desktop-save))
+    ;; ^ 
+
+  (progn
+    (desktop-read sboo-desktop-directory)
+    ;; ^
+    (desktop-save-mode 1)))
+    ;; ^ (enable a mode after configuring its variables).
 
 ;; TODO auto-save this every so-often (or on  buffer create/delete change events).
 ; (desktop-save sboo-desktop-directory)
