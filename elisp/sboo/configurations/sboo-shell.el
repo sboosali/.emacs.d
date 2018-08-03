@@ -14,28 +14,38 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package shell
+
+  :config
+
+  (push
+   (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
+   ;; ^
+   ;;
+   ;; How To Override The Default Behavior Of  "M-x shell" Opening A New Buffer In Another Window (e.g. splitting).
+   ;;
+   ;; see:
+   ;;    https://stackoverflow.com/questions/40301732/m-x-shell-open-shell-in-other-windows
+   ;;
+   ;; >  The command `shell` uses `pop-to-buffer`.
+   ;; > If you have the Emacs source code, you can see it for yourself by running `C-h d f shell` to open the function's documentation (and then clicking the link to the function's source).
+   ;; `pop-to-buffer` can be configured via `display-buffer-alist`. 
+
   :bind
+
   ( ("C-c s" . shell)
-    :map term-mode-map
-    ("<kp-prior>" . term-send-up)
-    ("<kp-next>"  . term-send-down)
-    ("<tab>"      . self-insert-command))) ;;TODO
+  
+    :map shell-mode-map
 
+    ("<kp-prior>" . comint-previous-input)
+    ;; ^ <prior> is the page-up key.
+    ;; `comint-previous-input` is like "press down in a terminal-emulator".
+    
+    ("<kp-next>" . 'comint-next-input)
+    ;; ^ <next> is the page-down key.
+    ;; `comint-next-input` is like "press up in a terminal-emulator".
 
-(progn
-
-  ;; the `shell-mode` major-mode has 
-  ;; the `shell-mode-map` keymap.
-
-  ;;;;(define-key comint-mode-map (kbd "<kp-prior>") 'comint-previous-input)
-  (define-key  shell-mode-map (kbd "<kp-prior>") 'comint-previous-input)
-  ;; <prior> is the page-up key
-
-  ;;;;(define-key comint-mode-map  (kbd "<kp-next>") 'comint-next-input)
-  (define-key  shell-mode-map  (kbd "<kp-next>") 'comint-next-input)
-  ;; <next> is the page-down key
-
-)
+    ))
+;; ^
 
 ;; TODO `comint-mode-map`???
 ;; ^ many shell modes inherit from `comint-mode`,
@@ -59,6 +69,10 @@
 ;;
 ;;
 ;;
+;;
+
+;; `shell-mode-map`
+;; the `shell-mode` major-mode has the `shell-mode-map` keymap.
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

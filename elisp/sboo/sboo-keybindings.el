@@ -68,6 +68,8 @@ A numeric ARG serves as a repeat count."
         (switch-to-buffer (get-buffer NAME) nil 'force-same-window)
       (shell NAME))))
 
+
+ 
   ;;OLD
   ;; (let*
   ;;     ((n "*shell*")
