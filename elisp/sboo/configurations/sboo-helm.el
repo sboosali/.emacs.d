@@ -1,6 +1,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Imports
 
+(require 'use-package)
+
 (setq helm-allow-mouse t)
 ;; [1/3]
 (require 'helm)
@@ -40,6 +42,13 @@
 (setq helm-allow-mouse t)
 ;; [3/3]
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (use-package helm
+;;   :bind
+;;   :map helm-mode-map
+;;   ("C-x C-f" .  helm-find-files))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NOTES
 
@@ -67,9 +76,6 @@
 ;;   :config
 ;;   (helm-autoresize-mode 1))
 ;;   ;; from jwiegley's configuration.
-
-
-
 
 ;; ;;; "Extended Config" from http://tuhdo.github.io/helm-intro.html
 
