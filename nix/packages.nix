@@ -1,7 +1,9 @@
 melpa: stable: elpa: org: 
 
-########################################
+############################################################
 let
+
+########################################
 
 officialPackages = with melpa; [
 
@@ -44,14 +46,44 @@ officialPackages = with melpa; [
  helm-dash
  helm-make
 
+ ########################
+
+  anzu   
+  # ^ shows total search hits in mode line.
+  # c.f. `query-replace`.
+
+  bm 
+  # ^ visual bookmarks
+
+  # csv-nav
+  #  # ^ editing csv files
+
+  deft
+  # ^ quick note taking and management
+
+  expand-region
+
+  page-break-lines
+  # ^ Convert the ^L (form feed) chars to horizontal lines
+
+  wrap-region
+  # ^ wrap selection with punctuations, tags (org-mode, markdown-mode, ..)
+
+  yaml-mode
+
+ ########################
+
 ];
 
+########################################
+
 unofficialPackages = [
+
 ];
 
 in
-########################################
+############################################################
 
 officialPackages ++ unofficialPackages
 
-########################################
+############################################################

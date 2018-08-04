@@ -130,6 +130,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; my configs (namespaced under "sboo").
 
+(require 'use-package)
+
 (sboo-register-sboo-load-paths!)
 ;; ^ register all `sboo-*` `load-path`s before `load`ing any `sboo-*` package.
 
@@ -166,21 +168,15 @@
 ;; ^
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; `use(d)-package(s)`
 
-(require 'use-package)
-;; ^
-
-;; see:
-;;      https://github.com/jwiegley/use-package/
-
-;; (use-package )
-
-;; (use-package )
-
-;; (use-package )
+(progn
+  (require 'sboo-desktop)
+  (sboo-config-desktop))
+  ;;^ 
+  ;; Don't restore any buffers until all modes have been initialized/configured.
+  ;; Otherwise, file-extensions won't have been registered with the correct modes,
+  ;; custom typefaces won't have been associated, etc.
+  ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -15,6 +15,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package desktop
+
+  ;;TODO
+
+  ;; :init
+  ;; (sboo-desktop-init)
+  
+  ;; :config
+  ;; (sboo-desktop-config)
+
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47,12 +56,18 @@
 
    desktop-dirname sboo-desktop-directory
    ;; ^
+
+   desktop-restore-eager 100
+   ;; ^ Specify the maximum number of buffers to restore immediately;
+   ;; the remaining buffers are restored lazily, when Emacs is idle.
+   ;; 
    
    desktop-load-locked-desktop t
    ;; ^ `t` means "load the desktop (on startup) without asking"
+   
    desktop-auto-save-timeout 5)
-   ;; ^ unit of time is seconds.
-   ;; auto-saves to a separate file.
+   ;; ^ unit-of-time is seconds.
+   ;; (NOTE the auto-saves are saved to a separate file).
 
   (progn
 

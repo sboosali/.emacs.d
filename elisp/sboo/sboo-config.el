@@ -35,6 +35,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Completion
 
 (require 'sboo-helm)
 ;; ^ my `helm` configuration.
@@ -68,16 +69,19 @@
 ;; ^ my `nix`-language configuration.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Projects
 
 (require 'sboo-projectile)
 ;; ^ my `projectile` configuration.
 ;; `projectile` does project-management.
 
-(require 'sboo-magit)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; VersionControl (Git)
+
+;;TODO it breaks autosave ;; (require 'sboo-magit)
 ;; ^ my `magit` configuration.
 ;; i.e. an elegant interface to `git` version control.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-config) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

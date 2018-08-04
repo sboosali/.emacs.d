@@ -19,16 +19,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Variables
 
-
+(defun sboo-register-nix-mode-file-extension ()
+  (add-to-list 'auto-mode-alist
+               '("\\.nix\\'" . nix-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Use-(the-)Package
 
 (use-package nix-mode
+  :config
+  (sboo-register-nix-mode-file-extension))
 
- ;; :config (nix-mode)
-
-)
 ;; ^ For editing `.nix`s.
 
 (use-package nix-repl)
