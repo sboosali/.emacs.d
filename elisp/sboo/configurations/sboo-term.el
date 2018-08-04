@@ -21,8 +21,11 @@
    :map term-mode-map
    ("<kp-prior>" . term-send-up)
    ("<kp-next>"  . term-send-down)
-   ("<tab>"      . self-insert-command)));;TODO
+   ("TAB"        . self-insert-command)))
    ;; ^ "Keys defined by global-set-key are shadowed by any local binding."
+
+;;(global-unset-key (kbd "<tab>"))
+;;(define-key term-mode-map (kbd "TAB") 'self-insert-command)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

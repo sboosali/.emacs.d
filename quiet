@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+##############################################################################
+# 
+# run the `nix`-configured `emacs` without an `init.el`.
+# i.e. no configuration/rebinding, and without loading any installed package).
+# 
+##############################################################################
+
+NIX_FILE=./default.nix
+
+NIX_DIRECTORY=result
+
+#######################################
+
+EMACS_EXECUTABLE=./"$NIX_RESULT_DIRECTORY"/bin/emacs
+
+#EMACS_OPTIONS=(-q )
+
+##############################################################################
+
+nix-build "$NIX_FILE" -o "$NIX_DIRECTORY"
+
+#######################################
+
+"${EMACS_EXECUTABLE}" -q "$@"
+
+##############################################################################

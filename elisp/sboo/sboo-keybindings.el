@@ -148,7 +148,15 @@ A numeric ARG serves as a repeat count."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(global-set-key (kbd "<tab>") 'dabbrev-expand)
+(global-set-key (kbd "TAB") 'dabbrev-expand)
+;;^ `(kbd "TAB")`, *not* `(kbd "<tab>")`.
+;;
+;; this distinction is necessary to support tab-as-emacs-completion in all buffers and by default (including `shell-mode`),
+;; while still supporting tab-as-bash-completion in a terminal buffer (e.g. `term-mode`).
+;;
+;; globally, "<tab>" always becomes "TAB" ("translated from"), then "TAB" becomes `dabbrev-expand` ("is bound to").
+;; locally, in `term-mode-map` (see `sboo-term`) "<tab>" always becomes "TAB" ("translated from"), then "TAB" becomes `self-insert-command` ("is bound to").
+;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
