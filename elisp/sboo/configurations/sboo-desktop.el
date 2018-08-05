@@ -2,7 +2,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; DESKTOP
 ;; 
-;; the `desktop` builtin-package.
+;; configure the `desktop` builtin-package.
 ;;
 ;; (Multiple) Desktop "Sessions"
 ;; 
@@ -36,14 +36,54 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-desktop-save ()
+    "
+    "
     (interactive)
-    ;; Don't call desktop-save-in-desktop-dir, as it prints a message.
-    ;;
-    ;; See 
-    ;;     https://www.emacswiki.org/emacs/Desktop
-    ;;
-    (if (eq (desktop-owner) (emacs-pid))
-        (desktop-save sboo-desktop-save)))
+    (progn
+
+      (if (eq (desktop-owner) (emacs-pid))
+          (let ((desktop-save 'ask-if-new))
+            ;; ^ `ask-if-new' means "ask if no desktop file exists, otherwise just save.",
+            ;; which `desktop-save' reads.
+            ;;
+            ;; i.e. only prompt-the-user-for-confirmation if:
+            ;; [1] we're saving to a different location
+            ;;     (in which case, `desktop-dirname' and/or `desktop-base-file-name' may have not been configured properly); or
+            ;; [2] we're saving over a desktop-file that's "unreleased"(?), or that's been updated
+            ;;     (e.g. by another emacs application) while the current emacs application has been running
+            ;;     (in particular, an "external" `desktop-save' has been called
+            ;;      after the most recent "interal" `desktop-read').
+            ;;
+            ;; NOTE `elisp' has dynamic-scoping, thus `let' correctly shadows any default value.
+            ;;
+            ;; NOTE `elisp' is a "Lisp2", i.e. variables and functions have different namespaces,
+            ;; thus `let' doesn't affect the definition (or boundedness) of any function.
+            ;;
+            (desktop-save sboo-desktop-directory)))
+          ;; ^ 
+          ;; `(desktop-save DIRNAME &optional RELEASE ONLY-IF-CHANGED VERSION)`
+          ;;
+    t))
+    ;; ^ in `sboo-quitting', we register `sboo-desktop-save` as a hook to be run when quitting emacs. 
+    ;; emacs aborts the quit (i.e. stays open) if any of these "quit hooks" return `nil'.
+    ;; NOTE currently, the constant-true return-value means that we don't do any checks, or prompt the user for any input.
+
+;; ^
+;;
+;; "Don't call `desktop-save-in-desktop-dir', as it prints a message."
+;; 
+;; See 
+;;     https://www.emacswiki.org/emacs/Desktop
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-desktop-read ()
+    "
+    "
+    (interactive)
+    (desktop-read))
+;; ^ "unconfigured" `desktop-read' works if `desktop-save' was properly "configured".
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -65,19 +105,22 @@
    desktop-load-locked-desktop t
    ;; ^ `t` means "load the desktop (on startup) without asking"
    
-   desktop-auto-save-timeout 5)
+   desktop-auto-save-timeout 5
    ;; ^ unit-of-time is seconds.
    ;; (NOTE the auto-saves are saved to a separate file).
 
-  (progn
+   desktop-path (list sboo-desktop-directory))
+   ;; ^ 
 
+  (progn
     (add-to-list 'desktop-modes-not-to-save 'dired-mode)
     (add-to-list 'desktop-modes-not-to-save 'Info-mode)
-    (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
+    (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode))
     ;; ^ You can specify buffers which should not be saved, by name or by mode.
 
-    (setq desktop-path (cons sboo-desktop-directory desktop-path))
-    
+  (progn  
+    ;(add-to-list TODO 'sboo-desktop-save)
+    ;; ^ 
     (add-hook 'auto-save-hook 'sboo-desktop-save))
     ;; ^ 
 
