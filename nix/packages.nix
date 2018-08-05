@@ -25,14 +25,15 @@ officialPackages = with melpa; [
  smooth-scrolling
  centered-cursor-mode
 
- flycheck
- multi-term
+ yasnippet
 
  haskell-mode
  dante           # needs `ghc` (or `cabal`, or `stack`, etc) system-package
 
- nix-mode
+ flycheck
+ multi-term
 
+ nix-mode
  markdown-mode 
 
  paredit
