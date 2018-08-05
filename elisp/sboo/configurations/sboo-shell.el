@@ -44,6 +44,11 @@
     ;; ^ <next> is the page-down key.
     ;; `comint-next-input` is like "press up in a terminal-emulator".
 
+    ("<tab>" . 'dabbrev-expand)
+    ;; ^ `<tab>' preceeds `TAB';
+    ;; intentionally shadow the shell's auto-completion (for files, commands, etc)
+    ;; with emacs's auto-completion (for anything).
+
     ))
 ;; ^
 

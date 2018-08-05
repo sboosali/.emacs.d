@@ -14,20 +14,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package desktop
-
-  ;;TODO
-
-  ;; :init
-  ;; (sboo-desktop-init)
-  
-  ;; :config
-  ;; (sboo-desktop-config)
-
-  )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defvar sboo-desktop-directory
   (if (fboundp 'sboo-database-file)
       (sboo-database-file "desktop" "")
@@ -136,6 +122,14 @@
 
 ;; TODO `desktop-save` on emacs exit (i.e. `C-x C-c`).
 ;; (desktop-save (sboo-database-file "desktop" ""))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package desktop
+  ;; :defer t
+  
+  :config
+  (sboo-config-desktop))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; NOTES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

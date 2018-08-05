@@ -21,11 +21,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-emacs-file (FILENAME)
-  "Like `(concat '~/.emacs.d/' FILENAME)`, but rather than being hard-coded, the emacs base directory is configured by `sboo-emacs-directory`. This safely falls back to the default location if, for whatever reason, this function has been called despite the variable it references not being bound."
+(defun sboo-emacs-file (PATH)
+  "Like `(concat '~/.emacs.d/' PATH)`, but rather than being hard-coded, the emacs base directory is configured by `sboo-emacs-directory`. This safely falls back to the default location if, for whatever reason, this function has been called despite the variable it references not being bound."
 
   (let ((d (or sboo-emacs-directory user-emacs-directory)))
-    (concat d FILENAME)))
+    (concat d PATH)))
 
 ;; ^
 ;;
@@ -122,6 +122,8 @@
                                      "utilities/"
                                      "initialization/"
                                      "configurations/"
+                                     "configurations/external-packages/"
+                                     "configurations/internal-packages/"
                                      "settings/"
                                      "packages/")))
 
@@ -166,6 +168,16 @@
 
 (require 'sboo-init-effects)
 ;; ^
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;Todo mv these two to own file.
+
+(when (require 'sboo-desktop nil t)
+      ;; ^ the `sboo-desktop` module has *only* definitions, no actions.
+  (require 'sboo-quitting))
+  ;; ^ requires `sboo-desktop`
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

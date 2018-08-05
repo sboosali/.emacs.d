@@ -11,10 +11,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-desktop nil t)
-      ;; ^ the `sboo-desktop` module has *only* definitions, no actions.
-  (require 'sboo-quitting))
-  ;; ^ requires `sboo-desktop`
+(require 'sboo-bookmarks)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;(require 'sboo-)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-settings)
