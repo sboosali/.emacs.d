@@ -1,22 +1,25 @@
 #!/bin/bash
 set -e
-#######################################
+##############################################################################
 
 NIX_FILE=./default.nix
 
-NIX_RESULT_DIRECTORY=result
+NIX_DIRECTORY=result
 
 #######################################
 
 EMACS_INITIALIZATION_FILE=./init.el
 
+EMACS_EXECUTABLE=./"$NIX_DIRECTORY"/bin/emacs
+
 #EMACS_OPTIONS=(-q )
 
-#######################################
+##############################################################################
 
-nix-build "$NIX_FILE" -o "$NIX_RESULT_DIRECTORY"
-
-./"$NIX_RESULT_DIRECTORY"/bin/emacs -q --load "$EMACS_INITIALIZATION_FILE" "$@"
+nix-build "$NIX_FILE" -o "$NIX_DIRECTORY"
 
 #######################################
 
+"${EMACS_EXECUTABLE}" -q --no-desktop --load "$EMACS_INITIALIZATION_FILE" "$@"
+
+##############################################################################

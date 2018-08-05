@@ -126,10 +126,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package desktop
-  ;; :defer t
-  
   :config
   (sboo-config-desktop))
+;; ^ NOTE we launch `emacs` with `--no-desktop`;
+;; this delays loading files until all modes have been properly configured.
+;;
+;; otherwise, for example, `.nix` files aren't properly registered with `nix-mode`
+;; when they are opened, even when `sboo-desktop` follows `sboo-nix`;
+;; and thus need `revert-buffer`. 
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; NOTES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
