@@ -126,6 +126,7 @@
                                      "configurations/internal-packages/"
                                      "settings/"
                                      "platforms/"
+                                     "window-systems/"
                                      "packages/")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
