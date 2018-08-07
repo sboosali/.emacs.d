@@ -179,6 +179,7 @@
 ;; desktop-restore-frames
 ;; desktop-load-locked-desktop
 ;;
+
 ;; NOTE
 ;; 
 ;; To manually interact with your desktop session at any time, use:
@@ -270,6 +271,25 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; e.g.
+;; Automatically save and restore sessions:
+;;
+;;     (progn
+;;       (setq desktop-dirname              "~/.emacs.d/desktop/"
+;;             desktop-base-file-name       "emacs.desktop"
+;;             desktop-base-lock-name       "lock"
+;;             desktop-path                 `(,desktop-dirname)
+;;             desktop-save                 t    ;; always save.
+;;             desktop-files-not-to-save    "^$" ;; reload tramp paths.
+;;             desktop-load-locked-desktop  nil  ;; don’t load.
+;;             desktop-auto-save-timeout    30)  ;; Number of seconds of idle time before auto-saving the desktop.
+;;                                               ; The desktop will be auto-saved when this amount of idle time have
+;;                                               ; passed after some change in the window configuration.
+;;       (desktop-save-mode 1))
+;;
+
+
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-desktop)
