@@ -5,8 +5,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-linum-config ()
+  
   (setq
-   display-line-numbers t))
+   display-line-numbers t)
    ;; ^ 
    ;;  automatically becomes buffer-local when set.
    ;;
@@ -14,6 +15,8 @@
    ;;
    ;;
    ;;
+
+  (global-linum-mode 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NOTES
