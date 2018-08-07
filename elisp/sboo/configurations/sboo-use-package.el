@@ -15,4 +15,26 @@
 ;; ^ `NOERROR=t` means "don't error if the `require`ment fails (can't be found, or is buggy, etc).
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Notes
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;; ^ `(use-package ... :load-path '("..."))`
+;; ;;
+;; Extending The Load-Path.
+;; If your package needs a directory added to the load-path in order to load, use :load-path. 
+;; This takes a symbol, a function, a string or a list of strings. 
+;; If the path is relative, it is expanded within user-emacs-directory. 
+
+;; e.g.
+
+;;   (use-package ess-site
+;;     :load-path "site-lisp/ess/lisp/")
+
+;; is the same as:
+
+;;   (add-to-list 'load-path (concat user-emacs-directory "site-lisp/ess/lisp/"))
+;;   (use-package ess-site)
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-use-package)

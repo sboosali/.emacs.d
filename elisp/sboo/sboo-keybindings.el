@@ -322,7 +322,6 @@ A numeric ARG serves as a repeat count."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 (global-set-key (kbd "C-M-m") 'maximize-frame)
 ;; ^ since <f11> is the *system*-global hotkey
 ;; for window-maximizing, which we overrode.
@@ -332,6 +331,17 @@ A numeric ARG serves as a repeat count."
 (global-set-key (kbd "C-o") 'other-window)
 ;;;(global-set-key (kbd "C-x C-o") 'other-window)
 
+(global-set-key (kbd "C-;") 'comment-region)
+;; ^
+;; `comment-region`
+;;
+;; M-x comment-region
+;; C-c C-c (in C-like modes)
+;; Add comment delimiters to all the lines in the region.
+;; 
+;; See
+;;     - https://www.gnu.org/software/emacs/manual/html_node/emacs/Comment-Commands.html
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

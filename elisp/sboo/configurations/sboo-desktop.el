@@ -226,7 +226,49 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; 
+ ;;  (defun sboo-desktop-owner-advice (original &rest args)
+
+ ;; "Whether a pid is the Process ID of an Emacs process. (Also returns nil if pid is nil.)
+  
+ ;;  (should be) Cross-Platform.
+
+ ;;  By sylvain, see https://www.emacswiki.org/emacs/Desktop
+
+ ;;  "
+ ;;  (interactive)
+
+ ;;    (let ((owner (apply original args)))
+ ;;      (if (and owner (/= owner (emacs-pid)))
+ ;;          (and (car (member owner (list-system-processes)))
+ ;;               (let (cmd (attrlist (process-attributes owner)))
+ ;;                 (if (not attrlist) owner
+ ;;                   (dolist (attr attrlist)
+ ;;                     (and (string= "comm" (car attr))
+ ;;                          (setq cmd (car attr))))
+ ;;                   (and cmd (string-match-p "[Ee]macs" cmd) owner))))
+ ;;        owner)))
+
+ ;;  ;; ^
+ ;;  ;;
+ ;;  ;; (because Windows lacks `process-attributes’?)
+ ;;  ;;
+ ;;  ;; Ensure that dead system processes don't own it.
+ ;;  ;;
+
+ ;;  (advice-add #'desktop-owner :around #'sylvain/desktop-owner-advice)
+
+
+ ;;  ;; ^ `advice` supports modification without redefinition.
+ ;;  ;; 
+ ;;  ;; e.g. you need to modify a function defined in another library, or you need to modify a hook like foo-function, a process filter, or basically any variable or object field which holds a function value.
+ ;;  ;; 
+ ;;  ;; 
+ ;;  ;;
+ ;;  ;; See
+ ;;  ;;     - https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html
+ ;;  ;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

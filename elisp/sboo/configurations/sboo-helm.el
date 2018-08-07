@@ -58,12 +58,6 @@
 
 ;; https://github.com/emacs-helm/helm/wiki
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'sboo-helm)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;NOTES
-
 ;; e.g.
 ;;
 ;; (use-package helm
@@ -111,3 +105,4 @@
 ;; (helm-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'sboo-helm)
