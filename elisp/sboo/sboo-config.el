@@ -27,6 +27,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'sboo-wdired)
+;; ^ my `wdired` and `dired` configuration.
+;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;TODO mv
 (require 'sboo-shell)
 ;; ^ `shell-mode` is a shell-interface (but not a full terminal-emulator),
