@@ -8,6 +8,19 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;(require 'sboo-dabbrev)
+;; ^
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-linum)
+
+(when (>= emacs-major-version 26)
+  (sboo-linum-config))
+  ;; ^ 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (require 'sboo-use-package)
 ;; ^ my `use-package` configuration.
 ;; Most `sboo-*` features call `use-package`.
