@@ -125,6 +125,7 @@
                                      "configurations/external-packages/"
                                      "configurations/internal-packages/"
                                      "settings/"
+                                     "platforms/"
                                      "packages/")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
