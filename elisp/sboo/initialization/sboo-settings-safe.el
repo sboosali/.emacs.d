@@ -158,6 +158,18 @@
 ))
 ;; ^ see buff-menu.el 
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-to-list 'safe-local-variable-values
+  '(lexical-binding . t))
+
+  ;; ^
+  ;; `safe-local-variable-values':
+  ;; 
+
+;;? (add-to-list 'safe-local-variable-values '(whitespace-line-column . 80))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (ffap-bindings)

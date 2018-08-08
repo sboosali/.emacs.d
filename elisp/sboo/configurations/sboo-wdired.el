@@ -9,7 +9,35 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun sboo-dired-initialize ()
+  
+  (setq
+   dired-isearch-filenames 'dwim
+   dired-dwim-target       t
+   dired-omit-extension    '(".hi" ".p_hi" ".o" ".a")
+   dired-listing-switches  "-alh")
+  ;; ^
+
+  (add-hook 'dired-mode-hook (lambda ()
+                               (dired-omit-mode 1)))
+  ;; ^ uses `dired-omit-extension' (above).
+
+  nil)
+
+  ;;TODO
+  ;; (add-hook 'dired-mode-hook (lambda ()
+  ;;  (define-key dired-mode-map
+  ;;    "z" 'dired-zip-files)
+  ;;  (define-key dired-mode-map 
+  ;;   (kbd "RET") 'dired-find-alternate-file)
+  ;;  (define-key dired-mode-map 
+  ;;   (kbd "w") 'wdired-change-to-wdired-mode)
+  ;;  (dired-omit-mode 1))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun sboo-wdired-initialize ()
+  
   (setq
 
    wdired-allow-to-change-permissions t
@@ -30,11 +58,15 @@
  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  
+(use-package dired
+  :init
+  (sboo-dired-initialize))
+
 (use-package wdired
   :init
   (sboo-wdired-initialize))
 
-  ;; ^ 
+  ;; ^ `dired' and `wdired'.
   ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
