@@ -25,8 +25,7 @@
 ;; Use-(the-)Package
 
 (use-package direnv
-
-  )
+  :disabled)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-direnv)

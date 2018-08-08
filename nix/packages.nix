@@ -8,14 +8,18 @@ let
 officialPackages = with melpa; [
 
  ####################
- # melpa...
 
  use-package
+ bind-key
+
+ ####################
 
  dash           # (the `-` prefix)
  s              # `s`trings
  f              # `f`iles
  
+ ####################
+
  real-auto-save
  tabbar
  shackle
@@ -40,7 +44,9 @@ officialPackages = with melpa; [
 
  magit          # <C-x g>
  projectile
- direnv         # needs `direnv` system-package
+ #direnv         # needs `direnv` system-package
+
+ ####################
 
  helm
  helm-core

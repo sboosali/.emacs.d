@@ -121,6 +121,7 @@
                                    '("./"
                                      "utilities/"
                                      "initialization/"
+                                     "keybindings/"
                                      "configurations/"
                                      "configurations/external-packages/"
                                      "configurations/internal-packages/"
@@ -147,7 +148,7 @@
 ;; [2] only simple configurations are performed, e.g. `(setq ...)`.
 ;;
 
-(require 'sboo-init)
+(require 'sboo-initialization)
 ;; ^
 ;; First configure builtin-packages,
 ;; then if able, configure installed(/ third-party) packages.
