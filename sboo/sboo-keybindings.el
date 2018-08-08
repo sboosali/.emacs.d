@@ -23,15 +23,13 @@
 
  ("C-x \\"  . align-regexp)
 
- ("M-c"     . toggle-char-case) 
- ;; ^ TODO set this key to a similar but saner idea
-
-
  ("C-c r"   . revert-buffer)
 
  ("C-h a"   . apropos)
  ;; ^ Help should search more than just commands
 
+ ;;("M-c"     . toggle-char-case) 
+ ;; ^ TODO set this key to a similar but saner idea
 
  ("C-c b"   . copy-file-name-to-clipboard)
  ;; ^ copy file name to clipboard

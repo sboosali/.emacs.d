@@ -8,7 +8,7 @@
 (use-package yasnippet
   :config
   (add-to-list 'yas-snippet-dirs
-               (sboo-emacs-file "elisp/sboo/snippets")) ;;TODO MV "sboo/snippets"
+               (sboo-emacs-file "sboo/snippets"))
                ;; ^ each item in this list is:
                ;; a top-level directory, which holds per-mode snippet directories.
   (yas-global-mode 1))

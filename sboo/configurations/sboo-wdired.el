@@ -18,10 +18,6 @@
    dired-listing-switches  "-alh")
   ;; ^
 
-  (add-hook 'dired-mode-hook (lambda ()
-                               (dired-omit-mode 1)))
-  ;; ^ uses `dired-omit-extension' (above).
-
   nil)
 
   ;;TODO
@@ -33,6 +29,10 @@
   ;;  (define-key dired-mode-map 
   ;;   (kbd "w") 'wdired-change-to-wdired-mode)
   ;;  (dired-omit-mode 1))))
+  ;; (add-hook 'dired-mode-hook (lambda ()
+  ;;                              (dired-omit-mode 1)))
+  ;; ;; ^ uses `dired-omit-extension' (above).
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
