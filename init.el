@@ -117,7 +117,7 @@
   "
   (interactive)
 
-  (sboo-add-subdirs-to-load-path "elisp/sboo"
+  (sboo-add-subdirs-to-load-path "sboo"
                                    '("./"
                                      "utilities/"
                                      "initialization/"
