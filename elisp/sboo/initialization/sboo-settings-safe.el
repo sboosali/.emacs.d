@@ -121,6 +121,26 @@
  ;; only row numbers are shown by default.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Parentheses
+
+(show-paren-mode t)	
+;; ^ highlight matching parens, automatically.
+
+(setq 
+ show-paren-delay 0
+ ;; ^ 
+ show-paren-style 'expression) 
+ ;; ^ alternatives are: `parenthesis' and `mixed'
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-font-lock-mode t) 
+;; ^ Syntax highlighting, by default.
+
+(auto-compression-mode t)
+;; ^ (Transparently) open compressed files
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BUFFERS 
 
 (setq

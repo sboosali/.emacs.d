@@ -26,4 +26,9 @@
 (require 'sboo-xah)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-minibuffer nil t)
+  (sboo-minibuffer-config))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-settings)
