@@ -1,0 +1,25 @@
+# -*- mode: snippet -*-
+#
+# key         : newnum
+# name        : a `Num`-newtype.
+# condition   : (= (length "newnum") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+# --
+--------------------------------------------------
+
+{-|
+
+-}
+
+newtype $1 = $1
+
+  Int$0
+
+  deriving stock    (Show,Read,Lift,Generic)
+  deriving newtype  (Eq,Ord,Num)
+  deriving newtype  (NFData,Hashable)
+
+-- instance Semigroup $1 where (<>)   = _
+-- instance Monoid    $1 where mempty = _
+

@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+#
+# key         : functor
+# name        : `deriving` a unary `Functor` type.
+# condition   : (= (length "functor") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+  deriving stock    (Functor,Foldable,Traversable)
+  deriving stock    (Show,Read,Eq,Ord,Enum,Bounded,Ix,Lift,Generic)
+  deriving anyclass (NFData,Hashable)

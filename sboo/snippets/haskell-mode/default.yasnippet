@@ -7,12 +7,12 @@
 # contributor : Spiros Boosalis
 #
 # --
--- | @= 'default${1:TYPE}'@
-instance Default ${1:TYPE} where
-  def = default${1:TYPE}
+-- | @= 'default$1'@
+instance Default $1 where
+  def = default$1
 
--- | @= '${2:VALUE}'@
-default${1:TYPE} :: ${1:TYPE}
-default${1:TYPE} = ${2:VALUE}
+-- | @= '$2'@
+default$1 :: $1
+default$1 = $2
 
 $0

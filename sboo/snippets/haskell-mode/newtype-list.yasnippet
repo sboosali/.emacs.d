@@ -1,0 +1,28 @@
+# -*- mode: snippet -*-
+#
+# key         : newlist
+# name        : a List-`newtype` of some Item.
+# condition   : (= (length "newlist") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+--------------------------------------------------
+
+{-|
+
+-}
+
+newtype $1 = $1
+
+  [$2]
+
+  deriving stock    (Show,Read,Lift,Generic)
+  deriving newtype  (Eq,Ord,Semigroup,Monoid)
+  deriving newtype  (NFData,Hashable)
+
+instance IsList $1 where
+  type Item $1 = $2
+  fromList = coerce
+  toList   = coerce
+
