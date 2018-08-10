@@ -1,4 +1,0 @@
-# name: language pragma
-# key: lang
-# --
-{-# LANGUAGE $1 #-}$0
