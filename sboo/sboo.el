@@ -16,4 +16,9 @@
 ;; ^ my configurations for several packages and/or modes.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-commands)
+;; ^
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo)
