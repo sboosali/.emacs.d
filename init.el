@@ -22,14 +22,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-emacs-file (PATH)
-  "Like `(concat '~/.emacs.d/' PATH)`, but rather than being hard-coded, the emacs base directory is configured by `sboo-emacs-directory`. This safely falls back to the default location if, for whatever reason, this function has been called despite the variable it references not being bound."
+  "Like `(concat '~/.emacs.d/' PATH)`, but rather than being hard-coded, the emacs base directory is configured by `sboo-emacs-directory'. This safely falls back to the default location if, for whatever reason, this function has been called despite the variable it references not being bound."
 
   (let ((d (or sboo-emacs-directory user-emacs-directory)))
     (concat d PATH)))
 
 ;; ^
 ;;
-;; `user-emacs-directory`:
+;; `user-emacs-directory':
 ;;
 ;; Default value is "~/.emacs.d/"
 ;; Defined in ‘subr.el’.

@@ -3,21 +3,9 @@
 
 (require 'use-package)
 
-(setq helm-allow-mouse t)
-;; [1/3]
 (require 'helm)
 
 (require 'helm-config)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Settings
-
-(setq helm-allow-mouse t)
-;; ^ the mouse is gratuitously disabled by default.
-;; this enables, for example, clicking on a helm candidate to activate it,
-;; rather than navigating it with several arrow and/or character keypresses.
-;; TODO doesn't work.
-;; [2/3]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings
@@ -36,18 +24,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Enable
 
-;;TODO
-(helm-mode 1)
+(use-package helm
 
-(setq helm-allow-mouse t)
-;; [3/3]
+  :init
+  (setq
+   helm-allow-mouse t)
+  ;; ^ the mouse is gratuitously disabled by default.
+  ;; this enables, for example, clicking on a helm candidate to activate it,
+  ;; rather than navigating it with several arrow and/or character keypresses.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  :bind (:map helm-command-map
+              ("<f9>" . helm-quit-and-helm-mini))
+;   ("C-x C-f" .  helm-find-files)
 
-;; (use-package helm
-;;   :bind
-;;   :map helm-mode-map
-;;   ("C-x C-f" .  helm-find-files))
+  :config
+  (helm-mode 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NOTES

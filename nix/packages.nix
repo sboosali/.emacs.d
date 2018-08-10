@@ -31,20 +31,19 @@ officialPackages = with melpa; [
 
  yasnippet
 
- haskell-mode
- dante           # needs `ghc` (or `cabal`, or `stack`, etc) system-package
-
  flycheck
- multi-term
-
- nix-mode
- markdown-mode 
-
- paredit
-
  magit          # <C-x g>
  projectile
  #direnv         # needs `direnv` system-package
+ #multi-term
+
+ haskell-mode
+ dante           # needs `ghc` (or `cabal`, or `stack`, etc) system-package
+ nix-mode
+ paredit
+
+ markdown-mode 
+ yaml-mode
 
  ####################
 
