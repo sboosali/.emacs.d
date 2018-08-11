@@ -9,12 +9,12 @@
 (use-package emacs
 
   :init
-  (setq sboo-custom-file (sboo-database-file "custom" "custom.el"))
+  (setq
+   sboo-custom-file (sboo-database-file "custom" "custom.el")
+   custom-file sboo-custom-file)
 
   :config
-  (load sboo-custom-file)
-
-  )
+  (load sboo-custom-file))
 
 ;; ^
 ;;
