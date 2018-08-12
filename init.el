@@ -38,6 +38,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defalias 'sboo-emacs-path
+  'sboo-emacs-file)
+;; ^
+;; `defalias':
+;;     (defalias 'NEW 'OLD)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defvar sboo-database-directory
   (sboo-emacs-file "db/")
   "")
@@ -60,6 +68,25 @@
       ;; ^ e.g.
       ;; `(concat  "~/.emacs.d/db"  "/"  "desktop"  "/"  ".emacs.desktop")
       (concat user-emacs-directory FILENAME)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-database-path (PATH)
+  "Like `sboo-database-file'.
+
+  e.g. 
+
+    M-: (sboo-database-path \"desktop/\")
+    \"~/.emacs.d/db/desktop/\"
+
+  "
+  
+  (let ((DIRECTORY (if (boundp 'sboo-database-directory)
+                       sboo-database-directory
+                     user-emacs-directory)))
+      (concat DIRECTORY "/" PATH)))
+      ;; ^ e.g.
+      ;; `(concat  "~/.emacs.d/db/"  "desktop")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -91,6 +118,22 @@
 
   ;; ^ 
   ;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Early Configuration ;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'use-package)
+
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
+;; ^ why? when launched from the dock, either in Linux (KDE) or Mac,
+;; emacs' `$PATH` is wrong (e.g. can't find `cabal` for `dante`, can't find `git` for `magit`).
+;; because the dock is under the graphical-enironment, which was run from a login-shell (?),
+;; not an interactive-shell, and thus didn't `source` `.bashrc` (only `.profile`).
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

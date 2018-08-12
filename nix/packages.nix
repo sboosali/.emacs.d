@@ -20,6 +20,7 @@ officialPackages = with melpa; [
  
  ####################
 
+ exec-path-from-shell
  real-auto-save
  tabbar
  shackle
