@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+#
+# key         : derivingnewtype
+# name        : `deriving` "standard" typeclasses (for a `newtype`).
+# condition   : (= (length "derivingnewtype") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+  deriving stock    (Show,Read,Lift,Generic)
+  deriving newtype  (Eq,Ord)
+  deriving newtype  (NFData,Hashable)
+$0
