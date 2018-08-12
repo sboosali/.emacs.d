@@ -27,7 +27,7 @@
     (interactive)
     (progn
 
-      (if (eq (desktop-owner) (emacs-pid))
+      (if t ;;TODO (eq (desktop-owner) (emacs-pid))
           (let ((desktop-save 'ask-if-new))
             ;; ^ `ask-if-new' means "ask if no desktop file exists, otherwise just save.",
             ;; which `desktop-save' reads.
@@ -45,7 +45,9 @@
             ;; NOTE `elisp' is a "Lisp2", i.e. variables and functions have different namespaces,
             ;; thus `let' doesn't affect the definition (or boundedness) of any function.
             ;;
-            (desktop-save sboo-desktop-directory)))
+            (desktop-save sboo-desktop-directory)
+            (message "Saved desktop to %s" sboo-desktop-directory)
+            ))
           ;; ^ 
           ;; `(desktop-save DIRNAME &optional RELEASE ONLY-IF-CHANGED VERSION)`
           ;;
@@ -83,11 +85,11 @@
    desktop-dirname sboo-desktop-directory
    ;; ^
 
-   desktop-restore-eager 100
+   desktop-restore-eager 10
    ;; ^ Specify the maximum number of buffers to restore immediately;
    ;; the remaining buffers are restored lazily, when Emacs is idle.
    ;; 
-   
+
    desktop-load-locked-desktop t
    ;; ^ `t` means "load the desktop (on startup) without asking"
    
