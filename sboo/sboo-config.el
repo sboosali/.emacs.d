@@ -128,6 +128,13 @@
 ;; `prog-mode's
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 
+
+(require 'sboo-direnv)
+;; ^ `dante` needs `direnv`,
+;; since it doesn't (?) expect both `cabal.project` and `nix-shell`.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Haskell
 
 (require 'sboo-haskell)

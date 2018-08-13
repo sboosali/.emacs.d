@@ -35,7 +35,7 @@ officialPackages = with melpa; [
  flycheck
  magit          # <C-x g>
  projectile
- #direnv         # needs `direnv` system-package
+ direnv         # needs `direnv` system-package
  #multi-term
 
  haskell-mode
