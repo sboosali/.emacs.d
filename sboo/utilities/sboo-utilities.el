@@ -1,16 +1,16 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; IMPORTS
 
 ;;(require ')
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 
 (defun sboo-find-user-init-file ()
   (interactive)
   (find-file user-init-file))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; https://emacs.stackexchange.com/questions/7475/recursively-go-up-to-find-makefile-and-compile
 
@@ -24,7 +24,7 @@
        (find-file-other-window filepath)
        (message "[find-file-in-ancestor-directory] not found: `%s`" FILE)))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; 
 ;;
@@ -33,9 +33,9 @@
   (interactive)
   (setq unread-command-events (listify-key-sequence "\C-g")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  
 
 ;; see http://ivanmalison.github.io/dotfiles/
@@ -80,12 +80,30 @@
   (if (region-active-p) (call-interactively 'eval-region)
     (call-interactively 'eval-last-sexp)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-kill-file-buffers-matching-file-extension (SUFFIX)
   ""
   (interactive)
   )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-message-warning (input)
+
+  (interactive)
+  "(by @lawlist)."
+  (message ;;;"%s"
+    (propertize input 'face 'font-lock-warning-face)))
+
+;; ^
+
+;-;-;-;-;-;-;-;-;-;-;-;-;
+
+;; See:
+;;     - https://www.gnu.org/s/emacs/manual/html_node/elisp/Displaying-Messages.html
+;;     - https://stackoverflow.com/questions/2742435/in-emacs-how-do-i-display-a-message-in-the-minibuffer-with-font-face-properties
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-utilities)
