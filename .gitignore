@@ -25,6 +25,10 @@ savehist.el
 # Emacs: `ido`
 ido.last
 
+# Emacs: `bookmarks`
+./bookmarks
+bookmarks.el
+
 # Emacs: miscellaneous
 # (miscellaneous state stored in .emacs.d/ by default)
 ./packages/
