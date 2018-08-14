@@ -46,6 +46,8 @@ officialPackages = with melpa; [
  markdown-mode 
  yaml-mode
 
+ edit-indirect
+
  ####################
 
  helm
