@@ -52,6 +52,7 @@ officialPackages = with melpa; [
  helm-core
  helm-dash
  helm-make
+ helm-swoop
 
  ########################
 

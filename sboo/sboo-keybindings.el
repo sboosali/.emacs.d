@@ -34,6 +34,8 @@
  ("C-c b"   . copy-file-name-to-clipboard)
  ;; ^ copy file name to clipboard
 
+ ("<kp-end>" . xref-find-definitions)
+
 )
 
 ;; (bind-key* "TAB" 'dabbrev-expand)

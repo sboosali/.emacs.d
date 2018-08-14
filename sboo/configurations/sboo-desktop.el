@@ -85,10 +85,10 @@
    desktop-dirname sboo-desktop-directory
    ;; ^
 
-   desktop-restore-eager 10
+   desktop-restore-eager 100
    ;; ^ Specify the maximum number of buffers to restore immediately;
    ;; the remaining buffers are restored lazily, when Emacs is idle.
-   ;; 
+   ;; `10` is instant, `100` takes a few seconds.
 
    desktop-load-locked-desktop t
    ;; ^ `t` means "load the desktop (on startup) without asking"
