@@ -1,0 +1,45 @@
+# -*- mode: snippet -*-
+#
+# key         : data-record
+# name        : [sboo] define a record (i.e. product) `data`type.
+# condition   : (= (length "data-record") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+--------------------------------------------------
+
+{-|  $0
+
+-}
+
+data $1 = $1
+  { $2 :: $3
+  , $4 :: $5
+  }
+
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
+
+-- | @= 'sappendGeneric'@ (i.e. pair-wise).
+instance Semigroup $1 where
+  (<>) = sappendGeneric
+
+-- -- | @= 'memptyGeneric'@
+-- instance Monoid $1 where
+--   mempty = memptyGeneric
+-- 
+-- -- | @= 'default$1'@
+-- instance Default $1 where
+--   def = default$1
+-- 
+-- {-|
+-- 
+-- -}
+-- 
+-- default$1 :: $1
+-- default$1 = $1{..}
+--   where
+--   $2 = def
+--   $4 = def
+

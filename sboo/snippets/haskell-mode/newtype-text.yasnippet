@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 #
-# key         : new-list
-# name        : [sboo] a List-`newtype` of some Item.
-# condition   : (= (length "new-list") (current-column))
+# key         : new-text
+# name        : [sboo] a Text-`newtype`.
+# condition   : (= (length "new-text") (current-column))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis
 #
@@ -15,14 +15,12 @@
 
 newtype $1 = $1
 
-  [$2]
+  Text$0
 
-  deriving stock    (Show,Read,Lift,Generic)
+  deriving stock    (Show,Read,Generic)
   deriving newtype  (Eq,Ord,Semigroup,Monoid)
   deriving newtype  (NFData,Hashable)
 
-instance IsList $1 where
-  type Item $1 = $2
-  fromList = coerce
-  toList   = coerce
+instance IsString $1 where
+  fromString = (coerce . fromString)
 

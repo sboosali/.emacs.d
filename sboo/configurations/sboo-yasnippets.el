@@ -6,6 +6,8 @@
 
 (use-package yasnippet
 
+  :demand t
+
   :bind
   (("<kp-home>" . yas-next-field-or-maybe-expand)
    )

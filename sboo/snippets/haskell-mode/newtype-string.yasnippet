@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 #
-# key         : newstring
-# name        : a String-`newtype`.
-# condition   : (= (length "newstring") (current-column))
+# key         : new-string
+# name        : [sboo] a String-`newtype`.
+# condition   : (= (length "new-string") (current-column))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis
 #
@@ -21,5 +21,6 @@ newtype $1 = $1
   deriving newtype  (Eq,Ord,Semigroup,Monoid)
   deriving newtype  (NFData,Hashable)
 
-instance IsString $1 where fromString = coerce
+instance IsString $1 where
+  fromString = coerce
 

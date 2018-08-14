@@ -1,0 +1,25 @@
+# -*- mode: snippet -*-
+#
+# key         : data-enum
+# name        : [sboo] define an enumeration (i.e. sum) `data`type.
+# condition   : (= (length "data-enum") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+--------------------------------------------------
+
+{-|
+
+-}
+
+data $1
+
+  = $2
+  | $3
+
+  deriving stock    (Enum,Bounded,Ix)
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (Enumerable)
+  deriving anyclass (NFData,Hashable)
+
