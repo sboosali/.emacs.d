@@ -92,8 +92,8 @@
 
    desktop-load-locked-desktop t
    ;; ^ `t` means "load the desktop (on startup) without asking"
-   
-   desktop-auto-save-timeout 5
+
+   desktop-auto-save-timeout 30
    ;; ^ unit-of-time is seconds.
    ;; (NOTE the auto-saves are saved to a separate file).
 
@@ -106,11 +106,11 @@
     (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode))
     ;; ^ You can specify buffers which should not be saved, by name or by mode.
 
-  (progn  
-    ;(add-to-list TODO 'sboo-desktop-save)
-    ;; ^ 
-    (add-hook 'auto-save-hook 'sboo-desktop-save))
-    ;; ^ 
+  ;; (progn  
+  ;;   ;(add-to-list TODO 'sboo-desktop-save)
+  ;;   ;; ^ 
+  ;;   (add-hook 'auto-save-hook 'sboo-desktop-save))
+  ;;   ;; ^ 
 
   (progn
     (desktop-read sboo-desktop-directory)

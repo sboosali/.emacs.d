@@ -44,9 +44,9 @@ officialPackages = with melpa; [
  paredit
 
  markdown-mode 
- yaml-mode
-
  edit-indirect
+
+ yaml-mode
 
  ####################
 
@@ -57,6 +57,8 @@ officialPackages = with melpa; [
  helm-swoop
 
  ########################
+
+ neotree
 
   anzu   
   # ^ shows total search hits in mode line.

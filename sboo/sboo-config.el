@@ -91,16 +91,18 @@
 
 (require 'sboo-helm-swoop)
 
+(require 'sboo-yasnippets)
+;; ^ Activate before any `prog-mode'-package configuration.
+;; 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Generic Project-Management
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
+;; Text Editing
 
-(require 'sboo-yasnippets)
-;; ^ Activate before any `prog-mode'-package configuration.
-;; 
+(require 'sboo-wrap-region)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FlyCheck
@@ -115,8 +117,13 @@
 ;; `projectile` does project-management.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Filesystem Navigation/Manipulation
 
-(require 'sboo-wrap-region)
+(require 'sboo-neotree)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;(require 'multi-term)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; VersionControl (Git)
@@ -158,14 +165,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Formats
 
-(require 'sboo-yaml)
-;; ^ 
-
 (require 'sboo-markdown)
 ;; ^
 
 (require 'sboo-edit-indirect)
 ;; ^
+
+(require 'sboo-yaml)
+;; ^ 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ====================================================== ;;
