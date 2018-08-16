@@ -172,8 +172,36 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(ffap-bindings)
+(setq
+  use-dialog-box t)
+
+;; ^
+;;
+;; To disable the use of dialog boxes, change the variable use-dialog-box to nil. In that case, Emacs always performs yes-or-no prompts using the echo area and keyboard input.
+;; This variable also controls whether to use file selection windows (but those are not supported on all platforms).
+;;
+;; A file selection window is a special kind of dialog box for asking for file names.
+;; You can customize the variable use-file-dialog to suppress the use of file selection windows, even if you still want other kinds of dialogs. This variable has no effect if you have suppressed all dialog boxes with the variable use-dialog-box.
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(ffap-bindings)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; NOTES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; 
+;; 
+;; 
+
+;; See:
+;;     - 
+;;     - 
+;;     - https://www.gnu.org/software/emacs/manual/html_node/emacs/Dialog-Boxes.html
+;;     - 
+;;     - 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-settings-safe)
