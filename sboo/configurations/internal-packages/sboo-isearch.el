@@ -86,6 +86,8 @@ Version 2015-04-09"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NOTES
 
+;; `isearch' has its own bindings that are active once you start an incremental search.
+
 ;; NOTE Emacs 24.4 has a new command `isearch-forward-symbol-at-point' but has these problems:
 ;;
 ;; - isearch-forward-symbol-at-point is on “symbols” only. 
