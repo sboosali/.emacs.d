@@ -37,6 +37,7 @@ officialPackages = with melpa; [
  projectile
  direnv         # needs `direnv` system-package
  #multi-term
+ neotree
 
  haskell-mode
  dante           # needs `ghc` (or `cabal`, or `stack`, etc) system-package
@@ -58,7 +59,9 @@ officialPackages = with melpa; [
 
  ########################
 
- neotree
+ evil
+
+ ########################
 
   anzu   
   # ^ shows total search hits in mode line.
