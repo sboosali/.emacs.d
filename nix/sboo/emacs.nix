@@ -1,8 +1,134 @@
-
 { nixpkgs ? import <nixpkgs> {}
 }:
 
-nixpkgs.emacs26WithPackages
+
+let customEmacsPackages =
+      nixpkgs.emacsPackagesNg.overrideScope (super: self: {
+        # use a custom version of emacs
+        emacs = super.emacs.overrideAttrs (attributes: {
+        
+          withXwidgets = true;
+          #^ for `xwidget-webkit-browse-url'.
+          # enables the `--with-xwidgets` configuration flag.
+          
+          withGTK3 = true;
+          withGTK2 = false;
+          
+          withCsrc = true;
+          
+          configureFlags = (attributes.configureFlags or [])
+            ++ [ "--with-xwidgets" "--with-cairo" ];
+
+          buildInputs = (attributes.buildInputs or [])
+            ++ [ nixpkgs.webkitgtk ];  # nixpkgs.cairo
+
+          inherit (nixpkgs) webkitgtk;
+
+        });
+        
+        # ^
+        # [Problem]
+        #    configure: error: xwidgets requested but WebKitGTK+ not found.
+        # [Solution]
+        # 
+        # 
+
+        # use the unstable MELPA version of magit
+        magit = self.melpaPackages.magit;
+      });
+in 
+customEmacsPackages.emacsWithPackages
+
+#nixpkgs.emacs26WithPackages
+
+
+/*
+########################################
+let
+
+inherit (nixpkgs) pkgs;
+
+in
+########################################
+let
+
+emacs26Packages =
+  pkgs.emacsPackagesNgGen nixpkgs.emacs26;
+
+myEmacs26Packages =
+  emacs26Packages.overrideScope (myEmacsPackageOverrides nixpkgs.emacs26);
+
+myEmacs26WithPackages =
+  myEmacs26Packages.emacsWithPackages;
+
+in
+########################################
+let
+
+myPackages = [];
+
+myEmacs = myEmacs26WithPackages myPackages;
+
+in
+########################################
+
+*/
+
+
+
+
+
+
+
+
+
+/*
+
+
+nixpkgs.emacs26PackagesNg
+
+
+
+----------------------------------------
+
+https://github.com/NixOS/nixpkgs/issues/11503
+
+myPkgs = pkgs: epkgs: with epkgs;
+  [ ... a list of all the Emacs packages I use ... ];
+
+myEmacsPackageOverrides = emacs: super: self: with self;
+  let withPatches = pkg: patches:
+    overrideDerivation pkg (attrs: { inherit patches; }); in
+
+  super.melpaPackages // {
+
+  inherit (pkgs) fetchurl fetchgit fetchFromGitHub;
+  inherit (pkgs) stdenv;
+  inherit (stdenv) mkDerivation lib;
+  inherit (lib) overrideDerivation;
+
+  ... many packages overridden here, including Org ...
+};
+
+emacs26PackagesNg = pkgs.emacsPackagesNgGen emacs26;
+
+customEmacs26Packages =
+  emacs26PackagesNg.overrideScope (myEmacsPackageOverrides emacs26);
+
+emacs26Env = pkgs.myEnvFun {
+  name = "emacs26";
+  buildInputs = [ (customEmacs26Packages.emacsWithPackages myPkgs) ];
+};
+
+----------------------------------------
+
+
+
+----------------------------------------
+
+*/
+
+
 
 /*
 ########################################

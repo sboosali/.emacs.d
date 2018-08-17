@@ -101,7 +101,7 @@ non-repository emacs-package (e.g. `intero` from GitHub):
   #^ NOTE
   # the dynamic modules flag is already given in the contemporary nixpkgs:
   # emacs = super.emacs.overrideAttrs (attributes: {
-  #   attributes.configureFlags ++ [ "--with-modules" ] ;
+  #   configureFlags = attributes.configureFlags ++ [ "--with-modules" ] ;
   # });
 
   # # [2] use a custom package.
