@@ -8,6 +8,9 @@
 
   :demand t
 
+  :mode
+  ("\\.yasnippet\\'" . snippet-mode)
+
   :bind
   (("<kp-home>" . yas-next-field-or-maybe-expand)
    )
@@ -26,7 +29,11 @@
   ;;
   ;; NOTE use `setq', not `add-to-list', to remove the default snippets-directory.
   ;;
-  ;;
+
+  (add-hook 'snippet-mode-hook
+            #'(lambda (real-auto-save-mode -1)))
+  ;; ^ works-around `snippet-mode''s obnoxious behavior
+  ;; of flinging the cursor somewhere else in the buffer, on each save.
 
   :config
   (yas-reload-all t)
@@ -43,6 +50,15 @@
 
  ;; ^ 
  ;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-yas-reload ()
+  "Recompile and reload all `.yasnippet's."
+  (interactive)
+  (progn
+    (yas-recompile-all)
+    (yas-reload-all)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NOTES

@@ -29,6 +29,9 @@ ido.last
 ./bookmarks
 bookmarks.el
 
+# Emacs: `YASnippet`
+.yas-compiled-snippets.el
+
 # Emacs: miscellaneous
 # (miscellaneous state stored in .emacs.d/ by default)
 ./packages/
