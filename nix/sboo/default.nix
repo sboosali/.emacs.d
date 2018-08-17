@@ -1,9 +1,10 @@
 ########################################
-{ nixpkgs           ? import <nixpkgs> {}
-, emacsWithPackages ? nixpkgs.emacs26WithPackages
+{ nixpkgs ? import <nixpkgs> {}
 }:
 ########################################
 let
+
+emacsWithPackages = (import ./emacs.nix) { inherit nixpkgs; };
 
 utilities = (import ./utilities.nix) emacsWithPackages;
 

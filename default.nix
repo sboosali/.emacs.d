@@ -1,1 +1,1 @@
-import ./nix/default.nix
+import ./nix/sboo/default.nix
