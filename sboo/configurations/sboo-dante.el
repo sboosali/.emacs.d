@@ -20,9 +20,13 @@
 (use-package dante
   :commands 'dante-mode
   :after    haskell-mode
-  :init
-  (add-hook 'haskell-mode-hook 'dante-mode)
-  (add-hook 'haskell-mode-hook 'flycheck-mode))
+
+  :hook ((haskell-mode-hook . dante-mode)
+         (haskell-mode-hook . flycheck-mode)))
+
+  ;; :init
+  ;; (add-hook 'haskell-mode-hook 'dante-mode)
+  ;; (add-hook 'haskell-mode-hook 'flycheck-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
