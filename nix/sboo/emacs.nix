@@ -1,13 +1,33 @@
+########################################
+########################################
 { nixpkgs ? import <nixpkgs> {}
 }:
 
+########################################
+########################################
+let 
+########################################
 
-let customEmacsPackages =
-      nixpkgs.emacsPackagesNg.overrideScope (super: self: {
+emacsWithPackages =
+ defaultEmacsPackages;
+
+########################################
+
+defaultEmacsPackages =
+ nixpkgs.emacs26WithPackages;
+
+########################################
+
+# customEmacsPackages = ;
+
+########################################
+
+xwidgetsEmacsPackages =
+    nixpkgs.emacsPackagesNg.overrideScope (super: self: {
         # use a custom version of emacs
         emacs = super.emacs.overrideAttrs (attributes: {
         
-          withXwidgets = true;
+          withXwidgets = false;
           #^ for `xwidget-webkit-browse-url'.
           # enables the `--with-xwidgets` configuration flag.
           
@@ -16,8 +36,8 @@ let customEmacsPackages =
           
           withCsrc = true;
           
-          configureFlags = (attributes.configureFlags or [])
-            ++ [ "--with-xwidgets" "--with-cairo" ];
+#          configureFlags = (attributes.configureFlags or [])
+#            ++ [ "--with-xwidgets" "--with-cairo" ];
 
           buildInputs = (attributes.buildInputs or [])
             ++ [ nixpkgs.webkitgtk ];  # nixpkgs.cairo
@@ -34,16 +54,27 @@ let customEmacsPackages =
         # 
 
         # use the unstable MELPA version of magit
-        magit = self.melpaPackages.magit;
-      });
-in 
-customEmacsPackages.emacsWithPackages
+        # magit = self.melpaPackages.magit;
+    }).emacsWithPackages;
 
-#nixpkgs.emacs26WithPackages
+in 
+########################################
+########################################
+
+emacsWithPackages
+
+########################################
+########################################
+
+
+
+
+
+
+
 
 
 /*
-########################################
 let
 
 inherit (nixpkgs) pkgs;

@@ -3,6 +3,7 @@
 (defun sboo-set-font (FONT)
   "Sets the current-buffer's (face-)font to `FONT`. 
   `FONT` is a string.
+
   e.g. `M-: (sboo-set-font \"Iosevka\")`
   e.g. `M-x sboo-set-font RET Iosevka`
   "
@@ -11,6 +12,9 @@
   ;; ^ `"s"` means "read a string from the user until they press RET".
 
   (if (find-font (font-spec :name FONT))
+      ;; ^ 
+      ;; e.g. (find-font (font-spec :name "iosevka"))
+      ;; e.g. (find-font (font-spec :name "garamond"))
     
     (progn
       (buffer-face-set `(:family ,FONT))

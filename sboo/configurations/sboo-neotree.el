@@ -22,10 +22,15 @@
     ;; ‘neotree’ will change root automatically.
 
     )
+
+  :config
+  (neotree-dir "~/haskell")
+  ;; ^
+  ;;   neotree-dir (path)
+  ;;   "Show the NeoTree window, and change root to PATH."
+
   )
 
-;; ^ 
-;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NOTES

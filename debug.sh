@@ -20,7 +20,6 @@ nix-build "$NIX_FILE" -o "$NIX_DIRECTORY"
 
 #######################################
 
-"${EMACS_EXECUTABLE}" -q --no-desktop --load "$EMACS_INITIALIZATION_FILE" "$@"
-#TODO arg  --debug-init
+"${EMACS_EXECUTABLE}" -q --no-desktop --load "$EMACS_INITIALIZATION_FILE" --debug-init "$@"
 
 ##############################################################################

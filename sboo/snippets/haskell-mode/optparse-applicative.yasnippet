@@ -1,0 +1,21 @@
+# -*- mode: snippet -*-
+#
+# key         : optparse-applicative-flag
+# name        : [sboo] a new flag (`optparse-applicative`)
+# condition   : (= (length "optparse-applicative-flag") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+# commentary  : 
+#               e.g. if the `yas-text' of `$1' is "port", then...
+#                    - "p"    is (`downcase' (`substring' yas-text 0 1))
+#                    - "PORT" is (`upcase' yas-text)
+#              .
+# --
+ 
+  <*> P.auto
+        ( P.long    "${1:flag}"
+       <> P.short   '${1:$(downcase (substring yas-text 0 1))}'
+       <> P.metavar "${1:$(upcase yas-text)}"
+       <> P.help    "$2."
+       <> P.value   def$0
+        )

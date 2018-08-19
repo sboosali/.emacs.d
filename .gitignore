@@ -47,6 +47,7 @@ saved-places
 eshell/history
 session.*
 .emacs-buffers
+recentf
 
 ########################################
 # Haskell

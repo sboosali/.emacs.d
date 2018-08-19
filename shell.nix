@@ -1,1 +1,1 @@
-import  ./profiles/featured/nix/shell.nix
+import ./nix/sboo/default.nix

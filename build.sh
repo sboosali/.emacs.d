@@ -6,7 +6,7 @@ NIX_FILE=./default.nix
 
 NIX_DIRECTORY=result
 
-NIX_EMACS=./"$NIX_DIRECTORY"/bin/emacs 
+NIX_EMACS=./"$NIX_DIRECTORY"/bin/emacs
 
 #################################################
 

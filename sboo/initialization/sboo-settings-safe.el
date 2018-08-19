@@ -203,5 +203,8 @@
 ;;     - 
 ;;     - 
 
+;;TODO
+;; (set-face-attribute 'default nil :font "Garamond" :height 200)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-settings-safe)
