@@ -8,6 +8,10 @@
 (require 'helm-swoop)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Enable
 
 (use-package helm-swoop
@@ -17,7 +21,7 @@
 
    helm-swoop-speed-or-color nil
    ;; ^
-   ;; `nil`: you can slightly boost invoke speed in exchange for text color 
+   ;; `nil`: you can slightly boost invoke-speed in exchange for text-color 
 
    helm-swoop-use-fuzzy-match t)
    ;; ^
@@ -29,12 +33,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NOTES
 
-;; 
-;; https://github.com/ShingoFukuyama/helm-swoop/blob/master/README.md
-;; 
-
 ;; e.g.
 ;;
+
+;; See:
+;;     - https://github.com/ShingoFukuyama/helm-swoop/blob/master/README.md
+;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-helm-swoop)

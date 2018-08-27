@@ -28,10 +28,16 @@
 
   :init
   (setq
+   helm-boring-buffer-regexp-list '()
+   ;; ^
+   ;; by default, `helm-boring-buffer-regexp-list' is:
+   ;;     ("\\` " "\\`\\*helm" "\\`\\*Echo Area" "\\`\\*Minibuf")
+   ;;
    helm-allow-mouse t)
   ;; ^ the mouse is gratuitously disabled by default.
   ;; this enables, for example, clicking on a helm candidate to activate it,
   ;; rather than navigating it with several arrow and/or character keypresses.
+  ;;
 
   :bind (:map helm-command-map
               ("<f9>" . helm-quit-and-helm-mini))

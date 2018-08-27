@@ -17,9 +17,9 @@ newtype $1 = $1
   Int$0
 
   deriving stock    (Show,Read,Lift,Generic)
-  deriving newtype  (Eq,Ord,Num)
+  deriving newtype  (Num)
+  deriving newtype  (Eq,Ord)
   deriving newtype  (NFData,Hashable)
 
--- instance Semigroup $1 where (<>)   = _
--- instance Monoid    $1 where mempty = _
-
+-- instance Semigroup $1 where (<>)   = coerce (+)
+-- instance Monoid    $1 where mempty = coerce 0

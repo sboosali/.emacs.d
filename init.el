@@ -193,8 +193,13 @@
 
 (require 'sboo-initialization)
 ;; ^
-;; First configure builtin-packages,
-;; then if able, configure installed(/ third-party) packages.
+;; Initially, do simple configurations (like keybindings, custom variables, etc),
+;; which (should) always succeed.
+
+(require 'sboo-1st)
+;; ^
+;; Properly configure any builtin-packages,
+;; before configuring installed(i.e. third-party) packages.
 
 (require 'sboo-settings)
 ;; ^ Further settings.
