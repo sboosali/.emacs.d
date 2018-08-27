@@ -20,6 +20,12 @@ officialPackages = with melpa; [
  
  ####################
 
+ haskell-mode
+ dante           # needs `ghc` (or `cabal`, or `stack`, etc) system-package
+ intero          # needs `stack` system-package
+
+ ####################
+
  exec-path-from-shell
  real-auto-save
  tabbar
@@ -32,6 +38,9 @@ officialPackages = with melpa; [
 
  yasnippet
 
+ nix-mode
+ paredit
+
  flycheck
  magit          # <C-x g>
  projectile
@@ -39,15 +48,12 @@ officialPackages = with melpa; [
  #multi-term
  neotree
 
- haskell-mode
- dante           # needs `ghc` (or `cabal`, or `stack`, etc) system-package
- nix-mode
- paredit
-
  markdown-mode 
  edit-indirect
 
  yaml-mode
+
+ ####################
 
  ####################
 
@@ -93,7 +99,16 @@ officialPackages = with melpa; [
  #emacs-web-server
  
  ########################
+ # for haskell-ide-engine:
 
+ lsp-mode
+ lsp-ui 
+ lsp-haskell
+
+ ########################
+
+
+ ########################
 
 ];
 

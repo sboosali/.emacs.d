@@ -156,11 +156,15 @@
 (require 'sboo-haskell)
 ;; ^ my `haskell`-language configuration. 
 
-(require 'sboo-dante)
+;;;(require 'sboo-dante)
 ;; ^ my `dante` configuration.
 ;; `dante` is a lightweight, configurable Haskell IDE.
 
-;(require 'sboo-ghcid)
+;;;(require 'sboo-intero)
+;; ^ my `intero` configuration.
+;; `intero` is a `stack`-only Haskell IDE.
+
+;;;(require 'sboo-ghcid)
 ;; ^ my custom `ghcid`-mode.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
