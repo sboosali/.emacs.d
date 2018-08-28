@@ -22,25 +22,39 @@
 (use-package haskell-mode
   :demand t
 
-  :hook
-  ((haskell-mode . haskell-decl-scan-mode)))
+  :interpreter ("runhaskell" "runghc" "stack")
+  :mode        ("\\.hs\\'" "\\.lhs\\'" "\\.hsig\\'" "\\.hsc\\'"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package haskell-decl-scan
+  :after    haskell-mode
+  :commands (haskell-decl-scan)
+  
+  :hook     haskell-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package haskell-interactive-mode
-  ;; :demand t
-
-  :hook
-  haskell-mode)
+  :after haskell-mode
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package haskell-process
-  ;; :demand t
+  :after haskell-mode
 
   :config
   (setq
    haskell-process-type 'cabal-new-repl))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package haskell-cabal
+  :after    haskell-mode
+  :commands (haskell-cabal-mode)
+
+  :mode        ("\\.cabal\\'" "\\.project\\'"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-haskell)
