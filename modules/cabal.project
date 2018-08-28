@@ -1,0 +1,31 @@
+--------------------------------------------------
+
+packages:
+  ./emacs-native
+
+--------------------------------------------------
+
+optional-packages:
+  ./emacs-module
+  ./radix-tree
+
+--------------------------------------------------
+
+debug-info:        True
+library-profiling: False
+
+--------------------------------------------------
+
+constraints:
+  emacs-module +assertions +module-assertions
+
+--------------------------------------------------
+
+package *
+  extra-lib-dirs:     /home/sboo/.nix-profile/lib/
+  extra-include-dirs: /home/sboo/.nix-profile/include/
+  extra-prog-path:    /home/sboo/.nix-profile/bin/
+
+-- `nix`-installed: headers, shared objects, and executables; UNIX-only.
+
+--------------------------------------------------

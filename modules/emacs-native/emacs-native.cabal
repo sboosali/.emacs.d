@@ -1,0 +1,198 @@
+-- Created     :   3 May 2018
+
+name:
+  emacs-native
+version:
+  0.1.0.0
+synopsis:
+  Emacs modules implemented in Haskell for my configuration
+license:
+  BSD3
+license-file:
+  LICENSE
+author:
+  Sergey Vinokurov
+maintainer:
+  Sergey Vinokurov <serg.foo@gmail.com>
+stability: stable
+tested-with:
+    GHC == 8.2.2, GHC == 8.4.3
+
+cabal-version:
+  >= 2.0
+build-type:
+  Simple
+
+flag runtime-checks
+  description:
+    Enable more runtime checks
+  default:
+    False
+  manual:
+    True
+
+library
+  if flag(runtime-checks)
+    cpp-options: -DRUNTIME_CHECKS
+  exposed-modules:
+    Data.ByteString.Char8.Ext
+    Data.Eproj
+    Data.Filesystem
+    Data.FuzzyMatch
+    Data.NBSem
+    Data.Regex
+  hs-source-dirs:
+    src
+  build-depends:
+    async,
+    base >= 4.7,
+    bimap,
+    bytestring,
+    containers,
+    emacs-module,
+    exceptions,
+    filepath,
+    lifted-async,
+    monad-control,
+    mtl,
+    path >=0.6.1,
+    prettyprinter,
+    radix-tree,
+    regex-tdfa,
+    regex-tdfa-text,
+    safe-exceptions-checked,
+    stm,
+    stm-chans,
+    streaming-commons,
+    text,
+    transformers-base,
+    vector
+  default-language:
+    Haskell2010
+  ghc-options:
+    -Wall
+    -fwarn-name-shadowing
+    -fno-warn-type-defaults
+  if impl(ghc >= 8.0)
+    ghc-options:
+      -Wcompat
+      -Whi-shadowing
+      -Widentities
+      -Wincomplete-record-updates
+      -Wincomplete-uni-patterns
+      -Wmissing-exported-signatures
+  if impl(ghc >= 8.2)
+    ghc-options:
+      -Wcpp-undef
+      -Wmissing-home-modules
+      -Wunbanged-strict-patterns
+
+foreign-library emacs-native
+  type:                native-shared
+  lib-version-info:    0:0:0
+  build-tools:
+    hsc2hs
+  c-sources:
+    cbits/emacs_wrapper.c
+  includes:
+    emacs-module.h
+  install-includes:
+    emacs-module.h
+  include-dirs:
+    cbits
+  other-modules:
+    Emacs.EprojTagIndex
+    Emacs.FastFileSearch
+    Emacs.FuzzyMatch
+    Emacs.Grep
+    Emacs.Init
+
+  if os(Windows)
+    options: standalone
+  --   mod-def-file: MyForeignLib.def
+
+  build-depends:
+    base >=4.7,
+    bytestring,
+    bytestring-lexing,
+    containers,
+    emacs-module,
+    emacs-native,
+    exceptions,
+    lifted-async,
+    monad-control,
+    monad-par,
+    monad-par-extras,
+    path,
+    path-io,
+    prettyprinter,
+    safe-exceptions-checked,
+    stm,
+    stm-chans,
+    text,
+    transformers-base
+  hs-source-dirs:
+    lib
+  default-language:
+    Haskell2010
+  ghc-options:
+    -threaded
+    -Wall
+    -fwarn-name-shadowing
+    -fno-warn-type-defaults
+  if impl(ghc >= 8.0)
+    ghc-options:
+      -Wcompat
+      -Whi-shadowing
+      -Widentities
+      -Wincomplete-record-updates
+      -Wincomplete-uni-patterns
+      -Wmissing-exported-signatures
+  if impl(ghc >= 8.2)
+    ghc-options:
+      -Wcpp-undef
+      -Wmissing-home-modules
+      -Wunbanged-strict-patterns
+  ghc-prof-options:
+    -fprof-auto
+
+test-suite emacs-native-test
+  type:
+    exitcode-stdio-1.0
+  main-is:
+    test/EmacsNativeTest.hs
+  hs-source-dirs:
+    . test
+  build-depends:
+    QuickCheck,
+    base,
+    containers,
+    emacs-native,
+    tasty,
+    tasty-hunit,
+    tasty-quickcheck,
+    text,
+    vector
+  default-language:
+    Haskell2010
+  ghc-options:
+    -rtsopts
+    -main-is EmacsNativeTest
+    -Wall
+    -fwarn-name-shadowing
+    -fno-warn-type-defaults
+  if impl(ghc >= 8.0)
+    ghc-options:
+      -Wcompat
+      -Whi-shadowing
+      -Widentities
+      -Wincomplete-record-updates
+      -Wincomplete-uni-patterns
+      -Wmissing-exported-signatures
+  if impl(ghc >= 8.2)
+    ghc-options:
+      -Wcpp-undef
+      -Wmissing-home-modules
+      -Wunbanged-strict-patterns
+  ghc-prof-options:
+    -fprof-auto

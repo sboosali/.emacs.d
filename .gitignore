@@ -1,11 +1,17 @@
 ########################################
 # my (i.e. sboosali's) local files
+
+.sboo/
+
 ignore/
+temporary/
+
 secret/*
 private/
 
 ########################################
 # nix
+
 result
 result-*
 
@@ -51,6 +57,21 @@ recentf
 
 ########################################
 # Haskell
+
+.ghc.environment.*
+cabal.project.local
+*.o
+*.hi
+*.chi
+*.chs.h
+report.html
+.cabal-sandbox/
+cabal.sandbox.config
+cabal.config
+dist-newstyle/
+dist/
+.stack-work/
+.styx/
 
 ########################################
 # OS X
