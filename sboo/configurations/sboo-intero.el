@@ -7,11 +7,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package intero
+  :disabled
+  
   :after    haskell-mode
 
-  :commands intero-mode
+  :hook (intero-mode)
 
-  :hook ((haskell-mode-hook . intero-mode)))
+  :commands intero-mode))
 
 ;; ^ 
 ;; 

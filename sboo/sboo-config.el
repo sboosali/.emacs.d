@@ -146,7 +146,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
 
-(require 'sboo-direnv)
+;;;TODO require 'sboo-direnv)
 ;; ^ `dante` needs `direnv`,
 ;; since it doesn't (?) expect both `cabal.project` and `nix-shell`.
 
