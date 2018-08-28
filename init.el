@@ -1,5 +1,39 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Early Configuration ;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq
+ ;;shell-file-name      "/bin/bash"
+
+ shell-command-switch "-ic")
+;; ^
+;;
+;; this overrides the default option "-c" (execute the following command), adding the option "-i", which forces the bash shell into interactive mode, which leads to the sourcing of `~/`.
+;;
+;; it's a more general solution than exec-path-from-shell: sets all variables and aliases, not just PATH.
+;;
+;; See
+;;     - https://stackoverflow.com/a/12229404/1190077
+;;
+;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'use-package)
+
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
+
+;; ^ why? when launched from the dock, either in Linux (KDE) or Mac,
+;; emacs' `$PATH` is wrong (e.g. can't find `cabal` for `dante`, can't find `git` for `magit`).
+;; because the dock is under the graphical-enironment, which was run from a login-shell (?),
+;; not an interactive-shell, and thus didn't `source` `.bashrc` (only `.profile`).
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Constants / Variables / Functions ;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -118,23 +152,6 @@
 
   ;; ^ 
   ;; 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Early Configuration ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'use-package)
-
-(use-package exec-path-from-shell
-  :config
-  (exec-path-from-shell-initialize))
-
-;; ^ why? when launched from the dock, either in Linux (KDE) or Mac,
-;; emacs' `$PATH` is wrong (e.g. can't find `cabal` for `dante`, can't find `git` for `magit`).
-;; because the dock is under the graphical-enironment, which was run from a login-shell (?),
-;; not an interactive-shell, and thus didn't `source` `.bashrc` (only `.profile`).
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
