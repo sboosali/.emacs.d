@@ -20,23 +20,27 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package haskell-mode
+  :demand t
+
   :hook
-  ((haskell-mode-hook . haskell-decl-scan-mode)))
+  ((haskell-mode . haskell-decl-scan-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package haskell-interactive-mode
+  ;; :demand t
+
   :hook
-  ((haskell-mode-hook . interactive-haskell-mode)))
+  haskell-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package haskell-process
-  :init
-  (setq haskell-process-type 'cabal-new-repl)
+  ;; :demand t
+
   :config
-  (setq haskell-process-type 'cabal-new-repl)
-  )
+  (setq
+   haskell-process-type 'cabal-new-repl))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-haskell)

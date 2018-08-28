@@ -7,17 +7,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package dante
-  :demand t
-  ;; :after    haskell-mode
-
   :commands dante-mode
 
-  :hook ((haskell-mode-hook . dante-mode)
-         (haskell-mode-hook . flycheck-mode)))
+  :hook ((haskell-mode . flycheck-mode)
+         (haskell-mode . dante-mode)))
 
-  ;; :init
-  ;; (add-hook 'haskell-mode-hook #'dante-mode)
-  ;; (add-hook 'haskell-mode-hook #'flycheck-mode))
+  ;; ^ i.e.:
+  ;;
+  ;;     :init
+  ;;     (add-hook 'haskell-mode-hook #'dante-mode)
+  ;;     (add-hook 'haskell-mode-hook #'flycheck-mode)
+  ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
