@@ -42,7 +42,7 @@ officialPackages = with melpa; [
  paredit
 
  flycheck
- magit          # <C-x g>
+ #magit          # <C-x g>
  projectile
  direnv         # needs `direnv` system-package
  #multi-term
@@ -52,6 +52,7 @@ officialPackages = with melpa; [
  markdown-mode 
  edit-indirect
 
+ json-mode
  yaml-mode
 
  ####################
