@@ -8,17 +8,22 @@
 
 (use-package markdown-mode
 
-  :commands
-  (markdown-mode gfm-mode)
-
   :mode
   (("README\\.md\\'" . gfm-mode)
    ;; ^ `gfm-mode', abbreviating "GitHub-flavored markdown".
    ("\\.md\\'"       . markdown-mode)
    ("\\.markdown\\'" . markdown-mode))
 
+  :bind (:map markdown-mode-map
+              ("TAB" . dabbrev-expand)
+         :map gfm-mode-map
+              ("TAB" . dabbrev-expand))
+
   :init
-  (setq markdown-command "multimarkdown"))
+  (setq markdown-command "multimarkdown")
+
+  :commands
+  (markdown-mode gfm-mode))
 
 ;; ^ 
 ;; 

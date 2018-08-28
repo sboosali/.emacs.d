@@ -130,6 +130,7 @@
 (use-package exec-path-from-shell
   :config
   (exec-path-from-shell-initialize))
+
 ;; ^ why? when launched from the dock, either in Linux (KDE) or Mac,
 ;; emacs' `$PATH` is wrong (e.g. can't find `cabal` for `dante`, can't find `git` for `magit`).
 ;; because the dock is under the graphical-enironment, which was run from a login-shell (?),

@@ -7,7 +7,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package dante
-  :after    haskell-mode
+  :demand t
+  ;; :after    haskell-mode
 
   :commands dante-mode
 

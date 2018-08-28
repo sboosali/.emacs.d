@@ -156,7 +156,7 @@
 (require 'sboo-haskell)
 ;; ^ my `haskell`-language configuration. 
 
-;;;(require 'sboo-dante)
+(require 'sboo-dante)
 ;; ^ my `dante` configuration.
 ;; `dante` is a lightweight, configurable Haskell IDE.
 

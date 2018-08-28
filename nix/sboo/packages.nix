@@ -47,6 +47,7 @@ officialPackages = with melpa; [
  direnv         # needs `direnv` system-package
  #multi-term
  neotree
+ wgrep
 
  markdown-mode 
  edit-indirect
