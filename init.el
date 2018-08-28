@@ -12,25 +12,19 @@
 ;;
 ;; this overrides the default option "-c" (execute the following command), adding the option "-i", which forces the bash shell into interactive mode, which leads to the sourcing of `~/`.
 ;;
-;; it's a more general solution than exec-path-from-shell: sets all variables and aliases, not just PATH.
+;; replaces `exec-path-from-shell'.
+;; it's a more general solution, because it sets all variables and aliases, not just PATH.
 ;;
+;; why `exec-path-from-shell' originally?
+;; when launched from the dock, either in Linux (KDE) or Mac,
+;; emacs' `$PATH` is wrong (e.g. can't find `cabal` for `dante`, can't find `git` for `magit`).
+;; because the dock is under the graphical-enironment, which was run from a login-shell (?),
+;; not an interactive-shell, and thus didn't `source` `.bashrc` (only `.profile`).
+
 ;; See
 ;;     - https://stackoverflow.com/a/12229404/1190077
 ;;
 ;; 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'use-package)
-
-(use-package exec-path-from-shell
-  :config
-  (exec-path-from-shell-initialize))
-
-;; ^ why? when launched from the dock, either in Linux (KDE) or Mac,
-;; emacs' `$PATH` is wrong (e.g. can't find `cabal` for `dante`, can't find `git` for `magit`).
-;; because the dock is under the graphical-enironment, which was run from a login-shell (?),
-;; not an interactive-shell, and thus didn't `source` `.bashrc` (only `.profile`).
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -178,28 +172,37 @@
   "
   (interactive)
 
-  (sboo-add-subdirs-to-load-path "sboo"
+  (sboo-add-subdirs-to-load-path "sboo/configuration"
                                    '("./"
-                                     "utilities/"
-                                     "initialization/"
-                                     "keybindings/"
-                                     "configurations/"
-                                     "configurations/external-packages/"
-                                     "configurations/internal-packages/"
-                                     "settings/"
-                                     "platforms/"
-                                     "window-systems/"
-                                     "packages/")))
+                                     "01-platforms"
+                                     "02-window-systems"
+                                     "05-keybindings"
+                                     "05-utilities"
+                                     "06-initialization"
+                                     "07-settings"
+                                     "10-internal-packages"
+                                     "20-my-packages"
+                                     "30-external-packages"
+                                     )))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; my configs (namespaced under "sboo").
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'use-package)
 
 (sboo-register-sboo-load-paths!)
 ;; ^ register all `sboo-*` `load-path`s before `load`ing any `sboo-*` package.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Configure ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; my configs (namespaced under "sboo").
 
 (require 'sboo-settings-safe)
 ;; ^
@@ -214,7 +217,7 @@
 ;; Initially, do simple configurations (like keybindings, custom variables, etc),
 ;; which (should) always succeed.
 
-(require 'sboo-1st)
+(require 'sboo-internal)
 ;; ^
 ;; Properly configure any builtin-packages,
 ;; before configuring installed(i.e. third-party) packages.
@@ -258,6 +261,12 @@
   ;; Otherwise, file-extensions won't have been registered with the correct modes,
   ;; custom typefaces won't have been associated, etc.
   ;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-external)
+;; ^
+;; Finally, configure any installed (i.e. third-party) packages.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -174,16 +174,22 @@
 ;; ^ my `nix`-language configuration.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Formats
+;; TextEditing / TextFormats
 
 (require 'sboo-markdown)
+;; ^
+
+(require 'sboo-json)
+;; ^
+
+(require 'sboo-yaml)
 ;; ^
 
 (require 'sboo-edit-indirect)
 ;; ^
 
-(require 'sboo-yaml)
-;; ^
+(require 'sboo-expand-region)
+;; ^ 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ====================================================== ;;

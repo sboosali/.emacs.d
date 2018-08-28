@@ -120,9 +120,17 @@ unofficialPackages = [
 
 ];
 
+########################################
+
+optionalPackages = with melpa; [
+
+# helm-colors
+
+];
+
 in
 ############################################################
 
-officialPackages ++ unofficialPackages
+officialPackages ++ unofficialPackages ++ optionalPackages
 
 ############################################################

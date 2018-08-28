@@ -71,7 +71,12 @@
  ;;
  ;; see:
  ;;     https://ux.stackexchange.com/questions/8153/what-are-the-negative-and-positive-aspects-of-dark-color-scheme
- 
+
+;;(set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
+;;(set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (setq
  visible-bell              t)
  ;; ^ on user errors,

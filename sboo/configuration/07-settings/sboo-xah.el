@@ -28,7 +28,7 @@
 (setq initial-major-mode 'text-mode)
 ;; ^ Set Default Major Mode
 
-(setq initial-buffer-choice 'xah-new-empty-buffer)
+;;(setq initial-buffer-choice 'xah-new-empty-buffer)
 ;; ^ Start Emacs with Empty Buffer
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

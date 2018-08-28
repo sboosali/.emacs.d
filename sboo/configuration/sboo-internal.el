@@ -3,4 +3,4 @@
 
                                         ;TODO mv sboo-config for internals to here.
 
-(provide 'sboo-1st)
+(provide 'sboo-internal)
