@@ -31,8 +31,8 @@
   ;;
 
   (add-hook 'snippet-mode-hook
-            #'(lambda (real-auto-save-mode -1)))
-  ;; ^ works-around `snippet-mode''s obnoxious behavior
+            (lambda () (real-auto-save-mode -1)))
+  ;; ^ HACK: works-around `snippet-mode''s obnoxious behavior
   ;; of flinging the cursor somewhere else in the buffer, on each save.
 
   :config
