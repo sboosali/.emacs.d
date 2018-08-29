@@ -108,7 +108,15 @@ officialPackages = with melpa; [
  lsp-haskell
 
  ########################
+ # from the "dired-hacks" megarepo:
 
+ dired-filter
+ dired-open
+ dired-rainbow
+ dired-subtree
+ dired-ranger
+ #dired-list
+ dired-collapse
 
  ########################
 
