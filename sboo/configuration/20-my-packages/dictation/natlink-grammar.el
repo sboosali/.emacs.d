@@ -24,10 +24,10 @@
 
   '(
     ("^#.*"      . 'font-lock-comment-face)       ;; comments at start of line
+    ("<dgn.*?>"  . 'font-lock-builtin-face)       ;; 
     ("^<.*?>"    . 'font-lock-function-name-face) ;; LHS nonterminals
     ("<.*?>"     . 'font-lock-variable-name-face) ;; other nonterminals
     ("{.*?}"     . 'font-lock-variable-name-face) ;;
-    ("<dgn.*?>"  . 'font-lock-builtin-face)       ;; 
     ("="         . 'font-lock-constant-face)      ;; "goes-to" symbol
     (";"         . 'font-lock-constant-face)      ;; statement delimiter
     ("\|"        . 'font-lock-keyword-face)       ;; "OR" symbol
@@ -37,7 +37,8 @@
     ("\]"        . 'font-lock-keyword-face)       ;; 
    )
 
-  '("\\.sapi\\'")                                 ;; filename suffixes
+  '("\\.sapi\\'" "\\.sapi.py\\'")                 ;; filename suffixes
+                                                  ;; override python-mode, only for this compound-file-extension.
 
   nil                                             ;; extra function hooks
   

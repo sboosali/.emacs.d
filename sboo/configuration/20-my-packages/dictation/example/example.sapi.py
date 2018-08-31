@@ -1,3 +1,4 @@
+example_rules = '''
 ##################################################
 # builtins
 ##################################################
@@ -11,15 +12,15 @@
 
 <dictating> exported = say   <dgndictation> [ stop ];
 <spelling>  exported = spell <dgnletters>   [ stop ];
-<commands>  exported =       <command>+     [ stop ];
 <keyboard>  exported = press <keysequence>  [ stop ];
 <mouse>     exported =       <click>        [ stop ];
+<commands>  exported =       <command>+     [ stop ];
 
 ##################################################
 # private non-terminals
 ##################################################
 
-<command> = [ <number> ] <action>;
+<command> = [<number>] <action>;
 <action>  = {command}; 
 
 #------------------------------------------------#
@@ -38,7 +39,18 @@
 
 #------------------------------------------------#
 
+<motion> = <absolute_motion>
+         | <relative_motion>
+         ;
 
+<absolute_motion> = {ordinal} {location};
+
+<relative_motion> = {cardinal} {location};
+
+# <motion> = <idempotent_motion>
+#          | <invertible_motion>;
+# <idempotent_motion> = {ordinal} {location};
+# <invertible_motion> = {cardinal} {location};
 
 #------------------------------------------------#
 
@@ -47,3 +59,4 @@
 <number> = {cardinal};
 
 ##################################################
+'''
