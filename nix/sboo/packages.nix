@@ -94,6 +94,8 @@ officialPackages = with melpa; [
 
   yaml-mode
 
+  #any-ini-mode # EmacsWiki only
+
  ########################
 
  epc

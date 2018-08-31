@@ -29,7 +29,6 @@
 
   ;;TODO any .project
 
-
 ;; e.g.
 ;; (dante-project-root-safe-p '(locate-dominating-file default-directory "cabal.project"))
 
@@ -52,11 +51,13 @@
 
   :config
   (progn
-    (setq dante-repl-command-line-methods-alist
-          sboo-dante-repl-command-line-methods-alist)
+
     ;; (put 'dante-project-root 'safe-local-variable
     ;;      #'dante-project-root-safe-p)
-    )
+    (function-put #'locate-dominating-file 'safe-local-eval-function t)
+
+    (setq dante-repl-command-line-methods-alist
+          sboo-dante-repl-command-line-methods-alist))
 
   :hook ((haskell-mode . flycheck-mode)
          (haskell-mode . dante-mode))
