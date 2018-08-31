@@ -1,0 +1,49 @@
+##################################################
+# builtins
+##################################################
+
+<dgndictation> imported;
+<dgnletters>   imported;
+
+##################################################
+# public non-terminals
+##################################################
+
+<dictating> exported = say   <dgndictation> [ stop ];
+<spelling>  exported = spell <dgnletters>   [ stop ];
+<commands>  exported =       <command>+     [ stop ];
+<keyboard>  exported = press <keysequence>  [ stop ];
+<mouse>     exported =       <click>        [ stop ];
+
+##################################################
+# private non-terminals
+##################################################
+
+<command> = [ <number> ] <action>;
+<action>  = {command}; 
+
+#------------------------------------------------#
+
+<keysequence> = <keychord>+
+              | [ <modifiers> ] <dgnletters>;
+<keychord>    = [ <modifiers> ] <key> [ key ];
+<key>         = {key}
+              | "key-code" <number>;
+
+#------------------------------------------------#
+
+<click>  = [ <modifiers> ] [ {multiplier} ] [ <button> ] click;
+<button> = {button}
+         | "button-code" <number>;
+
+#------------------------------------------------#
+
+
+
+#------------------------------------------------#
+
+<modifiers> = {modifier}+;
+
+<number> = {cardinal};
+
+##################################################
