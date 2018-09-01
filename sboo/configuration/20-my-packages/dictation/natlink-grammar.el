@@ -16,7 +16,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define-generic-mode 'natlink-grammar-mode
+(define-generic-mode 'natlink-grammar-simple-mode
 
   ()                                              ;; comment char: inapplicable because # must be at start of line
 
@@ -32,7 +32,6 @@
     (";"         . 'font-lock-constant-face)      ;; statement delimiter
     ("\|"        . 'font-lock-keyword-face)       ;; "OR" symbol
     ("\+"        . 'font-lock-keyword-face)       ;; 
-    ("\?"        . 'font-lock-keyword-face)       ;; 
     ("\["        . 'font-lock-keyword-face)       ;; 
     ("\]"        . 'font-lock-keyword-face)       ;; 
    )
@@ -41,9 +40,9 @@
                                                   ;; override python-mode, only for this compound-file-extension.
 
   nil                                             ;; extra function hooks
-  
+
   "Major mode for highlighting a NatLink/SAPI grammar.")
-        
+
         ;; token can be '=', '|', '+', ';', '(', ')', '[', ']' (with value None)
         ;; or 'list' (value without {})
         ;; or 'rule' (value wihtout <>)
@@ -51,23 +50,21 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define-generic-mode 'bnf-mode
-
-  ()                                               ;; comment char:
-                                                   ;; inapplicable because # must be at start of line
-  nil                                              ;; keywords
-  '(
-    ("^#.*"       . 'font-lock-comment-face)       ;; comments at start of line
-    ("^<.*?>"     . 'font-lock-function-name-face) ;; LHS nonterminals
-    ("<.*?>"      . 'font-lock-builtin-face)       ;; other nonterminals
-    ("::="        . 'font-lock-const-face)         ;; "goes-to" symbol
-    ("\|"         . 'font-lock-warning-face)       ;; "OR" symbol
-    ("\{:\\|:\}"  . 'font-lock-keyword-face)       ;; special pybnf delimiters
-   )
-  '("\\.bnf\\'" "\\.pybnf\\'")                     ;; filename suffixes
-  nil                                              ;; extra function hooks
-  
-  "Major mode for BNF highlighting.")
+;; (define-generic-mode 'bnf-mode
+;;   ()                                               ;; comment char:
+;;                                                    ;; inapplicable because # must be at start of line
+;;   nil                                              ;; keywords
+;;   '(
+;;     ("^#.*"       . 'font-lock-comment-face)       ;; comments at start of line
+;;     ("^<.*?>"     . 'font-lock-function-name-face) ;; LHS nonterminals
+;;     ("<.*?>"      . 'font-lock-builtin-face)       ;; other nonterminals
+;;     ("::="        . 'font-lock-const-face)         ;; "goes-to" symbol
+;;     ("\|"         . 'font-lock-warning-face)       ;; "OR" symbol
+;;     ("\{:\\|:\}"  . 'font-lock-keyword-face)       ;; special pybnf delimiters
+;;    )
+;;   '("\\.bnf\\'" "\\.pybnf\\'")                     ;; filename suffixes
+;;   nil                                              ;; extra function hooks
+;;   "Major mode for BNF highlighting.")
 
 ;; ^ 
 ;; 
@@ -96,10 +93,9 @@
 ;;
 ;; 
 
-
 ;; See:
 ;;     - https://stackoverflow.com/questions/1800199/is-there-a-bnf-mode-for-emacs
 ;;     - 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'dragon-grammar)
+(provide 'natlink-grammar)

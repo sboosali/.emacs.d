@@ -172,7 +172,9 @@
   "
   (interactive)
 
-  (sboo-add-subdirs-to-load-path "sboo/configuration"
+  (progn
+
+    (sboo-add-subdirs-to-load-path "sboo/configuration"
                                    '("./"
                                      "01-platforms"
                                      "02-window-systems"
@@ -181,9 +183,11 @@
                                      "06-initialization"
                                      "07-settings"
                                      "10-internal-packages"
-                                     "20-my-packages"
-                                     "30-external-packages"
-                                     )))
+                                     "30-external-packages"))
+
+    (sboo-add-subdirs-to-load-path "sboo/configuration/20-my-packages"
+                                   '("dictation"
+                                     "ghcid"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -218,19 +222,29 @@
 ;; which (should) always succeed.
 
 (require 'sboo-internal)
-;; ^
+;; ^ builtin-packages i.e. "1st party".
+;;
 ;; Properly configure any builtin-packages,
 ;; before configuring installed(i.e. third-party) packages.
+;;
+
+(require 'sboo-packages)
+;; ^ my packages i.e. "2nd party".
+;;
+;; 
 
 (require 'sboo-settings)
 ;; ^ Further settings.
 
 (require 'sboo)
-;; ^
+;; ^ other packages i.e. "3rd party".
+;;
+;; 
 
 ;;TODO (require 'haskell--projectile-compile--direnv-nixshell)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when (require 'sboo-server nil t)
   (server-start-unless-running))

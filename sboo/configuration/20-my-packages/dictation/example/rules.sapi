@@ -42,21 +42,32 @@
          | <relative_motion>
          ;
 
-<absolute_motion> = {ordinal} {location};
+<absolute_motion> = <ordinal> {locus};
+# ^ absolute motion is `idempotent`.
 
-<relative_motion> = <vertical_motion>
-                  | <horizontal_motion>
-                  | 
+<ordinal> = last
+          | {ordinal};
+
+<relative_motion> = {cardinal} <vertical_motion>
+                  | {cardinal} <horizontal_motion>
+                  | {cardinal} <temporal_motion>
                   ;
+# ^ relative motion is `invertible`.
 
-<vertical_motion> = {cardinal} {location};
+<vertical_motion>   = <vertical_direction>   <vertical_locus>;
+<horizontal_motion> = <horizontal_direction> <horizontal_locus>;
+<temporal_motion>   = <temporal_direction>   <temporal_locus>;
 
-<horizontal_motion> = {cardinal} {location};
+<vertical_direction>   = up   | down     | {vertical_direction};
+<horizontal_direction> = left | right    | {horizontal_direction};
+<temporal_direction>   = next | previous | {temporal_direction};
 
-# <motion> = <idempotent_motion>
-#          | <invertible_motion>;
-# <idempotent_motion> = {ordinal} {location};
-# <invertible_motion> = {cardinal} {location};
+<vertical_locus>   = line | {vertical_locus};
+<horizontal_locus> = char | {horizontal_locus};
+<temporal_locus>   = page | tab | {temporal_locus};
+
+# ^ these 'locus non-terminals' (i.e. `<*_locus>`)
+# often need more personalization by the user.
 
 #------------------------------------------------#
 
