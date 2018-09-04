@@ -1,4 +1,3 @@
 [
- (import ./overlay.nix)
- (import ./ghcs.nix)
+    (import ./10-emacs.nix)
 ]

@@ -1,30 +1,24 @@
 ##################################################
-
-Bin=./scripts
-
+self: super:
 ##################################################
-run:
-	@exec ${Bin}/run.sh
+let
 
-.PHONY: run 
 
+
+in
 ##################################################
-build:
-	@exec ${Bin}/build.sh
+{
 
-.PHONY: build 
+ # p = f (super.p);
 
+ # q = (super.q or {}) // self.p;
+
+}
 ##################################################
-install:
-	@exec ${Bin}/install.sh #TODO
 
-
-.PHONY: install 
-
-##################################################
-run-quiet:
-	@exec ${Bin}/quiet.sh
-
-.PHONY: run-quiet
+# ^ `jwiegley's `.emacs.d':
+# 
+# https://github.com/jwiegley/nix-config/blob/master/overlays/10-emacs.nix
+#
 
 ##################################################

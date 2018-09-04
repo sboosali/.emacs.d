@@ -122,6 +122,12 @@ officialPackages = with melpa; [
 
  ########################
 
+move-text
+treemacs
+tabbar-ruler
+
+ ########################
+
 ];
 
 ########################################

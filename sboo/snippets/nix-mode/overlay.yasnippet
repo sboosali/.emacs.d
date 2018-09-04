@@ -1,0 +1,32 @@
+# -*- mode: snippet -*-
+#
+# key         : overlay
+# name        : [sboo] the identity `nix` overlay.
+# condition   : (= (length "overlay") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+##################################################
+self: super:
+##################################################
+let
+
+$0
+
+in
+##################################################
+{
+
+ # p = f (super.p);
+
+ # q = (super.q or {}) // self.p;
+
+}
+##################################################
+# 
+# 
+# 
+# 
+# 
+##################################################
