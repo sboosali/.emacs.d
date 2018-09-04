@@ -5,10 +5,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq
- ;;shell-file-name      "/bin/bash"
+ shell-command-switch "-ic --rcfile /home/sboo/.bash_emacs.sh")
 
- shell-command-switch "-ic")
 ;; ^
+;;
+;; TODO `-i' -> `.bash_emacs.sh'
+;;
+;; `shell-*':
+;;
+;; - `shell-file-name'      "/bin/bash"
+;; - `shell-command-switch': "-ic"
 ;;
 ;; this overrides the default option "-c" (execute the following command), adding the option "-i", which forces the bash shell into interactive mode, which leads to the sourcing of `~/`.
 ;;
