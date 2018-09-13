@@ -4,8 +4,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq
- shell-command-switch "-ic --rcfile /home/sboo/.bash_emacs.sh")
+(progn
+  (setq
+   shell-command-switch "-ic"))
 
 ;; ^
 ;;
@@ -26,6 +27,50 @@
 ;; emacs' `$PATH` is wrong (e.g. can't find `cabal` for `dante`, can't find `git` for `magit`).
 ;; because the dock is under the graphical-enironment, which was run from a login-shell (?),
 ;; not an interactive-shell, and thus didn't `source` `.bashrc` (only `.profile`).
+
+;; `bash' (command) Syntax
+;;
+;;   $ bash --help
+;;
+;;   Usage:  bash [GNU long option] [option] ...
+;;           bash [GNU long option] [option] script-file ...
+;;   
+;;   GNU long options:
+;;           --debug
+;;           --debugger
+;;           --dump-po-strings
+;;           --dump-strings
+;;           --help
+;;           --init-file
+;;           --login
+;;           --noediting
+;;           --noprofile
+;;           --norc
+;;           --posix
+;;           --rcfile
+;;           --restricted
+;;           --verbose
+;;           --version
+;;   
+;;   Shell options:
+;;           -ilrsD or -c command or -O shopt_option         (invocation only)
+;;           -abefhkmnptuvxBCHP or -o option
+;;   
+
+;; Debugging
+;;
+;; to debug `shell-command-switch' (for example, when `M-x' `grep' doesn't work),
+;; try running bash directly with those options:
+;;
+;;   $ bash --rcfile /home/sboo/.bash_emacs.sh -i -c ls
+;;
+;; Or, for a quick fix, just call `sboo-restore-default-shell-command-switch'.
+;;
+
+;; e.g. older versions:
+;;
+;; shell-command-switch "                                   -ic"
+;; shell-command-switch "--rcfile /home/sboo/.bash_emacs.sh -ic"
 
 ;; See
 ;;     - https://stackoverflow.com/a/12229404/1190077

@@ -125,11 +125,22 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun sboo-restore-default-shell-command-switch ()
+   "Restores the default `shell-command-switch'. 
 
+   i.e.:
 
+   * `-i', \"run terminal interactively\";
+   * `-c', \"run the following command\".
 
+   "
+   (interactive)
 
+   (progn
+     (setq
+      shell-command-switch "-ic")))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 

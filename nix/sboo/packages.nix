@@ -122,9 +122,19 @@ officialPackages = with melpa; [
 
  ########################
 
-move-text
-treemacs
-tabbar-ruler
+ move-text
+ treemacs
+ tabbar-ruler
+
+ ########################
+
+ request
+ # ^ https://tkf.github.io/emacs-request/manual.html
+
+ ########################
+
+ wgrep
+ # ^ https://github.com/mhayashi1120/Emacs-wgrep
 
  ########################
 
