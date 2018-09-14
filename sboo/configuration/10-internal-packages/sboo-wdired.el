@@ -72,7 +72,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NOTES
 
-;; [keybindings]
+;; KeyBindings
 ;; 
 ;; dired is read-only, by default. switch to writable with the (globally-recognized) keybinding:
 ;;   C-x C-q
@@ -82,6 +82,18 @@
 ;;
 ;; cancel changes with the keybinding:
 ;;   C-c ESC
+;; 
+;; list all files recursively, in the `dired' buffer.
+;;   « C-u s R RET » 
+;;
+
+;; Notes
+;;
+;; « C-u s R RET »
+;; i.e. run `ls', adding the `-R' switch (a.k.a. "recursive").
+;;
+;; 
+;; 
 
 ;; See:
 ;;     - https://www.masteringemacs.org/article/wdired-editable-dired-buffers

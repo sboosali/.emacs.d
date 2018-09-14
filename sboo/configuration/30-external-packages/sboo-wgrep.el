@@ -9,18 +9,19 @@
 
 (use-package wgrep
 
-  :bind (:map grep-mode-map
-              ;; ^
-              ;; NOTE **not** `wgrep-mode-map', which binds:
-              ;;
-              ;;     ("C-x C-q" . wgrep-exit)
-              ;;
-              
-              ("C-x C-q" . wgrep-toggle-readonly-area)
-              ;; ^
-              ;; the standard keybinding for `toggle-read-only'.
-              ;; for consistency, e.g. with `wdired'.
-              )
+  ;; :bind (:map grep-mode-map
+  ;;             ;; ^
+  ;;             ;; NOTE **not** `wgrep-mode-map', which binds:
+  ;;             ;;
+  ;;             ;;     ("C-x C-q" . wgrep-exit)
+  ;;             ;;              
+  ;;             ("C-x C-q" . wgrep-toggle-readonly-area)
+  ;;             ;; ^
+  ;;             ;; the standard keybinding for `toggle-read-only'.
+  ;;             ;; for consistency, e.g. with `wdired'.
+  ;;             ;;
+  ;;             ;; [TODO doesn't work]
+  ;;             )
 
   :config
 
