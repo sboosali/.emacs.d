@@ -135,7 +135,7 @@
 (global-set-key (kbd "<f7>")  'helm-buffers-list)
 ;; ^ like [C-x C-b] (but not the default).
 
-(global-set-key (kbd "<f8>")  'switch-to-previous-buffer)
+(global-set-key (kbd "<f8>")  'switch-to-previous-buffer) ;TODO  `purpose-switch-buffer-with-purpose'
 ;; ^ like M-` (alluding to M-<tab>) within other applications.
 ;; 
 ;; why custom? because `previous-buffer` doesn't have the desired behavior.

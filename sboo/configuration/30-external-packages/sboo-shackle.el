@@ -44,32 +44,64 @@
 ;; (defconst ... "")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; DEFINITIONS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; UTILITIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package shackle
-  )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun sboo-config-shackle ()
+(defun sboo-shackle-rule ()
   "
   "
   (interactive)
 
-  
-  ;; ^
-  ;; 
-  ;;
+  )
 
-  (shackle-mode)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-)
+(defun sboo-shackle-add-rule! (ShackleRule)
+  "Register the `ShackleRule' (onto `shackle-rules').
+  "
+  (add-to-list 'shackle-rules ShackleRule)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; CONFIGURATION ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package shackle
+
+  :config
+  (progn
+    
+    (setq shackle-rules
+          '(("*Flycheck errors*" :regexp t :align 'below :size 10)
+            ("*compilation*"     :regexp t :align 'below :size 0.4)))
+
+    (shackle-mode 1)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NOTES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; e.g. 
+;;
+;;   ("..." :regexp t :popup t :select t :align bottom)
+;;
+
+;; `shackle-rules`:
+;; 
+;; a list of rules. 
+;; 
+;; Each rule consists of:
+;; 
+;; - a condition, and
+;; - a set of key-value-pairs
+;; 
+;; the key-value-pairs tell what to do with the buffer in question.
+;; 
+;; The condition can be either: 
+;; 
+;; - a symbol, 
+;; - a string,
+;; - or a list of either.
+;; 
 ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

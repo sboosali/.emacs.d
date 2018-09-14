@@ -1,4 +1,6 @@
 ########################################
+# Mine.
+########################################
 # my (i.e. sboosali's) local files
 
 .sboo/
@@ -6,40 +8,57 @@
 ignore/
 temporary/
 
-secret/*
+secret/
 private/
 
 ########################################
 # nix
+########################################
 
 result
 result-*
 
 ########################################
 # Emacs
+########################################
+
+########################################
+# tempory files
+
 \#*\#
 *~
 *.log
 
-# Emacs: `savehist`
+########################################
+# `savehist`
 savehist.el
 
-# Emacs: `desktop`
+########################################
+# `desktop`
 .emacs.desktop
 .emacs.desktop.lock
 
-# Emacs: `ido`
+########################################
+# `ido`
 ido.last
 
-# Emacs: `bookmarks`
+########################################
+# `bookmarks`
 ./bookmarks
 bookmarks.el
 
-# Emacs: `YASnippet`
+########################################
+# `YASnippet`
 .yas-compiled-snippets.el
 
-# Emacs: miscellaneous
-# (miscellaneous state stored in .emacs.d/ by default)
+########################################
+# `window-purpose`
+*.window-layout
+
+########################################
+# Miscellaneous
+# (miscellaneous state, stored in .emacs.d/ by default)
+
 ./packages/
 auto-save-list/
 backups/
@@ -57,24 +76,53 @@ recentf
 
 ########################################
 # Haskell
+########################################
+
+########################################
+# new cabal
+
+dist-newstyle/
+dist-*
 
 .ghc.environment.*
 cabal.project.local
+
+########################################
+# stack
+
+.stack-work/
+
+########################################
+# old cabal
+
+dist/
+.cabal-sandbox/
+cabal.sandbox.config
+cabal.config
+
+########################################
+# source files
+
 *.o
 *.hi
 *.chi
 *.chs.h
+
+########################################
+# (tool-)generated files
+
 report.html
-.cabal-sandbox/
-cabal.sandbox.config
-cabal.config
-dist-newstyle/
-dist/
-.stack-work/
+
+########################################
+# Miscellaneous.
+
 .styx/
 
 ########################################
 # OS X
+########################################
+
 .DS_Store
 
+########################################
 ########################################
