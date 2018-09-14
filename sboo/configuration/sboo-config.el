@@ -153,9 +153,9 @@
 ;; `prog-mode's
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
+;; Environment(?)
 
-;;;TODO require 'sboo-direnv)
+;;;TODO (require 'sboo-direnv)
 ;; ^ `dante` needs `direnv`,
 ;; since it doesn't (?) expect both `cabal.project` and `nix-shell`.
 
@@ -163,24 +163,15 @@
 ;; Haskell
 
 (require 'sboo-haskell)
-;; ^ my `haskell`-language configuration. 
-
-(require 'sboo-dante)
-;; ^ my `dante` configuration.
-;; `dante` is a lightweight, configurable Haskell IDE.
-
-;;;(require 'sboo-intero)
-;; ^ my `intero` configuration.
-;; `intero` is a `stack`-only Haskell IDE.
-
-;;;(require 'sboo-ghcid)
-;; ^ my custom `ghcid`-mode.
+;; ^ 
+;; my `haskell'-language configuration.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Nix
 
 (require 'sboo-nix)
-;; ^ my `nix`-language configuration.
+;; ^
+;; my `nix'-language configuration.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TextEditing / TextFormats

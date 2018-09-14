@@ -226,19 +226,21 @@
   (progn
 
     (sboo-add-subdirs-to-load-path "sboo/configuration"
-                                   '("./"
-                                     "01-platforms"
+                                   '("01-platforms"
                                      "02-window-systems"
                                      "05-keybindings"
                                      "05-utilities"
                                      "06-initialization"
                                      "07-settings"
                                      "10-internal-packages"
-                                     "30-external-packages"))
+                                     "30-external-packages"
+                                     "35-external-configurations"
+                                     "./"))
 
     (sboo-add-subdirs-to-load-path "sboo/configuration/20-my-packages"
                                    '("dictation"
-                                     "ghcid"))))
+                                     ;;"ghcid"
+                                     ))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

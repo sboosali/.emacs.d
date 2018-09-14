@@ -1,4 +1,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; my `haskell-mode' configuration.
+;;
+;; [NOTE] See `sboo-haskell' (under `./35-external-configurations/')
+;; for my final haskell configuration.
+;; (i.e. haskell-the-programming-language, not haskell-mode-the-emacs-package).
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'use-package)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -65,4 +73,4 @@
                 ("\\.project\\'" . haskell-cabal-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'sboo-haskell)
+(provide 'sboo-haskell-mode)

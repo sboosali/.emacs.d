@@ -6,26 +6,85 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Imports
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'use-package)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utilities
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-purpose-add-mode! (MajorMode Purpose)
+  " Register a new `Purpose' onto `purpose-user-mode-purposes',
+  for the given `MajorMode'.
+  "
+  (add-to-list 'purpose-user-mode-purposes `(,MajorMode . ,Purpose)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-purpose-add-name! (BufferName Purpose)
+  " Register a new `Purpose' onto `purpose-user-name-purposes',
+  for the given `BufferName'.
+  "
+  (add-to-list 'purpose-user-name-purposes `(,BufferName . ,Purpose)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-purpose-add-name! (RegexPattern Purpose)
+  " Register a new `Purpose' onto `purpose-user-regexp-purposes',
+  for the given `RegexPattern' (regular-expression pattern),
+  which gets matched against the buffer name (TODO?).
+  "
+  (add-to-list 'purpose-user-regexp-purposes `(,RegexPattern . ,Purpose)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-purpose-add-modes-for! (Purpose MajorModes)
+  " Register a new `Purpose' onto `purpose-user-mode-purposes',
+  for each of the given `MajorModes'.
+  "
+  (mapc (lambda (*mode*)
+            (add-to-list 'purpose-user-mode-purposes `(,*mode* . ,Purpose)))
+        MajorModes))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuration
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package window-purpose
 
   :init
-  (setq purpose-layout-dirs
-    `(,(sboo-database-path "layouts/")))
-  ;; (setq purpose-use-default-configuration nil)
+  (progn
+    ;;;(setq purpose-use-default-configuration nil)
+    (setq purpose-layout-dirs
+          `(,(sboo-database-path "layouts/"))))
 
   :config
-  (add-to-list 'purpose-user-mode-purposes
-               '(haskell-mode . hs))
-  
-  (purpose-compile-user-configuration)
-  ;;(purpose-save-window-layout)
-  (purpose-mode))
+  (progn
+
+    ;; [1] configure your purposes:
+    
+    (sboo-purpose-add-mode! 'haskell-mode 'haskell-purpose) ;TODO hs
+    (sboo-purpose-add-mode! 'cabal-mode   'haskell-purpose)
+
+    (sboo-purpose-add-modes-for! 'errors-purpose ;TODO err
+                                 '(compilation-mode
+                                   flycheck-mode))
+    
+    ;; (sboo-purpose-add-mode! 'flycheck-mode    'errors-purpose) 
+    ;; (sboo-purpose-add-mode! 'compilation-mode 'errors-purpose)
+
+    (sboo-purpose-add-mode! 'shell-mode  'shell-purpose) ;TODO sh
+    (sboo-purpose-add-mode! 'term-mode   'shell-purpose)
+    (sboo-purpose-add-mode! 'eshell-mode 'shell-purpose)
+
+   
+    ;; [2] build the purposes:
+
+    (purpose-compile-user-configuration)
+    
+    ;;;(purpose-save-window-layout)
+    (purpose-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

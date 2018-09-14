@@ -26,22 +26,43 @@ officialPackages = with melpa; [
 
  ####################
 
+ lsp-mode
+ lsp-ui
+ lsp-haskell
+
+ ####################
+
+ flycheck
+ flycheck-haskell
+
+ ####################
+
  exec-path-from-shell
  real-auto-save
+
+ ####################
+
  tabbar
  shackle
  window-purpose
+
+ ####################
 
  color-theme
  smooth-scrolling
  centered-cursor-mode
 
+ ####################
+
  yasnippet
+
+ ####################
 
  nix-mode
  paredit
 
- flycheck
+ ####################
+
  #magit          # <C-x g>
  projectile
  direnv         # needs `direnv` system-package
