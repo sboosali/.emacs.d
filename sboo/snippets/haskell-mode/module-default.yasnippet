@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 #
-# key         : mod-standard
+# key         : =mod
 # name        : [sboo] a `Module` declaration, with textual sections.
-# condition   : (= (length "mod-standard") (current-column))
+# condition   : (= (length "=mod") (current-column))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis
 #
@@ -12,12 +12,13 @@
 
 {-|
 
-
+$0
 
 -}
 
-module ${1:pkg}.$2 where
+module ${1:TheModule}.${2:Types} where
 
+--------------------------------------------------
 --------------------------------------------------
 
 -- import qualified "" _ as _
@@ -31,20 +32,6 @@ module ${1:pkg}.$2 where
 import Prelude_${1:$(downcase yas-text)}
 
 --------------------------------------------------
---------------------------------------------------
-
-{-| 
-
--}
-
-$0
-
---------------------------------------------------
-
-{-| 
-
--}
-
 --------------------------------------------------
 
 {-| 

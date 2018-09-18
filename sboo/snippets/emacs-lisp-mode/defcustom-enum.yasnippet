@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+#
+# key         : =custom=enum
+# name        : « =custom=enum » a `defcustom` declaration, for an enum `:type`.
+# condition   : (= (length "=custom=enum") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcustom ${1:`(f-base (buffer-name))`}-$2 $3
+  "$5(an Enum)."
+  :type  '(set (const $3)
+               (const $4))
+  :safe  t
+   ;;; :set-after '()
+  :group '$1)
+

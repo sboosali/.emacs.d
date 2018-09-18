@@ -1,0 +1,47 @@
+# -*- mode: snippet -*-
+#
+# key         : =mod=export=package
+# name        : [sboo] a `Module` declaration, that re-exports all package modules.
+# condition   : (= (length "=mod=export=package") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+Re-export all (public) types and functions in this package.
+
+Example Usage:
+
+@
+import qualified ${2:"the-package"} $1
+@
+
+$0
+
+-}
+
+module ${1:TheModule}
+  (
+    -- * Core types and instances.
+    module $1.Types
+
+    -- * Core functions and values.
+  , module $1.Core
+
+    -- * More functions and values.
+  , module $1.Derived
+  
+  ) where
+
+--------------------------------------------------
+
+import $1.Types
+import $1.Core
+import $1.Derived
+
+--------------------------------------------------
+--------------------------------------------------

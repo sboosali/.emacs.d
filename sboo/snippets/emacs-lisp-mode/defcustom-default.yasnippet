@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+#
+# key         : =custom
+# name        : « =custom » a `defcustom` declaration.
+# condition   : (= (length "=custom") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcustom ${1:`(f-base (buffer-name))`}-$2 $3
+  "$0."
+  :type  '$4
+  :safe  t
+  :group '$1)
+

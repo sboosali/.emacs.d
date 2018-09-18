@@ -1,19 +1,20 @@
 # -*- mode: snippet -*-
-# key  : sboo
-# name : sboosali's Config Module
+#
+# key:         =sboo
+# name:        « =sboo » a package configuration (via use-package).
+# condition:   (= (length "=sboo") (current-column))
 # contributor: Spiros Boosalis
+#
 # --
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; $1
+;; My configuration for the \`$1' package.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'use-package)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package $1
-
-)
+(use-package $1)
 
 ;; ^ 
 ;; 

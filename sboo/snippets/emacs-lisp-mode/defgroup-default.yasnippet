@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+#
+# key         : =group
+# name        : « =group » a `defgroup` declaration.
+# condition   : (= (length "=group") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defgroup ${1:`(buffer-name)`} nil
+  "$0."
+  :group '$2)
+

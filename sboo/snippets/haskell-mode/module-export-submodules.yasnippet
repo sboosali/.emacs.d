@@ -1,0 +1,36 @@
+# -*- mode: snippet -*-
+#
+# key         : =mod=export
+# name        : [sboo] a `Module` declaration, that re-exports its submodules.
+# condition   : (= (length "=mod=export") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+Re-export all types and functions of this module's submodules.
+
+$0
+-}
+
+module ${1:TheModule}
+  (
+    -- * Types and instances.
+    module $1.Types
+
+    -- * Functions and values.
+  , module $1.Values
+  
+  ) where
+
+--------------------------------------------------
+
+import $1.Types
+import $1.Values
+
+--------------------------------------------------
+--------------------------------------------------
