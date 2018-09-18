@@ -84,7 +84,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar sboo-emacs-initialized nil
- "Whether Emacs has finished initializing. i.e. It's `t` when `init.el` has reached last line (of this file); it's `nil` or unbound otherwise")
+ "Whether Emacs has finished initializing. i.e. It's `t' when `init.el' has reached last line (of this file); it's `nil' (or unbound) otherwise")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -204,12 +204,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn
-  (sboo-add-to-load-path "elisp/"))
-  ;; ^ e.g. "~/.emacs.d/elisp/*.el"
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun sboo-register-sboo-load-paths! ()
   "Register `sboo`'s sub-directories to the `load-path`.
 
@@ -233,14 +227,27 @@
                                      "06-initialization"
                                      "07-settings"
                                      "10-internal-packages"
+                                     "25-vendored-packages"
                                      "30-external-packages"
                                      "35-external-configurations"
                                      "./"))
 
+    (sboo-add-to-load-path "elisp/")
+    ;; ^ e.g. "~/.emacs.d/elisp/*.el"
+
+    (sboo-add-subdirs-to-load-path "vendor"
+                                   '("go-back"
+                                     "dante"))
+
     (sboo-add-subdirs-to-load-path "sboo/configuration/20-my-packages"
-                                   '("dictation"
-                                     ;;"ghcid"
-                                     ))))
+                                   '(;;"ghcid"
+                                     "dictation"))
+
+    load-path))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

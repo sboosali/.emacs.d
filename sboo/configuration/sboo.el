@@ -12,6 +12,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'sboo-vendored)
+;; ^ my configurations for any vendored packages.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (require 'sboo-config)
 ;; ^ my configurations for several packages and/or modes.
 
