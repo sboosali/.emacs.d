@@ -113,7 +113,19 @@ A numeric ARG serves as a repeat count."
 
 ;;;;;;;;;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun sboo-insert-angle-quote-left ()
+  "`insert' \"«\", the \"LEFT-POINTING DOUBLE ANGLE QUOTATION MARK\" Unicode character,
+  with spacing."
+  (interactive)
+  (insert "« "))
+
+(defun sboo-insert-angle-quote-right ()
+  "`insert' \"»\", the \"RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK\" Unicode character,
+  with spacing."
+  (interactive)
+  (insert " »"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-keybindings-utilities)

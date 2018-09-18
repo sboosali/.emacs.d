@@ -28,7 +28,7 @@
 (use-package flycheck-haskell
   :defer t
 
-  :command
+  :commands
   (flycheck-haskell--find-default-directory))
 
 ;; ^

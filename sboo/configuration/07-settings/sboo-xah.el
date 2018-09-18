@@ -25,14 +25,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq initial-major-mode 'text-mode)
-;; ^ Set Default Major Mode
-
-;;(setq initial-buffer-choice 'xah-new-empty-buffer)
-;; ^ Start Emacs with Empty Buffer
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun xah-open-file-at-cursor ()
   "Open the file path under cursor.
 If there is text selection, uses the text selection for path.

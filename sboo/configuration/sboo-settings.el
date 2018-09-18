@@ -32,6 +32,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'sboo-display)
+
+(require 'sboo-buffers)
+
 ;;TODO
 ;; ^ disable `overwrite-mode'.
 
