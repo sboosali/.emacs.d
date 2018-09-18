@@ -1,0 +1,30 @@
+;; -*- mode: emacs-lisp; -*-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(source melpa)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(package "haskell-compilation" "0.1" "Lightweight Haskell Project IDE.")
+;; (package-file "haskell-compilation.el") 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(files "lisp/*.el")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(depends-on "dash" "2.13.0")
+(depends-on "s"    "1.10.0")
+(depends-on "f"    "0.18.2")
+
+(depends-on "projectile"  "0.14.0")
+(depends-on "xterm-color" "1.6")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(development
+ (depends-on "ert-runner")
+ (depends-on "f"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
