@@ -8,11 +8,20 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package org
-  
-  :bind (:map org-mode-map
-              ("TAB" . dabbrev-expand))
 
-  :commands (org-mode))
+  :commands (org-mode)
+
+  :bind (:map org-mode-map
+              ("TAB"   . dabbrev-expand)
+              ("<tab>" . dabbrev-expand)
+              )
+
+  :config
+  (progn
+    (setq
+     org-tags-match-list-sublevels                  nil
+     org-complete-tags-always-offer-all-agenda-tags t
+     org-agenda-files                               '("~/Dropbox/issues.org"))))
 
 ;; ^ 
 ;; 
