@@ -86,7 +86,7 @@
     (purpose-compile-user-configuration)
     
     ;;;(purpose-save-window-layout)
-    (purpose-mode)))
+    (purpose-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -59,7 +59,7 @@
 (defun sboo-shackle-add-rule! (ShackleRule)
   "Register the `ShackleRule' (onto `shackle-rules').
   "
-  (add-to-list 'shackle-rules ShackleRule)
+  (add-to-list 'shackle-rules ShackleRule))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; CONFIGURATION ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
