@@ -102,6 +102,12 @@
 
 (defalias 'ras 'real-auto-save-mode)
 
+(defalias 'neo  'neotree)
+(defalias 'neor 'neotree-refresh)
+
+(defalias 'godl 'god-local-mode)
+(defalias 'godg 'god-mode-all)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NOTES

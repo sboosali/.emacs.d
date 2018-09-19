@@ -17,5 +17,7 @@
 
 ;;(use-package palimpsest-mode)
 
+;;(require 'sboo-god-mode)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-external)

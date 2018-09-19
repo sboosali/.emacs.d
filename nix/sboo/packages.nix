@@ -88,7 +88,9 @@ officialPackages = with melpa; [
 
  ########################
 
- evil
+ god-mode
+
+ ##evil
 
  ########################
 
