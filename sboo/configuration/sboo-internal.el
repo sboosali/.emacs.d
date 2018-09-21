@@ -2,7 +2,7 @@
 
 ;;;(require 'sboo-unicode)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'sboo-shell)
 
 (require 'sboo-compilation-1st)
 
