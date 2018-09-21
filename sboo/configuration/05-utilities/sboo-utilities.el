@@ -1,8 +1,47 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; IMPORTS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;(require ')
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Munging
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-tokenize (STRING) (let ((*separators* "[-/]+") (*omit-nulls* t)) (split-string STRING *separators* *omit-nulls*)))
+
+;; ^
+;; 
+;;   >>> (sboo-tokenize "some-command")
+;;   ("sboo" "command")
+;;
+;;   >>> (mapcar #'(lambda (s) (substring s 0 1)) '("sboo" "command"))
+;;   ("s" "c")
+;;
+;;   >>> (apply #'string (mapcar #'string-to-char '("sboo" "command")))
+;;   "sc"
+;;
+;; NOTE `sboo-tokenize' is inlined into `.yasnippet's
+;; (keep it a one-liner, for easy transfer).
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-abbreviate (STRING) (let ((*separators* "[-/]+") (*omit-nulls* t)) (apply #'string (mapcar #'string-to-char (split-string STRING *separators* *omit-nulls*)))))
+
+;; ^
+;; 
+;;   >>> (sboo-abbreviate "some-command")
+;;   "sc"
+;;
+;; NOTE `sboo-abbreviate' is inlined into `.yasnippet's
+;; (keep it a one-liner, for easy transfer).
+;;
+;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Creating-Strings.html
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Filesystem
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 

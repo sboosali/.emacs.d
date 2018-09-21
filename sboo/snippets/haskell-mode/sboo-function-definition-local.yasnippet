@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+#
+# key         : =f
+# name        : [sboo] a (unary) function declaration.
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+${1:fff} :: ${2:AAA} -> ${3:BBB}
+$1 (${2:$(downcase yas-text)}) = ${3:$(downcase yas-text)}
+  where
+
+  ${3:$(downcase yas-text)} = _${0} $2

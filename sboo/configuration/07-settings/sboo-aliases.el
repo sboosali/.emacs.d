@@ -11,6 +11,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defalias 'de   'dabbrev-expand)
+;; ^ acronym.
+
+(defalias 't    'dabbrev-expand)
+;; ^ « 't » for "tab-complete".
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -36,7 +40,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defalias 'sh   'shell)
+(defalias 'sh #'shell)
+
+(defalias 's #'shell)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -104,6 +110,10 @@
 
 (defalias 'neo  'neotree)
 (defalias 'neor 'neotree-refresh)
+
+(defalias 'pg #'projectile-grep)
+(defalias 'pf #'projectile-find-file)
+(defalias 'pc #'projectile-compile-project)
 
 (defalias 'godl 'god-local-mode)
 (defalias 'godg 'god-mode-all)

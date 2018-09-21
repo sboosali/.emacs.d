@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+#
+# key         : =alias
+# name        : a `defalias` declaration.
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+(defalias '${1:$(apply #'string (mapcar #'string-to-char (split-string yas-text "[-/]+" t)))} #'${1:some-command})
+$0
