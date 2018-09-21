@@ -220,16 +220,17 @@
   (progn
 
     (sboo-add-subdirs-to-load-path "sboo/configuration"
-                                   '("01-platforms"
-                                     "02-window-systems"
+                                   '("02-platforms"
+                                     "03-window-systems"
+                                     "04-utilities"
                                      "05-keybindings"
-                                     "05-utilities"
                                      "06-initialization"
                                      "07-settings"
                                      "10-internal-packages"
                                      "25-vendored-packages"
                                      "30-external-packages"
                                      "35-external-configurations"
+                                     "50-meta-configurations"
                                      "./"))
 
     (sboo-add-to-load-path "elisp/")
