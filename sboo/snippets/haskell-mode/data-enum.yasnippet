@@ -19,7 +19,6 @@ data $1
   | $3
 
   deriving stock    (Enum,Bounded,Ix)
+  deriving anyclass (GEnum)
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass (Enumerable)
   deriving anyclass (NFData,Hashable)
-

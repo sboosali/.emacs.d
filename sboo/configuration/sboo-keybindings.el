@@ -268,6 +268,7 @@
 
 (global-set-key (kbd "s-,") #'sboo-insert-angle-quote-left)
 (global-set-key (kbd "s-.") #'sboo-insert-angle-quote-right)
+(global-set-key (kbd "s-=") #'sboo-insert-triple-equals-sign)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

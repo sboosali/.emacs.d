@@ -1,17 +1,21 @@
 # -*- mode: snippet -*-
 #
-# key         : def
+# key         : =def
 # name        : [sboo] `Default` instance and a constant.
-# condition   : (= (length "def") (current-column))
+# condition   : (= (length "=def") (current-column))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis
 #
 # --
+--------------------------------------------------
+
 -- | @= 'default$1'@
+
 instance Default $1 where
   def = default$1
 
 -- | @= '$2'@
+
 default$1 :: $1
 default$1 = $2
 

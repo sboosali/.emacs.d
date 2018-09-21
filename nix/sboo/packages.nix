@@ -88,8 +88,10 @@ officialPackages = with melpa; [
 
  ########################
 
- god-mode
+ modalka
+ # ^ https://github.com/mrkkrp/modalka/blob/master/README.md
 
+ ##god-mode
  ##evil
 
  ########################
@@ -166,6 +168,11 @@ officialPackages = with melpa; [
  ########################
 
  palimpsest
+
+ ########################
+
+ which-key
+ # ^ https://github.com/justbur/emacs-which-key/blob/master/README.org
 
  ########################
 

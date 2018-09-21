@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
+;; Utilities.
 ;; 
 ;; provides utility functions like `sboo-utilities',
 ;; but only for my (global) keybindings.
@@ -7,14 +7,14 @@
 ;; its expressions are only the keybindings themselves (no lambdas).
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Imports.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'dash)           ;; (the `-` prefix)
 (require 's)              ;; `s`trings
 (require 'f)              ;; `f`iles
 
 (require 'shell)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (Custom Functions, Bound By My Keybindings) ;;;
@@ -28,22 +28,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;; ^ see http://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
 
-;;;;;;;;;;
-
-;;TODO doesn't work.
-(defun redo (&optional arg)
-  "Redo some previouly-undone changes.
-Use **`undo`**, not this function, to continue the `redoing`.
-A numeric ARG serves as a repeat count."
-  (interactive "*P")
-  (keyboard-quit)
-  (undo arg)
-  )
-
-;; ^ see `undo` in `simple.el`.
-;; see https://stackoverflow.com/questions/3527142/how-do-you-redo-changes-after-undo-with-emacs
-
-;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-split-window-left-right ()
   ".
@@ -59,7 +44,23 @@ A numeric ARG serves as a repeat count."
 )
 ;; ^
 
-;;;;;;;;;;
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; ;;TODO doesn't work.
+;; (defun redo (&optional arg)
+;;   "Redo some previouly-undone changes.
+;; Use **`undo`**, not this function, to continue the `redoing`.
+;; A numeric ARG serves as a repeat count."
+;;   (interactive "*P")
+;;   (keyboard-quit)
+;;   (undo arg)
+;;   )
+;; ;; ^ see `undo` in `simple.el`.
+;; ;; see https://stackoverflow.com/questions/3527142/how-do-you-redo-changes-after-undo-with-emacs
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Shell / Terminal.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;TODO
 (defun sboo-launch-shell ()
@@ -100,19 +101,23 @@ A numeric ARG serves as a repeat count."
   (interactive)
    (term "/bin/bash"))
 
-;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Projectile.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-projectile-find-file ()
   (interactive)
   (projectile-find-file))
   ;;OLD (projectile-find-file (make-hash-table))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; (defun sboo-projectile-grep ()
 ;;   (interactive)
 ;;   (projectile-grep))
 
-;;;;;;;;;;
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Unicode insertion.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-insert-angle-quote-left ()
@@ -121,11 +126,21 @@ A numeric ARG serves as a repeat count."
   (interactive)
   (insert "« "))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun sboo-insert-angle-quote-right ()
   "`insert' \"»\", the \"RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK\" Unicode character,
   with spacing."
   (interactive)
   (insert " »"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-insert-triple-equals-sign ()
+  "`insert' \"≡ \", the \"IDENTICAL TO\" Unicode character,
+  with spacing."
+  (interactive)
+  (insert "≡ "))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-keybindings-utilities)

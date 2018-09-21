@@ -108,6 +108,8 @@
 (defalias 'godl 'god-local-mode)
 (defalias 'godg 'god-mode-all)
 
+(defalias 'dr 'dante-restart)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NOTES

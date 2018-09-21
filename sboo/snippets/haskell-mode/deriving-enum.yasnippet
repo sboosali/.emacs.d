@@ -7,6 +7,8 @@
 # contributor : Spiros Boosalis
 #
 # --
+
   deriving stock    (Enum,Bounded,Ix)
+  deriving anyclass (GEnum)
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass (Enumerable,$0NFData,Hashable)
+  deriving anyclass (NFData,Hashable)
