@@ -12,7 +12,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'sboo-vendored)
+(require 'sboo-vendored) ;;TODO shuold i just comment out?
 ;; ^ my configurations for any vendored packages.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

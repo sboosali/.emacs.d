@@ -1,24 +1,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Bookmarks
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Imports
-
-(require 'use-package)
-
+;; My `bookmarks' configuration.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package emacs
-  
-  :init
-  (setq
+
+(progn
    
-   bookmark-default-file (sboo-database-file "bookmarks" "bookmarks.el")
+   (setq bookmark-default-file (sboo-database-file "bookmarks" "bookmarks.el"))
    ;; ^ the file in which to save bookmarks, by default.
 
-   bookmark-save-flag 1))
+   (setq bookmark-save-flag 1)
    ;; ^ `1` means: "each command that sets a bookmark will also save your bookmarks".
+
+   t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

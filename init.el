@@ -1,7 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Early Configuration ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Pre-Configuration ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (progn
@@ -78,9 +76,7 @@
 ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Constants / Variables / Functions ;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar sboo-emacs-initialized nil
@@ -199,12 +195,10 @@
   ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Load Paths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-register-sboo-load-paths! ()
+(defun sboo-register-sboo-load-paths! ()      ;;TODO clean up? mv to sboo-path? does default-directory changing fuck things up?
   "Register `sboo`'s sub-directories to the `load-path`.
 
   e.g.
@@ -247,13 +241,7 @@
     load-path))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'use-package)
@@ -262,14 +250,12 @@
 ;; ^ register all `sboo-*` `load-path`s before `load`ing any `sboo-*` package.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Configure ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; my configs (namespaced under "sboo").
 
-(require 'sboo-settings-safe)
+(require 'sboo-settings-safe) ;TODO mv these to before use-package, and remove all external dependencies
 ;; ^
 ;; `sboo-settings-safe` should always succeed,
 ;; even if the `load-path` is corrupt, since:
@@ -277,12 +263,12 @@
 ;; [2] only simple configurations are performed, e.g. `(setq ...)`.
 ;;
 
-(require 'sboo-initialization)
+(require 'sboo-initialization)    ;TODO mv these to before use-package, and remove all external dependencies
 ;; ^
 ;; Initially, do simple configurations (like keybindings, custom variables, etc),
 ;; which (should) always succeed.
 
-(require 'sboo-internal)
+(require 'sboo-internal) ;TODO mv these to before use-package, and remove all external dependencies
 ;; ^ builtin-packages i.e. "1st party".
 ;;
 ;; Properly configure any builtin-packages,
@@ -297,7 +283,7 @@
 (require 'sboo-settings)
 ;; ^ Further settings.
 
-(require 'sboo)
+(require 'sboo)            ;TODO rename
 ;; ^ other packages i.e. "3rd party".
 ;;
 ;; 
@@ -305,6 +291,7 @@
 ;;TODO (require 'haskell--projectile-compile--direnv-nixshell)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Initialize ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when (require 'sboo-server nil t)
@@ -317,11 +304,10 @@
 ;; ^
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;Todo mv these two to own file.
+;;TODO mv these two to own file.
 
-(when (require 'sboo-desktop nil t)
+(when (require 'sboo-desktop nil t)  ;;TODO rm duplication with import below?
       ;; ^ the `sboo-desktop` module has *only* definitions, no actions.
   (require 'sboo-quitting))
   ;; ^ requires `sboo-desktop`
@@ -344,21 +330,19 @@
 ;; Finally, configure any installed (i.e. third-party) packages.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; More Shortcuts (TODO rm)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; MORE SHORTCUTS
+
 ;; (this is later to be defined after its dependent definitions)
 
 (require 'sboo-utilities)
 (global-set-key "\M-w" 'eval-region-or-last-sexp) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Finalize ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq
  sboo-emacs-initialized t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

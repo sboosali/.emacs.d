@@ -1,20 +1,24 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; `isearch`
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; `isearch'
 ;;
-;; a.k.a. "Interactive SEARCH"
+;; a.k.a. "Interactive SEARCH".
 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; this `feature' provides:
 ;;
 ;; - arrow-keys for keybindings of `isearch-mode-map'
 ;; - `xah-search-current-word'
 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Import ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'use-package)
+(require 'sboo-utilities-internal)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Define ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun xah-search-current-word ()
 
@@ -47,20 +51,16 @@ Version 2015-04-09"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package emacs
+(progn
 
-  :demand t
+  (sboo-bind-key-globally! '("<f2>" . xah-search-current-word))
 
-  :bind
-  (("<f2>" . xah-search-current-word)
-   (:map isearch-mode-map
-         ("<up>"    . isearch-ring-retreat)
-         ("<down>"  . isearch-ring-advance)
-         ("<left>"  . isearch-repeat-backward)
-         ("<right>" . isearch-repeat-forward))
-   (:map isearch-mode-map
-         ("<f2>"    . isearch-repeat-forward)))
-  
+  (sboo-bind-keys-for! isearch-mode-map
+                       '(("<up>"    . isearch-ring-retreat)
+                         ("<down>"  . isearch-ring-advance)
+                         ("<left>"  . isearch-repeat-backward)
+                         ("<right>" . isearch-repeat-forward))))
+
   ;; ^ provides these (single-keypress) keybindings:
   ;; .
   ;; → 
@@ -78,9 +78,9 @@ Version 2015-04-09"
   ;; Enter
   ;; exit isearch
   ;; .
-  )
 
 ;; ^ 
+;;TODO minibuffer-local-isearch-map (kbd "<f2>") #'isearch-repeat-forward)
 ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
