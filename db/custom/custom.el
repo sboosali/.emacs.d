@@ -15,7 +15,7 @@
  '(haskell-process-path-ghci "cabal")
  '(haskell-process-type (quote cabal-new-repl))
  '(image-dired-append-when-browsing t)
- '(package-selected-packages (quote (use-package))))
+ '(package-selected-packages (quote (magit use-package))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

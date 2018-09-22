@@ -76,6 +76,31 @@
 ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Relocatable `.emacs.d' ;;;;;;;;;;;;;;;;;;;;;;; TODO
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Emacs uses following environment variables for configuration:
+;; 1. EMACS_ROOT - path to .emacs.d directory.
+;;
+;; 2. EMACS_ENV_DEFS - paths to .bash_env file - shell script that sets
+;; up environment variables on the system for current user.t
+;;
+;; 3. BASHRC_ENV_LOADED - whecher ~/.bash_env was already loaded.
+
+;; (unless (featurep 'start)
+;;   (let ((emacs-root (getenv "EMACS_ROOT")))
+;;     (if emacs-root
+;;         (progn
+;;           (cl-assert (file-directory-p emacs-root))
+;;           (let ((src-dir (concat emacs-root "/src")))
+;;             (cl-assert (file-directory-p src-dir))
+;;             (add-to-list 'load-path src-dir)))
+;;       (error "EMACS_ROOT not defined")))
+;;   (load-library "start"))
+
+;; ^ from `sergv/dotemacs'.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Constants / Variables / Functions ;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -195,12 +220,6 @@
   ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'use-package)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Load Paths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -219,6 +238,11 @@
 
   (progn
 
+    (sboo-add-to-load-path "elisp/")
+    ;; ^ e.g. "~/.emacs.d/elisp/*.el"
+
+    (sboo-add-to-load-path "sboo/installation/")
+
     (sboo-add-subdirs-to-load-path "sboo/configuration"
                                    '("02-platforms"
                                      "03-window-systems"
@@ -232,9 +256,6 @@
                                      "35-external-configurations"
                                      "50-meta-configurations"
                                      "./"))
-
-    (sboo-add-to-load-path "elisp/")
-    ;; ^ e.g. "~/.emacs.d/elisp/*.el"
 
     (sboo-add-subdirs-to-load-path "vendor"
                                    '("dante"))
@@ -251,6 +272,25 @@
 
 (sboo-register-sboo-load-paths!)
 ;; ^ register all `sboo-*` `load-path`s before `load`ing any `sboo-*` package.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Installation ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-dependencies)
+
+;;TODO expose command-line-arguments or environment-variables;
+;; `--install-dependencies' or `$SBOO_EMACS_INSTALL_DEPENDENCIES'.
+
+(when t
+  (sboo-configure-emacs-package-repositories!   )
+  (sboo-install-emacs-packages!                t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'use-package)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Configure ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
