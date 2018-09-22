@@ -27,7 +27,10 @@
 (use-package helm
 
   :init
-  (setq
+  (progn
+    (setq helm-mode-fuzzy-match                 t)
+    (setq helm-completion-in-region-fuzzy-match t)
+    ;; ^ fuzzy-matching.
 
    ;; helm-boring-buffer-regexp-list '()
    ;; ;; ^
@@ -35,11 +38,13 @@
    ;; ;;     ("\\` " "\\`\\*helm" "\\`\\*Echo Area" "\\`\\*Minibuf")
    ;; ;;
 
-   helm-allow-mouse t)
-  ;; ^ the mouse is gratuitously disabled by default.
-  ;; this enables, for example, clicking on a helm candidate to activate it,
-  ;; rather than navigating it with several arrow and/or character keypresses.
-  ;;
+    (setq helm-allow-mouse t)
+    ;; ^ the mouse is gratuitously disabled by default.
+    ;; this enables, for example, clicking on a helm candidate to activate it,
+    ;; rather than navigating it with several arrow and/or character keypresses.
+    ;;
+
+    nil)
 
   :bind (:map helm-command-map
               ("<f9>" . helm-quit-and-helm-mini))

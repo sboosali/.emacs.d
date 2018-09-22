@@ -78,6 +78,7 @@ eshell/history
 session.*
 .emacs-buffers
 recentf
+.cache/
 
 ########################################
 # Haskell

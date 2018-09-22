@@ -282,6 +282,7 @@
 ;;TODO expose command-line-arguments or environment-variables;
 ;; `--install-dependencies' or `$SBOO_EMACS_INSTALL_DEPENDENCIES'.
 
+
 (when t
   (sboo-configure-emacs-package-repositories!   )
   (sboo-install-emacs-packages!                t))
