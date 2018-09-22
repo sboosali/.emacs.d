@@ -7,6 +7,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;(require 'sboo-keybindings-universal)
 (require 'sboo-utilities)
 (require 'sboo-keybindings-utilities)
 
@@ -249,11 +250,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(global-set-key (kbd "M-a") 'mark-whole-buffer-buffer)
+;; ^ i.e. SelectAll,
+;; with "standard"-keybinding (under `<meta>', not `<ctrl>').
+
 (global-set-key "\M-r" 'query-replace-regexp)
-;; ^ for my own "CUA"-mode.
+;; ^ i.e. FindReplace,
+;; with "standard"-keybinding (under `<meta>', not `<ctrl>').
 
 (global-set-key "\M-`" 'previous-buffer) 
-;; ^ mnemonic: it's like ALT-TAB.
+;; ^ Mnemonic: it's like "ALT-TAB".
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -261,7 +267,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;
+
+(global-set-key (kbd "C-o") 'other-window)
+;;;(global-set-key (kbd "C-x C-o") 'other-window)
+
+(global-set-key (kbd "C-;") 'comment-region)
+;; ^ 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -269,11 +280,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;
-
 (global-set-key (kbd "s-,") #'sboo-insert-angle-quote-left)
 (global-set-key (kbd "s-.") #'sboo-insert-angle-quote-right)
 (global-set-key (kbd "s-=") #'sboo-insert-triple-equals-sign)
+;; ^ inserting Unicode character.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -286,11 +296,6 @@
 ;; for window-maximizing, which we overrode.
 
 ; (global-set-key (kbd "<f9>") 'pop-tag-mark)
-
-(global-set-key (kbd "C-o") 'other-window)
-;;;(global-set-key (kbd "C-x C-o") 'other-window)
-
-(global-set-key (kbd "C-;") 'comment-region)
 ;; ^
 ;; `comment-region`
 ;;

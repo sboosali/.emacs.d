@@ -23,10 +23,16 @@
 ;; 
 
 ;; See:
-;;     - https://stackoverflow.com/questions/13535172/list-of-all-unicodes-open-close-brackets
-;;     - http://xahlee.info/comp/unicode_common_symbols.html
 ;;     - http://ergoemacs.org/emacs/emacs_n_unicode.html
+;;     - http://xahlee.info/comp/unicode_matching_brackets.html
+;;     - http://xahlee.info/comp/unicode_common_symbols.html
 ;;     - http://xahlee.info/comp/unicode_index.html
+;;     - 
+;;     - 
+;;     - 
+;;     - 
+;;
+;;     - https://stackoverflow.com/questions/13535172/list-of-all-unicodes-open-close-brackets
 ;;     - 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
