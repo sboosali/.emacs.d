@@ -2,17 +2,15 @@
 ;; My configuration for the `go-back' package.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'use-package)
+;; (require 'use-package)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package go-back
-
-  :disabled
-  ;; ^ERROR
-  ;; Error (use-package): Failed to parse package go-back: Wrong number of arguments: (1 . 1), 2
-
-  :bind (("M-q" . go-back-pop-point-stack)))
+;; (use-package go-back
+;;   :disabled
+;;   ;; ^ERROR
+;;   ;; Error (use-package): Failed to parse package go-back: Wrong number of arguments: (1 . 1), 2
+;;   :bind (("M-q" . go-back-pop-point-stack)))
 
 ;; ^ 
 ;; 

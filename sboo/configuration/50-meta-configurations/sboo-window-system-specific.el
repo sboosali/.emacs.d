@@ -2,10 +2,13 @@
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package sboo-gui-only
-  :if     window-system)
-(use-package sboo-cli-only
-  :unless window-system)
+;;;(require 'use-package)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;TODO (use-package sboo-gui-only :if     window-system)
+
+;;TODO (use-package sboo-cli-only :unless window-system)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes

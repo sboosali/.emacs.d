@@ -195,6 +195,12 @@
   ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'use-package)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Load Paths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -231,8 +237,7 @@
     ;; ^ e.g. "~/.emacs.d/elisp/*.el"
 
     (sboo-add-subdirs-to-load-path "vendor"
-                                   '("go-back"
-                                     "dante"))
+                                   '("dante"))
 
     (sboo-add-subdirs-to-load-path "sboo/configuration/20-my-packages"
                                    '(;;"ghcid"
@@ -243,8 +248,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'use-package)
 
 (sboo-register-sboo-load-paths!)
 ;; ^ register all `sboo-*` `load-path`s before `load`ing any `sboo-*` package.

@@ -4,6 +4,3 @@
 [submodule "dante"]
 	path = vendor/dante
 	url = https://github.com/jyp/dante
-[submodule "vendor/go-back"]
-	path = vendor/go-back
-	url = https://github.com/pkreiner/go-back
