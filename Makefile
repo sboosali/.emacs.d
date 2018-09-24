@@ -8,7 +8,7 @@ default: run
 .PHONY: default
 
 ##################################################
-run: run-via-package-dot-el
+run: run-via-nixpkgs
 
 .PHONY: run
 

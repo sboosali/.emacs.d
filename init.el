@@ -1,10 +1,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Pre-Configuration ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Pre-Configuration: Shell & Env ;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (progn
   (setq
-   shell-command-switch "-ic"))
+   shell-command-switch "-c"))
 
 ;; ^
 ;;
@@ -25,6 +25,19 @@
 ;; emacs' `$PATH` is wrong (e.g. can't find `cabal` for `dante`, can't find `git` for `magit`).
 ;; because the dock is under the graphical-enironment, which was run from a login-shell (?),
 ;; not an interactive-shell, and thus didn't `source` `.bashrc` (only `.profile`).
+
+;; NOTE
+;;
+;; `-i' causes this error:
+;;
+;;     bash: cannot set terminal process group (-1): Inappropriate ioctl for device bash: no job control in this shell
+;; 
+;; because:
+;;
+;; > The -i flag requests that Bash run in interactive mode, which requires a terminal. The solution is to leave the shell-command-switch variable at its default value, which is just -c.
+;;
+;; https://emacs.stackexchange.com/questions/3447/cannot-set-terminal-process-group-error-when-running-bash-script
+;;
 
 ;; `bash' (command) Syntax
 ;;
@@ -74,6 +87,15 @@
 ;;     - https://stackoverflow.com/a/12229404/1190077
 ;;
 ;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when t
+  (setenv "LD_PRELOAD" ""))                ;TODO mv to `.bash_emacs.sh', once the file works.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Relocatable `.emacs.d' ;;;;;;;;;;;;;;;;;;;;;;; TODO

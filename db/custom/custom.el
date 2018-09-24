@@ -15,7 +15,9 @@
  '(haskell-process-path-ghci "cabal")
  '(haskell-process-type (quote cabal-new-repl))
  '(image-dired-append-when-browsing t)
- '(package-selected-packages (quote (magit use-package))))
+ '(package-selected-packages
+   (quote
+    (which-key palimpsest request tabbar-ruler treemacs move-text dired-collapse dired-ranger dired-subtree dired-rainbow dired-open dired-filter elnode epc wrap-region page-break-lines expand-region deft bm anzu modalka helm-swoop helm-make helm-dash helm-core helm yaml-mode json-mode edit-indirect markdown-mode wgrep neotree direnv projectile paredit nix-mode yasnippet centered-cursor-mode smooth-scrolling color-theme window-purpose shackle tabbar real-auto-save exec-path-from-shell flycheck-haskell flycheck lsp-haskell lsp-ui lsp-mode intero dante haskell-mode f s dash bind-key magit use-package))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

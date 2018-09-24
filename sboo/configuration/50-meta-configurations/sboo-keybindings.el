@@ -267,6 +267,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(global-set-key (kbd "C-x f")   'ffap)
+(global-set-key (kbd "C-x C-f") 'ffap)
+;; ^ `ffap': find-file-at-point
 
 (global-set-key (kbd "C-o") 'other-window)
 ;;;(global-set-key (kbd "C-x C-o") 'other-window)

@@ -5,15 +5,14 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'use-package)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package subword
-  :hook (haskell-mode)
-  :config
-  (defalias 'sub 'subword-mode)
-  (defalias 'sup 'superword-mode))
+;; (require 'use-package)
+;; (use-package subword
+;;   :hook (haskell-mode)
+;;   :config
+;;   (defalias 'sub 'subword-mode)
+;;   (defalias 'sup 'superword-mode))
 
 ;; ^ 
 ;; 
