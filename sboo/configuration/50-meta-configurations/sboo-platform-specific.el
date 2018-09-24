@@ -6,19 +6,24 @@
 
   (cond
 
-   ((memq window-system '(x))
+   ((or (memq system-type   '(gnu/linux))
+        (memq window-system '(x)))
+         ;; ^ TODO Wayland?
     'sboo-linux)
-   ;; ^ TODO Wayland?
 
-   ((memq window-system '(w32 pc))
-    'sboo-windows)
+   ((or (memq system-type   '(windows-nt ms-dos))
+        (memq window-system '(w32 pc)))
+    'sboo-windnows)
 
-   ((memq window-system '(mac ns))
+   ((or (memq system-type   '(darwin))
+        (memq window-system '(mac ns)))
+
     'sboo-macintosh))
 
   "The `feature' (i.e. Emacs module) `load'ed for the current platform.
    Has type Symbol (the symbols are named after the different supported operating-systems).
-   In particular, one of: '`sboo-linux',  '`sboo-windows', '`sboo-macintosh'.")
+   In particular, one of: '`sboo-linux',  '`sboo-windows', '`sboo-macintosh'.
+   Uses the `system-type' and `window-system' variables.")
 
 ;; TODO? `case'
 ;; (case window-system
