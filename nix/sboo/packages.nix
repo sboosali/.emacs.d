@@ -5,11 +5,11 @@ let
 
 ########################################
 
-officialPackages = with melpa; [
+stablePackages = with stable; [
 
  ####################
 
-#TODO# use-package
+ use-package
  bind-key
 
  ####################
@@ -17,7 +17,19 @@ officialPackages = with melpa; [
  dash           # (the `-` prefix)
  s              # `s`trings
  f              # `f`iles
- 
+
+ ####################
+
+ helm
+
+ ########################
+
+];
+
+########################################
+
+melpaPackages = with melpa; [
+
  ####################
 
  haskell-mode
@@ -78,15 +90,11 @@ officialPackages = with melpa; [
 
  ####################
 
- ####################
-
- helm
- helm-core
  helm-dash
  helm-make
  helm-swoop
 
- ########################
+ ####################
 
  modalka
  # ^ https://github.com/mrkkrp/modalka/blob/master/README.md
@@ -180,12 +188,6 @@ officialPackages = with melpa; [
 
 ########################################
 
-unofficialPackages = [
-
-];
-
-########################################
-
 optionalPackages = with melpa; [
 
 # helm-colors
@@ -195,6 +197,6 @@ optionalPackages = with melpa; [
 in
 ############################################################
 
-officialPackages ++ unofficialPackages ++ optionalPackages
+melpaPackages ++ stablePackages ++ optionalPackages
 
 ############################################################

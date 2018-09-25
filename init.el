@@ -48,11 +48,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn  
-  (require 'sboo-init-paths)
-  (sboo-register-sboo-load-paths!)
-  ;; ^ register all `sboo-*` `load-path`s before `load`ing any `sboo-*` package.
-  ())
+;; (progn  
+;;   (require 'sboo-init-paths)
+;;   (sboo-register-sboo-load-paths!)
+;;   ;; ^ register all `sboo-*` `load-path`s before `load`ing any `sboo-*` package.
+;;   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Installation ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

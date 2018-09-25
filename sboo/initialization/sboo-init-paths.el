@@ -165,8 +165,8 @@
                                      "./"))
 
     (sboo-add-subdirs-to-load-path "vendor"
-                                   '("dante"
-                                     "use-package"))
+                                   '("dante"))
+                                     ;;                                      "use-package"))
 
     (sboo-add-subdirs-to-load-path "sboo/configuration/20-my-packages"
                                    '(;;"ghcid"

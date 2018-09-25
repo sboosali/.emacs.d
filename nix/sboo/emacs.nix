@@ -14,7 +14,7 @@ emacsWithPackages =
 ########################################
 
 defaultEmacsPackages =
- nixpkgs.emacs25WithPackages;
+ nixpkgs.emacs26WithPackages;
 
 ########################################
 
@@ -22,40 +22,40 @@ defaultEmacsPackages =
 
 ########################################
 
-xwidgetsEmacsPackages =
-    nixpkgs.emacsPackagesNg.overrideScope (super: self: {
-        # use a custom version of emacs
-        emacs = super.emacs.overrideAttrs (attributes: {
-        
-          withXwidgets = false;
-          #^ for `xwidget-webkit-browse-url'.
-          # enables the `--with-xwidgets` configuration flag.
-          
-          withGTK3 = true;
-          withGTK2 = false;
-          
-          withCsrc = true;
-          
-#          configureFlags = (attributes.configureFlags or [])
-#            ++ [ "--with-xwidgets" "--with-cairo" ];
-
-          buildInputs = (attributes.buildInputs or [])
-            ++ [ nixpkgs.webkitgtk ];  # nixpkgs.cairo
-
-          inherit (nixpkgs) webkitgtk;
-
-        });
-        
-        # ^
-        # [Problem]
-        #    configure: error: xwidgets requested but WebKitGTK+ not found.
-        # [Solution]
-        # 
-        # 
-
-        # use the unstable MELPA version of magit
-        # magit = self.melpaPackages.magit;
-    }).emacsWithPackages;
+# xwidgetsEmacsPackages =
+#     nixpkgs.emacsPackagesNg.overrideScope (super: self: {
+#         # use a custom version of emacs
+#         emacs = super.emacs.overrideAttrs (attributes: {
+#         
+#           withXwidgets = false;
+#           #^ for `xwidget-webkit-browse-url'.
+#           # enables the `--with-xwidgets` configuration flag.
+#           
+#           withGTK3 = true;
+#           withGTK2 = false;
+#           
+#           withCsrc = true;
+#           
+# #          configureFlags = (attributes.configureFlags or [])
+# #            ++ [ "--with-xwidgets" "--with-cairo" ];
+# 
+#           buildInputs = (attributes.buildInputs or [])
+#             ++ [ nixpkgs.webkitgtk ];  # nixpkgs.cairo
+# 
+#           inherit (nixpkgs) webkitgtk;
+# 
+#         });
+#         
+#         # ^
+#         # [Problem]
+#         #    configure: error: xwidgets requested but WebKitGTK+ not found.
+#         # [Solution]
+#         # 
+#         # 
+# 
+#         # use the unstable MELPA version of magit
+#         # magit = self.melpaPackages.magit;
+#     }).emacsWithPackages;
 
 in 
 ########################################
