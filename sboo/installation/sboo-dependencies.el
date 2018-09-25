@@ -184,13 +184,20 @@
     
     (require 'package)
 
-    (add-to-list 'package-archives
-                 '("melpa" . "http://melpa.milkbox.net/packages/")
-                 t)
-    ;; ^
-    ;; « (`add-to-list' LIST-VAR ELEMENT &optional APPEND COMPARE-FN) »
+    (progn
+      (add-to-list 'package-archives
+                   '("melpa-stable" . "http://stable.melpa.org/packages/")
+                   t)
+      (add-to-list 'package-archives
+                   '("melpa" . "http://melpa.milkbox.net/packages/")
+                   t)
+      ;; ^
+      ;; « (`add-to-list' LIST-VAR ELEMENT &optional APPEND COMPARE-FN) »
+      ())
 
-    nil))
+    (package-initialize)
+
+    ()))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -204,7 +211,7 @@
   "
   (interactive "P")
 
-  (message "« RefreshAndForceReinstall = %s »" RefreshAndForceReinstall)
+  ;;;(message "« RefreshAndForceReinstall = %s »" RefreshAndForceReinstall)
 
   (progn
 
@@ -212,7 +219,6 @@
     (prefer-coding-system 'utf-8)
     
     (when RefreshAndForceReinstall
-      (package-initialize)
       (package-refresh-contents))
 
     (dolist (p sboo-emacs-packages-required)
@@ -228,7 +234,7 @@
 
 ;; `melpa'
 ;;
-;; MELPA is a 
+;; MELPA is a package-repository.
 ;;
 ;; MELPA is updated daily and has the most packages (circa 2018).
 ;;
