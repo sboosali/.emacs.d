@@ -2,9 +2,7 @@
 ;;; Pre-Configuration: Shell & Env ;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn
-  (setq
-   shell-command-switch "-c"))
+;;;(progn (setq shell-command-switch "-c"))
 
 ;; ^
 ;;
@@ -95,7 +93,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
+(progn
+  (setq undo-limit        20000000)
+  (setq undo-strong-limit 40000000)
+  ())
+;; ^
+;; ensure undo limits are as high as possible
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Relocatable `.emacs.d' ;;;;;;;;;;;;;;;;;;;;;;; TODO
@@ -280,7 +283,8 @@
                                      "./"))
 
     (sboo-add-subdirs-to-load-path "vendor"
-                                   '("dante"))
+                                   '("dante"
+                                     "use-package"))
 
     (sboo-add-subdirs-to-load-path "sboo/configuration/20-my-packages"
                                    '(;;"ghcid"
@@ -305,7 +309,7 @@
 ;; `--install-dependencies' or `$SBOO_EMACS_INSTALL_DEPENDENCIES'.
 
 
-(when t
+(when nil
   (sboo-configure-emacs-package-repositories!   )
   (sboo-install-emacs-packages!                t))
 
@@ -399,10 +403,10 @@
 ;; More Shortcuts (TODO rm)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (this is later to be defined after its dependent definitions)
-
 (require 'sboo-utilities)
 (global-set-key "\M-w" 'eval-region-or-last-sexp) 
+
+;; (this is later to be defined after its dependent definitions)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Finalize ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
