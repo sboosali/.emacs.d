@@ -8,14 +8,22 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar sboo-init-file
-  (or load-file-name (buffer-file-name))
-  "")
+
+  (or load-file-name
+      (buffer-file-name)
+      (expand-file-name "~/.emacs.d/init.el"))
+
+  "e.g. « ~/.emacs.d/init.el »")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar sboo-emacs-directory
-    (or (getenv "SBOO_EMACS_ROOT") (file-name-directory sboo-init-file))
-  "")
+
+  (or (getenv "SBOO_EMACS_ROOT")
+      (file-name-directory sboo-init-file)
+      (expand-file-name "~/.emacs.d"))
+
+  "e.g. « ~/.emacs.d »")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -36,8 +44,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defalias 'sboo-emacs-path
-  'sboo-emacs-file)
+;;;(defalias 'sboo-emacs-path  'sboo-emacs-file)
 ;; ^
 ;; `defalias':
 ;;     (defalias 'NEW 'OLD)
@@ -45,9 +52,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar sboo-database-directory
+
   (sboo-emacs-file "db/")
-  "")
-  ;;^ e.g. "~/.emacs.d/db/"
+
+  "e.g. « ~/.emacs.d/db/ »")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -90,6 +98,7 @@
 
 (defun sboo-add-to-load-path (FILEPATH)
   "`add-to-list` FILEPATH to the `load-path`."
+  
   (add-to-list 'load-path
                (sboo-emacs-file FILEPATH)))
                ;; ^ i.e. the filepath `EMACSD/FILEPATH`

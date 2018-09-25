@@ -44,11 +44,11 @@
 (defun sboo-set-frame-parameters ()
   (interactive)
   
-  (set-frame-parameter nil
-                       'title "SBoo's Emacs")
-  ;; ^
-  ;; the title of the operating-system-window 
-  ;; TODO `sboo-frame-title`
+  ;; (set-frame-parameter nil
+  ;;                      'title "SBoo's Emacs")
+  ;; ;; ^
+  ;; ;; the title of the operating-system-window 
+  ;; ;; TODO `sboo-frame-title`
 
   (set-frame-parameter nil
                        'fullscreen 'maximized)
