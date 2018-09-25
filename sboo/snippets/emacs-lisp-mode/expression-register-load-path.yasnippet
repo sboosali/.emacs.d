@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+#
+# key         : =atlp
+# name        : « add-to-load-path » an expression to add a path to the load-path.
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+(add-to-list 'load-path (expand-file-name "${1:x/y}"))
