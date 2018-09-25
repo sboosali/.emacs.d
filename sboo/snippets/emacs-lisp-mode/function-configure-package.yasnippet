@@ -1,0 +1,43 @@
+# -*- mode: snippet -*-
+#
+# key         : =config
+# name        : a `defun` declaration, for a package configuration.
+# condition   : (= (length "=config") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-config-${1:PACKAGE}! ()
+
+  "Require `$1' and configure `$1-mode'.
+
+  Idempotent (invoking it twice is the same as calling once).
+
+  Safe (doesn't throw an error when the package can't be `load'ed).
+  "
+  (interactive)
+
+  (progn                                ;; :init
+    ())
+
+  (when (require '$1 nil t)             ;; :config
+
+      ($0)
+
+      ()
+
+      ()
+
+      ;;;(add-hook 'MODE-mode-hook '$1-mode)
+  
+      ;;;(defalias 'ALIAS '$1-mode)
+
+      ()))
+
+;; ^ 
+;; 
+;; 
+;;
+
