@@ -33,7 +33,7 @@
 ;; IMPORTS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'use-package)
+;;;(require 'use-package)
 
 ;;(require 'shackle)
 

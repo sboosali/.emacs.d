@@ -6,7 +6,7 @@
 (require 'package)
 (package-initialize 'noactivate)
 (eval-when-compile
-  (require 'use-package))
+  ;;;(require 'use-package))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; configure+load some packages

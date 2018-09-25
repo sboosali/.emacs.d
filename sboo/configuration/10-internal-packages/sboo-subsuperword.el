@@ -5,17 +5,38 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-config-subword! ()
+
+  "Configure `subword-mode'.
+
+  Should be idempotent.
+  "
+  (interactive)
+
+  (require 'subword)
+
+  (progn
+
+    (add-hook 'haskell-mode-hook 'subword-mode)
+
+    (defalias 'sub 'subword-mode)
+    (defalias 'sup 'superword-mode)))
+
+;; ^ 
+;; 
+;; 
+;;
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (require 'use-package)
+;; ;;;(require 'use-package)
 ;; (use-package subword
 ;;   :hook (haskell-mode)
 ;;   :config
 ;;   (defalias 'sub 'subword-mode)
 ;;   (defalias 'sup 'superword-mode))
-
-;; ^ 
-;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NOTES

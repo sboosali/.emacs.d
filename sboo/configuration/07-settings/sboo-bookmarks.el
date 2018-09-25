@@ -4,7 +4,7 @@
 ;; > Emacs's Bookmarks is similar to browser's bookmark. 
 ;; > It lets you easily open frequently needed files.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'use-package)
+;;;(require 'use-package)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq

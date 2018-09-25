@@ -1,13 +1,52 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Imports
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'use-package)
+(defun sboo-config-helm! ()
 
-(require 'helm)
+  "Require `helm' and configure `helm-mode'.
 
-(require 'helm-config)
+  Idempotent (invoking it twice is the same as calling once).
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  Safe (doesn't throw an error when the package can't be `load'ed).
+  "
+  (interactive)
+
+  ;; :init
+  (progn ())
+
+  ;; :config
+  (when (and (require 'helm-config nil t) (require 'helm nil t))
+
+    (setq helm-mode-fuzzy-match                 t)
+    (setq helm-completion-in-region-fuzzy-match t)
+    ;; ^ fuzzy-matching.
+
+    (setq helm-allow-mouse t)
+    ;; ^ the mouse is gratuitously disabled by default.
+    ;; this enables, for example, clicking on a helm candidate to activate it,
+    ;; rather than navigating it with several arrow and/or character keypresses.
+    ;;
+
+   ;; helm-boring-buffer-regexp-list '()
+   ;; ;; ^
+   ;; ;; by default, `helm-boring-buffer-regexp-list' is:
+   ;; ;;     ("\\` " "\\`\\*helm" "\\`\\*Echo Area" "\\`\\*Minibuf")
+   ;; ;;
+
+      ;;;(add-hook 'MODE-mode-hook '-mode)
+  
+      ;;;(defalias 'ALIAS '-mode)
+
+  (helm-mode 1)))
+
+;; ^ 
+;; 
+;; 
+;;
+
+;;;TODO
+(sboo-config-helm!)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings
 
 ;; (global-set-key (kbd "M-x")
@@ -21,40 +60,34 @@
 
 ;;; ^ Helm provides generic functions for completions to replace tab-completion in Emacs, with no loss of functionality.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Enable
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package helm
+;; (use-package helm
+;;   :init
+;;   (progn
+;;     (setq helm-mode-fuzzy-match                 t)
+;;     (setq helm-completion-in-region-fuzzy-match t)
+;;     ;; ^ fuzzy-matching.
+;;    ;; helm-boring-buffer-regexp-list '()
+;;    ;; ;; ^
+;;    ;; ;; by default, `helm-boring-buffer-regexp-list' is:
+;;    ;; ;;     ("\\` " "\\`\\*helm" "\\`\\*Echo Area" "\\`\\*Minibuf")
+;;    ;; ;;
+;;     (setq helm-allow-mouse t)
+;;     ;; ^ the mouse is gratuitously disabled by default.
+;;     ;; this enables, for example, clicking on a helm candidate to activate it,
+;;     ;; rather than navigating it with several arrow and/or character keypresses.
+;;     ;;
+;;     nil)
+;;   :bind (:map helm-command-map
+;;               ("<f9>" . helm-quit-and-helm-mini))
+;; ;   ("C-x C-f" .  helm-find-files)
+;;   :config
+;;   (helm-mode 1))
 
-  :init
-  (progn
-    (setq helm-mode-fuzzy-match                 t)
-    (setq helm-completion-in-region-fuzzy-match t)
-    ;; ^ fuzzy-matching.
-
-   ;; helm-boring-buffer-regexp-list '()
-   ;; ;; ^
-   ;; ;; by default, `helm-boring-buffer-regexp-list' is:
-   ;; ;;     ("\\` " "\\`\\*helm" "\\`\\*Echo Area" "\\`\\*Minibuf")
-   ;; ;;
-
-    (setq helm-allow-mouse t)
-    ;; ^ the mouse is gratuitously disabled by default.
-    ;; this enables, for example, clicking on a helm candidate to activate it,
-    ;; rather than navigating it with several arrow and/or character keypresses.
-    ;;
-
-    nil)
-
-  :bind (:map helm-command-map
-              ("<f9>" . helm-quit-and-helm-mini))
-;   ("C-x C-f" .  helm-find-files)
-
-  :config
-  (helm-mode 1))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; NOTES
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; "Helm is a framework for incremental narrowing and selecting."
 
@@ -108,5 +141,5 @@
 
 ;; (helm-mode 1)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-helm)

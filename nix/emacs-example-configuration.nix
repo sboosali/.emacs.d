@@ -8,7 +8,7 @@
 (require 'package)
 (package-initialize 'noactivate)
 (eval-when-compile
-  (require 'use-package))
+  ;;;(require 'use-package))
 
 ;; load some packages
 

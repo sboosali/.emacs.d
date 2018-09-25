@@ -1,7 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq
- use-package-verbose t)
+(setq use-package-verbose t)
 
  ;; ^ 
  ;;
@@ -11,7 +10,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'use-package nil t)
+;;;(require 'use-package nil t)
 ;; ^ `NOERROR=t` means "don't error if the `require`ment fails (can't be found, or is buggy, etc).
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
