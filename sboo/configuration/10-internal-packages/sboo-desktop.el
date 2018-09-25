@@ -127,8 +127,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package desktop
-  :config
+(when (require 'desktop nil t)
   (sboo-config-desktop))
 ;; ^ NOTE we launch `emacs` with `--no-desktop`;
 ;; this delays loading files until all modes have been properly configured.

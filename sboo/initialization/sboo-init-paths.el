@@ -9,8 +9,9 @@
 
 (defvar sboo-init-file
 
-  (or load-file-name
-      (buffer-file-name)
+  (or user-init-file
+      ;; load-file-name
+      ;; (buffer-file-name)
       (expand-file-name "~/.emacs.d/init.el"))
 
   "e.g. « ~/.emacs.d/init.el »")

@@ -30,29 +30,32 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(put 'dante-project-root 'safe-local-variable #'stringp)
+(put 'dante-target       'safe-local-variable #'stringp)
+
+;; ^ why?
+;; with « $ emacs --desktop », to prevent requiring user input
+;; (i.e. "Please enter y, n, or !: ") on **every** startup
+;; (whose `desktop' has a haskell file under `dante-mode').
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; LoadPaths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-to-list 'load-path (expand-file-name "elisp"))
+
+(add-to-list 'load-path (expand-file-name "vendor/dante"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Install `sboo' ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (progn
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/sboo"))
-  (require 'sboo))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; LoadPaths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (progn  
-;;   (require 'sboo-init-paths)
-;;   (sboo-register-sboo-load-paths!)
-;;   ;; ^ register all `sboo-*` `load-path`s before `load`ing any `sboo-*` package.
-;;   ())
+  (require 'sboo)
+  (sboo-register-sboo-load-paths!)
+  ;; ^ register all `sboo-*` `load-path`s before `load`ing any `sboo-*` package.
+  ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Installation ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

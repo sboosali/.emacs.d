@@ -41,9 +41,23 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar sboo-dante-repl-command-line-methods-alist
+
   `((new-build . sboo-dante-cabal-new-repl)
     (stack     . ,(lambda (root) (dante-repl-by-file root '("stack.yaml") '("stack" "repl" dante-target))))
-    (bare      . ,(lambda (_) '("cabal" "repl" dante-target "--builddir=dist/dante")))))
+    (bare      . ,(lambda (_) '("cabal" "repl" dante-target "--builddir=dist/dante"))))
+
+  "")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar sboo-dante-blacklist
+
+  '("/home/sboo/haskell/haskell-project-skeleton/projects"
+    "/home/sboo/haskell/commands"
+    )
+
+  "")
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

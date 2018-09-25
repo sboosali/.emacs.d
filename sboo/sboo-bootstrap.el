@@ -37,8 +37,8 @@
     (add-to-list 'load-path (expand-file-name "sboo/configuration/06-initialization/"))
     (add-to-list 'load-path (expand-file-name "sboo/configuration/07-settings/"))
     (add-to-list 'load-path (expand-file-name "sboo/configuration/10-internal-packages/"))
-    ;;TODO;;(add-to-list 'load-path (expand-file-name "sboo/configuration/20-my-packages/*"))
-    ;;TODO;;(add-to-list 'load-path (expand-file-name "sboo/configuration/25-vendored-packages/"))
+    (add-to-list 'load-path (expand-file-name "sboo/configuration/20-my-packages/dictation"))
+    (add-to-list 'load-path (expand-file-name "sboo/configuration/25-vendored-packages/"))
     (add-to-list 'load-path (expand-file-name "sboo/configuration/30-external-packages/"))
     (add-to-list 'load-path (expand-file-name "sboo/configuration/35-external-configurations/"))
     (add-to-list 'load-path (expand-file-name "sboo/configuration/50-meta-configurations/"))
@@ -48,7 +48,8 @@
 ;; NOTE why absolute-filepaths, prefixed with "sboo"?
 ;; because relative-filepaths are relative to `default-directory' (e.g. like `bash'),
 ;; **not** to this file itself (e.g. like `nix').
-;; 
+;;
+;; TODO use `load-file-name': full name of the file being loaded by ‘load’.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -58,6 +59,7 @@
   "
 
   (progn
+    (require 'sboo-init-paths)
     ;;(require 'sboo-settings)
     ()))
 
