@@ -25,23 +25,30 @@
   "
 
   (progn
-    (add-to-list 'load-path (expand-file-name "./installation/"))
+    (add-to-list 'load-path (expand-file-name "sboo/installation/"))
     
-    (add-to-list 'load-path (expand-file-name "./initialization/"))
+    (add-to-list 'load-path (expand-file-name "sboo/initialization/"))
     
-    (add-to-list 'load-path (expand-file-name "./configuration/"))
-    (add-to-list 'load-path (expand-file-name "./configuration/02-platforms/"))
-    (add-to-list 'load-path (expand-file-name "./configuration/03-window-systems/"))
-    (add-to-list 'load-path (expand-file-name "./configuration/04-utilities/"))
-    (add-to-list 'load-path (expand-file-name "./configuration/05-keybindings/"))
-    (add-to-list 'load-path (expand-file-name "./configuration/06-initialization/"))
-    (add-to-list 'load-path (expand-file-name "./configuration/07-settings/"))
-    (add-to-list 'load-path (expand-file-name "./configuration/10-internal-packages/"))
-    ;;TODO;;(add-to-list 'load-path (expand-file-name "./configuration/25-vendored-packages/"))
-    (add-to-list 'load-path (expand-file-name "./configuration/30-external-packages/"))
-    (add-to-list 'load-path (expand-file-name "./configuration/35-external-configurations/"))
-    (add-to-list 'load-path (expand-file-name "./configuration/50-meta-configurations/"))
+    (add-to-list 'load-path (expand-file-name "sboo/configuration/"))
+    (add-to-list 'load-path (expand-file-name "sboo/configuration/02-platforms/"))
+    (add-to-list 'load-path (expand-file-name "sboo/configuration/03-window-systems/"))
+    (add-to-list 'load-path (expand-file-name "sboo/configuration/04-utilities/"))
+    (add-to-list 'load-path (expand-file-name "sboo/configuration/05-keybindings/"))
+    (add-to-list 'load-path (expand-file-name "sboo/configuration/06-initialization/"))
+    (add-to-list 'load-path (expand-file-name "sboo/configuration/07-settings/"))
+    (add-to-list 'load-path (expand-file-name "sboo/configuration/10-internal-packages/"))
+    ;;TODO;;(add-to-list 'load-path (expand-file-name "sboo/configuration/20-my-packages/*"))
+    ;;TODO;;(add-to-list 'load-path (expand-file-name "sboo/configuration/25-vendored-packages/"))
+    (add-to-list 'load-path (expand-file-name "sboo/configuration/30-external-packages/"))
+    (add-to-list 'load-path (expand-file-name "sboo/configuration/35-external-configurations/"))
+    (add-to-list 'load-path (expand-file-name "sboo/configuration/50-meta-configurations/"))
     ()))
+
+;; ^
+;; NOTE why absolute-filepaths, prefixed with "sboo"?
+;; because relative-filepaths are relative to `default-directory' (e.g. like `bash'),
+;; **not** to this file itself (e.g. like `nix').
+;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -51,7 +58,7 @@
   "
 
   (progn
-    (require 'sboo-settings)
+    ;;(require 'sboo-settings)
     ()))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

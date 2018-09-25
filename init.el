@@ -58,14 +58,14 @@
 ;;; Installation ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'sboo-dependencies)
-
-;;TODO expose command-line-arguments or environment-variables;
-;; `--install-dependencies' or `$SBOO_EMACS_INSTALL_DEPENDENCIES'.
-
-(when ()                                ;TODO; (getenv "SBOO_EMACS_INSTALL")
-  (sboo-configure-emacs-package-repositories!)
-  (sboo-install-emacs-packages! t))
+;; (require 'sboo-dependencies)
+;; 
+;; ;;TODO expose command-line-arguments or environment-variables;
+;; ;; `--install-dependencies' or `$SBOO_EMACS_INSTALL_DEPENDENCIES'.
+;; 
+;; (when ()                                ;TODO; (getenv "SBOO_EMACS_INSTALL")
+;;   (sboo-configure-emacs-package-repositories!)
+;;   (sboo-install-emacs-packages! t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Configure ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
