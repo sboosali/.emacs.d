@@ -1,7 +1,13 @@
+;;; -*- lexical-binding: t -*-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;(require 'use-package)
+(require 'dash)
+(require 'f)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Definitions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun dante-project-root-safe-p (x)
@@ -52,12 +58,42 @@
 
 (defvar sboo-dante-blacklist
 
-  '("/home/sboo/haskell/haskell-project-skeleton/projects"
-    "/home/sboo/haskell/commands"
+  '("~/haskell/haskell-project-skeleton/projects"
+    "~/haskell/commands"
     )
 
-  "")
+  "Directories (e.g. projects) that `dante' will ignore.")
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-dante--does-directory-contain-current-buffer? (DIRECTORY)
+  ""
+
+  (f-descendant-of?
+   (f-canonical (or (buffer-file-name) ""))
+   (f-canonical (expand-file-name DIRECTORY))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-dante--is-current-buffer-blacklisted? ()
+
+  "Whether `buffer-file-name' is a descendant of any directory in `sboo-dante-blacklist'."
+
+  (-any? #'sboo-dante--does-directory-contain-current-buffer?
+         sboo-dante-blacklist))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-dante-mode-on? ()
+
+  "Wrap `dante-mode'. 
+
+  Don't enable on buffers whose `buffer-file-name' is not (recursively) contained by a blacklisted directory in `sboo-dante-blacklist'.
+  "
+  (interactive)
+
+  (unless (sboo-dante--is-current-buffer-blacklisted?)
+    (dante-mode 1)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -74,7 +110,7 @@
           sboo-dante-repl-command-line-methods-alist))
 
   :hook ((haskell-mode . flycheck-mode)
-         (haskell-mode . dante-mode))
+         (haskell-mode . sboo-dante-mode-on?))
 
   :commands dante-mode)
 
@@ -101,6 +137,14 @@
 ;; - file-locally, or
 ;; - directory-locally.
 ;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;; (flet ((is-contained-by-blacklisted-directory?
+  ;;        (*blacklisted-directory*)
+  ;;        (f-descendant-of
+  ;;         (f-canonical *blacklisted-directory*)
+  ;;         (f-canonical (or (buffer-file-name) "")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-dante)
