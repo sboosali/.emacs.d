@@ -1,9 +1,90 @@
+;;; init.el --- sboo's Emacs Configuration -*- lexical-binding: t -*-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'cl-lib)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Variables ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-profile-environment-variable
+
+  "EMACS_PROFILE"
+
+  "Which emacs profile will be (/ has been) loaded.
+  Example Usage: « $ EMACS_PROFILE=minimal emacs ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar sboo-profile-name nil
+
+  "Which emacs profile has been loaded (or will be).")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo/string->symbol (STRING)
+  "`intern` the `STRING', returning its symbol.
+  
+  Munge the string into an idiomatic elisp symbol:
+  
+  * clean up, by dropping any non-printable characters;
+  * normalize casing, via `downcase';
+  * normalize word boundaries, by replacing *all* "unidiomatic" substrings 
+  (i.e. one-or-more whitespace and/or non-alphanumeric characters)
+  with a single hyphen.
+
+  M-: (sboo/string->symbol "foo-bar")
+  'foo-bar
+
+  M-: (sboo/string->symbol "foo, bar!")
+  'foo-bar
+
+  M-: (sboo/string->symbol ":Foo:|:Bar:")
+  'foo-bar
+
+  "
+  (interactive)
+
+  (let ((*symbolic-string* STRING)) ;TODO; implement
+  
+    (intern *symbolic-string*)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Profiles ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq sboo-profile-name ;TODO; clean/normalize envvar val
+ (getenv sboo-profile-environment-variable))
+
+;; ^ NOTE (`getenv' VAR) is:
+;;
+;; `nil' if: VAR is undefined in the environment;
+;; ‘""’ if: VAR is set but null;
+;; the value of VAR (as a string), otherwise.
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(pcase sboo-profile-name
+
+  ("sboo"
+    (load "~/.emacs.d/sboo/sboo-default-init.el"))
+
+  ("core"
+    (load "~/.emacs.d/sboo/sboo-core-init.el"))
+
+  ("builtins"
+    (load "~/.emacs.d/sboo/sboo-builtins-init.el"))
+
+  (_
+    (load "~/.emacs.d/sboo/sboo-default-init.el")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -74,6 +155,8 @@
 ;;; Configure ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'sboo-keybindings)
+
 (require 'sboo-settings-safe) ;TODO mv these to before use-package, and remove all external dependencies
 ;; ^
 ;; `sboo-settings-safe` should always succeed,
@@ -136,18 +219,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;TODO mv these two to own file.
+;;(progn
+;;  (require 'sboo-desktop)
+;;  (sboo-config-desktop))
+;;      ;; ^ the `sboo-desktop` module has *only* definitions, no actions.
+;;  (require 'sboo-quitting))
+;;  ;; ^ requires `sboo-desktop`
 
-(when (require 'sboo-desktop nil t)  ;;TODO rm duplication with import below?
-      ;; ^ the `sboo-desktop` module has *only* definitions, no actions.
-  (require 'sboo-quitting))
-  ;; ^ requires `sboo-desktop`
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(progn
-  (require 'sboo-desktop)
-  (sboo-config-desktop))
   ;;^ 
   ;; Don't restore any buffers until all modes have been initialized/configured.
   ;; Otherwise, file-extensions won't have been registered with the correct modes,
