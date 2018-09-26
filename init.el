@@ -14,23 +14,10 @@
 ;; Utilities: Macros ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro ~USER (FilePath)
-  "Construct a filepath literal, relative to the user's home directory.
-
-  M-: (~USER ./haskell)
-  \"/home/sboo/haskell\"
-  "
-
-  `(expand-file-name 
-    (concat "~/"
-            (symbol-name (quote ,FilePath)))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defmacro ~EMACS (FilePath)
+(defmacro ~EMACS~ (FilePath)
   "Construct a filepath literal, relative to `user-emacs-directory'.
 
-  M-: (~EMACS lisp)
+  M-: (~EMACS ./lisp)
   \"/home/sboo/.emacs.d/lisp"
   "
 
@@ -40,8 +27,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro register! (FilePath)
-  "Register a filepath literal onto the `load-path'."
+(defmacro load-path! (FilePath)
+  "Register a filepath literal onto the `load-path'.
+  
+  M-: (macroexpand (load-path! ./lisp))
+  (add-to-list 'load-path \"/home/sboo/.emacs.d/lisp\")
+  "
 
   `(add-to-list 'load-path
      (expand-file-name 
@@ -62,36 +53,31 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (progn
-  (add-to-list 'load-path (expand-file-name "elisp"))
-  ;(add-to-list 'load-path (expand-file-name "submodules/use-package"))
-  ;(add-to-list 'load-path (expand-file-name "submodules/dante"))
+  (load-path! ./elisp)
+  ;(load-path! ./submodules/use-package)
+  ;(load-path! ./submodules/dante)
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (progn
 
-  (add-to-list 'load-path (expand-file-name "sboo"))
-  
-  (when (require 'sboo-bootstrap nil t)
-
-    (add-to-list 'load-path (expand-file-name "sboo/installation/"))    
-    (add-to-list 'load-path (expand-file-name "sboo/initialization/")) 
-    (add-to-list 'load-path (expand-file-name "sboo/configuration/"))
-    (add-to-list 'load-path (expand-file-name "sboo/configuration/02-platforms/"))
-    (add-to-list 'load-path (expand-file-name "sboo/configuration/03-window-systems/"))
-    (add-to-list 'load-path (expand-file-name "sboo/configuration/04-utilities/"))
-    (add-to-list 'load-path (expand-file-name "sboo/configuration/05-keybindings/"))
-    (add-to-list 'load-path (expand-file-name "sboo/configuration/06-initialization/"))
-    (add-to-list 'load-path (expand-file-name "sboo/configuration/07-settings/"))
-    (add-to-list 'load-path (expand-file-name "sboo/configuration/10-internal-packages/"))
-    (add-to-list 'load-path (expand-file-name "sboo/configuration/20-my-packages/dictation"))
-    (add-to-list 'load-path (expand-file-name "sboo/configuration/25-vendored-packages/"))
-    (add-to-list 'load-path (expand-file-name "sboo/configuration/30-external-packages/"))
-    (add-to-list 'load-path (expand-file-name "sboo/configuration/35-external-configurations/"))
-    (add-to-list 'load-path (expand-file-name "sboo/configuration/50-meta-configurations/"))
-    ())
-
+  (load-path! ./sboo)
+  (load-path! ./sboo/installation)
+  (load-path! ./sboo/initialization)
+  (load-path! ./sboo/configuration)
+  (load-path! ./sboo/configuration/02-platforms)
+  (load-path! ./sboo/configuration/03-window-systems)
+  (load-path! ./sboo/configuration/04-utilities)
+  (load-path! ./sboo/configuration/05-keybindings)
+  (load-path! ./sboo/configuration/06-initialization)
+  (load-path! ./sboo/configuration/07-settings)
+  (load-path! ./sboo/configuration/10-internal-packages)
+  (load-path! ./sboo/configuration/20-my-packages/dictation)
+  (load-path! ./sboo/configuration/25-vendored-packages)
+  (load-path! ./sboo/configuration/30-external-packages)
+  (load-path! ./sboo/configuration/35-external-configurations)
+  (load-path! ./sboo/configuration/50-meta-configurations)
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -117,21 +103,6 @@
 
 ;; (progn
 ;;   (setq shell-command-switch "-c"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'sboo-keybindings) ;TODO replace require with load?
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'sboo-settings-safe) ;TODO mv these to before use-package, and remove all external dependencies
-
-;; ^
-;; `sboo-settings-safe` should always succeed,
-;; even if the `load-path` is corrupt, since:
-;; [1] only packages built into Emacs25+ are imported; and
-;; [2] only simple configurations are performed, e.g. `(setq ...)`.
-;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Settings: Hacks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -239,10 +210,47 @@
 
   "The location of my emacs dotfiles.")
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuration: Internal Packages (a.k.a Builtins)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-keybindings) ;TODO replace require with load?
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-settings-safe) ;TODO mv these to before use-package, and remove all external dependencies
+
+;; ^
+;; `sboo-settings-safe` should always succeed,
+;; even if the `load-path` is corrupt, since:
+;; [1] only packages built into Emacs25+ are imported; and
+;; [2] only simple configurations are performed, e.g. `(setq ...)`.
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Effects: Initialization ;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(progn
+
+  (find-file user-init-file)
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;TODO
+;(when (require 'sboo-server nil t)
+;  (server-start-unless-running))
+  ;; ^ 
+  ;; for `emacsclient'.
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -332,29 +340,14 @@
   (setq package-enable-at-startup nil)
   (package-initialize))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (require 'use-package)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Effects: Initialization ;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(progn
-
-  (find-file user-init-file)
-
-  ())
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;TODO
-;(when (require 'sboo-server nil t)
-;  (server-start-unless-running))
-  ;; ^ 
-  ;; for `emacsclient'.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuration: External Packages ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Effects: Finalization ;;;;;;;;;;;;;;;;;;;;;;;;;
