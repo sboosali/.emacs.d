@@ -148,7 +148,7 @@
 ;; ;; `--install-dependencies' or `$SBOO_EMACS_INSTALL_DEPENDENCIES'.
 ;; 
 (when t                                ;TODO; (getenv "SBOO_EMACS_INSTALL")
-  (sboo-install-emacs-packages! t))
+  (sboo-install-emacs-packages! nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Configure ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

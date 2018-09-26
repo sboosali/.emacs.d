@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar sboo-emacs-packages-needed
+(defvar sboo-needed-packages
 
   '(
 
@@ -8,8 +8,8 @@
     ;; Meta-Configuration:
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    use-package-el-get  ; `use-package` dependency
-    bind-key            ; `use-package` dependency
+    ;;;use-package-el-get  ; `use-package` dependency
+    ;;;bind-key            ; `use-package` dependency
     use-package
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23,8 +23,8 @@
     ;; Helm:
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    async      ; `helm` dependency
-    popup      ; `helm` dependency
+    ;;;async      ; `helm` dependency
+    ;;;popup      ; `helm` dependency
     helm-core  ; `helm` dependency
     helm
 
@@ -55,7 +55,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar sboo-emacs-packages-wanted
+(defvar sboo-wanted-packages
 
   '(
 
@@ -139,18 +139,18 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar sboo-emacs-packages
+(defvar sboo-installed-packages
 
-  sboo-emacs-packages-needed
+  sboo-needed-packages
 
-  ;;;(append sboo-emacs-packages-needed
-  ;;;        sboo-emacs-packages-wanted)
+  ;;;(append sboo-needed-packages
+  ;;;        sboo-wanted-packages)
 
   "Install these Emacs packages. Required for (and configured by) my Emacs configuration.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-configure-emacs-package-repositories ()
+(defun sboo-configure-package-repositories ()
 
   "Add MELPA to `package-archives'.
   "
@@ -175,8 +175,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-install-emacs-packages! (&optional RefreshAndForceReinstall)
-  "Install everything in `sboo-emacs-packages'.
+(defun sboo-install-packages (&optional RefreshAndForceReinstall)
+  "Install everything in `sboo-installed-packages'.
 
   With a Universal Argument (e.g. `C-u'), reconfigure the package manager
   (via `package-initialize' and `package-refresh-contents'),
@@ -191,17 +191,34 @@
 
     (prefer-coding-system 'utf-8)      ;;TODO set coding system globally for url.el &al?
 
-    (sboo-configure-emacs-package-repositories)
+    (sboo-configure-package-repositories)
 
     (when RefreshAndForceReinstall
       (package-refresh-contents))
 
-    (dolist (p sboo-emacs-packages)
+    (dolist (p sboo-installed-packages)
 
       (when (or (not (package-installed-p p))
                 RefreshAndForceReinstall)
 
         (package-install p)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-require-installed-packages (&optional InstallBeforeRequiring)
+  "`require' everything in `sboo-installed-packages'.
+
+  With a Universal Argument (e.g. `C-u'), 
+  install the packages before requiring them.
+  "
+  (interactive "P")
+
+  (when InstallBeforeRequiring 
+    (sboo-install-packages)
+
+  
+
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
