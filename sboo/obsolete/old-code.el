@@ -11,6 +11,522 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(defmacro ~USER (FilePath)
+  "Construct a filepath literal, relative to the user's home directory.
+
+  M-: (~USER ./haskell)
+  \"/home/sboo/haskell\"
+  "
+
+  `(expand-file-name 
+    (concat "~/"
+            (symbol-name (quote ,FilePath)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro ~EMACS (FilePath)
+  "Construct a filepath literal, relative to `user-emacs-directory'.
+
+  M-: (~EMACS lisp)
+  \"/home/sboo/.emacs.d/lisp"
+  "
+
+  `(expand-file-name 
+    (concat user-emacs-directory
+            (symbol-name (quote ,FilePath)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro ~SBOO (FilePath)
+  "Construct a filepath literal, relative to `sboo-directory',
+  my emacs-dotfiles location.
+
+  M-: (~SBOO ./sboo-init-builtins.el)
+  \"/home/sboo/.emacs.d/sboo/sboo-init-builtins.el"
+  "
+
+  `(expand-file-name 
+    (concat sboo-directory "/" 
+            (symbol-name (quote ,FilePath)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(defmacro ./ (FilePath)
+  "Construct a filepath literal, relative to the current `default-directory'.
+
+  (TODO the current buffer's, or the file currently being loaded).
+  
+  M-: (./ haskell)
+  \"/home/sboo/haskell\"
+
+  "
+
+  `(expand-file-name 
+    (concat default-directory "/" 
+            (symbol-name (quote ,FilePath)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro ~/ (FilePath)
+  "Construct a filepath literal, relative to the user's home directory.
+
+  M-: (~/ haskell)
+  \"/home/sboo/haskell\"
+
+  "
+
+  `(expand-file-name 
+    (concat "~/" 
+            (symbol-name (quote ,FilePath)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro ~/.emacs.d/ (FilePath)
+  "Construct a filepath literal, relative to `user-emacs-directory'.
+
+  (TODO: the root directory of the currently running emacs instance).
+
+  M-: (~/.emacs.d/ lisp)
+  \"/home/sboo/.emacs.d/lisp"
+
+  "
+
+  `(expand-file-name 
+    (concat user-emacs-directory "/" 
+            (symbol-name (quote ,FilePath)))))
+
+
+
+
+
+
+
+
+
+
+
+
+(defmacro ./ (FilePath)
+  `(expand-file-name (concat load-file-name (symbol-name (quote ,FilePath)))))
+
+(defmacro path! (FilePath)
+  `(expand-file-name (symbol-name (quote ,FilePath))))
+
+(defmacro sboo-register! (FilePath)
+  `(add-to-list 'load-path (expand-file-name (symbol-value ,FilePath))))
+
+(sboo-register! ./sboo/)
+
+
+
+
+
+
+
+
+(defmacro sboo-bind! (KeySequence Command &optional KeyMap)
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; My (default, featured) Emacs Configuration.
+;;
+;; To import (but not invoke) all configuration functions,
+;; call « (require 'sboo) ».
+;;
+;; See `./README.md'.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-bootstrap)
+
+(sboo-bootstrap!)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'sboo)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; my configs (namespaced under "sboo").
+
+(require 'sboo-initialization)    ;TODO mv these to before use-package, and remove all external dependencies
+;; ^
+;; Initially, do simple configurations (like keybindings, custom variables, etc),
+;; which (should) always succeed.
+
+(require 'sboo-internal) ;TODO mv these to before use-package, and remove all external dependencies
+;; ^ builtin-packages i.e. "1st party".
+;;
+;; Properly configure any builtin-packages,
+;; before configuring installed(i.e. third-party) packages.
+;;
+
+(require 'sboo-packages)
+;; ^ my packages i.e. "2nd party".
+;;
+;; 
+
+(require 'sboo-settings)
+;; ^ Further settings.
+
+(require 'sboo)            ;TODO rename
+;; ^ other packages i.e. "3rd party".
+;;
+;; 
+
+;;TODO (require 'haskell--projectile-compile--direnv-nixshell)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Initialize ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-server nil t)
+  (server-start-unless-running))
+  ;; ^
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-init-effects)
+;; ^
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;(progn
+;;  (require 'sboo-desktop)
+;;  (sboo-config-desktop))
+;;      ;; ^ the `sboo-desktop` module has *only* definitions, no actions.
+;;  (require 'sboo-quitting))
+;;  ;; ^ requires `sboo-desktop`
+
+  ;;^ 
+  ;; Don't restore any buffers until all modes have been initialized/configured.
+  ;; Otherwise, file-extensions won't have been registered with the correct modes,
+  ;; custom typefaces won't have been associated, etc.
+  ;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-external)
+;; ^
+;; Finally, configure any installed (i.e. third-party) packages.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; More Shortcuts (TODO rm)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-utilities)
+(global-set-key "\M-w" 'eval-region-or-last-sexp) 
+
+;; (this is later to be defined after its dependent definitions)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Finalize ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq
+ sboo-emacs-initialized t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(progn
+  (require 'package)
+  (setq package-enable-at-startup nil)
+  (package-initialize))
+
+
+
+
+
+
+
+
+
+  (dolist (*p* sboo-installed-packages)
+
+      (when (not (package-installed-p *p*))
+
+        (package-install *p*)))
+
+
+
+
+
+
+
+(when (>= emacs-major-version 24)
+
+  (require 'package)
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; LoadPaths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-to-list 'load-path (expand-file-name "elisp"))
+
+;(add-to-list 'load-path (expand-file-name "submodules/use-package"))
+;(add-to-list 'load-path (expand-file-name "submodules/dante"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Install `sboo' ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(progn
+  (add-to-list 'load-path (expand-file-name "sboo"))
+  (require 'sboo)
+  (sboo-register-sboo-load-paths!)
+  ;; ^ register all `sboo-*` `load-path`s before `load`ing any `sboo-*` package.
+  ())
+
+
+
+
+
+
+
+;;(require 'sboo-dependencies)
+;; 
+;; ;;TODO expose command-line-arguments or environment-variables;
+;; ;; `--install-dependencies' or `$SBOO_EMACS_INSTALL_DEPENDENCIES'.
+;; 
+
+(when sboo-install?
+  (sboo-install-emacs-packages nil))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;; NOTE `()' is `nil' (and parses as a pattern, not a variable).
+
+
+
+
+
+
+
+
+
+  ;;(setq package-archives (assq-delete-all 'elpa 'package-archives))
+  ;;(setq package-archives (assq-delete-all "elpa" 'package-archives))
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo/string->symbol (STRING)
+  "`intern` the `STRING', returning its symbol.
+  
+  Munge the string into an idiomatic elisp symbol:
+  
+  * clean up, by dropping any non-printable characters;
+  * normalize casing, via `downcase';
+  * normalize word boundaries, by replacing *all* "unidiomatic" substrings 
+  (i.e. one-or-more whitespace and/or non-alphanumeric characters)
+  with a single hyphen.
+
+  M-: (sboo/string->symbol "foo-bar")
+  'foo-bar
+
+  M-: (sboo/string->symbol "foo, bar!")
+  'foo-bar
+
+  M-: (sboo/string->symbol ":Foo:|:Bar:")
+  'foo-bar
+
+  "
+  (interactive)
+
+  (let ((*symbolic-string* STRING)) ;TODO; implement
+  
+    (intern *symbolic-string*)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Profiles ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq sboo-profile-name ;TODO; clean/normalize envvar val
+ (getenv sboo-profile-environment-variable))
+
+;; ^ NOTE (`getenv' VAR) is:
+;;
+;; `nil' if: VAR is undefined in the environment;
+;; ‘""’ if: VAR is set but null;
+;; the value of VAR (as a string), otherwise.
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(pcase sboo-profile-name
+
+  ("sboo"
+    (load "~/.emacs.d/sboo/sboo-default-init.el"))
+
+  ("core"
+    (load "~/.emacs.d/sboo/sboo-core-init.el"))
+
+  ("builtins"
+    (load "~/.emacs.d/sboo/sboo-builtins-init.el"))
+
+  (_
+    (load "~/.emacs.d/sboo/sboo-default-init.el")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+
+
+
       (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/")  t)
       ;;;(add-to-list 'package-archives '("melpa"        . "http://melpa.milkbox.net/packages/") t)
 

@@ -67,7 +67,8 @@ debug: configure
 .PHONY: debug
 
 ##################################################
-test: configure debug
+test: configure
+	@exec ./result/bin/emacs --debug-init
 
 .PHONY: test
 

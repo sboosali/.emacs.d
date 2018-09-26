@@ -25,7 +25,7 @@
 
     ;;;async      ; `helm` dependency
     ;;;popup      ; `helm` dependency
-    helm-core  ; `helm` dependency
+    ;;;helm-core  ; `helm` dependency
     helm
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
