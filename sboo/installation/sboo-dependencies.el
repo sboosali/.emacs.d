@@ -1,106 +1,111 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar sboo-emacs-packages-required
+(defvar sboo-emacs-packages-needed
 
-  '(bind-key
+  '(
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Meta-Configuration:
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    use-package-el-get  ; `use-package` dependency
+    bind-key            ; `use-package` dependency
     use-package
 
-    ;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Text/Buffer/Window Stuff:
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    real-auto-save
+    yasnippet
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Helm:
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    async      ; `helm` dependency
+    popup      ; `helm` dependency
+    helm-core  ; `helm` dependency
+    helm
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Development:
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    projectile
+    flycheck
+    magit            ; git <C-x g>
+
+    haskell-mode     ; haskell
+    dante            ; haskell
+    flycheck-haskell ; haskell
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Utilities:
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
     dash           ; (the `-` prefix)
-    s              ; `s`trings
-    f              ; `f`iles
-    
-    ;;
+    s              ; (`s`trings)
+    f              ; (`f`iles)
 
-    haskell-mode
-    dante           ; needs `ghc` (or `cabal`, or `stack`, etc) system-package
-    intero          ; needs `stack` system-package
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   )
 
-    ;;
+  "Packages I really need to be installed.")
 
-    lsp-mode
-    lsp-ui
-    lsp-haskell
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    ;;
+(defvar sboo-emacs-packages-wanted
 
-    flycheck
-    flycheck-haskell
+  '(
 
-    ;;
-
-    exec-path-from-shell
-    real-auto-save
-
-    ;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Window/Buffer Management:
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
     tabbar
     shackle
     window-purpose
 
-    ;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Development:
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    color-theme
-    smooth-scrolling
-    centered-cursor-mode
-
-    ;;
-
-    yasnippet
-
-    ;;
-
-    nix-mode
     paredit
+    nix-mode
 
-    ;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Formats:
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-                                        ;magit          ; <C-x g>
-    projectile
-    direnv         ; needs `direnv` system-package
-                                        ;multi-term
-    neotree
-    wgrep
-
-    markdown-mode 
-    edit-indirect
-
+    markdown-mode
     json-mode
     yaml-mode
+    csv-nav
+    ;; ^ editing csv files
 
-    ;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Filesystem/Project Navigation/Searching:
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    ;;
+    multi-term
+    ;neotree
+    bm
+    ;; ^ visual bookmarks
 
-    helm
-    helm-core
-    helm-dash
-    helm-make
-    helm-swoop
+    ;; from the "dired-hacks" megarepo:
 
-    ;;
+    dired-filter
+    dired-open
+    dired-rainbow
+    dired-subtree
+    dired-ranger
+   ;dired-list
+    dired-collapse
 
-    modalka
-                                        ; ^ https://github.com/mrkkrp/modalka/blob/master/README.md
-
-    ;;god-mode
-    ;;evil
-
-    ;;
-
-    anzu   
-                                        ; ^ shows total search hits in mode line.
-                                        ; c.f. `query-replace`.
-
-    bm 
-                                        ; ^ visual bookmarks
-
-                                        ; csv-nav
-                                        ;  ; ^ editing csv files
-
-    deft
-                                        ; ^ quick note taking and management
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Text Manipulation/Visualization:
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
     expand-region
 
@@ -110,87 +115,56 @@
     wrap-region
                                         ; ^ wrap selection with punctuations, tags (org-mode, markdown-mode, ..)
 
-    yaml-mode
-
-                                        ;any-ini-mode ; EmacsWiki only
-
-    ;;
-
-    epc
-    elnode
-                                        ;emacs-web-server
-    
-    ;;
-                                        ; for haskell-ide-engine:
-
-    lsp-mode
-    lsp-ui 
-    lsp-haskell
-
-    ;;
-                                        ; from the "dired-hacks" megarepo:
-
-    dired-filter
-    dired-open
-    dired-rainbow
-    dired-subtree
-    dired-ranger
-                                        ;dired-list
-    dired-collapse
-
-    ;;
-
-    move-text
-    treemacs
-    tabbar-ruler
-
-    ;;
-
-    request
-                                        ; ^ https://tkf.github.io/emacs-request/manual.html
-
-    ;;
-
     wgrep
                                         ; ^ https://github.com/mhayashi1120/Emacs-wgrep
 
-    ;;
+    edit-indirect
 
-    ;;TODO repo;; org.org
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; (miscellaneous):
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    ;;
-
-    palimpsest
-
-    ;;
-
+    anzu
+                                        ; ^ shows total search hits in mode line.
+                                        ; c.f. `query-replace`.
+    request
+                                        ; ^ https://tkf.github.io/emacs-request/manual.html
     which-key
                                         ; ^ https://github.com/justbur/emacs-which-key/blob/master/README.org
 
-    ;;
 
     )
 
-  "Install these Emacs packages; which are required for (and configured by) my Emacs configuration.")
+  "Packages I want (but don't need) to be installed.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-configure-emacs-package-repositories! ()
+(defvar sboo-emacs-packages
 
-  "Add MELPA to `package-archives'. 
+  sboo-emacs-packages-needed
+
+  ;;;(append sboo-emacs-packages-needed
+  ;;;        sboo-emacs-packages-wanted)
+
+  "Install these Emacs packages. Required for (and configured by) my Emacs configuration.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-configure-emacs-package-repositories ()
+
+  "Add MELPA to `package-archives'.
   "
 
   (when (>= emacs-major-version 24)
-    
+
     (require 'package)
 
     (progn
-      (add-to-list 'package-archives
-                   '("melpa-stable" . "http://stable.melpa.org/packages/")
-                   t)
-      (add-to-list 'package-archives
-                   '("melpa" . "http://melpa.milkbox.net/packages/")
-                   t)
+
+      (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
+
+      ;;;(add-to-list 'package-archives '("melpa"        . "http://melpa.milkbox.net/packages/") t)
+
       ;; ^
       ;; « (`add-to-list' LIST-VAR ELEMENT &optional APPEND COMPARE-FN) »
       ())
@@ -202,7 +176,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-install-emacs-packages! (&optional RefreshAndForceReinstall)
-  " Install everything in `sboo-emacs-packages-required'.
+  "Install everything in `sboo-emacs-packages'.
 
   With a Universal Argument (e.g. `C-u'), reconfigure the package manager
   (via `package-initialize' and `package-refresh-contents'),
@@ -215,13 +189,14 @@
 
   (progn
 
-    ;;TODO set coding system globally for url.el &al?
-    (prefer-coding-system 'utf-8)
-    
+    (prefer-coding-system 'utf-8)      ;;TODO set coding system globally for url.el &al?
+
+    (sboo-configure-emacs-package-repositories)
+
     (when RefreshAndForceReinstall
       (package-refresh-contents))
 
-    (dolist (p sboo-emacs-packages-required)
+    (dolist (p sboo-emacs-packages)
 
       (when (or (not (package-installed-p p))
                 RefreshAndForceReinstall)
@@ -244,7 +219,7 @@
 
 ;; See
 ;;     - http://ergoemacs.org/emacs/emacs_package_system.html
-;;     - 
+;;     -
 ;;
 
 

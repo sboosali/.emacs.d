@@ -2,31 +2,51 @@ melpa: stable: elpa: org:
 
 ############################################################
 let
-
-########################################
+############################################################
 
 stablePackages = with stable; [
 
- ####################
+ ########################################
+ # use-package + its (transitive) dependencies
+ ########################################
 
  use-package
  bind-key
+ use-package-el-get
 
- ####################
+ # https://stable.melpa.org/#/use-package
+ # use-package-2.3
+ # Dependencies: bind-key 1.0 / diminish 0.44
+
+ ########################################
+ # helm + its (transitive) dependencies
+ ########################################
+
+ helm
+ helm-core
+ async
+ popup
+
+ # https://stable.melpa.org/#/helm
+ # helm-3.0
+ # Dependencies: async 1.9.3 / emacs 24.4 / helm-core 3.0 / popup 0.5.3
+
+ ########################################
+ # utilities
+ ########################################
 
  dash           # (the `-` prefix)
  s              # `s`trings
  f              # `f`iles
 
- ####################
+ # https://stable.melpa.org/#/f
+ # Dependencies: dash 2.2.0 / s 1.7.0
 
- helm
-
- ########################
+ ########################################
 
 ];
 
-########################################
+############################################################
 
 melpaPackages = with melpa; [
 
@@ -186,7 +206,7 @@ melpaPackages = with melpa; [
 
 ];
 
-########################################
+############################################################
 
 optionalPackages = with melpa; [
 
@@ -194,9 +214,15 @@ optionalPackages = with melpa; [
 
 ];
 
+############################################################
 in
 ############################################################
 
-melpaPackages ++ stablePackages ++ optionalPackages
+[]
+
+###stablePackages
+
+/* melpaPackages ++ stablePackages ++ optionalPackages
+ */
 
 ############################################################
