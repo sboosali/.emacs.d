@@ -8,6 +8,39 @@
 
 
 
+
+
+
+      (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/")  t)
+      ;;;(add-to-list 'package-archives '("melpa"        . "http://melpa.milkbox.net/packages/") t)
+
+
+
+
+#TODO# melpaPackages ++ stablePackages ++ optionalPackages
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (require 'sboo-dependencies)
+;; 
+;; ;;TODO expose command-line-arguments or environment-variables;
+;; ;; `--install-dependencies' or `$SBOO_EMACS_INSTALL_DEPENDENCIES'.
+;; 
+;; (when ()                                ;TODO; (getenv "SBOO_EMACS_INSTALL")
+;;   (sboo-configure-emacs-package-repositories!)
+;;   (sboo-install-emacs-packages! t))
+
+
+
+
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (pcase sboo-profile-name
