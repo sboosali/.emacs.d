@@ -1,0 +1,6 @@
+[submodule "use-package"]
+	path = submodules/use-package
+	url = https://github.com/jwiegley/use-package
+[submodule "dante"]
+	path = submodules/dante
+	url = https://github.com/jyp/dante
