@@ -12,6 +12,14 @@ default: run
 .PHONY: default
 
 ##################################################
+# Install Dependencies ###########################
+##################################################
+configure:
+	@exec nix-build
+
+.PHONY: configure
+
+##################################################
 # Run ############################################
 ##################################################
 run: run-via-nixpkgs
@@ -45,23 +53,26 @@ build:
 .PHONY: build 
 
 ##################################################
-install:
-	@exec ${Bin}/install.sh #TODO
-
-
-.PHONY: install 
+# install:
+# 	@exec ${Bin}/install.sh #TODO
+#
+# .PHONY: install 
 
 ##################################################
 # Test ###########################################
 ##################################################
-test:
-	@exec emacs --debug-init
+debug: configure
+	@exec ./result/bin/emacs --debug-init --no-desktop
+
+.PHONY: debug
+
+##################################################
+test: configure debug
 
 .PHONY: test
 
 #TODO	@exec SBOO_EMACS_TEST=1 emacs --debug-init
 
 ##################################################
-
 
 ##################################################

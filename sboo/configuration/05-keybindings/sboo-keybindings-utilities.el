@@ -10,14 +10,44 @@
 ;; Imports.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'shell)
+
+;;TODO rm from core utilities:
 (require 'dash)           ;; (the `-` prefix)
 (require 's)              ;; `s`trings
 (require 'f)              ;; `f`iles
 
-(require 'shell)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (Custom Functions, Bound By My Keybindings) ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-buffers-list ()
+
+  "Try `helm-buffers-list', fallback to `list-buffers'.
+  
+  (When `helm' isn't loaded/installed, this command falls back 
+  to the standard-library command upon which that package improves.)
+  "
+  (interactive)
+
+  (if (and (commandp 'helm-buffers-list) 
+           (fboundp 'helm-buffers-list))
+      ;; ^ NOTE 
+      ;; do predicates succeed when command is to-be-`autoload'ed?
+    
+    (call-interactively #'helm-buffers-list)
+
+   (call-interactively #'list-buffers)))
+
+;;  (if (fboundp 'helm-buffers-list)
+;;  (if (featurep 'helm)
+;;    (helm-buffers-list)  ;TODO; preserve abilit to autoload
+;;   (list-buffers)))
+;;    (call-interactively #'helm-buffers-list)
+;;   (call-interactively #'list-buffers)))
+
+;; ^
+ 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun switch-to-previous-buffer ()

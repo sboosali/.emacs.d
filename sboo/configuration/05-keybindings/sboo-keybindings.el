@@ -138,7 +138,7 @@
 ;; (delete-other-windows &optional WINDOW)
 ;; OR 'redo
 
-(global-set-key (kbd "<f7>")  'helm-buffers-list)
+(global-set-key (kbd "<f7>") #'sboo-buffers-list)
 ;; ^ like [C-x C-b] (but not the default).
 
 (global-set-key (kbd "<f8>")  'switch-to-previous-buffer) ;TODO  `purpose-switch-buffer-with-purpose'
