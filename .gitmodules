@@ -1,9 +1,0 @@
-[submodule "sergv"]
-	path = sergv/dotemacs
-	url = https://github.com/sergv/dotemacs.git
-[submodule "dante"]
-	path = vendor/dante
-	url = https://github.com/jyp/dante
-[submodule "vendor/use-package"]
-	path = vendor/use-package
-	url = https://github.com/jwiegley/use-package
