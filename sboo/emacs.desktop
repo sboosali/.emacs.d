@@ -1,0 +1,74 @@
+##################################################
+[Desktop Entry]
+Name=emacs
+
+Version=1.0
+Type=Application
+
+TryExec=emacs
+Exec=emacs --no-desktop --maximized --name=SBoo
+Path=/home/sboo/.emacs.d
+
+Icon=emacs   # TODO
+StartupWMClass=Emacs
+StartupNotify=false
+
+Actions=debug;quick;minimal;v25;
+
+##################################################
+[Desktop Action debug]
+
+Name=【D】Debug Emacs « --debug-init »
+
+TryExec=emacs
+Exec=emacs --debug-init --find-file=~/.emacs.d/init.el --no-splash --name=SBoo/Debug
+Path=/home/sboo/.emacs.d
+
+##################################################
+[Desktop Action quick]
+
+Name=【Q】Quick Emacs « --no-init-file »
+
+TryExec=emacs
+Exec=emacs --quick --find-file=~/.emacs.d/init.el --name=SBoo/Quick
+Path=/home/sboo/.emacs.d
+
+# NOTE
+# « -Q  » a.k.a. « --quick » is the same as:
+# « --no-init-file --no-site-file --no-splash ».
+
+##################################################
+[Desktop Action minimal]
+
+Name=【M】Minimal Emacs (builtin packages only)
+
+TryExec=emacs
+Exec=emacs --find-file=~/.emacs.d/init-minimal.el --name=SBoo/Minimal 
+Path=/home/sboo/.emacs.d
+
+# --load /home/sboo/.emacs.d/init-minimal.el
+
+##################################################
+[Desktop Action v25]
+
+Name=【25】 Emacs 25.3 (not 26.1)
+
+TryExec=emacs-25.1
+Exec=emacs-25.1 --name=SBoo/Emacs25 --find-file=/home/sboo/.emacs.d/init.el
+Path=/home/sboo/.emacs.d
+
+##################################################
+# Notes ##########################################
+##################################################
+
+# `Icon=emacs.png`
+#
+# ^ `desktop-file-validate` demands no extension,
+# unless it's an absolute-filepath.
+
+#TODO Name=emacs-sboo
+#TODO Exec=/home/sboo/.nix-profile/bin/emacs-sboo
+
+#TODO  --load /home/sboo/.emacs.d/init.el 
+
+##################################################
