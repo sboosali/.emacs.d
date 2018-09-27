@@ -53,7 +53,7 @@ Version 2015-04-09"
 
 (progn
 
-  (sboo-bind-key-globally! '("<f2>" . xah-search-current-word))
+  ;;(sboo-bind-key-globally! '("<f2>" . xah-search-current-word))
 
   (sboo-bind-keys-for! isearch-mode-map
                        '(("<up>"    . isearch-ring-retreat)

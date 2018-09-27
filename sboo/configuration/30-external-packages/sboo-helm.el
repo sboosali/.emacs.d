@@ -1,5 +1,39 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun sboo-init-helm! ()
+
+  "Initialize `helm' variables.
+
+  Fast & Safe (only `setq's a few `defvar's).
+  "
+  (interactive)
+
+  (progn
+
+     (setq
+      helm-mode-fuzzy-match                 t
+      helm-completion-in-region-fuzzy-match t)
+
+     ;; ^ fuzzy-matching.
+
+     ;; helm-boring-buffer-regexp-list '()
+     ;;
+     ;; ;; ^
+     ;; ;; by default, `helm-boring-buffer-regexp-list' is:
+     ;; ;;     ("\\` " "\\`\\*helm" "\\`\\*Echo Area" "\\`\\*Minibuf")
+     ;; ;;
+
+     (setq helm-allow-mouse t)
+
+     ;; ^ the mouse is gratuitously disabled by default.
+     ;; this enables, for example, clicking on a helm candidate to activate it,
+     ;; rather than navigating it with several arrow and/or character keypresses.
+     ;;
+
+     ()))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun sboo-config-helm! ()
 
   "Require `helm' and configure `helm-mode'.
@@ -10,11 +44,9 @@
   "
   (interactive)
 
-  ;; :init
-  (progn ())
-
-  ;; :config
-  (when (and (require 'helm-config nil t) (require 'helm nil t))
+  (when (require 'helm nil t)
+  
+      ;;TODO (and (require 'helm-config nil t) (require 'helm nil t))
 
     (setq helm-mode-fuzzy-match                 t)
     (setq helm-completion-in-region-fuzzy-match t)
@@ -42,9 +74,6 @@
 ;; 
 ;; 
 ;;
-
-;;;TODO
-(sboo-config-helm!)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings

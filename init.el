@@ -11,37 +11,60 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Effects: Initialization ;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(find-file user-init-file)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Utilities: Macros ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro ~EMACS~ (FilePath)
-  "Construct a filepath literal, relative to `user-emacs-directory'.
 
-  M-: (~EMACS ./lisp)
-  \"/home/sboo/.emacs.d/lisp"
-  "
+  ;; Construct a filepath literal, relative to `user-emacs-directory'.
+  ;; 
+  ;; M-: (~EMACS ./lisp)
+  ;; \"/home/sboo/.emacs.d/lisp"
 
-  `(expand-file-name 
+  `(expand-file-name
     (concat (or user-emacs-directory "~/.emacs.d/")
             (symbol-name (quote ,FilePath)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro load-path! (FilePath)
-  "Register a filepath literal onto the `load-path'.
-  
-  M-: (macroexpand (load-path! ./lisp))
-  (add-to-list 'load-path \"/home/sboo/.emacs.d/lisp\")
-  "
+
+  ;; Register a filepath literal onto the `load-path'.
+  ;; 
+  ;; M-: (macroexpand (load-path! ./lisp))
+  ;; (add-to-list 'load-path \"/home/sboo/.emacs.d/lisp\")
 
   `(add-to-list 'load-path
-     (expand-file-name 
+     (expand-file-name
        (concat (or user-emacs-directory "~/.emacs.d/")
                (symbol-name (quote ,FilePath))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;TODO;(defmacro sboo-bind! (KeySequence Command &optional KeyMap))
+(defmacro binding! (KeyString Command)
+  `(global-set-key (kbd ,KeyString) (function ,Command)))
+
+;; ^ e.g.
+;;
+;;   (binding! "M-r" query-replace)
+;;    ==
+;;   (global-set-key (kbd "M-r") #'query-replace)
+;;
+
+;TODO;(defmacro bind! (KeySequence Command &optional KeyMap) `(define-key ,KeyMap (kbd ,KeySequence) (function ,Command)))
+
+;;          (global-set-key key binding)
+;;          ==
+;;          (define-key (current-global-map) key binding)
+;;
+;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Commands.html#Key-Binding-Commands
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Utilities: Constants ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -54,9 +77,17 @@
 
 (progn
   (load-path! ./elisp)
-  ;(load-path! ./submodules/use-package)
-  ;(load-path! ./submodules/dante)
   ())
+
+  ;; ^ singe-file packages.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(progn
+;;(load-path! ./submodules/dante)
+  ())
+
+  ;; ^ submodule packages.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -79,6 +110,19 @@
   (load-path! ./sboo/configuration/35-external-configurations)
   (load-path! ./sboo/configuration/50-meta-configurations)
   ())
+
+  ;; ^ `sboo' package (TODO flatten).
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(progn
+  (load-path! ./elpa/helm-3.0)
+  (load-path! ./elpa/helm-core-3.0)    ; `helm` dependency
+  (load-path! ./elpa/async-1.9.3)      ; `helm` dependency
+  (load-path! ./elpa/popup-0.5.3)      ; `helm` dependency
+  ())
+
+  ;; ^ `package-install'ed packages.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -113,8 +157,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(put 'dante-project-root 'safe-local-variable #'stringp)
-(put 'dante-target       'safe-local-variable #'stringp)
+(progn
+  (put 'dante-project-root 'safe-local-variable #'stringp)
+  (put 'dante-target       'safe-local-variable #'stringp)
+  ())
 
 ;; ^ why?
 ;; with « $ emacs --desktop », to prevent requiring user input
@@ -125,9 +171,7 @@
 ;; Environment Variables ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst sboo-environment-variable-profile
-
-  "EMACS_PROFILE"
+(defconst sboo-environment-variable-profile "EMACS_PROFILE"
 
   "See `sboo-profile'.
 
@@ -135,9 +179,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst sboo-environment-variable-install
-
-  "EMACS_INSTALL"
+(defconst sboo-environment-variable-install "EMACS_INSTALL"
 
   "See `sboo-install?'.
 
@@ -145,13 +187,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst sboo-environment-variable-directory
+(defconst sboo-environment-variable-directory "EMACS_SBOO_DIR"
 
-  "EMACS_SBOO_DIR"
+  "See `sboo-directory'.
 
-  "See `sboo-directory'. 
-  
-  Example Usage: « $ EMACS_SBOO_DIR=~/configuration/submodules/.emacs.d/sboo emacs ».")
+  Example Usage: « $ EMACS_SBOO_DIR=~/configuration/submodules/.emacs.d/sboo emacs --debug-init ».")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -159,24 +199,24 @@
 
   (let ((*value* (getenv sboo-environment-variable-profile)))
     (pcase *value*
-      
+
       ("0"        'sboo-only-builtins)
       ("builtins" 'sboo-only-builtins)
-      
+
       ("1"        'sboo-core)
       ("core"     'sboo-core)
 
       ("2"        'sboo-default)
       ("default"  'sboo-default)
-      ('()        'sboo-default)    
+      ('()        'sboo-default)
       (""         'sboo-default)))
 
-  "Which emacs profile has been loaded (or will be). 
-  
+  "Which emacs profile has been loaded (or will be).
+
   The environment variable can reference a profile:
   * by name (a string); or
   * by level (a number).
-  
+
   e.g. `\"0\"' is the most robust, `\"2\"' is the most featured.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -206,10 +246,12 @@
 (defvar sboo-directory
 
   (or (getenv sboo-environment-variable-directory)
-      (user-emacs-directory "sboo")
+      (expand-file-name
+        (concat (or user-emacs-directory
+                    "~/.emacs.d/")
+                "sboo")))
 
   "The location of my emacs dotfiles.")
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuration: Internal Packages (a.k.a Builtins)
@@ -221,7 +263,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'sboo-settings-safe) ;TODO mv these to before use-package, and remove all external dependencies
+;;(require 'sboo-settings-safe) ;TODO mv these to before use-package, and remove all external dependencies
 
 ;; ^
 ;; `sboo-settings-safe` should always succeed,
@@ -231,27 +273,26 @@
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Effects: Initialization ;;;;;;;;;;;;;;;;;;;;;;;
+;; Provisioning: External Packages ;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn
+(eval-when-compile
 
-  (find-file user-init-file)
+  (load-path! ./submodules/use-package)
+  ;;;(load-path! ./elpa/use-package-2.3)
 
-  ())
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;TODO
-;(when (require 'sboo-server nil t)
-;  (server-start-unless-running))
   ;; ^ 
-  ;; for `emacsclient'.
+  ;; Choose one (i.e. uncomment):
+  ;;
+  ;; - vendored (via `git-sumbodule').
+  ;; - installed (via `package-install'ed).
+  ;;
 
+  (require 'use-package))
+
+  ;; ^ `use-package' is a macro. As such,
+  ;; it's a compile-time dependency (i.e. not run-time).
+  ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Installation: External Packages ;;;;;;;;;;;;;;;
@@ -267,7 +308,7 @@
 
     ;;;use-package-el-get  ; `use-package` dependency
     ;;;bind-key            ; `use-package` dependency
-    use-package
+    ;;;use-package         ; (currently vendored, see above)
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;; Text/Buffer/Window Stuff:
@@ -315,42 +356,112 @@
 (progn
 
   (require 'package)
-  ;; ^ 
+
+  ;; ^
   ;; (>= emacs-major-version 24)
+  ;;
 
   (set         'package-archives ())
   (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
-  ;; ^ 
-  ;; remove GNU ELPA, add MELPA Stable. 
+
+  ;; ^
+  ;; remove GNU ELPA, add MELPA Stable.
   ;; use HTTPS.
+  ;;
+
+  (setq package-enable-at-startup nil)
+
+  ;; ^
+  ;;
+  ;;
+
+  (when sboo-install?
+
+    (message "[sboo] installing packages...")
+
+    (package-initialize)
+
+    (dolist (*p* sboo-required-packages)
+      
+      (unless (package-installed-p *p*)
+        (package-install *p*))))
+
+    ;; ^ install everything.
 
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Initialization: External Packages ;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when t ;sboo-install?
+(if (require 'sboo-helm nil t)
 
-  (dolist (*p* sboo-required-packages)
-    (package-install *p*)))
+  (progn
+
+    (sboo-init-helm!)
+
+    (add-hook 'after-init-hook
+              #'sboo-config-helm!))
+
+  (message "[sboo] can't find %s." 'sboo-helm))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn
-  (require 'package)
-  (setq package-enable-at-startup nil)
-  (package-initialize))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'use-package)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuration: External Packages ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Effects: Finalization ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Finalization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-server nil t)
+
+  (add-hook 'after-init-hook
+            #'server-start-unless-running)
+  
+  ;; ^ a singleton Emacs Server for `emacsclient'.
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(progn
+
+  (message ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
+
+  (dolist (@x load-path)
+    (message "[load-path] %s" @x))
+  
+  ;; ^ pretty-print the `load-path'.
+
+  (message ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
+
+  (dolist (@x features)
+    (message "[feature]   %s" @x))
+  
+  ;; ^ pretty-print `features' (i.e. loaded packages).
+
+  (message ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Customization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages (quote (helm))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
