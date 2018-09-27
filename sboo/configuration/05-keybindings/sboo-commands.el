@@ -1,6 +1,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Utilities.
+;;  `sboo-` and `xah-` commands
 ;; 
+;; See my `defgrace` macro.
+;;
 ;; provides utility functions like `sboo-utilities',
 ;; but only for my (global) keybindings.
 ;; why? to keep `sboo-keybindings' focused, for readability;
@@ -303,4 +305,4 @@ version 2016-06-18"
   (insert "≡ "))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'sboo-keybindings-utilities)
+(provide 'sboo-commands)
