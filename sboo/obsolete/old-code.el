@@ -9,6 +9,65 @@
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (use-package helm
+;;   :init
+;;   (progn
+;;     (setq helm-mode-fuzzy-match                 t)
+;;     (setq helm-completion-in-region-fuzzy-match t)
+;;     ;; ^ fuzzy-matching.
+;;    ;; helm-boring-buffer-regexp-list '()
+;;    ;; ;; ^
+;;    ;; ;; by default, `helm-boring-buffer-regexp-list' is:
+;;    ;; ;;     ("\\` " "\\`\\*helm" "\\`\\*Echo Area" "\\`\\*Minibuf")
+;;    ;; ;;
+;;     (setq helm-allow-mouse t)
+;;     ;; ^ the mouse is gratuitously disabled by default.
+;;     ;; this enables, for example, clicking on a helm candidate to activate it,
+;;     ;; rather than navigating it with several arrow and/or character keypresses.
+;;     ;;
+;;     nil)
+;;   :bind (:map helm-command-map
+;;               ("<f9>" . helm-quit-and-helm-mini))
+;; ;   ("C-x C-f" .  helm-find-files)
+;;   :config
+;;   (helm-mode 1))
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-config-helm! ()
+
+  "Require `helm' and configure `helm-mode'.
+
+  Idempotent (invoking it twice is the same as calling once).
+
+  Safe (doesn't throw an error when the package can't be `load'ed).
+  "
+  (interactive)
+
+  (when (and (require 'helm-config nil t) (require 'helm nil t))
+    (helm-mode 1)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Keybindings
+
+;; (global-set-key (kbd "M-x")
+;;                 #'helm-M-x)
+
+;; (global-set-key (kbd "C-x r b")
+;;                 #'helm-filtered-bookmarks)
+
+;; (global-set-key (kbd "C-x C-f")
+;;                 #'helm-find-files)
+
+;;; ^ Helm provides generic functions for completions to replace tab-completion in Emacs, with no loss of functionality.
 
 
 
@@ -21,6 +80,121 @@
 
 
 
+;; [C-x b] was originally:
+;; (switch-to-buffer BUFFER-OR-NAME &optional NORECORD FORCE-SAME-WINDOW)
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(progn
+
+  (load-path! ./sboo)
+  (load-path! ./sboo/installation)
+  (load-path! ./sboo/initialization)
+  (load-path! ./sboo/configuration)
+  (load-path! ./sboo/configuration/02-platforms)
+  (load-path! ./sboo/configuration/03-window-systems)
+  (load-path! ./sboo/configuration/04-utilities)
+  (load-path! ./sboo/configuration/05-keybindings)
+  (load-path! ./sboo/configuration/06-initialization)
+  (load-path! ./sboo/configuration/07-settings)
+  (load-path! ./sboo/configuration/10-internal-packages)
+  (load-path! ./sboo/configuration/20-my-packages/dictation)
+  (load-path! ./sboo/configuration/25-vendored-packages)
+  (load-path! ./sboo/configuration/30-external-packages)
+  (load-path! ./sboo/configuration/35-external-configurations)
+  (load-path! ./sboo/configuration/50-meta-configurations)
+  ())
+
+  ;; ^ `sboo' package (TODO flatten).
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; LoadPaths: Bootstrap ;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(let* ((*emacs-directory* 
+                          (or user-emacs-directory "~/.emacs.d/"))
+       (*sboo-directory*
+                          (expand-file-name (concat *emacs-directory* "sboo"))))
+
+  (add-to-list 'load-path *sboo-directory*))
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utilities for an Emacs Server.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun server-start-unless-running ()
+
+  "Run `server-start` unless another Emacs Server is already running.
+  
+  Platform-Compability: UNIX only.
+  
+  By @markhellewell
+  "
+  (interactive)
+
+  (let* ((tmp
+          "/tmp")
+          ;; (getenv "TMPDIR"))
+          ;; ;; ^ i.e. "$TMPDIR"
+         (uid
+          (number-to-string (user-real-uid)))
+          ;; ^ i.e. "$UID"
+         (server-socket-file
+          (concat tmp "/" "emacs" uid "/" "server")))
+          ;; ^
+          ;; e.g. "/tmp/emacs1001/server"
+          ;; i.e. "/tmp/emacs<UserId>/<ServerName>"
+
+  (unless (file-exists-p server-socket-file)
+    (server-start)))
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Load (a whitelist of) my configurations for vendored packages.
+;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;(require 'use-package)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Configurations ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;(require 'sboo-go-back)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'sboo-vendored)
 
 
 
@@ -33,6 +207,118 @@
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ====================================================== ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-use-package)       ;TODO
+;; ^ my `use-package` configuration.
+;; Most `sboo-*` features call `use-package`.
+
+
+
+
+
+
+
+
+;; (defun server-start-once ()
+;;   "Start an Emacs Server for the `emacsclient` command, 
+;;   unless a server is already running.
+;;   We check for the presence of another Emacs Server 
+;;   via the existence of a specific socket; for example,
+;;   named \"/tmp/emacs1001/server\".
+;;   `server-start-once` is idempotent, modulo race conditions."
+;;   (interactive)
+;;   (let 
+;;       ( (server-socket-file "/tmp/emacs1001/server") ;;TODO shell out for "$UID"
+;;          ;; ^
+;;          ;; e.g. "/tmp/emacs1001/server"
+;;          ;; i.e. "/tmp/emacs<UserId>/<ServerName>"
+;;          ;; 
+;;          ;; NOTE when evaluated from a running Emacs Server,
+;;          ;; `server-socket-file` should equal `(concat server-socket-dir server-name)`
+;;          ;; (otherwise, some `server-*` variables are undefined).
+;;       )
+;;     (unless (file-exists-p server-socket-file)
+;;       ;; ^ check whether another server (named `server-name`) is already running.
+;;       (server-start)))
+;; )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'sboo-server)
+
+
+
+
+
+
+
+
+;;TODO
+;; (set-face-attribute 'default nil :font "Garamond" :height 200)
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-set-font (FONT)
+  "Sets the font of the `current-buffer' to `FONT`. 
+  `FONT` is a string.
+
+  e.g. `M-: (sboo-set-font \"Iosevka\")`
+  e.g. `M-x sboo-set-font RET Iosevka`
+  "
+
+  (interactive "sFont name [C-h v font-family-list]: ") ;;TODO `try-completion; from `font-family-list'.
+  
+  ;; ^ `"s"` means "read a string from the user until they press RET".
+
+  (if (find-font (font-spec :name FONT))
+      ;; ^ 
+      ;; e.g. (find-font (font-spec :name "iosevka"))
+      ;; e.g. (find-font (font-spec :name "garamond"))
+    
+    (progn
+      (buffer-face-set `(:family ,FONT))
+      (buffer-face-mode)
+      t)
+    
+    nil))
+
+;; ^
+;; Starting with Emacs 23, you can set the face for the current buffer, using ‘M-x buffer-face-set’. You can toggle this on/off using ‘M-x buffer-face-mode’. 
+;; Internally, this uses ‘face-map-add-relative’ to remap faces. For example, (face-remap-add-relative 'default :family "Source Code Pro" :height 140)
+;; 
+;; also, you can list all fonts with `M-: (print (font-family-list))`.
+;;
+
+;;OLD;;
+;;                            (setq buffer-face-mode-face '(:family "Inconsolata"))
+;;                            (buffer-face-mode)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (defun sboo-set-font-to-iosevka ()
+;;    "Sets a custom font for code, `Iosevka`, in the current buffer, if present.
+;;    By @HanfeiSun.
+;;    By /u/MrTJC."
+;;    (interactive)
+
+;;    (cond
+    
+;;     ((find-font (font-spec :name "Iosevka"))
+;;      (progn
+;;        (setq
+;;         buffer-face-mode-face '(:family "Iosevka"))
+;;        (buffer-face-mode)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'sboo-fonts)
 
 
 
@@ -42,6 +328,23 @@
 
 
 
+;; TODO
+
+;; (add-to-list 'safe-local-eval-forms
+;;              '(locate-dominating-file default-directory "cabal.project"))
+
+;; (add-to-list 'safe-local-variable-values
+;;              ('dante-project-root
+;;               . '(locate-dominating-file default-directory "cabal.project")))
+
+;;TODO (put 'dante-project-root 'safe-local-variable (== (list 'locate-dominating-file 'default-directory "cabal.project")))
+;; (put 'dante-project-root 'safe-local-variable #'stringp) is in dante.el
+;;
+
+;; ^ for `.dir-locals.el' & `dante'.
+;; 
+
+(provide 'sboo-settings-dirlocals)
 
 
 

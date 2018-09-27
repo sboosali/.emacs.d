@@ -174,4 +174,4 @@
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'sboo-widgets)
+(provide 'sboo-settings-widgets)

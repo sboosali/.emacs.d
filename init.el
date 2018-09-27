@@ -1,78 +1,51 @@
 ;;; init.el --- sboo's Emacs Configuration -*- lexical-binding: t -*-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'cl-lib)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Constants ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Effects: Initialization ;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (find-file user-init-file)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Utilities: Macros ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Constants ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro ~EMACS~ (FilePath)
+(defconst sboo-root
 
-  ;; Construct a filepath literal, relative to `user-emacs-directory'.
-  ;; 
-  ;; M-: (~EMACS ./lisp)
-  ;; \"/home/sboo/.emacs.d/lisp"
+  (if (and (boundp 'user-emacs-directory)
+           user-emacs-directory)
 
-  `(expand-file-name
-    (concat (or user-emacs-directory "~/.emacs.d/")
-            (symbol-name (quote ,FilePath)))))
+      (expand-file-name (concat user-emacs-directory "sboo"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    (expand-file-name "~/.emacs.d/sboo/"))
 
-(defmacro load-path! (FilePath)
-
-  ;; Register a filepath literal onto the `load-path'.
-  ;; 
-  ;; M-: (macroexpand (load-path! ./lisp))
-  ;; (add-to-list 'load-path \"/home/sboo/.emacs.d/lisp\")
-
-  `(add-to-list 'load-path
-     (expand-file-name
-       (concat (or user-emacs-directory "~/.emacs.d/")
-               (symbol-name (quote ,FilePath))))))
+  "The root directory of my configuration.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; LoadPaths: Bootstrap ;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro binding! (KeyString Command)
-  `(global-set-key (kbd ,KeyString) (function ,Command)))
-
-;; ^ e.g.
-;;
-;;   (binding! "M-r" query-replace)
-;;    ==
-;;   (global-set-key (kbd "M-r") #'query-replace)
-;;
-
-;TODO;(defmacro bind! (KeySequence Command &optional KeyMap) `(define-key ,KeyMap (kbd ,KeySequence) (function ,Command)))
-
-;;          (global-set-key key binding)
-;;          ==
-;;          (define-key (current-global-map) key binding)
-;;
-;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Commands.html#Key-Binding-Commands
-;;
+(add-to-list 'load-path sboo-root)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Utilities: Constants ;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'cl-lib)
+
+(require 'sboo-macros)
+(require 'sboo-utilities)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; LoadPaths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; LoadPaths: `sboo' ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-conditions)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (progn
@@ -92,30 +65,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (progn
-
-  (load-path! ./sboo)
-  (load-path! ./sboo/installation)
-  (load-path! ./sboo/initialization)
-  (load-path! ./sboo/configuration)
-  (load-path! ./sboo/configuration/02-platforms)
-  (load-path! ./sboo/configuration/03-window-systems)
-  (load-path! ./sboo/configuration/04-utilities)
-  (load-path! ./sboo/configuration/05-keybindings)
-  (load-path! ./sboo/configuration/06-initialization)
-  (load-path! ./sboo/configuration/07-settings)
-  (load-path! ./sboo/configuration/10-internal-packages)
-  (load-path! ./sboo/configuration/20-my-packages/dictation)
-  (load-path! ./sboo/configuration/25-vendored-packages)
-  (load-path! ./sboo/configuration/30-external-packages)
-  (load-path! ./sboo/configuration/35-external-configurations)
-  (load-path! ./sboo/configuration/50-meta-configurations)
-  ())
-
-  ;; ^ `sboo' package (TODO flatten).
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(progn
   (load-path! ./elpa/helm-3.0)
   (load-path! ./elpa/helm-core-3.0)    ; `helm` dependency
   (load-path! ./elpa/async-1.9.3)      ; `helm` dependency
@@ -124,29 +73,53 @@
 
   ;; ^ `package-install'ed packages.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (prefer-coding-system 'utf-8)
 
-;; ^ needed by `package-install' (among others).
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(progn
-  (setq undo-limit        20000000)
-  (setq undo-strong-limit 40000000)
-  ())
-
-;; ^ ensure undo limits are as high as possible.
+;; ^ 
+;; the default coding-system is **not** a Unicode one.
+;;
+;; in particular, needed by `package-install'.
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (progn
 ;;   (setq shell-command-switch "-c"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(ffap-bindings)
+
+;; ^ a.k.a. `find-file-at-point' settings.
+;;
+;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; How Windows are Displayed:
+
+(progn
+
+  (setq truncate-lines nil)
+
+  ;;TODO put linum and scrollbar here.
+
+  ())
+
+;; ^ Enable Soft LineWrapping explicitly.
+;;
+;; (`nil' is already the default).
+;;
+;;
+;; See:
+;;     - https://www.gnu.org/software/emacs/manual/html_node/emacs/Line-Truncation.html#Line-Truncation
+;;     - 
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Settings: Hacks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -162,115 +135,47 @@
   (put 'dante-target       'safe-local-variable #'stringp)
   ())
 
-;; ^ why?
+;; ^ why? because:
 ;; with « $ emacs --desktop », to prevent requiring user input
 ;; (i.e. "Please enter y, n, or !: ") on **every** startup
 ;; (whose `desktop' has a haskell file under `dante-mode').
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Environment Variables ;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Settings: Features ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defconst sboo-environment-variable-profile "EMACS_PROFILE"
-
-  "See `sboo-profile'.
-
-  Example Usage: « $ EMACS_PROFILE=minimal emacs ».")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst sboo-environment-variable-install "EMACS_INSTALL"
-
-  "See `sboo-install?'.
-
-  Example Usage: « $ EMACS_INSTALL=t emacs ».")
+(require 'sboo-keybindings)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst sboo-environment-variable-directory "EMACS_SBOO_DIR"
+(require 'sboo-settings-safe)
 
-  "See `sboo-directory'.
+;; ^ `sboo-settings-safe` should always succeed.
+;;
+;; Even if the `load-path` is corrupt, since:
+''
+;; [1] only packages built into Emacs25+ are imported; and
+;; [2] only simple configurations are performed, e.g. `(setq ...)`.
+;;
 
-  Example Usage: « $ EMACS_SBOO_DIR=~/configuration/submodules/.emacs.d/sboo emacs --debug-init ».")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defvar sboo-profile
-
-  (let ((*value* (getenv sboo-environment-variable-profile)))
-    (pcase *value*
-
-      ("0"        'sboo-only-builtins)
-      ("builtins" 'sboo-only-builtins)
-
-      ("1"        'sboo-core)
-      ("core"     'sboo-core)
-
-      ("2"        'sboo-default)
-      ("default"  'sboo-default)
-      ('()        'sboo-default)
-      (""         'sboo-default)))
-
-  "Which emacs profile has been loaded (or will be).
-
-  The environment variable can reference a profile:
-  * by name (a string); or
-  * by level (a number).
-
-  e.g. `\"0\"' is the most robust, `\"2\"' is the most featured.")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defvar sboo-install?
-
-  (let ((*value* (getenv sboo-environment-variable-install)))
-    (pcase *value*
-
-      ('()     nil)
-
-      (""      nil)
-      ("0"     nil)
-      ("no"    nil)
-      ("false" nil)
-
-      ("1"     t)
-      ("yes"   t)
-      ("true"  t)
-
-      (_       t)))
-
-  "Whether to install packages (e.g. when `emacs' is first launched on a new computer).")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defvar sboo-directory
-
-  (or (getenv sboo-environment-variable-directory)
-      (expand-file-name
-        (concat (or user-emacs-directory
-                    "~/.emacs.d/")
-                "sboo")))
-
-  "The location of my emacs dotfiles.")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Built-In Packages (Emacs 26+) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuration: Internal Packages (a.k.a Builtins)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'sboo-keybindings) ;TODO replace require with load?
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;(require 'sboo-settings-safe) ;TODO mv these to before use-package, and remove all external dependencies
-
-;; ^
-;; `sboo-settings-safe` should always succeed,
-;; even if the `load-path` is corrupt, since:
-;; [1] only packages built into Emacs25+ are imported; and
-;; [2] only simple configurations are performed, e.g. `(setq ...)`.
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; External Packages (MELPA Stable, GitHub, etc) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Provisioning: External Packages ;;;;;;;;;;;;;;;
@@ -406,17 +311,19 @@
   (message "[sboo] can't find %s." 'sboo-helm))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuration: External Packages ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Finalization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Finalization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Emacs Server.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when (require 'sboo-server nil t)
@@ -428,6 +335,8 @@
 
   ())
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pretty-Print Information (via `message')
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (progn
@@ -450,9 +359,11 @@
 
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Customization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Customization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -1,7 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;NOTE
+;; Settings.
 ;;
 ;; I want these few settings to be always present,
 ;; even if the rest of this file fails, 
@@ -9,61 +7,70 @@
 ;;
 ;; Thus, this section must not have any errors itself,
 ;; nor do anything too complicated.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (cua-mode t)
+
 ;; ^ the standard keybindings: C-c, C-x, C-v, C-z.
 
 (setq cua-keep-region-after-copy t) 
+
 ;; ^ Standard Windows behaviour.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (transient-mark-mode 1) 
+
 ;; ^ No region when nothing is highlighted.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (prefer-coding-system 'utf-8)
+
 ;; ^ TODO
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq
- ;; "peeking" behavior when scrolling.
- redisplay-dont-pause t
- ;; ^
- ;; scroll-margin 10
- ;; ^
- scroll-step 1
- ;; ^
- ;; scroll-conservatively 10000
- ;; ^
- scroll-preserve-screen-position 1)
- ;; ^
+(progn
+
+  (setq redisplay-dont-pause            t)
+  (setq scroll-step                     1)
+  (setq scroll-preserve-screen-position 1)
+
+  ;; (setq scroll-margin 10)
+  ;; (setq scroll-conservatively 10000)
+
+  ())
+
+;; ^ "peeking" behavior when scrolling.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defalias 'yes-or-no-p
-  'y-or-n-p)
-  ;; ^
-  ;; so you can just press one key for prompts
-  ;; (i.e. the single character "y",
-  ;; instead of typing out the phrase "yes").
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; ^ lets you press just one key for boolean prompts.
+''
+;; i.e. the single character "y",
+;; instead of typing out the phrase "yes".
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq
- require-final-newline      nil
- ;; ^ 
- mode-require-final-newline nil)
- ;; ^ 
+(progn
+
+  (setq require-final-newline      nil)
+  (setq mode-require-final-newline nil)
+
+  ())
+
+;; ^ 
+;;  
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (set-background-color "#f4f4f4")
+
  ;; ^
  ;; i.e. R=xF4 G=xF4 B=xF4 
  ;; i.e. rgb(244, 244, 244)
@@ -190,16 +197,8 @@
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(ffap-bindings)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; NOTES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; 
-;; 
-;; 
+;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; See:
 ;;     - 
@@ -207,9 +206,6 @@
 ;;     - https://www.gnu.org/software/emacs/manual/html_node/emacs/Dialog-Boxes.html
 ;;     - 
 ;;     - 
-
-;;TODO
-;; (set-face-attribute 'default nil :font "Garamond" :height 200)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-settings-safe)

@@ -1,12 +1,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Manage multiple `shell's.
+;; Manage `shell's, by name.
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar sboo-shell-emacs-buffer-name "*emacs*" "")
+(defvar sboo-shell-emacs
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  "*emacs*")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-launch-shell-emacs ()
 
@@ -15,14 +18,14 @@
  (interactive)
 
  (let ((default-directory (or sboo-emacs-directory "~/.emacs.d/")))
-   (shell sboo-shell-emacs-buffer-name)))
+   (shell sboo-shell-emacs)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; NOTES
+;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO
 ;;
-;; > If a file ‘~/.emacs_SHELLNAME’ exists, or ‘~/.emacs.d/init_SHELLNAME.sh’, it is given as initial input.
+;; > If a file ‘~/.emacs_SHELLNAME’ exists, or ‘~/.emacs.d/init_SHELLNAME.sh’, it is given as initial input. TODO
 ;; 
 
 ;; See:
@@ -30,4 +33,4 @@
 ;;     - 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'sboo-shell)
+(provide 'sboo-settings-shell)

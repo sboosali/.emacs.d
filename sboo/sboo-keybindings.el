@@ -10,14 +10,10 @@
 
 (require 'shell)
 
-;;;;(require 'comint)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;(require 'sboo-keybindings-universal)
+;;;(require 'comint)
 
 (require 'sboo-utilities)
-(require 'sboo-keybindings-utilities)
+(require 'sboo-commands)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -164,22 +160,18 @@
 ;; <f1>..<f4>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(global-set-key (kbd "<f1>") #'sboo-search)
+;(global-set-key (kbd "<f1>") #')
+
+;; ^
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-set-key (kbd "<f2>") #'sboo-search)
 
 ;; ^ like C-s
 ;;
 ;; (isearch-forward &optional REGEXP-P NO-RECURSIVE-EDIT)
 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;TODO; (global-set-key (kbd "<f2>") #')
-
-;; ^
-;;
-
-;TODO;
-;; [C-x b] was originally:
-;; (switch-to-buffer BUFFER-OR-NAME &optional NORECORD FORCE-SAME-WINDOW)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -190,13 +182,17 @@
 ;; <f5>..<f8>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(global-set-key (kbd "<f5>") #'undo)
+(global-set-key (kbd "<f5>") #'sboo-buffers-list)
 
-;; ^ 
+;; ^ like [C-x C-b]
 ;;
-;; (undo &optional ARG)
+;; (but not the default behavior/keybinding).
 ;;
 ;;
+;; alternatives:
+;;
+;; - `sboo-buffers-list'
+;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -253,26 +249,22 @@
 ;; <f9>..<f12>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(global-set-key (kbd "<f9>") "\C-g") ;TODO;  [remap ???]
+(global-set-key (kbd "<f9>") #'undo)
+
+;; ^ 
+;;
+;; (undo &optional ARG)
+;;
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-set-key (kbd "<f10>") "\C-g") ;TODO;  [remap ???]
 
 ;; ^ i.e. `keyboard-quit`
 ;;
 ;; NOTE binding directly to the command `keyboard-quit` doesn't work.
 ;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(global-set-key (kbd "<f10>") #'sboo-buffers-list)
-
-;; ^ like [C-x C-b]
-;;
-;; (but not the default behavior/keybinding).
-;;
-;;
-;; alternatives:
-;;
-;; - `sboo-buffers-list'
-;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

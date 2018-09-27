@@ -4,15 +4,18 @@
 ;; > Emacs's Bookmarks is similar to browser's bookmark. 
 ;; > It lets you easily open frequently needed files.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;(require 'use-package)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq
- bookmark-save-flag 1)
- ;; ^ everytime the bookmark-file is changed, automatically save it.
+(progn
+
+  (setq bookmark-save-flag 1)
+
+  ;; ^ everytime the bookmark-file is changed, automatically save it.
+
+  ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; NOTES
+;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; M-x list-bookmark
 ;;
@@ -30,4 +33,4 @@
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'sboo-bookmarks)
+(provide 'sboo-settings-bookmarks)

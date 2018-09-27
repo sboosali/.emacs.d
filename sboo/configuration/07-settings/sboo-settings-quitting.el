@@ -2,23 +2,30 @@
 ;; Behavior when Quitting the Application
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (progn
 
   (when (boundp 'confirm-kill-processes)
     (setq confirm-kill-processes nil))
-    ;; ^ suppress spurious warnings about: open process-buffers (like `*shell*`).
-    ;; these warnings are spurious, and block Emacs from immediately quitting.
+
+    ;; ^ suppress warnings about open process-buffers (like `*shell*`).
+    ;;
+    ;; why? because these warnings are spurious, 
+    ;; and prevent Emacs from quitting immediately/automatically.
 
   (setq kill-emacs-query-functions
         (remove 'server-kill-emacs-query-function kill-emacs-query-functions))
-        ;; ^ remove `server-kill-emacs-query-function`, which warns you about
-        ;; [1] open process-buffers (like `*shell*`), and [2] open `emacsclient` buffers.
-        ;; these warnings are spurious, and block Emacs from immediately quitting.
 
-  (add-to-list 'kill-emacs-query-functions
-               #'sboo-desktop-save))
+        ;; ^ remove `server-kill-emacs-query-function`.
+        ;;
+        ;; it warns you about:
+        ;;
+        ;; [1] open process-buffers (like `*shell*`).
+        ;; [2] open `emacsclient` buffers.
+        ;;
+
+  (add-to-list 'kill-emacs-query-functions #'sboo-desktop-save) ;;TODO this fucks up sometimes (prevents quitting, corrupts desktop, etc)
+               
+  ())
 
 ;; ^ NOTE if `kill-emacs-query-functions` has a buggy hook,
 ;; run `kill-emacs` directly to exit.
@@ -41,4 +48,4 @@
 ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'sboo-quitting)
+(provide 'sboo-settings-quitting)
