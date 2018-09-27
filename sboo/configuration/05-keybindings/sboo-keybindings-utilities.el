@@ -7,95 +7,197 @@
 ;; its expressions are only the keybindings themselves (no lambdas).
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Imports.
+;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'shell)
 
-;;TODO rm from core utilities:
-(require 'dash)           ;; (the `-` prefix)
-(require 's)              ;; `s`trings
-(require 'f)              ;; `f`iles
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utilities: Macros ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro defgrace (Name ExternalCommand BuiltinCommand &optional DocString)
+
+  `(defun ,Name ()
+     
+     ,DocString
+     
+     (interactive)
+     
+     (let ((*command* (function ,ExternalCommand)))
+  
+    (if (and (commandp *command*) 
+             (fboundp  *command*))
+             
+      (call-interactively *command*)
+
+     (call-interactively (function ,BuiltinCommand))))))
+
+;; ^ `defalias' for commands with graceful degradation.
+;;
+;; Wraps `defun' and `call-interactively'.
+;;
+;; NOTE (function f) is like #'f
+;;
+;; NOTE the predicates succeed even when command is marked with `autoload'.
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (Custom Functions, Bound By My Keybindings) ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-buffers-list ()
-
-  "Try `helm-buffers-list', fallback to `list-buffers'.
-  
-  (When `helm' isn't loaded/installed, this command falls back 
-  to the standard-library command upon which that package improves.)
-  "
-  (interactive)
-
-  (if (and (commandp 'helm-buffers-list) 
-           (fboundp 'helm-buffers-list))
-      ;; ^ NOTE 
-      ;; do predicates succeed when command is to-be-`autoload'ed?
-    
-    (call-interactively #'helm-buffers-list)
-
-   (call-interactively #'list-buffers)))
-
-;;  (if (fboundp 'helm-buffers-list)
-;;  (if (featurep 'helm)
-;;    (helm-buffers-list)  ;TODO; preserve abilit to autoload
-;;   (list-buffers)))
-;;    (call-interactively #'helm-buffers-list)
-;;   (call-interactively #'list-buffers)))
-
-;; ^
- 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun switch-to-previous-buffer ()
-  "Switch to previously open buffer.
-Repeated invocations toggle between the two most recently open buffers."
-  (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1)))
-
-;; ^ see http://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
+(defgrace sboo-buffers-list
+          helm-buffers-list
+          list-buffers)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-split-window-left-right ()
-  ".
+(defgrace sboo-M-x
+          helm-M-x 
+          execute-extended-command)
+
+;;  "Try `helm-M-x', fallback to `execute-extended-command'.  
+;;  (When `helm' isn't loaded/installed, this command falls back 
+;;  to the standard-library command upon which that package improves.)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defgrace sboo-search
+          xah-search-current-word
+          isearch-forward)
+
+;; ^ 
+;; i.e. fallback to `isearch-forward'.  
+;;
+;; alternatives:
+;; 
+;; - xah-search-current-word
+;; - isearch-forward
+;; - isearch-forward-regexp
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Cycle Through (& Toggle Between) User Buffers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Problems with `next-buffer' / `previous-buffer':
+;;
+;; (1) you cannot hold down the key for the command to repeat.
+;;
+;; (2) they will go thru many buffers user are not interested in cycling thru.
+;;
+
+;; See:
+;;     - http://ergoemacs.org/emacs/elisp_next_prev_user_buffer.html
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun xah-next-user-buffer ()
+
+  "Switch to the next user buffer.
+“user buffer” is determined by `xah-user-buffer-q'.
+URL `http://ergoemacs.org/emacs/elisp_next_prev_user_buffer.html'
+Version 2016-06-19"
+
+  (interactive)
+
+  (next-buffer)
+  (let ((i 0))
+    (while (< i 20)
+      (if (not (xah-user-buffer-q))
+          (progn (next-buffer)
+                 (setq i (1+ i)))
+        (progn (setq i 100))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun xah-prior-user-buffer ()
+
+  "Switch to the previous user buffer.
+“user buffer” is determined by `xah-user-buffer-q'.
+URL `http://ergoemacs.org/emacs/elisp_next_prev_user_buffer.html'
+Version 2016-06-19"
+
+  (interactive)
+
+  (previous-buffer)
+  (let ((i 0))
+    (while (< i 20)
+      (if (not (xah-user-buffer-q))
+          (progn (previous-buffer)
+                 (setq i (1+ i)))
+        (progn (setq i 100))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun xah-user-buffer-q ()
+
+  "Return t if current buffer is a user buffer, else nil.
+Typically, if buffer name starts with *, it's not considered a user buffer.
+This function is used by buffer switching command and close buffer command, so that next buffer shown is a user buffer.
+You can override this function to get your idea of “user buffer”.
+version 2016-06-18"
+
+  (interactive)
+  (if (string-equal "*" (substring (buffer-name) 0 1))
+      nil
+    (if (string-equal major-mode "dired-mode")
+        nil
+      t
+      )))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-toggle-buffer ()
+
+  "Switch to the previously open buffer.
+  
+  Repeated invocations **toggle** between the two most recently open buffers.
+  (c.f. the default behavior of repeated `other-buffer' invocations, 
+  which **cycle** through all open buffers).
+
+  See http://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
   "
   (interactive)
+
+  (switch-to-buffer 
+    (other-buffer (current-buffer) 1)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Window Management,
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-split-window-left-right ();;TODO
+
+  "
+  "
+
+  (interactive)
   
-  (delete-other-windows)
-  (split-window-horizontally)
-  (other-window 1)
-  (switch-to-next-buffer)
-  (other-window 1)
+  (progn
+    (delete-other-windows)
+    (split-window-horizontally)
+    (other-window 1)
+    (switch-to-next-buffer)
+    (other-window 1)
+    ()))
 
-)
 ;; ^
+;;
 
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; ;;TODO doesn't work.
-;; (defun redo (&optional arg)
-;;   "Redo some previouly-undone changes.
-;; Use **`undo`**, not this function, to continue the `redoing`.
-;; A numeric ARG serves as a repeat count."
-;;   (interactive "*P")
-;;   (keyboard-quit)
-;;   (undo arg)
-;;   )
-;; ;; ^ see `undo` in `simple.el`.
-;; ;; see https://stackoverflow.com/questions/3527142/how-do-you-redo-changes-after-undo-with-emacs
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Shell / Terminal.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;TODO
-(defun sboo-launch-shell ()
-  " switch-to-or-create a `shell-mode` buffer.
-  "
+(defun sboo-launch-shell ();;TODO
+
+  "Switch to (or create) a`shell-mode` buffer."
+
   (interactive)
 
   (let*
@@ -103,14 +205,6 @@ Repeated invocations toggle between the two most recently open buffers."
     (if (bufferp (get-buffer NAME))
         (switch-to-buffer (get-buffer NAME) nil 'force-same-window)
       (shell NAME))))
-
-  ;;OLD
-  ;; (let*
-  ;;     ((n "*shell*")
-  ;;      (b (get-buffer n)))
-  ;;   (if (bufferp b)
-  ;;       (switch-to-buffer b nil 'force-same-window)
-  ;;     (shell n))))
 
   ;; ^
   ;;
@@ -125,11 +219,41 @@ Repeated invocations toggle between the two most recently open buffers."
   ;; NOTE `shell` doesn't have an option for the `'force-same-window` behavior.
   ;; 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun sboo-launch-term ()
-  " switch-to-or-create a `term-mode` buffer.
-  "
+
+  "Switch to (or create) a `term-mode` buffer."
+
   (interactive)
-   (term "/bin/bash"))
+  
+  (progn
+  
+    (term "/bin/bash") ;;TODO still prompts
+
+    ()))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Filesystem Navigation.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-find-file ()
+
+  "Wraps `ffap' ("find file at point").
+
+  TODO handle "dir/dir/file.ext:line:column"
+  "
+  
+  (interactive)
+
+  (if (commandp #'ffap)
+
+      (call-interactively #'ffap)
+
+    (call-interactively #'find-file)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Projectile.
@@ -151,25 +275,31 @@ Repeated invocations toggle between the two most recently open buffers."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-insert-angle-quote-left ()
+  
   "`insert' \"«\", the \"LEFT-POINTING DOUBLE ANGLE QUOTATION MARK\" Unicode character,
   with spacing."
   (interactive)
+
   (insert "« "))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-insert-angle-quote-right ()
+  
   "`insert' \"»\", the \"RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK\" Unicode character,
   with spacing."
   (interactive)
+  
   (insert " »"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-insert-triple-equals-sign ()
+  
   "`insert' \"≡ \", the \"IDENTICAL TO\" Unicode character,
   with spacing."
   (interactive)
+  
   (insert "≡ "))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

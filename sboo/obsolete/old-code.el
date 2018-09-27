@@ -50,6 +50,240 @@
 
 
 
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; ;;TODO doesn't work.
+;; (defun redo (&optional arg)
+;;   "Redo some previouly-undone changes.
+;; Use **`undo`**, not this function, to continue the `redoing`.
+;; A numeric ARG serves as a repeat count."
+;;   (interactive "*P")
+;;   (keyboard-quit)
+;;   (undo arg)
+;;   )
+;; ;; ^ see `undo` in `simple.el`.
+;; ;; see https://stackoverflow.com/questions/3527142/how-do-you-redo-changes-after-undo-with-emacs
+
+
+
+
+
+
+  ;;OLD
+  ;; (let*
+  ;;     ((n "*shell*")
+  ;;      (b (get-buffer n)))
+  ;;   (if (bufferp b)
+  ;;       (switch-to-buffer b nil 'force-same-window)
+  ;;     (shell n))))
+
+
+
+
+
+
+
+
+
+
+(defun sboo-buffers-list ()
+
+  "Try `helm-buffers-list', fallback to `list-buffers'.
+  
+  (When `helm' isn't loaded/installed, this command falls back 
+  to the standard-library command upon which that package improves.)
+  "
+  (interactive)
+
+  (let ((*command* #'helm-buffers-list))
+  
+    (if (and (commandp *command*) 
+             (fboundp  *command*))
+             
+      (call-interactively *command*)
+
+     (call-interactively #'list-buffers))))
+
+;; ^ NOTE 
+;; the predicates succeed even when command is marked with `autoload'.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Configuration: External Packages ;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-helm nil t)
+  (sboo-config-helm!))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Provisioning: External Packages ;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(eval-when-compile
+
+  (load-path! ./submodules/use-package)
+
+  ;; ^ either vendored...
+  
+  ;;;(load-path! ./elpa/use-package-2.3)
+
+  ;; ^ ... or `package-install'ed.
+
+  (require 'use-package))
+
+  ;; ^ `use-package' is a macro;
+  ;; as such, it's a compile-time dependency only (i.e. not run-time).
+  ;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(defun sboo-buffers-list ()
+
+;;  (if (fboundp 'helm-buffers-list)
+;;  (if (featurep 'helm)
+;;    (helm-buffers-list)  ;TODO; preserve abilit to autoload
+;;   (list-buffers)))
+;;    (call-interactively #'helm-buffers-list)
+;;   (call-interactively #'list-buffers)))
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;
+;; older versions...
+
+;; (global-set-key (kbd "<f7>")  'split-window-right)
+;; ;; ^ i.e. [C-x 3]
+;; ;; (split-window-right &optional SIZE)
+
+;; (global-set-key (kbd "<f8>")  'other-window)
+;; ;; ^ i.e. [C-x o]
+;; ;; (other-window COUNT &optional ALL-FRAMES)
+
+
+
+
+
+
+
+
+
+
+
+
+;(require 'bind-key)                     ;TODO rm
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; `bind-keys*' Global KeyBindings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;(bind-keys*
+;; ;;
+;; ("M-p"     . backward-paragraph)
+;; ("M-n"     . forward-paragraph)
+;;  ;; ^^ paragraph navigation
+;; ;;
+;; ("C-x \\"  . align-regexp)
+;; ;;
+;; ("C-c r"   . revert-buffer)
+;; ;;
+;; ("C-h a"   . apropos)
+;; ;; ^ Help should search more than just commands
+;; ;;
+;; ;;("M-c"     . toggle-char-case) 
+;; ;; ^ TODO set this key to a similar but saner idea
+;; ;;
+;; ("C-c b"   . copy-file-name-to-clipboard)
+;; ;; ^ copy file name to clipboard
+;; ;;
+;; ("<kp-end>" . xref-find-definitions)
+;; ;;
+;;)
+
+;; (bind-key* "TAB" 'dabbrev-expand)
+;; ;; ^ for all minor-modes override the "tab-character". TODO
+
+;; (bind-key "<tab>" 'dabbrev-expand)
+;; ;; ^ for all modes, don't override the tab-key, if a keybinding already exists (?) TODO
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; `bind-key*': 
+;;
+;; the keybinding overrides all minor-modes that may also bind the same key, use the `bind-key*' 
+;;
+;; 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
