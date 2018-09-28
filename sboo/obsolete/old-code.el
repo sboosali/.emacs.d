@@ -176,6 +176,33 @@
 
 
 
+(progn
+  (sboo-add-to-load-path "submodules" nil '("use-package"))
+  (sboo-add-to-load-path "elpa"       nil '("use-package-2.3")))
+  
+  ;; ^ i.e. "submodules/use-package" (if available) shadows "elpa/use-package-*". TODO check this
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Configuration: Features ;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-haskell nil t)
+  ())
+
+
+
+
+
+
+
 
 
 

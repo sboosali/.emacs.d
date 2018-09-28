@@ -48,7 +48,42 @@
   "Which files to `load' during bootstrapping.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Effects: Boostrapping ;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utilities: Boostrapping ;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-add-to-load-path (BaseDirectory &optional RegisterBaseDirectory SubDirectoryNames)
+
+  "Register the subdirectories `SubDirectoryNames' of `BaseDirectory' onto the `load-path'. 
+
+   Wraps `normal-top-level-add-to-load-path'.
+
+   Arguments:
+
+   * `BaseDirectory': a string. a filepath relative to `user-emacs-directory'.
+
+   * `SubDirectoryNames': a list of strings. a whitelist of directory names (no trailing slash required). `nil' means no whitelist, i.e. all subdirectories.
+
+   * `RegisterBaseDirectory': a boolean. Whether to also register `BaseDirectory` itself.
+  "
+
+  (let* ((*emacs-directory* (file-name-as-directory (expand-file-name (or user-emacs-directory "~/.emacs.d/"))))
+         (*base-directory*  (file-name-as-directory (concat *emacs-directory* BaseDirectory))))
+
+    (when RegisterBaseDirectory
+        (add-to-list 'load-path *base-directory*))
+
+    (let* ((default-directory *base-directory*))
+      (normal-top-level-add-to-load-path SubDirectoryNames))))
+
+;; ^ Utility for registering `load-path's.
+;;
+;; (For loading `sboo-*' features **and** for bootstrapping `init.el' itself.)
+;; 
+;; TODO `normal-top-level-add-subdirs-to-load-path' versus `normal-top-level-add-to-load-path'.
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Effects: Boostrapping ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (dolist (@file *sboo-bootstrap-filenames*)
@@ -58,12 +93,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (sboo-add-to-load-path "sboo" t)
-
-(sboo-add-to-load-path "submodules" nil '("use-package"))
-(sboo-add-to-load-path "elpa"       nil '("use-package-2.3"))
-
-;; ^ i.e. "submodules/use-package" (if available) shadows "elpa/use-package-*".
-
+  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -214,16 +244,30 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Provisioning: External Packages ;;;;;;;;;;;;;;;
+;; LoadPaths: External Packages ;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(sboo-add-to-load-path "elpa" nil
+
+ '("helm-3.0"
+   "helm-core-3.0"    ; `helm` dependency
+   "async-1.9.3"      ; `helm` (transitive) dependency
+   "popup-0.5.3"      ; `helm` (transitive) dependency
+ ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; `use-package' ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (eval-when-compile
 
-  (load-path! ./submodules/use-package)
-  ;;;(load-path! ./elpa/use-package-2.3)
+  (progn
+    (sboo-add-to-load-path "submodules" nil '("use-package"))
+    (sboo-add-to-load-path "elpa"       nil '("use-package-2.3")))
 
-  ;; ^ 
-  ;; Choose one (i.e. uncomment):
+  ;; ^ i.e. "submodules/use-package" (if available) shadows "elpa/use-package-*". TODO check this
+  ;;
+  ;; or Choose one (i.e. uncomment):
   ;;
   ;; - vendored (via `git-sumbodule').
   ;; - installed (via `package-install'ed).
@@ -242,14 +286,6 @@
 (defvar sboo-required-packages
 
   '(
-
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; Meta-Configuration:
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-    ;;;use-package-el-get  ; `use-package` dependency
-    ;;;bind-key            ; `use-package` dependency
-    ;;;use-package         ; (currently vendored, see above)
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;; Text/Buffer/Window Stuff:
@@ -348,6 +384,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuration: External Packages ;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Configuration: Features ;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
