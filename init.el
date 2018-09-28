@@ -43,7 +43,7 @@
 
 (defconst *sboo-bootstrap-filenames*
 
-  '("sboo-directories.el "sboo-load-path.el)
+  '("sboo-directories.el" "sboo-load-path.el")
 
   "Which files to `load' during bootstrapping.")
 

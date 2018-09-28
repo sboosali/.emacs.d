@@ -1,15 +1,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Bootstrap `load-path's.
+;; Utilities for registering `load-path's.
 ;;
-;; (for `sboo-*' features **and** for `init.el' itself).
+;; (for `sboo-*' features **and** for bootstrapping `init.el' itself).
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(def sboo-add-to-load-path (BaseDirectory &optional RegisterBaseDirectory SubDirectoryNames)
+(defun sboo-add-to-load-path (BaseDirectory &optional RegisterBaseDirectory SubDirectoryNames)
 
-  "Register all descendant directories (i.e. recursive subdirectories) of `BaseDirectory' onto the `load-path'. 
+  "Register the subdirectories `SubDirectoryNames' of `BaseDirectory' onto the `load-path'. 
 
-   Wraps `normal-top-level-add-subdirs-to-load-path'.
+   Wraps `normal-top-level-add-to-load-path'.
 
    Arguments:
 
@@ -24,10 +24,14 @@
          (*base-directory*  (file-name-as-directory (concat *emacs-directory* BaseDirectory))))
 
     (when RegisterBaseDirectory
-        ((add-to-list 'load-path *base-directory*))
+        (add-to-list 'load-path *base-directory*))
 
     (let* ((default-directory *base-directory*))
-      (normal-top-level-add-subdirs-to-load-path SubDirectoryNames))
+      (normal-top-level-add-to-load-path SubDirectoryNames))))
+
+;; ^ 
+;; 
+;; TODO `normal-top-level-add-subdirs-to-load-path' versus `normal-top-level-add-to-load-path'.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-load-path)
