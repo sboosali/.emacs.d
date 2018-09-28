@@ -6,8 +6,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (boundp 'user-init-file)
-  (find-file user-init-file))
+;(when (boundp 'user-init-file) (find-file user-init-file))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -19,7 +18,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(load (concat emacs-directory (file-name-as-directory "sboo/") "sboo-init.el"))
+(load (expand-file-name "~/.emacs.d/sboo/sboo-init.el"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

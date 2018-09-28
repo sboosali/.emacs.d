@@ -2,6 +2,9 @@
 # Variables ######################################
 ##################################################
 
+Emacs=emacs
+#Emacs=./result/bin/emacs
+
 Bin=./scripts
 
 ##################################################
@@ -62,13 +65,13 @@ build:
 # Test ###########################################
 ##################################################
 debug: configure
-	@exec ./result/bin/emacs --debug-init --no-desktop
+	@exec emacs --debug-init --no-desktop
 
 .PHONY: debug
 
 ##################################################
 test: configure
-	@exec ./result/bin/emacs --debug-init
+	@exec emacs --debug-init
 
 .PHONY: test
 

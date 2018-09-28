@@ -218,9 +218,10 @@ optionalPackages = with melpa; [
 in
 ############################################################
 
-[]
+[] 
 
-###stablePackages
+### with stable; [ use-package helm ]
+
 
 /* melpaPackages ++ stablePackages ++ optionalPackages
  */
