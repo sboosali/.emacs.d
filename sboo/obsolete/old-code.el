@@ -11,6 +11,36 @@
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Constants ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-directory
+
+  (file-name-as-directory (concat emacs-directory "sboo/"))
+
+  "The root directory of my personal configuration.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst lisp-directory
+
+  (file-name-as-directory (concat emacs-directory "lisp/"))
+
+  "The root directory of any vendored lisp files.")
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;;(load (concat emacs-directory (file-name-as-directory "sboo/") "sboo-init.el"))
 

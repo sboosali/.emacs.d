@@ -6,7 +6,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;(when (boundp 'user-init-file) (find-file user-init-file))
+(when (boundp 'user-init-file) (find-file user-init-file))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -18,7 +18,39 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(load (expand-file-name "~/.emacs.d/sboo/sboo-init.el"))
+(defconst sboo-directory
+
+  (file-name-as-directory (concat emacs-directory "sboo/"))
+
+  "The root directory of my personal configuration.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst lisp-directory
+
+  (file-name-as-directory (concat sboo-directory "lisp/"))
+
+  "Directory which contains any vendored ELisp files.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst snippets-directory
+
+  (file-name-as-directory (concat sboo-directory "snippets/"))
+
+  "Directory whose (per-major-mode) subdirectories contain my YASnippets files.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-init-file
+
+  (concat sboo-directory "sboo-init.el")
+
+  "Main configuration (like `user-init-file') for the `sboo'-profile.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(load sboo-init-file)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
