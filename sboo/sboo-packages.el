@@ -9,52 +9,23 @@
 ;; Variables ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar sboo-packages-required
+(defvar sboo-package-names
 
   '(
-
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; Helm:
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-    (helm . "3.0")
-
-    ;;;async      ; `helm` dependency
-    ;;;popup      ; `helm` dependency
-    ;;;helm-core  ; `helm` dependency
-
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; Text/Buffer/Window Management:
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+    helm           ;;(helm . "3.0")
     real-auto-save
     yasnippet
 
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; Development: General
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
     projectile
     flycheck
-    magit            ; git <C-x g>
-
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; Development: Haskell
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+    magit
     haskell-mode
     dante
     flycheck-haskell
 
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; Utilities:
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-    dash           ; (the `-` prefix)
-    s              ; (`s`trings)
-    f              ; (`f`iles)
-
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    s
+    f
+    dash
    )
 
   "Packages which I need to be installed.
@@ -82,124 +53,27 @@
   ")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun sboo-normalize-package-identifier (PackageIdentifier)
-
-  "Convert:
-  
-  * from my package identifers (e.g. « 'dante » or « '(helm . \"3.0\") »).
-  * into the format of `package-load-list'.
-
-  (`nil' when invalid).
-  "
-
-  (pcase PackageIdentifier
-
-      (`(,(pred symbolp) . ,(pred stringp))
-        PackageIdentifier)
-
-      ((pred symbolp)
-       `(,PackageIdentifier . t))
-
-      (_ nil)))
-
-;; ^ 
-;;
-;; NOTE « '(<p> . t) » means "the latest version available" for `<p>'.
-;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun sboo-normalize-package-list (PackageIdentifiers)
-
-  "map `sboo-normalize-package-identifier', drop `nil's, drop duplicates.
-  "
-
-  (seq-uniq
-    (seq-filter #'identity
-      (seq-map #'sboo-normalize-package-identifier 
-        PackageIdentifiers))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun sboo-packages-print! ()
-  ""
-  (interactive)
-
-  (message "==================================================\n")
-
-  (dolist (@p sboo-packages-required)
-    (message "[package] %S" @p))
-    
-  ())
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun sboo-packages-config! ()
-
-  "Configure this feature (i.e. `sboo-packages') before calling its exports.
-  "
-
-  (setq package-archives 
-        sboo-package-archives)
-
-  (setq sboo-packages-required
-        (sboo-normalize-package-list sboo-packages-required))
-
-  ())
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun sboo-packages-activate! ()
-
-  "`load' and activate all installed packages.
-  "
-
-  (interactive)
-
-  (setq package-enable-at-startup nil)
-
-  (let ((package-load-list sboo-packages-required))
-    (package-initialize))
-
-  ())
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun sboo-packages-install-required! ()
-
-  "For each package in `sboo-packages-required':
-
-  * install it (via `package-install'), unless already installed'
-  * load it (via `require'), unless already loaded;
-  * activate it (TODO wdtm?)
-  "
-
-  (interactive)
-
-  (message "==================================================\n")
-  (message "[sboo] Installing packages...")
-
-  (dolist (@package-identifier sboo-packages-required)
-    (unless (package-installed-p *p*)
-      (package-install *p*)))
-
-  (message "==================================================\n")
-  (message "[sboo] Activating packages...")
-
-  (sboo-packages-activate!)
-
-  ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Effects ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(sboo-packages-config!)
+(progn
+
+  (setq package-enable-at-startup nil)
+
+  (setq package-archives sboo-package-archives)
+
+  (package-initialize)
+
+  (package-refresh-contents)
+
+  (dolist (*p* sboo-package-names)
+    (package-install *p*))
+  
+  ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
