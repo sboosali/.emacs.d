@@ -43,53 +43,24 @@
 (sboo-load-file! "sboo-commands.el")
 (sboo-load-file! "sboo-keybindings.el")
 
+(when (require 'sboo-server nil t)
+  (add-hook 'after-init-hook #'server-start-unless-running))
+
 ;;;(require 'sboo-settings-widgets)
 ;;;  (sboo-minibuffer-config))
 ;;;  (sboo-config-fonts))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Internal Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(add-to-load-path! "~/.emacs.d/submodules/use-package/")
-(require 'use-package)
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Internal Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package helm
-
-  :commands (helm-mode helm-find-files)
-
-  :init (progn
-          (setq helm-mode-fuzzy-match                 t)
-          (setq helm-completion-in-region-fuzzy-match t)
-          (setq helm-allow-mouse t)
-          ())
-
-  :config (progn
-            (helm-mode 1)
-            ()))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package dante
-  
-  :commands dante-mode
-
-  :bind (:map haskell-mode-map
-              (("<kp-home>" . sboo-dante-mode)))  ;;TODO 
-
-  :config
-  (setq dante-repl-command-line-methods-alist sboo-dante-repl-command-line-methods-alist))
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; External Packages: Installation ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-server nil t)
-  (add-hook 'after-init-hook #'server-start-unless-running))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; External Packages: Configuration ;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-init) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

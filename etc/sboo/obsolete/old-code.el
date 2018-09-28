@@ -13,6 +13,52 @@
 
 
 
+
+
+(eval-when-compile
+  (add-to-load-path! "~/.emacs.d/submodules/use-package/")
+  (require 'use-package))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(use-package helm
+
+  :commands (helm-mode helm-find-files)
+
+  :init
+  (setq helm-mode-fuzzy-match                 t)
+  (setq helm-completion-in-region-fuzzy-match t)
+  (setq helm-allow-mouse t)
+
+  :config
+  (helm-mode 1))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package dante
+  
+  :commands dante-mode
+
+  :bind (:map haskell-mode-map
+              (("<kp-home>" . sboo-dante-mode)))  ;;TODO 
+
+  :config
+  (setq dante-repl-command-line-methods-alist sboo-dante-repl-command-line-methods-alist))
+
+
+
+
+
+
+
+
+
+
+
+
+
 (require 'sboo-aliases)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
