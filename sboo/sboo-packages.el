@@ -42,7 +42,9 @@
 
 (defvar sboo-package-archives
 
-  '(("melpa-stable" . "https://stable.melpa.org/packages/")    ;;TODO is https still buggy on windows?
+  '(
+    ;;;("melpa"        . "https://melpa.org/packages/")
+    ("melpa-stable" . "https://stable.melpa.org/packages/")
    )
 
   "Override `package-archives':
@@ -64,14 +66,17 @@
 
   (setq package-enable-at-startup nil)
 
-  (setq package-archives sboo-package-archives)
+  ;;;(setq package-archives sboo-package-archives)
+
+  (dolist ($archive sboo-package-archives)
+    (add-to-list 'package-archives $archive))
 
   (package-initialize)
 
   (package-refresh-contents)
 
-  (dolist (*p* sboo-package-names)
-    (package-install *p*))
+  (dolist ($package sboo-package-names)
+    (package-install $package))
   
   ())
 

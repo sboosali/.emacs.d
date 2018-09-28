@@ -2,10 +2,10 @@
 # Variables ######################################
 ##################################################
 
-Emacs=emacs
-#Emacs=./result/bin/emacs
+#Emacs=emacs
+Emacs=./result/bin/emacs
 
-Bin=./scripts
+Options=--debug-init --no-desktop --maximized --no-splash --name=SBoo
 
 ##################################################
 # Default ########################################
@@ -23,60 +23,11 @@ configure:
 .PHONY: configure
 
 ##################################################
-# Run ############################################
-##################################################
-run: run-via-nixpkgs
-
-.PHONY: run
-
-##################################################
-run-via-package-dot-el:
-	@exec emacs
-
-.PHONY: run-via-package-dot-el
-
-##################################################
-run-via-nixpkgs:
-	@exec ${Bin}/run.sh
-
-.PHONY: run-via-nixpkgs 
-
-##################################################
-run-quiet:
-	@exec ${Bin}/quiet.sh
-
-.PHONY: run-quiet
-
-##################################################
-# Build ##########################################
-##################################################
-build:
-	@exec ${Bin}/build.sh
-
-.PHONY: build 
-
-##################################################
-# install:
-# 	@exec ${Bin}/install.sh #TODO
-#
-# .PHONY: install 
-
-##################################################
 # Test ###########################################
 ##################################################
-debug: configure
-	@exec emacs --debug-init --no-desktop
-
-.PHONY: debug
-
-##################################################
 test: configure
-	@exec emacs --debug-init
+	@exec $(Emacs) $(Options)
 
 .PHONY: test
-
-#TODO	@exec SBOO_EMACS_TEST=1 emacs --debug-init
-
-##################################################
 
 ##################################################

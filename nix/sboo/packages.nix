@@ -44,6 +44,20 @@ stablePackages = with stable; [
 
  ########################################
 
+ real-auto-save
+ yasnippet
+ projectile
+ 
+ #########################################
+
+ haskell-mode
+ dante           # needs `ghc` (or `cabal`, or `stack`, etc) system-package
+
+ #########################################
+
+
+ #########################################
+
 ];
 
 ############################################################
@@ -52,27 +66,7 @@ melpaPackages = with melpa; [
 
  ####################
 
- haskell-mode
- dante           # needs `ghc` (or `cabal`, or `stack`, etc) system-package
  intero          # needs `stack` system-package
-
- ####################
-
- lsp-mode
- lsp-ui
- lsp-haskell
-
- ####################
-
- flycheck
- flycheck-haskell
-
- ####################
-
- exec-path-from-shell
- real-auto-save
-
- ####################
 
  tabbar
  shackle
@@ -86,8 +80,6 @@ melpaPackages = with melpa; [
 
  ####################
 
- yasnippet
-
  ####################
 
  nix-mode
@@ -96,7 +88,7 @@ melpaPackages = with melpa; [
  ####################
 
  #magit          # <C-x g>
- projectile
+
  direnv         # needs `direnv` system-package
  #multi-term
  neotree
@@ -218,10 +210,7 @@ optionalPackages = with melpa; [
 in
 ############################################################
 
-[] 
-
-### with stable; [ use-package helm ]
-
+stablePackages
 
 /* melpaPackages ++ stablePackages ++ optionalPackages
  */

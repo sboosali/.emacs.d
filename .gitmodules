@@ -4,3 +4,6 @@
 [submodule "dante"]
 	path = submodules/dante
 	url = https://github.com/jyp/dante
+[submodule "helm"]
+	path = submodules/helm
+	url = https://github.com/emacs-helm/helm
