@@ -67,6 +67,16 @@
   (concat database-directory FilePath))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Vendored Files (`*.el')
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst lisp-directory 
+
+  (concat emacs-directory "lisp")
+
+  "Where vendored files are.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Cloned Packages (Git SubModules)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -74,7 +84,7 @@
 
   (concat emacs-directory "submodules")
 
-  "Where vendored (cloned) packages are.")
+  "Where vendored packages are.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Installed Packages (MELPA Stable)

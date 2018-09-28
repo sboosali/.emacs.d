@@ -25,7 +25,7 @@
 
 (defconst sboo-environment-variable-install "EMACS_INSTALL"
 
-  "See `sboo-install?'.
+  "See `sboo-install-p'.
 
   Example Usage: « $ EMACS_INSTALL=t emacs ».")
 
@@ -65,7 +65,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar sboo-install?
+(defvar sboo-install-p
 
   (let ((*value* (getenv sboo-environment-variable-install)))
     (pcase *value*
@@ -101,7 +101,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-conditions)

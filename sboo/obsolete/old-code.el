@@ -10,6 +10,42 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; `use-package' ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(eval-when-compile
+
+  (progn
+    (sboo-add-subdir-to-load-path "submodules" nil '("use-package"))
+    (sboo-add-subdir-to-load-path "elpa"       nil '("use-package-2.3")))
+
+  ;; ^ i.e. "submodules/use-package" (if available) shadows "elpa/use-package-*". TODO check this
+  ;;
+  ;; or Choose one (i.e. uncomment):
+  ;;
+  ;; - vendored (via `git-sumbodule').
+  ;; - installed (via `package-install'ed).
+  ;;
+
+  (require 'use-package))
+
+  ;; ^ `use-package' is a macro. As such,
+  ;; it's a compile-time dependency (i.e. not run-time).
+  ;; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (use-package helm
 ;;   :init
@@ -75,6 +111,325 @@
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; LoadPaths: External Packages ;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(sboo-add-subdir-to-load-path "elpa" nil
+
+ '("helm-3.0"
+   "helm-core-3.0"    ; `helm` dependency
+   "async-1.9.3"      ; `helm` (transitive) dependency
+   "popup-0.5.3"      ; `helm` (transitive) dependency
+ ))
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Initialization: External Packages ;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(if (require 'sboo-helm nil t)
+
+  (progn
+
+    (sboo-init-helm!)
+
+    (add-hook 'after-init-hook
+              #'sboo-config-helm!))
+
+  (message "[sboo] can't find %s." 'sboo-helm))
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Configuration: External Packages ;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'use-package nil t)  
+
+  (require 'sboo-haskell nil t)
+
+  ())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pretty-Print Information (via `message')
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(progn
+
+  (message ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
+
+  (dolist (@x load-path)
+    (message "[load-path] %s" @x))
+  
+  ;; ^ pretty-print the `load-path'.
+
+  (message ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
+
+  (dolist (@x features)
+    (message "[feature]   %s" @x))
+  
+  ;; ^ pretty-print `features' (i.e. loaded packages).
+
+  (message ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
+
+  ())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Installation: External Packages ;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar sboo-package-list
+
+  '((use-package    . "2.3")
+    (helm           . "3.0")
+    (real-auto-save . t)
+    (yasnippet      . t)
+    (projectile     . t)
+    (haskell-mode   . t)
+    (dante          . t)
+    )
+
+ "Packages that must be installed.")
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(progn
+
+  (require 'package)
+
+  (setq package-enable-at-startup nil)
+
+  (setq package-archives sboo-package-archives)
+
+  (package-initialize)
+
+  (dolist (pv sboo-package-list)
+    (pcase pv
+      (`(,p . ,v)
+        (package-install p))
+
+  ())
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+;;(when (and (>= emacs-major-version 24)
+;;          (require 'sboo-packages nil t))
+;;  (if sboo-install-p
+;;      (sboo-packages-install!)     ;; install and activate
+;;      (sboo-packages-activate!)))  ;; only activate
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; LoadPaths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-directories)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(sboo-add-to-load-path sboo-directory t)
+(sboo-add-to-load-path lisp-directory t)
+
+;; ^ "Which (sub)directories to register under the `load-path'."
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(sboo-add-to-load-path cloned-package-directory    nil 
+  '("dante"
+   ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(sboo-add-to-load-path installed-package-directory nil
+  '("dante"
+    "dante"
+   ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'cl-lib)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-macros)
+(require 'sboo-utilities)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; LoadPaths: `sboo' ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-conditions)
+
+  ;; ^ `package-install'ed packages.
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; LoadPaths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-directories)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-load-path  ;;TODO
+
+  (list sboo-directory
+        lisp-directory
+        cloned-package-directory
+        installed-package-directory
+  )
+
+  "Which subdirectories to register under the `load-path'.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(dolist (@directory sboo-load-path)
+
+  (sboo-add-to-load-path @directory t))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(use-package dante
+  
+  :commands dante-mode
+
+  :hook ((haskell-mode . flycheck-mode)
+         (haskell-mode . dante-mode))
+
+  :config (progn
+            (setq dante-repl-command-line-methods-alist sboo-dante-repl-command-line-methods-alist)
+            ()))
+
+
+
+
+
+
+
+
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -91,6 +446,80 @@
 
 (sboo-add-to-load-path "elpa"       nil '("helm-3.0" "helm-core-3.0" "popup" "async"))
 (sboo-add-to-load-path "submodules" nil '("use-package"))
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;(require 'use-package)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-haskell-mode)
+;; ^
+;; my baseline (and the standard) `haskell`-language configuration. 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-dante)
+;; ^
+;; my `dante` configuration.
+;; `dante` is a lightweight, configurable Haskell IDE.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (require 'sboo-lsp)
+;; ;; ^
+;; ;; `haskell-ide-engine' uses `LSP'.
+;; ;;
+;; ;;
+
+;; (use-package dante
+;;   :commands dante-mode)
+;; ;; ^
+;; ;; load `dante.el', which registers `dante-target' (&al) as `safe-local-var'(s).
+;; ;; autoload `dante-mode', so we can run 《 M-x dante-mode 》.
+;; ;;
+;; ;; but don't **configure** it, i.e. no `hook's;
+;; ;; when this statement is uncommented, we're using `lsp-haskell'.
+;; ;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;(require 'sboo-intero)
+;; ^
+;; my `intero` configuration.
+;; `intero` is a `stack`-only Haskell IDE.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;(require 'sboo-ghcid)
+;; ^
+;; my custom `ghcid`-mode.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'sboo-haskell)
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -43,7 +43,8 @@
 
 (defconst *sboo-bootstrap-filenames*
 
-  '("sboo-directories.el" "sboo-load-path.el")
+  '("sboo-directories.el"
+   )
 
   "Which files to `load' during bootstrapping.")
 
@@ -51,7 +52,32 @@
 ;; Utilities: Boostrapping ;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-add-to-load-path (BaseDirectory &optional RegisterBaseDirectory SubDirectoryNames)
+(defmacro add-to-load-path! (FilePath)
+
+  "Register `FilePath' with `load-path'.
+
+  `FilePath':
+  
+  * /must/ be an absolute filepath to a directory; (TODO)
+  
+  * /should/ use forward-slashes, e.g. `.../.../...'
+    (they're automatically converted to the platform-specifc directory-separator character);
+  
+  * /may/ start with `~/' 
+    (tildes are expanded to the user's home directory);
+
+  * /may/ end with a forward-slash (e.g. `sboo/' or `sboo')
+    (a trailing is added if absent).
+  "
+
+  (declare (debug (sexp body)))
+
+  `(add-to-list 'load-path
+     (file-name-as-directory (expand-file-name ,FilePath))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-add-subdir-to-load-path (BaseDirectory &optional RegisterBaseDirectory SubDirectoryNames)
 
   "Register the subdirectories `SubDirectoryNames' of `BaseDirectory' onto the `load-path'. 
 
@@ -86,14 +112,18 @@
 ;; Effects: Boostrapping ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(sboo-add-subdir-to-load-path *sboo-bootstrap-directory* t)
+  
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (dolist (@file *sboo-bootstrap-filenames*)
 
   (load (concat *sboo-bootstrap-directory* @file)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(sboo-add-to-load-path "sboo" t)
-  
+;; (Boostrapping finished)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -101,51 +131,20 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; LoadPaths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'cl-lib)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'sboo-macros)
-(require 'sboo-utilities)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; LoadPaths: `sboo' ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'sboo-conditions)
+(require 'sboo-directories)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn
-  (load-path! ./elisp)
-  ())
+(add-to-load-path! sboo-directory)
+(add-to-load-path! lisp-directory)
 
-  ;; ^ singe-file packages.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(progn
-;;(load-path! ./submodules/dante)
-  ())
-
-  ;; ^ submodule packages.
+;; ^ "Which (sub)directories to register under the `load-path'."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(progn
-  (load-path! ./elpa/helm-3.0)
-  (load-path! ./elpa/helm-core-3.0)    ; `helm` dependency
-  (load-path! ./elpa/async-1.9.3)      ; `helm` dependency
-  (load-path! ./elpa/popup-0.5.3)      ; `helm` dependency
-  ())
-
-  ;; ^ `package-install'ed packages.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Settings: Safe ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (prefer-coding-system 'utf-8)
@@ -229,104 +228,48 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Built-In Packages (Emacs 26+) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Internal Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Configuration: Internal Packages (a.k.a Builtins)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Configuration for (Emacs 26+) Built-In Packages
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages (MELPA Stable, GitHub, submodules, etc) ;;;;;;;;;;;;;;;;;;
+;;; External Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; LoadPaths: External Packages ;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(sboo-add-to-load-path "elpa" nil
-
- '("helm-3.0"
-   "helm-core-3.0"    ; `helm` dependency
-   "async-1.9.3"      ; `helm` (transitive) dependency
-   "popup-0.5.3"      ; `helm` (transitive) dependency
- ))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; `use-package' ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(eval-when-compile
-
-  (progn
-    (sboo-add-to-load-path "submodules" nil '("use-package"))
-    (sboo-add-to-load-path "elpa"       nil '("use-package-2.3")))
-
-  ;; ^ i.e. "submodules/use-package" (if available) shadows "elpa/use-package-*". TODO check this
-  ;;
-  ;; or Choose one (i.e. uncomment):
-  ;;
-  ;; - vendored (via `git-sumbodule').
-  ;; - installed (via `package-install'ed).
-  ;;
-
-  (require 'use-package))
-
-  ;; ^ `use-package' is a macro. As such,
-  ;; it's a compile-time dependency (i.e. not run-time).
-  ;; 
+;; Configuration for Installed Packages (MELPA Stable, GitHub, submodules, etc)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Installation: External Packages ;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar sboo-required-packages
+(defvar sboo-package-list
 
-  '(
+  '(use-package    ;;
+    helm           ;;
+    real-auto-save ;; 
+    yasnippet      ;; 
+    projectile     ;; 
+    haskell-mode   ;; 
+    dante          ;; 
+    )
 
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; Text/Buffer/Window Stuff:
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ "Packages that must be installed.")
 
-    real-auto-save
-    yasnippet
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; Helm:
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defvar sboo-package-archives 
 
-    ;;;async      ; `helm` dependency
-    ;;;popup      ; `helm` dependency
-    ;;;helm-core  ; `helm` dependency
-    helm
-
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; Development:
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-    projectile
-    flycheck
-    magit            ; git <C-x g>
-
-    haskell-mode     ; haskell
-    dante            ; haskell
-    flycheck-haskell ; haskell
-
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; Utilities:
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-    dash           ; (the `-` prefix)
-    s              ; (`s`trings)
-    f              ; (`f`iles)
-
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  '(("melpa-stable" . "https://stable.melpa.org/packages/")
    )
 
-  "Packages which I need to be installed.")
+  "Override `package-archives':
+  
+  * remove GNU ELPA
+  * add MELPA Stable
+  * use HTTPS
+  ")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -334,65 +277,48 @@
 
   (require 'package)
 
-  ;; ^
-  ;; (>= emacs-major-version 24)
-  ;;
-
-  (set         'package-archives ())
-  (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
-
-  ;; ^
-  ;; remove GNU ELPA, add MELPA Stable.
-  ;; use HTTPS.
-  ;;
-
   (setq package-enable-at-startup nil)
 
-  ;; ^
-  ;;
-  ;;
+  (setq package-archives sboo-package-archives)
 
-  (when sboo-install?
+  (package-initialize)
 
-    (message "[sboo] installing packages...")
-
-    (package-initialize)
-
-    (dolist (*p* sboo-required-packages)
-      
-      (unless (package-installed-p *p*)
-        (package-install *p*))))
-
-    ;; ^ install everything.
+  (dolist (p sboo-package-list)
+    (package-install p))
 
   ())
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Initialization: External Packages ;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(if (require 'sboo-helm nil t)
-
-  (progn
-
-    (sboo-init-helm!)
-
-    (add-hook 'after-init-hook
-              #'sboo-config-helm!))
-
-  (message "[sboo] can't find %s." 'sboo-helm))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuration: External Packages ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package helm
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Configuration: Features ;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  :commands
+  (helm-mode helm-find-files)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  :init
+  (setq helm-mode-fuzzy-match                 t)
+  (setq helm-completion-in-region-fuzzy-match t)
+  (setq helm-allow-mouse t)
+
+  :config
+  (helm-mode 1))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package dante
+  
+  :commands dante-mode
+
+  ;;;  :hook ((haskell-mode . flycheck-mode)
+  ;;;         (haskell-mode . dante-mode))
+
+  :bind (:map haskell-mode-map
+              (("<kp-home>" . sboo-dante-mode)))  ;;TODO 
+
+  :config
+  (setq dante-repl-command-line-methods-alist sboo-dante-repl-command-line-methods-alist))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -413,32 +339,9 @@
 
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Pretty-Print Information (via `message')
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(progn
-
-  (message ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
-
-  (dolist (@x load-path)
-    (message "[load-path] %s" @x))
-  
-  ;; ^ pretty-print the `load-path'.
-
-  (message ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
-
-  (dolist (@x features)
-    (message "[feature]   %s" @x))
-  
-  ;; ^ pretty-print `features' (i.e. loaded packages).
-
-  (message ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
-
-  ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
+;; Effects: Debugging
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq debug-on-error nil)
