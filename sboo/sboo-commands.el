@@ -7,7 +7,6 @@
 ;; See my `defgrace` macro, for conveniently defining commands with fallbacks
 ;; (when external packages haven't been installed and/or can't be loaded).
 ;;
-;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -42,40 +41,6 @@
 ;; NOTE (function f) is like #'f
 ;;
 ;; NOTE the predicates succeed even when command is marked with `autoload'.
-;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (Custom Functions, Bound By My Keybindings) ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defgrace sboo-buffers-list
-          helm-buffers-list
-          list-buffers)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defgrace sboo-M-x
-          helm-M-x 
-          execute-extended-command)
-
-;;  "Try `helm-M-x', fallback to `execute-extended-command'.  
-;;  (When `helm' isn't loaded/installed, this command falls back 
-;;  to the standard-library command upon which that package improves.)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defgrace sboo-search
-          xah-search-current-word
-          isearch-forward)
-
-;; ^ 
-;; i.e. fallback to `isearch-forward'.  
-;;
-;; alternatives:
-;; 
-;; - xah-search-current-word
-;; - isearch-forward
-;; - isearch-forward-regexp
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -190,7 +155,61 @@ version 2016-06-18"
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Files
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun xah-open-file-at-cursor ()
+  "Open the file path under cursor.
+If there is text selection, uses the text selection for path.
+If the path starts with “http://”, open the URL in browser.
+Input path can be {relative, full path, URL}.
+Path may have a trailing “:‹n›” that indicates line number. If so, jump to that line number.
+If path does not have a file extension, automatically try with “.el” for elisp files.
+This command is similar to `find-file-at-point' but without prompting for confirmation.
+
+URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
+  (interactive)
+  (let ((-path (if (use-region-p)
+                   (buffer-substring-no-properties (region-beginning) (region-end))
+                 (let (p0 p1 p2)
+                   (setq p0 (point))
+                   ;; chars that are likely to be delimiters of full path, e.g. space, tabs, brakets.
+                   (skip-chars-backward "^  \"\t\n`'|()[]{}<>〔〕“”〈〉《》【】〖〗«»‹›·。\\`")
+                   (setq p1 (point))
+                   (goto-char p0)
+                   (skip-chars-forward "^  \"\t\n`'|()[]{}<>〔〕“”〈〉《》【】〖〗«»‹›·。\\'")
+                   (setq p2 (point))
+                   (goto-char p0)
+                   (buffer-substring-no-properties p1 p2)))))
+    (if (string-match-p "\\`https?://" -path)
+        (browse-url -path)
+      (progn ; not starting “http://”
+        (if (string-match "^\\`\\(.+?\\):\\([0-9]+\\)\\'" -path)
+            (progn
+              (let (
+                    (-fpath (match-string 1 -path))
+                    (-line-num (string-to-number (match-string 2 -path))))
+                (if (file-exists-p -fpath)
+                    (progn
+                      (find-file -fpath)
+                      (goto-char 1)
+                      (forward-line (1- -line-num)))
+                  (progn
+                    (when (y-or-n-p (format "file doesn't exist: 「%s」. Create?" -fpath))
+                      (find-file -fpath))))))
+          (progn
+            (if (file-exists-p -path)
+                (find-file -path)
+              (if (file-exists-p (concat -path ".el"))
+                  (find-file (concat -path ".el"))
+                (when (y-or-n-p (format "file doesn't exist: 「%s」. Create?" -path))
+                  (find-file -path ))))))))))
+
+;; ^ this command will:
+;; - open the file path under cursor, without confirmation;
+;; - and jump to line number, if the path ends with ":<number>".
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Shell / Terminal.
@@ -255,7 +274,37 @@ version 2016-06-18"
     (call-interactively #'find-file)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Text Navigation.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun xah-search-current-word ()
+
+  "Call `isearch' on current word or text selection.
+“word” here is A to Z, a to z, and hyphen 「-」 and underline 「_」, independent of syntax table.
+URL `http://ergoemacs.org/emacs/modernization_isearch.html'
+Version 2015-04-09"
+  (interactive)
+
+  (let ( $p1 $p2 )
+    (if (use-region-p)
+        (progn
+          (setq $p1 (region-beginning))
+          (setq $p2 (region-end)))
+      (save-excursion
+        (skip-chars-backward "-_A-Za-z0-9")
+        (setq $p1 (point))
+        (right-char)
+        (skip-chars-forward "-_A-Za-z0-9")
+        (setq $p2 (point))))
+
+    (setq mark-active nil)
+
+    (when (< $p1 (point))
+      (goto-char $p1))
+
+    (isearch-mode t)
+
+    (isearch-yank-string (buffer-substring-no-properties $p1 $p2))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Projectile.
@@ -304,28 +353,38 @@ version 2016-06-18"
   
   (insert "≡ "))
 
-;; 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Commands that Gracefully Degrade ;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-require (FEATURE)
-  "
-  `require' one my configs (namespaced under `sboo-*').
+(defgrace sboo-buffers-list
+          helm-buffers-list
+          list-buffers)
 
-  For example, this command:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-      M-x sboo-require yasnippets
+(defgrace sboo-M-x
+          helm-M-x 
+          execute-extended-command)
 
-  equals this expression:
+;;  "Try `helm-M-x', fallback to `execute-extended-command'.  
+;;  (When `helm' isn't loaded/installed, this command falls back 
+;;  to the standard-library command upon which that package improves.)
 
-      M-: (require 'sboo-yasnippets)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  "
-  (interactive "SFeature to require (`sboo-...'): ")
-  
-  (require FEATURE))       ;;TODO
+(defgrace sboo-search
+          xah-search-current-word
+          isearch-forward)
 
 ;; ^ 
+;; i.e. fallback to `isearch-forward'.  
 ;;
+;; alternatives:
+;; 
+;; - xah-search-current-word
+;; - isearch-forward
+;; - isearch-forward-regexp
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -373,9 +432,20 @@ version 2016-06-18"
 ;; 
 ;; 
 
+;; List Major Modes:
+;;
+;; You can view a list of major mode names by Alt+x `describe-variable' on `auto-mode-alist':
+;; 
+;;     (describe-variable 'auto-mode-alist)
+;;
+
+;; list-matching-lines
+;;
+;; ^ M-x `list-matching-lines' shows all lines in a buffer that match some regexp.
+
 ;; See:
-;;     - 
-;;     - 
+;;    - http://www.wilkesley.org/~ian/xah/emacs/emacs_open_file_path_fast.html
+;;    - 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-commands)

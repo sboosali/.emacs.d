@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Custom settings.
+;; General Settings.
 ;;
 ;; Settings should be both **fast** and **safe**
 ;; (like the `:init' initialization in `use-package').
@@ -8,29 +8,23 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'sboo-aliases)
+(prefer-coding-system 'utf-8)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'sboo-xah)
+(ffap-bindings)
+;; ^ 
+;; a.k.a. `find-file-at-point'
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'sboo-settings-widgets)
+(setq truncate-lines nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'sboo-settings-bookmarks)
+(setenv "LD_PRELOAD" "") ;;HACK;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(when (require 'sboo-settings-minibuffer nil t)
-  (sboo-minibuffer-config))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(when (require 'sboo-settings-fonts nil t)
-  (sboo-config-fonts))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

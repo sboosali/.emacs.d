@@ -1,7 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun add-to-load-path! (FilePath)
 
   "Register `FilePath' with `load-path'.
@@ -25,33 +23,29 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun sboo-load-file! (FileName)
+
+  "`load' a `sboo-*.el' file."
+
+  (load (concat sboo-directory FileName)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (add-to-load-path! sboo-directory)
+(add-to-load-path! sboo-lisp-directory)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prefer-coding-system 'utf-8)
+(sboo-load-file! "sboo-settings.el")
+(sboo-load-file! "sboo-aliases.el")
+(sboo-load-file! "sboo-commands.el")
+(sboo-load-file! "sboo-keybindings.el")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(ffap-bindings)
-;; ^ 
-;; a.k.a. `find-file-at-point'
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(setq truncate-lines nil)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(setenv "LD_PRELOAD" "") ;;HACK;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'sboo-keybindings)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;(require 'sboo-settings-widgets)
+;;;  (sboo-minibuffer-config))
+;;;  (sboo-config-fonts))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Internal Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -62,23 +56,23 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-to-load-path! "~/.emacs.d/submodules/use-package/")
-
 (require 'use-package)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package helm
 
-  :commands
-  (helm-mode helm-find-files)
+  :commands (helm-mode helm-find-files)
 
-  :init
-  (setq helm-mode-fuzzy-match                 t)
-  (setq helm-completion-in-region-fuzzy-match t)
-  (setq helm-allow-mouse t)
+  :init (progn
+          (setq helm-mode-fuzzy-match                 t)
+          (setq helm-completion-in-region-fuzzy-match t)
+          (setq helm-allow-mouse t)
+          ())
 
-  :config
-  (helm-mode 1))
+  :config (progn
+            (helm-mode 1)
+            ()))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

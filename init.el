@@ -26,7 +26,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst lisp-directory
+(defconst sboo-lisp-directory
 
   (file-name-as-directory (concat sboo-directory "lisp/"))
 
@@ -34,7 +34,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst snippets-directory
+(defconst sboo-snippets-directory
 
   (file-name-as-directory (concat sboo-directory "snippets/"))
 
