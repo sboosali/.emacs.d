@@ -28,6 +28,16 @@ to configure a package named `<PACKAGE>`, `init.el` has a statement like:
   (sboo-config-<PACKAGE>!))
 ```
 
+## Bootstrapping
 
 
-## 
+
+## `use-package`
+
+NOTE `use-package` is used (by `init.el`) like so:
+
+* always configures external (/installed) packages (for convenience and legibility)
+* /never/ configures internal (/builtin) packages (for robustness).
+
+
+##
