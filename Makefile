@@ -3,16 +3,24 @@
 ##################################################
 
 #Emacs=emacs
-Emacs=./result/bin/emacs
+Emacs?=./result/bin/emacs
 
-Options=--debug-init --no-desktop --maximized --no-splash --name=SBoo
+Cask?=cask
+
+EmacsOptions?=--debug-init --no-desktop --maximized --no-splash --name=SBoo
 
 ##################################################
-# Default ########################################
+# Default / Miscellaneous ########################
 ##################################################
 default: run
 
 .PHONY: default
+
+##################################################
+clean:
+	find sboo/ lisp/  -type f  -name '*.elc'  -exec rm -f \{} \+
+
+.PHONY: clean
 
 ##################################################
 # Install Dependencies ###########################
@@ -23,10 +31,24 @@ configure:
 .PHONY: configure
 
 ##################################################
-# Test ###########################################
+# Build ##########################################
+##################################################
+build:
+	$(Cask) build
+
+.PHONY: build
+
+##################################################
+# Emacs: Run / Test. #############################
+##################################################
+run: configure
+	@exec $(Emacs) $(EmacsOptions)
+
+.PHONY: run
+
 ##################################################
 test: configure
-	@exec $(Emacs) $(Options)
+	@exec $(Emacs) $(EmacsOptions)
 
 .PHONY: test
 
