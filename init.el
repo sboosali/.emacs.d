@@ -2,12 +2,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;(package-initialize)
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq debug-on-error t)
 
@@ -33,19 +30,27 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst sboo-lisp-directory
-
-  (file-name-as-directory (concat sboo-directory "lisp/"))
-
-  "Directory which contains any vendored ELisp files.")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defconst sboo-snippets-directory
 
   (file-name-as-directory (concat sboo-directory "snippets/"))
 
   "Directory whose (per-major-mode) subdirectories contain my YASnippets files.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-installed-package-directory
+
+  (file-name-as-directory (concat sboo-directory "elpa/"))
+
+  "Directory where `package.el' should install ELisp packages.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-cloned-package-directory
+
+  (file-name-as-directory (concat sboo-directory "submodules/"))
+
+  "Directory which contains any vendored ELisp packages (as subdirectories).")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -57,7 +62,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(load sboo-init-file)
+(load "/home/sboo/.emacs.d/sboo/sboo-init-helm.el")
+
+;;;(load sboo-init-file)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
