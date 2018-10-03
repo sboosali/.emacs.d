@@ -8,6 +8,40 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(load "/home/sboo/.emacs.d/sboo/sboo-init-helm.el")
+
+
+
+
+;;;(add-to-list 'load-path (concat sboo-cloned-package-directory "helm/"))
+;;;(add-to-list 'load-path (file-name-directory (file-truename "./submodules/helm/")))
+
+
+
+
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; External Packages to Install
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
