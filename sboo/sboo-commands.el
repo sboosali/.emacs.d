@@ -11,6 +11,7 @@
 ;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'cl-lib)
 (require 'shell)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -42,6 +43,39 @@
 ;;
 ;; NOTE the predicates succeed even when command is marked with `autoload'.
 ;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(cl-defmacro define-graceful-boolean-command 
+
+  ( NAME
+    &key internal external doc
+  )
+
+  `(defun ,NAME (PrefixArgument)
+     
+     ,doc
+     
+     (interactive "P")
+     
+     (let ((*command* (function ,external)))
+
+        (if (commandp *command*)
+
+          (call-interactively *command*)
+
+          (call-interactively (function ,internal) PrefixArgument)))))
+
+
+;; ^ `defalias' for commands with graceful degradation.
+;;
+;; Wraps `defun' and `call-interactively'.
+;;
+;; See:
+;; 
+;; - https://stackoverflow.com/questions/37531124/emacs-how-to-use-call-interactively-with-parameter
+;; - 
+;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Cycle Through (& Toggle Between) User Buffers
@@ -357,19 +391,37 @@ Version 2015-04-09"
 ;; Commands that Gracefully Degrade ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define-graceful-command sboo-buffers-list
-          helm-buffers-list
-          list-buffers)
+(defun sboo-M-x (PrefixArgument)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     "Invoke `helm-M-x', if bound."
 
-(define-graceful-command sboo-M-x
-          helm-M-x 
-          execute-extended-command)
+     (interactive "P")
+     
+     (if (commandp #'helm-M-x)
+         (helm-M-x PrefixArgument)
+         (execute-extended-command)))
+
+;;;(defalias sboo-M-x helm-M-x)
+;;;(define-graceful-command sboo-M-x helm-M-x execute-extended-command)
 
 ;;  "Try `helm-M-x', fallback to `execute-extended-command'.  
 ;;  (When `helm' isn't loaded/installed, this command falls back 
 ;;  to the standard-library command upon which that package improves.)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-buffers-list (PrefixArgument)
+
+     "Invoke `helm-buffers-list', if bound."
+
+     (interactive "P")
+     
+     (if (commandp #'helm-buffers-list)
+         (helm-buffers-list PrefixArgument)
+         (ibuffer)))
+
+;;;(defalias sboo-buffers-list helm-buffers-list)
+;;;(define-graceful-command sboo-buffers-list helm-buffers-list list-buffers)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
