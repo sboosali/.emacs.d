@@ -27,16 +27,18 @@
 
   "`load' a `sboo-*.el' file."
 
-  (load (concat sboo-directory FileName)))
+  (load (concat sboo-root-directory FileName)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(add-to-load-path! sboo-directory)
+(add-to-load-path! sboo-root-directory)
 (add-to-load-path! sboo-lisp-directory)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(load sboo-init-helm-file)
 
 (sboo-load-file! "sboo-settings.el")
 (sboo-load-file! "sboo-aliases.el")

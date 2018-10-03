@@ -76,6 +76,22 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defconst sboo-lisp-directory
+
+  (sboo-subdir "lisp/")
+
+  "Directory with vendored (individual) ELisp files.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-snippets-directory
+
+  (sboo-subdir "snippets/")
+
+  "Directory whose (per-major-mode) subdirectories contain my YASnippets files.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defconst sboo-installed-package-directory
 
   (sboo-subdir "elpa/")
@@ -107,8 +123,6 @@
   "`helm'-specific configuration for the `sboo'-profile.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(load sboo-init-helm-file)
 
 (load sboo-init-file)
 
