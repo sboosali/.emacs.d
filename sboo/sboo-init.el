@@ -27,8 +27,10 @@
 
   "`load' a `sboo-*.el' file."
 
-  (load (concat sboo-root-directory FileName)))
+  (load (sboo-file FileName)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Effects ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-to-load-path! sboo-root-directory)
@@ -38,12 +40,12 @@
 ;;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(load sboo-init-helm-file)
+(sboo-load-file! "sboo-init-helm.el")
 
-(sboo-load-file! "sboo-settings.el")
-(sboo-load-file! "sboo-aliases.el")
-(sboo-load-file! "sboo-commands.el")
-(sboo-load-file! "sboo-keybindings.el")
+;(sboo-load-file! "sboo-settings.el")
+;(sboo-load-file! "sboo-aliases.el")
+;(sboo-load-file! "sboo-commands.el")
+;(sboo-load-file! "sboo-keybindings.el")
 
 (when (require 'sboo-server nil t)
   (add-hook 'after-init-hook #'server-start-unless-running))
@@ -71,8 +73,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Use-package.
 
-(eval-when-compile (require 'use-package))
-(setq use-package-verbose t)
+;;(eval-when-compile (require 'use-package))
+;;(setq use-package-verbose t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

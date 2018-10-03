@@ -218,6 +218,6 @@ in
 ###stablePackages
 ###allPackages
 
-allPackages
+[]
 
 ############################################################
