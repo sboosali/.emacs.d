@@ -3,15 +3,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'helm-config)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package helm-mode
-  :config (helm-mode 1))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun sboo-init-helm! ()
 
   "Initialize `helm' variables.
@@ -60,6 +51,22 @@
     (helm-mode 1)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(progn
+  (sboo-init-helm!)
+  (add-hook 'emacs-startup-hook #'sboo-config-helm!)
+  ())
+
+;; ^ 
+;; 
+;; "`emacs-startup-hook' runs later than the `after-init-hook'."
+;;
+;; See:
+;; - https://www.gnu.org/software/emacs/manual/html_node/elisp/Hooks.html#Hooks
+;; - https://emacs.stackexchange.com/questions/14551/whats-the-difference-between-after-init-hook-and-emacs-startup-hook
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -69,7 +76,16 @@
 ;;
 ;; - https://emacs-helm.github.io/helm/
 ;; - https://github.com/emacs-helm/helm/wiki
+;; - https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm.el
+;; - 
+;;
 
+;; [Problem] "helm-interpret-value: Wrong number of arguments: (1 . 1), 0"
+;;
+;; [Solution] ?
+;; 
+;; a cloned `./helm/emacs-helm.sh' does work (i.e. `helm-M-x', `helm-find-file', etc).
+;; 
 
 ;; `helm-boring-buffer-regexp-list'
 ;; 

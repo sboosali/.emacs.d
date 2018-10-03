@@ -207,12 +207,17 @@ optionalPackages = with melpa; [
 ];
 
 ############################################################
+
+allPackages =
+  melpaPackages ++ stablePackages ++ optionalPackages;
+
+############################################################
 in
 ############################################################
 
-stablePackages
+###stablePackages
+###allPackages
 
-/* melpaPackages ++ stablePackages ++ optionalPackages
- */
+allPackages
 
 ############################################################

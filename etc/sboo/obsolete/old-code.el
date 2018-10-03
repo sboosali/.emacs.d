@@ -10,6 +10,46 @@
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utilities: Macros ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro define-graceful-command (Name ExternalCommand BuiltinCommand &optional DocString)
+
+  `(defun ,Name ()
+     
+     ,DocString
+     
+     (interactive) ;;TODO must expose, e.g. for helm-find-files, (interactive "P") ;; use cl-defun for :doc and :interactive
+     
+     (let ((*command* (function ,ExternalCommand)))
+  
+    (if (and (commandp *command*) 
+             (fboundp  *command*))
+             
+      (call-interactively *command*)
+
+     (call-interactively (function ,BuiltinCommand))))))
+
+;; ^ `defalias' for commands with graceful degradation.
+;;
+;; Wraps `defun' and `call-interactively'.
+;;
+;; NOTE (function f) is like #'f
+;;
+;; NOTE the predicates succeed even when command is marked with `autoload'.
+;;
+
+
+
+
+
+
+
+
+
+
+
 
 
 

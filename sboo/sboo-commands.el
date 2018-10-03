@@ -4,7 +4,7 @@
 ;; Most commands are namespaced under `sboo-` or `xah-`
 ;; (as are their non-`interactive' utilities).
 ;; 
-;; See my `defgrace` macro, for conveniently defining commands with fallbacks
+;; See my `define-graceful-command` macro, for conveniently defining commands with fallbacks
 ;; (when external packages haven't been installed and/or can't be loaded).
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17,13 +17,13 @@
 ;; Utilities: Macros ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro defgrace (Name ExternalCommand BuiltinCommand &optional DocString)
+(defmacro define-graceful-command (Name ExternalCommand BuiltinCommand &optional DocString)
 
   `(defun ,Name ()
      
      ,DocString
      
-     (interactive)
+     (interactive) ;;TODO must expose, e.g. for helm-find-files, (interactive "P") ;; use cl-defun for :doc and :interactive
      
      (let ((*command* (function ,ExternalCommand)))
   
@@ -357,13 +357,13 @@ Version 2015-04-09"
 ;; Commands that Gracefully Degrade ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defgrace sboo-buffers-list
+(define-graceful-command sboo-buffers-list
           helm-buffers-list
           list-buffers)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defgrace sboo-M-x
+(define-graceful-command sboo-M-x
           helm-M-x 
           execute-extended-command)
 
@@ -373,7 +373,7 @@ Version 2015-04-09"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defgrace sboo-search
+(define-graceful-command sboo-search
           xah-search-current-word
           isearch-forward)
 

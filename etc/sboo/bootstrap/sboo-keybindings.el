@@ -106,7 +106,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(global-set-key (kbd "<kp-enter>") 'helm-find-files)
+(global-set-key (kbd "<kp-enter>") #'helm-find-files)
 
   ;; ^ alternatives:
   ;;
