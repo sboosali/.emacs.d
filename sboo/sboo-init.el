@@ -40,12 +40,10 @@
 ;;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(sboo-load-file! "sboo-init-helm.el")
-
-;(sboo-load-file! "sboo-settings.el")
+(sboo-load-file! "sboo-settings.el")
 ;(sboo-load-file! "sboo-aliases.el")
-;(sboo-load-file! "sboo-commands.el")
-;(sboo-load-file! "sboo-keybindings.el")
+(sboo-load-file! "sboo-commands.el")
+(sboo-load-file! "sboo-keybindings.el")
 
 (when (require 'sboo-server nil t)
   (add-hook 'after-init-hook #'server-start-unless-running))
@@ -62,23 +60,18 @@
 ;;; External Packages: Installation ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;(sboo-load-file! "sboo-packages.el")
+(sboo-load-file! "sboo-packages.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: Configuration ;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(sboo-load-file! "sboo-init-helm.el")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Use-package.
 
 ;;(eval-when-compile (require 'use-package))
 ;;(setq use-package-verbose t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;(sboo-load-file! "sboo-helm.el")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'sboo-init) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'sboo-init)

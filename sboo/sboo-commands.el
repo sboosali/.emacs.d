@@ -1,6 +1,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom `interactive' commands.
 ;;
+;; (This `feature' is "pure" (it has declarations only, no settings)).
+;;
 ;; Most commands are namespaced under `sboo-` or `xah-`
 ;; (as are their non-`interactive' utilities).
 ;; 
@@ -391,15 +393,15 @@ Version 2015-04-09"
 ;; Commands that Gracefully Degrade ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-M-x (PrefixArgument)
-
-     "Invoke `helm-M-x', if bound."
-
-     (interactive "P")
-     
-     (if (commandp #'helm-M-x)
-         (helm-M-x PrefixArgument)
-         (execute-extended-command)))
+;(defun sboo-M-x (PrefixArgument)
+;
+ ;    "Invoke `helm-M-x', if bound."
+;
+ ;    (interactive "P")
+  ;   
+   ;  (if (commandp #'helm-M-x)
+    ;     (helm-M-x PrefixArgument)
+     ;    (execute-extended-command)))
 
 ;;;(defalias sboo-M-x helm-M-x)
 ;;;(define-graceful-command sboo-M-x helm-M-x execute-extended-command)
