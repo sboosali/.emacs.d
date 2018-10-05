@@ -30,6 +30,14 @@
   (load (sboo-file FileName)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-require! (FeatureSymbol &optional NoError)
+
+  "`require' a `sboo-*' feature."
+
+  (require FeatureSymbol nil NoError))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Effects ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -60,13 +68,17 @@
 ;;; External Packages: Installation ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(sboo-load-file! "sboo-packages.el")
+(sboo-require! 'sboo-packages)
+
+;;;(sboo-load-file! "sboo-packages.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: Configuration ;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(sboo-load-file! "sboo-init-helm.el")
+(sboo-require! 'sboo-init-helm)
+
+;;;(sboo-load-file! "sboo-init-helm.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
