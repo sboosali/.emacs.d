@@ -49,7 +49,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (sboo-load-file! "sboo-settings.el")
-;(sboo-load-file! "sboo-aliases.el")
+(sboo-load-file! "sboo-aliases.el")
 (sboo-load-file! "sboo-commands.el")
 (sboo-load-file! "sboo-keybindings.el")
 
@@ -70,15 +70,11 @@
 
 (sboo-require! 'sboo-packages)
 
-;;;(sboo-load-file! "sboo-packages.el")
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: Configuration ;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (sboo-require! 'sboo-init-helm)
-
-;;;(sboo-load-file! "sboo-init-helm.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

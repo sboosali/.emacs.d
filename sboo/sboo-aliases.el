@@ -6,51 +6,51 @@
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defalias 't 'dabbrev-expand)
-;; ^ « 't » for "tab-complete".
+(defalias '/t 'dabbrev-expand)
+;; ^ « t » for "tab-complete".
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defalias 'i 'insert-char)
+(defalias '/ic 'insert-char)
 
-(defalias 'rq 'query-replace-regexp)
-(defalias 'rs 'replace-string)
+(defalias '/rq 'query-replace-regexp)
+(defalias '/rs 'replace-string)
 
-(defalias 'ar  'align-regexp)
-(defalias 'ae  'align-entire)
+(defalias '/ar  'align-regexp)
+(defalias '/ae  'align-entire)
 
-;(defalias 'sl   'sort-lines)
-;(defalias 'rr   'reverse-region)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defalias 'eb   'eval-buffer)
-(defalias 'er   'eval-region)
-(defalias 'ed   'eval-defun)
-(defalias 'el   'eval-last-sexp)
-
-(defalias 'rb   'revert-buffer)
-
-(defalias 'wm   'whitespace-mode)
-(defalias 'gwm  'global-whitespace-mode)
-(defalias 'glm  'global-linum-mode)
-(defalias 'vm   'visual-line-mode)
-
-(defalias 'sbgc  'set-background-color)
-
-(defalias 'sh   'shell)
-
-(defalias 'fb   'flyspell-buffer)
+;(defalias '/sl   'sort-lines)
+;(defalias '/rr   'reverse-region)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defalias 'ras 'real-auto-save-mode)
+(defalias '/eb   'eval-buffer)
+(defalias '/er   'eval-region)
+(defalias '/ed   'eval-defun)
+(defalias '/el   'eval-last-sexp)
 
-(defalias 'pg #'projectile-grep)
-(defalias 'pf #'projectile-find-file)
-(defalias 'pc #'projectile-compile-project)
+(defalias '/rb   'revert-buffer)
 
-(defalias 'neo  'neotree)
+;; (defalias '/wm   'whitespace-mode)
+;; (defalias '/gwm  'global-whitespace-mode)
+;; (defalias '/glm  'global-linum-mode)
+;; (defalias '/vm   'visual-line-mode)
+
+;; (defalias '/sbgc  'set-background-color)
+
+;; (defalias '/sh   'shell)
+
+;; (defalias '/fb   'flyspell-buffer)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defalias '/ras 'real-auto-save-mode)
+
+(defalias '/pg #'projectile-grep)
+(defalias '/pf #'projectile-find-file)
+(defalias '/pc #'projectile-compile-project)
+
+(defalias '/neo  'neotree)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
