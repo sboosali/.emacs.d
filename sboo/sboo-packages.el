@@ -1,5 +1,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; External Packages to Load or Install
+;;; External Packages to Load or Install
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-definitions)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'package)
@@ -12,8 +17,10 @@
 
   (package-initialize)
   
-  (add-to-list 'load-path (truename-as-directory "./submodules/helm/"))
-  
+  (sboo-register-submodule! "helm/")
+  (sboo-register-submodule! "use-package/")
+  (sboo-register-submodule! "real-auto-save/")
+
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

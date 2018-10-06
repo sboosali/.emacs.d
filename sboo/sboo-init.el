@@ -1,4 +1,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Imports (Bootstrapped) ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(let* ((EmacsDirectory     (or user-emacs-directory "~/.emacs.d/"))
+       (SbooDirectory      (file-name-as-directory (concat EmacsDirectory "sboo/")))
+       (SbooFile           (file-truename (concat SbooDirectory "sboo-definitions.el"))))   ;;TODO EnvironmentVars
+
+  (require 'sboo-definitions SbooFile))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun add-to-load-path! (FilePath)
 
@@ -19,33 +29,17 @@
   "
 
   (add-to-list 'load-path
-     (file-name-as-directory (expand-file-name FilePath))))
+     (file-name-as-directory (file-truename FilePath))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun sboo-load-file! (FileName)
-
-  "`load' a `sboo-*.el' file."
-
-  (load (sboo-file FileName)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun sboo-require! (FeatureSymbol &optional NoError)
-
-  "`require' a `sboo-*' feature."
-
-  (require FeatureSymbol nil NoError))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Effects ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Register LoadPaths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-to-load-path! sboo-root-directory)
 (add-to-load-path! sboo-lisp-directory)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Load Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (sboo-load-file! "sboo-settings.el")
