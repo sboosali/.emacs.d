@@ -30,19 +30,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-file (FilePath)
-  "Return « `sboo-root-directory'/`FilePath' ».
-
-  i.e. Return the relative filepath `FilePath', 
-  as an absolute filepath, under `sboo-root-directory'.
-
-  Calls `file-truename'.
-  "
-
-  (file-truename (concat sboo-root-directory FilePath)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun sboo-subdir (FilePath)
   "Return « `sboo-root-directory'/`FilePath'/ ».
 
@@ -80,11 +67,24 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst sboo-cloned-package-directory
+(defconst sboo-vendored-package-directory
 
   (sboo-subdir "submodules/")
 
   "Directory which contains any vendored ELisp packages (as subdirectories).")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-file (FilePath)
+  "Return « `sboo-root-directory'/`FilePath' ».
+
+  i.e. Return the relative filepath `FilePath', 
+  as an absolute filepath, under `sboo-root-directory'.
+
+  Calls `file-truename'.
+  "
+
+  (file-truename (concat sboo-root-directory FilePath)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -118,14 +118,50 @@ most other installed packages; concisely, efficiently, and safely.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defconst sboo-init-real-auto-save-file
+
+  (sboo-file "sboo-init-real-auto-save.el")
+
+  "`real-auto-save'-specific loading & configuration. 
+`real-auto-save` is important (single-file) package (i.e. it really should be installed). Why? Because continuous (& convenient) autosaving saves you from lost work.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-package-file (PackageName &optional FileName)
+  "Return « `sboo-submodule-directory'/`PackageName'/`FileName' ».
+
+Calls `file-truename'.
+
+e.g.:
+
+(sboo-submodule-file \"real-auto-save\")
+=
+(sboo-submodule-file \"real-auto-save\" \"real-auto-save.el\")
+=
+\"~/.emacs.d/submodules/real-auto-save/real-auto-save.el\"
+"
+
+  (let* ((PackageDirectory
+          (truename-as-directory (concat sboo-vendored-package-directory PackageName)))
+
+	 (File (or FileName
+	           (concat PackageName ".el")))
+	 
+	 (PackageFile
+	  (file-truename (concat PackageDirectory File))))
+
+    PackageFile))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun sboo-register-submodule! (DirectoryName)
 
-  "Register `DirectoryName' with `load-path', under `sboo-cloned-package-directory'.
+  "Register `DirectoryName' with `load-path', under `sboo-vendored-package-directory'.
 
 See the file `./scripts/add-submodule.sh'."
 
   (let ((DirectoryPath 
-            (truename-as-directory (concat sboo-cloned-package-directory DirectoryName))))
+          (truename-as-directory (concat sboo-vendored-package-directory DirectoryName))))
 
     (add-to-list 'load-path DirectoryPath)))
 
