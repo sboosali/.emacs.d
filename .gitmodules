@@ -7,3 +7,6 @@
 [submodule "helm"]
 	path = submodules/helm
 	url = https://github.com/emacs-helm/helm
+[submodule "real-auto-save"]
+	path = submodules/real-auto-save
+	url = https://github.com/ChillarAnand/real-auto-save

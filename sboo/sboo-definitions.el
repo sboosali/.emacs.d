@@ -120,7 +120,9 @@ most other installed packages; concisely, efficiently, and safely.")
 
 (defun sboo-register-submodule! (DirectoryName)
 
-  "Register `DirectoryName' with `load-path', under `sboo-cloned-package-directory'."
+  "Register `DirectoryName' with `load-path', under `sboo-cloned-package-directory'.
+
+See the file `./scripts/add-submodule.sh'."
 
   (let ((DirectoryPath 
             (truename-as-directory (concat sboo-cloned-package-directory DirectoryName))))
