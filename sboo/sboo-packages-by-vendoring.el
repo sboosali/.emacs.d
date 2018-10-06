@@ -48,4 +48,4 @@
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'sboo-packages)
+(provide 'sboo-packages-by-vendoring)
