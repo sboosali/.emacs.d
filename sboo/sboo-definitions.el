@@ -22,9 +22,59 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun emacs-subdir (FilePath)
+  "Return « `emacs-directory'/`FilePath'/ ».
+
+  i.e. Return the relative directory `FilePath', 
+  as an absolute sub-directory of `emacs-directory'.
+
+  Calls `file-name-as-directory' and `file-truename'.
+  "
+
+  (truename-as-directory (concat emacs-directory FilePath)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun emacs-file (FilePath)
+  "Return « `emacs-directory'/`FilePath' ».
+
+  i.e. Return the relative filepath `FilePath', 
+  as an absolute filepath, under `emacs-directory'.
+
+  Calls `file-truename'.
+  "
+
+  (file-truename (concat emacs-directory FilePath)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-lisp-directory
+
+  (emacs-subdir "lisp/")
+
+  "Directory with vendored (individual) ELisp files.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-installed-package-directory
+
+  (emacs-subdir "elpa/")
+
+  "Directory where `package.el' should install ELisp packages.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-vendored-package-directory
+
+  (emacs-subdir "submodules/")
+
+  "Directory which contains any vendored ELisp packages (as subdirectories).")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defconst sboo-root-directory
 
-  (truename-as-directory (concat emacs-directory "sboo/"))
+  (emacs-subdir "sboo/")
 
   "The root directory of my personal configuration.")
 
@@ -48,30 +98,6 @@
   (sboo-subdir "snippets/")
 
   "Directory whose (per-major-mode) subdirectories contain my YASnippets files.")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defconst sboo-lisp-directory
-
-  (sboo-subdir "lisp/")
-
-  "Directory with vendored (individual) ELisp files.")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defconst sboo-installed-package-directory
-
-  (sboo-subdir "elpa/")
-
-  "Directory where `package.el' should install ELisp packages.")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defconst sboo-vendored-package-directory
-
-  (sboo-subdir "submodules/")
-
-  "Directory which contains any vendored ELisp packages (as subdirectories).")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -138,7 +164,7 @@ e.g.:
 =
 (sboo-submodule-file \"real-auto-save\" \"real-auto-save.el\")
 =
-\"~/.emacs.d/submodules/real-auto-save/real-auto-save.el\"
+\"/home/sboo/.emacs.d/submodules/real-auto-save/real-auto-save.el\"
 "
 
   (let* ((PackageDirectory
