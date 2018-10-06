@@ -64,6 +64,8 @@ An `alist', where each item's:
 
 (progn
 
+  (setq package-archives sboo-package-archives)
+
   (setq package-load-list sboo-package-dependencies)
 
   (package-initialize)

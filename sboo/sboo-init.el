@@ -63,13 +63,62 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;(sboo-load-file! "sboo-packages-by-installing.el")
-(sboo-load-file! "sboo-packages-by-vendoring.el")
+;;(sboo-load-file! "sboo-packages-by-vendoring.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: Configuration ;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(sboo-require! 'sboo-init-helm)
+;;(sboo-require! 'sboo-init-helm)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(progn
+  (require 'package)
+
+  (setq package-enable-at-startup nil)
+
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+
+  (package-initialize)
+
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(progn
+  (setq use-package-verbose t)
+
+  (eval-when-compile (require 'use-package))
+  (require 'diminish)
+  (require 'bind-key)
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package real-auto-save
+
+  :init (setq real-auto-save-interval 1) 
+        ;; ^ 
+        ;; "1" means autosave every second".
+
+  :hook ((find-file . real-auto-save-mode))
+        ;; ^
+        ;; autosave all file-buffers.
+
+  :commands (real-auto-save-mode)
+            ;; ^
+            ;; (package name and mode command differ).
+
+  )
+
+;; ^ 
+;; `real-auto-save-mode' auto-saves a (file-)buffer to the visited file itself (not the `~`-suffixed backup file.")
   
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-init)
