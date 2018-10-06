@@ -13,9 +13,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(let* ((EmacsDirectory (or user-emacs-directory "~/.emacs.d/"))
-       (SbooDirectory  (file-name-as-directory (concat EmacsDirectory "sboo/")))
-       (SbooFile       (file-truename (concat SbooDirectory "sboo-init.el"))))   ;;TODO EnvironmentVars
+(let* ((EmacsDirectory (or user-emacs-directory
+			   "~/.emacs.d/"))
+       (SbooDirectory  (file-name-as-directory (concat EmacsDirectory
+						       "sboo/")))
+       (SbooFile       (file-truename (concat SbooDirectory
+					      "sboo-init.el"))))   ;;TODO EnvironmentVars
 
   (load SbooFile nil nil t t))
 

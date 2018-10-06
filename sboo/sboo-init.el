@@ -4,9 +4,14 @@
 ;; Imports (Bootstrapped) ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(let* ((EmacsDirectory     (or user-emacs-directory "~/.emacs.d/"))
-       (SbooDirectory      (file-name-as-directory (concat EmacsDirectory "sboo/")))
-       (SbooFile           (file-truename (concat SbooDirectory "sboo-definitions.el"))))   ;;TODO EnvironmentVars
+(let* ((EmacsDirectory     (or user-emacs-directory
+                               "~/.emacs.d/"))
+
+       (SbooDirectory      (file-name-as-directory (concat EmacsDirectory
+                                                           "sboo/")))
+
+       (SbooFile           (file-truename (concat SbooDirectory
+                                                  "sboo-definitions.el"))))   ;;TODO EnvironmentVars
 
   (require 'sboo-definitions SbooFile))
 

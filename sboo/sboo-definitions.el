@@ -35,32 +35,32 @@ Example Usage: « $ EMACS_INSTALL=t emacs ».")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-install-p ()
+;; (defun sboo-install-p ()
 
-  (let ((*value* (getenv sboo-environment-variable-install)))
+;;   (let ((*value* (getenv sboo-environment-variable-install)))
 
-    (pcase *value*
+;;     (pcase *value*
 
-      ('()     nil)
+;;       ('()     nil)
 
-      (""      nil)
-      ("0"     nil)
-      ("no"    nil)
-      ("false" nil)
+;;       (""      nil)
+;;       ("0"     nil)
+;;       ("no"    nil)
+;;       ("false" nil)
 
-      ("nixpkgs"    'nixpkgs)
-      ("submodules" 'submodules)
-      ("melpa"      'melpa)
+;;       ("nixpkgs"    'nixpkgs)
+;;       ("submodules" 'submodules)
+;;       ("melpa"      'melpa)
 
-      ("1"     t)
-      ("yes"   t)
-      ("true"  t)
+;;       ("1"     t)
+;;       ("yes"   t)
+;;       ("true"  t)
 
-      (_       t)))
+;;       (_       t)))
 
-  "Whether to install packages, and how to install them.
+;;   "Whether to install packages, and how to install them.
 
-(e.g. when Emacs is first launched on a new computer).")
+;; (e.g. when Emacs is first launched on a new computer).")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Paths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -113,8 +113,7 @@ Example Usage: « $ EMACS_INSTALL=t emacs ».")
 
 (defvar sboo-installed-package-directory
 
-  (if (bound-and-true-p 'package-user-dir)
-      package-user-dir
+  (or (bound-and-true-p package-user-dir)
       (emacs-subdir "elpa/"))
 
   "Directory where `package.el' should install ELisp packages.
