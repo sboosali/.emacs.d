@@ -11,6 +11,37 @@
 (require 'cl-lib)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo/string->symbol (STRING)
+  "`intern` the `STRING', returning its symbol.
+  
+  Munge the string into an idiomatic elisp symbol:
+  
+  * clean up, by dropping any non-printable characters;
+  * normalize casing, via `downcase';
+  * normalize word boundaries, by replacing *all* "unidiomatic" substrings 
+  (i.e. one-or-more whitespace and/or non-alphanumeric characters)
+  with a single hyphen.
+
+  M-: (sboo/string->symbol "foo-bar")
+  'foo-bar
+
+  M-: (sboo/string->symbol "foo, bar!")
+  'foo-bar
+
+  M-: (sboo/string->symbol ":Foo:|:Bar:")
+  'foo-bar
+
+  "
+  (interactive)
+
+  (let ((*symbolic-string* STRING)) ;TODO; implement
+  
+    (intern *symbolic-string*)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Environment Variables ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

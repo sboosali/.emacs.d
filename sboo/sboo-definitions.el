@@ -1,22 +1,75 @@
-;;; Core Definitions (no Statements) for SBoo's Emacs Configuration
+;;; Core Definitions (no Statements) for SBoo's Emacs Configuration -*- lexical-binding: t -*-
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'cl-lib)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun truename-as-directory (FilePath)
   "Return « `FilePath'/ ».
 
-  i.e. Return the true name of `FilePath', as a directory path.
-  
-  Calls `file-name-as-directory' and `file-truename'.
-  "
+Return the true name of `FilePath', as a directory path:
+
+* an absolute path, 
+* with symbolic links resolved (but not hard links),
+* with « ~/... » and « $HOME/... » expanded.
+
+Calls `file-name-as-directory' and `file-truename'."
 
   (file-name-as-directory (file-truename FilePath)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Environment Variables ;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-environment-variable-install "EMACS_INSTALL"
+
+  "See `sboo-install-p'.
+
+Example Usage: « $ EMACS_INSTALL=t emacs ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-install-p ()
+
+  (let ((*value* (getenv sboo-environment-variable-install)))
+
+    (pcase *value*
+
+      ('()     nil)
+
+      (""      nil)
+      ("0"     nil)
+      ("no"    nil)
+      ("false" nil)
+
+      ("nixpkgs"    'nixpkgs)
+      ("submodules" 'submodules)
+      ("melpa"      'melpa)
+
+      ("1"     t)
+      ("yes"   t)
+      ("true"  t)
+
+      (_       t)))
+
+  "Whether to install packages, and how to install them.
+
+(e.g. when Emacs is first launched on a new computer).")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Paths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defconst emacs-directory
 
-  (truename-as-directory (or user-emacs-directory "~/.emacs.d/"))
+  (truename-as-directory (or user-emacs-directory
+			     "~/.emacs.d/"))
 
   "The root directory of the user's emacs configuration.")
 
@@ -31,7 +84,8 @@
   Calls `file-name-as-directory' and `file-truename'.
   "
 
-  (truename-as-directory (concat emacs-directory FilePath)))
+  (truename-as-directory (concat emacs-directory
+				 FilePath)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -44,7 +98,8 @@
   Calls `file-truename'.
   "
 
-  (file-truename (concat emacs-directory FilePath)))
+  (file-truename (concat emacs-directory
+			 FilePath)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -56,11 +111,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst sboo-installed-package-directory
+(defvar sboo-installed-package-directory
 
-  (emacs-subdir "elpa/")
+  (if (bound-and-true-p 'package-user-dir)
+      package-user-dir
+      (emacs-subdir "elpa/"))
 
-  "Directory where `package.el' should install ELisp packages.")
+  "Directory where `package.el' should install ELisp packages.
+`package-user-dir' by default.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -89,7 +147,8 @@
   Calls `file-name-as-directory' and `file-truename'.
   "
 
-  (file-name-as-directory (file-truename (concat sboo-root-directory FilePath))))
+  (truename-as-directory (concat sboo-root-directory
+				 FilePath)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -110,7 +169,8 @@
   Calls `file-truename'.
   "
 
-  (file-truename (concat sboo-root-directory FilePath)))
+  (file-truename (concat sboo-root-directory
+			 FilePath)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -168,13 +228,16 @@ e.g.:
 "
 
   (let* ((PackageDirectory
-          (truename-as-directory (concat sboo-vendored-package-directory PackageName)))
+          (truename-as-directory (concat sboo-vendored-package-directory
+					 PackageName)))
 
 	 (File (or FileName
-	           (concat PackageName ".el")))
+	           (concat PackageName
+			   ".el")))
 	 
 	 (PackageFile
-	  (file-truename (concat PackageDirectory File))))
+	  (file-truename (concat PackageDirectory
+				 File))))
 
     PackageFile))
 
@@ -187,7 +250,8 @@ e.g.:
 See the file `./scripts/add-submodule.sh'."
 
   (let ((DirectoryPath 
-          (truename-as-directory (concat sboo-vendored-package-directory DirectoryName))))
+         (truename-as-directory (concat sboo-vendored-package-directory
+					DirectoryName))))
 
     (add-to-list 'load-path DirectoryPath)))
 
