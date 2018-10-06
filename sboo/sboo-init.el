@@ -62,7 +62,8 @@
 ;;; External Packages: Installation ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(sboo-require! 'sboo-packages)
+(sboo-require! 'sboo-packages-by-installing)
+;;;(sboo-require! 'sboo-packages-by-vendoring)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: Configuration ;;;;;;;;;;;;;
