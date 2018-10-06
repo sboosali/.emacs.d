@@ -1,4 +1,4 @@
-;;; init.el --- SBoo's Emacs Configuration
+;;; init.el --- SBoo's Emacs Configuration -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq debug-on-error t)
