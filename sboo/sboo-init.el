@@ -1,3 +1,5 @@
+;;; `init.el' for the `sboo' profile. -*- lexical-binding: t -*-
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Imports (Bootstrapped) ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -69,35 +71,21 @@
 ;;; External Packages: Configuration ;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;(sboo-require! 'sboo-init-helm)
+(sboo-register-submodule! "helm/")
+
+(sboo-load-file! "sboo-init-helm.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn
-  (require 'package)
+(sboo-register-submodule! "real-auto-save/")
 
-  (setq package-enable-at-startup nil)
-
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
-
-  (package-initialize)
-
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package))
-  ())
+(sboo-load-file! "sboo-init-real-auto-save.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn
-  (setq use-package-verbose t)
+(sboo-register-submodule! "use-package/")
 
-  (eval-when-compile (require 'use-package))
-  (require 'diminish)
-  (require 'bind-key)
-  ())
+(sboo-load-file! "sboo-init-use-package.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
