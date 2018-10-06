@@ -24,10 +24,6 @@
   (setq
    real-auto-save-interval 1) 
   ;; ^ in seconds
-  
-  (setq
-   auto-save-visited-file-name t) 
-  ;; ^ ?
 
   )
 

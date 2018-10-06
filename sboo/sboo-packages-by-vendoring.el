@@ -15,7 +15,7 @@
  '((helm-core t) (helm t) (async t) (popup t)))
 
 (defvar sboo--use-package-dependencies 
- '((bind-key t) (use-package t) (async t) (popup t)))
+ '((bind-key t) (use-package t)))
 
 (defvar sboo--real-auto-save-dependencies 
  '((real-auto-save t)))
@@ -33,8 +33,7 @@
 
   (package-initialize)
   
-  (sboo-register-submodule! "helm/")
-  (sboo-register-submodule! "use-package/")
+  ;;(sboo-register-submodule! "helm/")
   (sboo-register-submodule! "real-auto-save/")
 
   ())

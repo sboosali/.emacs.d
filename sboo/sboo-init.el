@@ -62,19 +62,14 @@
 ;;; External Packages: Installation ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(sboo-require! 'sboo-packages-by-installing)
-;;;(sboo-require! 'sboo-packages-by-vendoring)
+;;;(sboo-load-file! "sboo-packages-by-installing.el")
+(sboo-load-file! "sboo-packages-by-vendoring.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: Configuration ;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (sboo-require! 'sboo-init-helm)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;(eval-when-compile (require 'use-package))
-;;(setq use-package-verbose t)
-
+  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-init)
