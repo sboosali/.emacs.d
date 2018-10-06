@@ -35,32 +35,35 @@ Example Usage: « $ EMACS_INSTALL=t emacs ».")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (defun sboo-install-p ()
+(defun sboo-install-p ()
 
-;;   (let ((*value* (getenv sboo-environment-variable-install)))
+  "Whether to install packages. (TODO and how to install them).
 
-;;     (pcase *value*
+(e.g. when Emacs is first launched on a new computer)."
 
-;;       ('()     nil)
+  (pcase (getenv sboo-environment-variable-install)
 
-;;       (""      nil)
-;;       ("0"     nil)
-;;       ("no"    nil)
-;;       ("false" nil)
+      ('()   nil)
+      ("nil" nil)
+      ("t"     t)
+      
+      ("nixpkgs"    'nixpkgs)
+      ("submodules" 'submodules)
+      ("melpa"      'melpa)
 
-;;       ("nixpkgs"    'nixpkgs)
-;;       ("submodules" 'submodules)
-;;       ("melpa"      'melpa)
+      (_ nil)))
 
-;;       ("1"     t)
-;;       ("yes"   t)
-;;       ("true"  t)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;       (_       t)))
+(defun sboo-install-submodules-p ()
+  "Whether to load the `sboo-critical-packages' from vendored submodules.
 
-;;   "Whether to install packages, and how to install them.
+Wraps `sboo-install-p'."
 
-;; (e.g. when Emacs is first launched on a new computer).")
+  (pcase (sboo-install-p)
+
+      ('submodules   t)
+      (_           nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Paths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

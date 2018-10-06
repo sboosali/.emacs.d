@@ -76,42 +76,28 @@
 ;;; External Packages: Configuration ;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(sboo-register-submodule! "helm/")
+(when (sboo-install-submodules-p)
+  (sboo-register-submodule! "helm/"))
 
 (sboo-load-file! "sboo-init-helm.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(sboo-register-submodule! "real-auto-save/")
+(when (sboo-install-submodules-p)
+  (sboo-register-submodule! "real-auto-save/"))
 
 (sboo-load-file! "sboo-init-real-auto-save.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(sboo-register-submodule! "use-package/")
+(when (sboo-install-submodules-p)
+  (sboo-register-submodule! "use-package/"))
 
 (sboo-load-file! "sboo-init-use-package.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package real-auto-save
 
-  :init (setq real-auto-save-interval 1) 
-        ;; ^ 
-        ;; "1" means autosave every second".
 
-  :hook ((find-file . real-auto-save-mode))
-        ;; ^
-        ;; autosave all file-buffers.
-
-  :commands (real-auto-save-mode)
-            ;; ^
-            ;; (package name and mode command differ).
-
-  )
-
-;; ^ 
-;; `real-auto-save-mode' auto-saves a (file-)buffer to the visited file itself (not the `~`-suffixed backup file.")
-  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-init)

@@ -4,6 +4,25 @@ melpa: stable: elpa: org:
 let
 ############################################################
 
+criticalPackages = with melpa; [
+
+ use-package     # minimal dependencies
+ bind-key        #
+
+ helm            # minimal dependencies
+ helm-core       #
+ async           #
+ popup           #
+
+ real-auto-save  # no dependencies
+ 
+ haskell-mode    # no dependencies
+
+ yasnippet       # no dependencies
+
+];
+
+############################################################
 
 stablePackages = with stable; [
 
@@ -67,7 +86,13 @@ melpaPackages = with melpa; [
 
  ####################
 
- intero          # needs `stack` system-package
+ ghc
+ company-ghci
+ dante
+ helm-hayoo
+ ##intero          # needs `stack` system-package
+
+ ####################
 
  tabbar
  shackle
@@ -218,7 +243,8 @@ in
 
 ###stablePackages
 ###allPackages
+###criticalPackages
 
-[]
+allPackages
 
 ############################################################

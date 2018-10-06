@@ -2,8 +2,8 @@
 # Variables ######################################
 ##################################################
 
-Emacs?=emacs
-#Emacs?=./result/bin/emacs
+#Emacs?=emacs
+Emacs?=./result/bin/emacs
 
 Cask?=cask
 

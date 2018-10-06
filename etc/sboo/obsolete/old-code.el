@@ -30,6 +30,92 @@
 
 
 
+(autoload #'real-auto-save-mode
+          (sboo-submodule-file "real-auto-save" "real-auto-save.el")
+          "Autosave this buffer (via `real-auto-save')." 
+          'interactive 
+          nil)
+
+
+
+
+
+
+
+
+
+
+(use-package real-auto-save
+
+  :init (setq real-auto-save-interval 1) 
+        ;; ^ 
+        ;; "1" means autosave every second".
+
+  :hook ((find-file . real-auto-save-mode))
+        ;; ^
+        ;; autosave all file-buffers.
+
+  :commands (real-auto-save-mode)
+            ;; ^
+            ;; (package name and mode command differ).
+
+  )
+
+;; ^ 
+;; `real-auto-save-mode' auto-saves a (file-)buffer to the visited file itself (not the `~`-suffixed backup file.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(defun sboo-install-p ()
+
+  (let ((*value* (getenv sboo-environment-variable-install)))
+
+    (pcase *value*
+
+      ('()     nil)
+
+      (""      nil)
+      ("0"     nil)
+      ("no"    nil)
+      ("false" nil)
+
+      ("nixpkgs"    'nixpkgs)
+      ("submodules" 'submodules)
+      ("melpa"      'melpa)
+
+      ("1"     t)
+      ("yes"   t)
+      ("true"  t)
+
+      (_       t)))
+
+  "Whether to install packages, and how to install them.
+
+(e.g. when Emacs is first launched on a new computer).")
+
+
+
+
+
+
+
+
+
+
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

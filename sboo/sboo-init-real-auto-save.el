@@ -15,7 +15,7 @@
 ;;(require 'real-auto-save)
 
 (autoload #'real-auto-save-mode
-          (sboo-submodule-file "real-auto-save" "real-auto-save.el")
+          "real-auto-save.el"
           "Autosave this buffer (via `real-auto-save')." 
           'interactive 
           nil)
