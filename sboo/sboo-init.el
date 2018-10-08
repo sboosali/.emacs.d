@@ -46,7 +46,7 @@
 (add-to-load-path! sboo-lisp-directory)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Load Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (sboo-load-file! "sboo-settings.el")
@@ -54,49 +54,150 @@
 (sboo-load-file! "sboo-commands.el")
 (sboo-load-file! "sboo-keybindings.el")
 
-(when (require 'sboo-server nil t)
-  (add-hook 'after-init-hook #'server-start-unless-running))
-
-;;;(require 'sboo-settings-widgets)
-;;;  (sboo-minibuffer-config))
-;;;  (sboo-config-fonts))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Internal Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-server nil t)
+  (add-hook 'after-init-hook #'server-start-unless-running))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'sboo-settings-widgets)
+;;;  (sboo-minibuffer-config))
+;;;  (sboo-config-fonts))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: Installation ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;(sboo-load-file! "sboo-packages-by-installing.el")
-;;(sboo-load-file! "sboo-packages-by-vendoring.el")
+(pcase (sboo-install-p)
+
+  ('submodules (progn
+                 (sboo-register-submodule! "use-package/")
+                 (sboo-register-submodule! "helm/")
+                 (sboo-register-submodule! "real-auto-save/")))
+
+  ('melpa      (progn
+                 (sboo-load-file! "sboo-packages-by-installing.el")))
+
+  ('nixpkgs    (progn))
+
+  (_           (progn)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: Configuration ;;;;;;;;;;;;;
+;;; External Packages: Core Configuration ;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(when (sboo-install-submodules-p)
-  (sboo-register-submodule! "helm/"))
 
 (sboo-load-file! "sboo-init-helm.el")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(when (sboo-install-submodules-p)
-  (sboo-register-submodule! "real-auto-save/"))
-
 (sboo-load-file! "sboo-init-real-auto-save.el")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(when (sboo-install-submodules-p)
-  (sboo-register-submodule! "use-package/"))
-
 (sboo-load-file! "sboo-init-use-package.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; External Packages: Haskell Configuration ;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(when (require 'sboo-haskell nil t)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (use-package haskell
+    :demand t
+
+    :commands    (haskell-mode)
+
+    :interpreter (("runhaskell"  . haskell-mode)
+                  ("runghc"      . haskell-mode)
+                  ("stack"       . haskell-mode))
+
+    :mode        (("\\.hs\\'"    . haskell-mode)
+                  ("\\.lhs\\'"   . haskell-mode)
+                  ("\\.hsig\\'"  . haskell-mode)
+                  ("\\.hsc\\'"   . haskell-mode))
+
+    ;;; :hook        ((haskell-mode . interactive-haskell-mode))
+
+    :init
+    (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
+    
+    :config
+    
+    (progn
+      (custom-set-variables
+
+       '(haskell-process-type             (quote cabal-new-repl))
+       
+       '(haskell-process-path-ghci        "cabal")
+
+       ;; '(haskell-process-type             (quote stack-ghci))
+       ;; '(haskell-process-path-ghci        "stack")
+
+       '(haskell-process-args-cabal-repl  (list "--ghc-option=-ferror-spans"))
+
+       '(haskell-ask-also-kill-buffers    nil)
+
+       '(haskell-interactive-popup-errors nil))
+
+      ()))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (use-package haskell-decl-scan
+    :after    haskell
+    
+    :commands (haskell-decl-scan-mode)
+    
+    ;;;:hook     ((haskell-mode . haskell-decl-scan-mode))
+
+    :init
+    (add-hook 'haskell-mode-hook #'haskell-decl-scan-mode))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (use-package haskell-cabal
+    :after    haskell
+
+    :commands (haskell-cabal-mode)
+
+    :mode        (("\\.cabal\\'"      . haskell-cabal-mode)
+                  ("\\.project\\'"    . haskell-cabal-mode)
+                  ("\\`\\.project\\'" . haskell-cabal-mode)))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (use-package dante
+    :after    haskell
+
+    :commands (dante-mode dante-restart)
+
+    :bind (:map haskell-mode-map
+                (("C-c d" . sboo-dante-mode)))
+
+;;;  :hook ((haskell-mode . flycheck-mode)
+;;;         (haskell-mode . dante-mode))
+
+    :init
+    (add-hook 'haskell-mode-hook #'flycheck-mode)
+    (add-hook 'haskell-mode-hook #'dante-mode)
+
+    :config (setq dante-repl-command-line-methods-alist 
+                  sboo-dante-repl-command-line-methods-alist)
+    ())
+
+  ;; ^ Configure `dante':
+  ;;
+  ;; * load `dante.el', which registers `dante-target' and `dante-project-root' as `safe-local-var's.
+  ;; * `autoload' the `dante-mode' command, so we can run 《 M-x dante-mode 》 manually.
+  ;; 
+  ;; 
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; External Packages: (Miscellaneous) Configuration
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

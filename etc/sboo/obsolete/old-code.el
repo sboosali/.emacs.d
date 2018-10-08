@@ -26,6 +26,36 @@
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Hacks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun haskell-doc-current-info ()
+  (when (commandp #'dante-info)
+    (call-interactively #'dante-info)))
+
+;; ^ `dante-info' + `eldoc-mode'.
+;;
+;; NOTE disable if too slow.
+
+;; (defun haskell-doc-current-info ()
+;;   (progn
+;;     (dante-info)
+;;     ))
+;;
+;;  ;; ^ HACK fixes this pseudo-error:
+;;  ;; 
+;;  ;;     eldoc error: (void-function haskell-doc-current-info)
+;;  ;; 
+
+
+
+
+
+
+
+
+
 
 
 

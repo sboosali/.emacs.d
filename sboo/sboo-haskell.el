@@ -1,4 +1,41 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;(require ')
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Hacks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun haskell-doc-current-info ()
+  (when (commandp #'dante-type-at)
+    (call-interactively #'dante-type-at)))
+
+;; ^ `dante'+`eldoc' integration.
+;;
+;; NOTE disable if too slow.
+;;
+;; Alternatively:
+;;
+;; * `dante-info': more informative, pops-up a `*Help' buffer.
+;; * `dante-type-at': more concise, prints to Echo Area (like `eldoc' should),
+;;
+;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun haskell-mode-after-save-handler ()
+  (progn))
+
+ ;; ^ HACK fixes this pseudo-error:
+ ;;
+ ;;     Error running timer ‘real-auto-save-buffers’: (void-function haskell-mode-after-save-handler)
+ ;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Dante ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-dante-cabal-new-repl (root)
 
@@ -37,27 +74,4 @@
    (dante-mode 1)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package dante
-  
-  :commands dante-mode
-
-;;;  :hook ((haskell-mode . flycheck-mode)
-;;;         (haskell-mode . dante-mode))
-
-  :bind (:map haskell-mode-map
-              (("" . sboo-dante-mode)))
-
-  :config (progn
-            (setq dante-repl-command-line-methods-alist sboo-dante-repl-command-line-methods-alist)
-            ()))
-
-;; ^ Configure `dante':
-;;
-;; * load `dante.el', which registers `dante-target' and `dante-project-root' as `safe-local-var's.
-;; * `autoload' the `dante-mode' command, so we can run 《 M-x dante-mode 》 manually.
-;; 
-;; 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-haskell)

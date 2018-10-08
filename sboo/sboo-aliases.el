@@ -19,6 +19,8 @@
 (defalias '/ar  'align-regexp)
 (defalias '/ae  'align-entire)
 
+(defalias '/ir   'indent-region)
+
 ;(defalias '/sl   'sort-lines)
 ;(defalias '/rr   'reverse-region)
 
