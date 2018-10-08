@@ -39,6 +39,14 @@
      (file-name-as-directory (file-truename FilePath))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun add-startup-hook! (FunctionSymbol)
+
+  "Register `FunctionSymbol' with `emacs-startup-hook'."
+
+  (add-hook 'emacs-startup-hook FunctionSymbol))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Register LoadPaths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -54,12 +62,22 @@
 (sboo-load-file! "sboo-commands.el")
 (sboo-load-file! "sboo-keybindings.el")
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (>= emacs-major-version 26)
+
+  (require 'sboo-autosave)
+
+  (sboo-autosave-init!)
+
+  (add-startup-hook! #'sboo-autosave-config!))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Internal Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when (require 'sboo-server nil t)
-  (add-hook 'after-init-hook #'server-start-unless-running))
+  (add-startup-hook! #'server-start-unless-running))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -90,8 +108,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (sboo-load-file! "sboo-init-helm.el")
-(sboo-load-file! "sboo-init-real-auto-save.el")
 (sboo-load-file! "sboo-init-use-package.el")
+
+(when (< emacs-major-version 26)
+  (sboo-load-file! "sboo-init-real-auto-save.el"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: Haskell Configuration ;;;;;
