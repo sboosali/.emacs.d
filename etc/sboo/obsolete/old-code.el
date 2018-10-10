@@ -26,6 +26,76 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  (rx bol
+      (group (eval sboo-prompt-regexp)) ;; the present working directory
+      (zero-or-more space)
+      (zero-or-more (not "$")) ;; TODO ignore accessories (like the current git-branch)
+      "$"
+      (zero-or-more space)
+      eol)
+
+
+
+
+
+(unless (boundp 'completion-in-region-function)
+  (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+  (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
+
+
+
+
+
+
+(define-key key-translation-map (kbd "<apps>") (kbd "<menu>"))
+
+;; ^ alias the AppKey to the MenuKey.
+;; they're the same key, with different names, almost PC keyboards.
+
+
+
+
+
+    (add-hook 'snippet-mode-hook
+              (lambda () (real-auto-save-mode -1)))
+
+    ;; ^ HACK: works-around `snippet-mode''s obnoxious behavior
+    ;; of flinging the cursor somewhere else in the buffer, on each save.
+
+
+
+
+
+(sboo-load-file! "sboo-init-projectile.el")
+(sboo-load-file! "sboo-init-yasnippets.el")
+
+
+
+
+
+
+
+
+
+
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hacks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
