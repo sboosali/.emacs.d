@@ -47,6 +47,12 @@
   (add-hook 'emacs-startup-hook FunctionSymbol))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq custom-file sboo-custom-file)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Register LoadPaths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -81,7 +87,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'sboo-settings-widgets)
+(require 'sboo-widgets)
 ;;;  (sboo-minibuffer-config))
 ;;;  (sboo-config-fonts))
 
@@ -94,7 +100,9 @@
   ('submodules (progn
                  (sboo-register-submodule! "use-package/")
                  (sboo-register-submodule! "helm/")
-                 (sboo-register-submodule! "real-auto-save/")))
+                 
+                 (when (< emacs-major-version 26)
+                   (sboo-register-submodule! "real-auto-save/"))))
 
   ('melpa      (progn
                  (sboo-load-file! "sboo-packages-by-installing.el")))
@@ -139,7 +147,8 @@
 
     :init
     (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
-    
+    (add-hook 'haskell-mode-hook #'sboo-haskell-prettify-symbols)
+
     :config
     
     (progn
@@ -214,11 +223,214 @@
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: (Miscellaneous) Configuration
+;;; External Packages: `company-*' Configurations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-company nil t)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (use-package company
+
+    :init (global-company-mode)
+
+    :config (progn
+
+              (setq company-backends sboo-company-backends)
+
+              (bind-key [remap completion-at-point] #'company-complete company-mode-map)
+              ;; ^ Use Company for completion
+              ;;
+              ;; NOTE `:bind' syntax is (`kbd' ...) only, no [`remap' ...]
+
+              (setq company-tooltip-align-annotations t)
+              ;; ^
+
+              (setq company-show-numbers t)
+              ;; ^ 
+              ;; FYI candidate selection via `M-{number}'
+              ;; (i.e. `M-1', `M-2', ..., `M-9').
+              
+              (setq company-dabbrev-downcase nil)
+              ;; ^
+
+              (setq company-minimum-prefix-length 1)
+
+              ;; ^ minimum prefix length for idle completion.
+              ;;
+              ;; Default is 3.
+              ;;
+
+              ())
+
+    :diminish company-mode)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (define-key company-active-map (kbd "TAB") #'company-complete-common-or-cycle)
+
+  (define-key company-active-map (kbd "<backtab>") #'sboo-company-complete-common-or-previous-cycle)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (use-package company-cabal
+
+    :init
+    (add-to-list 'company-backends #'company-cabal)
+
+    ())
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (use-package company-ghci
+
+    :init
+
+    (push #'company-ghci company-backends)
+    
+    (add-hook 'haskell-mode-hook             #'company-mode)
+    (add-hook 'haskell-interactive-mode-hook #'company-mode)
+    ;; ^ for completions in the REPL
+
+    ())
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;; (use-package company-web
+
+  ;;   :init
+  ;;   (dolist (HOOK '(js-mode-hook
+  ;;                   js2-mode-hook
+  ;;                   js3-mode-hook
+  ;;                   inferior-js-mode-hook))
+
+  ;;     (add-hook HOOK #'sboo-company-javascript))
+  ;;   ())
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;; (use-package company-anaconda
+  ;;   ;
+  ;;   :init
+  ;;   (add-hook 'python-mode-hook #'sboo-company-python)
+  ;;   ;
+  ;;   ())
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; External Packages: (Other) Configuration ;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-projectile nil t)
+
+  (use-package projectile
+
+    ;;;TODO :delight '(:eval (concat " " (projectile-project-name)))  
+    ;; ^
+    ;; [1] Hide the mode name for projectile-mode;
+    ;; [2] Show the project name instead.
+
+    :config
+    (setq projectile-globally-ignored-directories    (append sboo-exclusions-directories       projectile-globally-ignored-directories))
+    (setq projectile-globally-ignored-files          (append sboo-exclusions-file-names        projectile-globally-ignored-files))
+    (setq projectile-globally-ignored-file-suffixes  (append sboo-exclusions-file-extensions   projectile-globally-ignored-file-suffixes))
+    ()))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(when (require 'sboo-yasnippets nil t)
+
+  (use-package yasnippet
+
+    :demand t
+
+    :mode ("\\.yasnippet\\'" . snippet-mode)
+
+    :bind (("<kp-home>" . yas-next-field-or-maybe-expand)
+          )
+    
+    :init
+    (setq yas-snippet-dirs (list sboo-snippets-directory))
+
+    ;; ^ `setq' vs `add-to-list': remove the default.
+
+    :config
+    (yas-reload-all t)
+    (yas-global-mode 1)
+    ())
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; `wgrep': "Writeable GREP".
+
+(use-package wgrep
+
+  ;; :bind (:map grep-mode-map
+  ;;             ;; ^
+  ;;             ;; NOTE **not** `wgrep-mode-map', which binds:
+  ;;             ;;
+  ;;             ;;     ("C-x C-q" . wgrep-exit)
+  ;;             ;;              
+  ;;             ("C-x C-q" . wgrep-toggle-readonly-area)
+  ;;             ;; ^
+  ;;             ;; the standard keybinding for `toggle-read-only'.
+  ;;             ;; for consistency, e.g. with `wdired'.
+  ;;             ;;
+  ;;             ;; [TODO doesn't work]
+  ;;             )
+
+  :config
+
+  (setq wgrep-auto-save-buffer t)
+  ;; ^ save all edited buffers automatically, after `wgrep-finish-edit'.
+
+  (setq wgrep-enable-key "r")
+  ;; ^ the key binding to switch to wgrep.
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; `wgrep' notes...
+;;
+;; KeyBindings:
+;;
+;; You can edit the text in the grep buffer after typing C-c C-p. After that the changed text is highlighted. The following keybindings are defined:
+;;
+;; C-c C-e: Apply the changes to file buffers.
+;; C-c C-u: All changes are unmarked and ignored.
+;; C-c C-d: Mark as delete to current line (including newline).
+;; C-c C-r: Remove the changes in the region (these changes are not applied to the files. Of course, the remaining changes can still be applied to the files.)
+;; C-c C-p: Toggle read-only area.
+;; C-c C-k: Discard all changes and exit.
+;; C-x C-q: Exit wgrep mode.
+;;
+;; i.e.:
+;;
+;; ("\C-c\C-c" . 'wgrep-finish-edit)
+;; ("\C-c\C-d" . 'wgrep-mark-deletion)
+;; ("\C-c\C-e" . 'wgrep-finish-edit)
+;; ("\C-c\C-p" . 'wgrep-toggle-readonly-area)
+;; ("\C-c\C-r" . 'wgrep-remove-change)
+;; ("\C-x\C-s" . 'wgrep-finish-edit)
+;; ("\C-c\C-u" . 'wgrep-remove-all-change)
+;; ("\C-c\C-[" . 'wgrep-remove-all-change)
+;; ("\C-c\C-k" . 'wgrep-abort-changes)
+;; ("\C-x\C-q" . 'wgrep-exit)
+;; 
+
+;; See: https://github.com/mhayashi1120/Emacs-wgrep
+;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-init)
