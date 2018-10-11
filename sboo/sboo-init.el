@@ -149,6 +149,8 @@
     (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
     (add-hook 'haskell-mode-hook #'sboo-haskell-prettify-symbols)
 
+    (setq haskell-doc-current-info #'sboo-haskell-doc-current-info)
+
     :config
     
     (progn
@@ -209,8 +211,12 @@
     (add-hook 'haskell-mode-hook #'flycheck-mode)
     (add-hook 'haskell-mode-hook #'dante-mode)
 
-    :config (setq dante-repl-command-line-methods-alist 
-                  sboo-dante-repl-command-line-methods-alist)
+    :config
+    (setq dante-repl-command-line-methods-alist
+          sboo-dante-repl-command-line-methods-alist)
+
+    (setq sboo-haskell-eldoc 'dante)
+
     ())
 
   ;; ^ Configure `dante':
@@ -392,8 +398,9 @@
   (setq wgrep-auto-save-buffer t)
   ;; ^ save all edited buffers automatically, after `wgrep-finish-edit'.
 
-  (setq wgrep-enable-key "r")
-  ;; ^ the key binding to switch to wgrep.
+  (setq wgrep-enable-key "w")
+  ;; ^ keybinding to switch to wgrep.
+  ;; Mnemonic: "w" for "write-mode" (from "read-only-mode").
 
   ())
 

@@ -2,15 +2,40 @@
 ;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;(require ')
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Hacks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ElDoc ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun haskell-doc-current-info ()
-  (when (commandp #'dante-type-at)
-    (call-interactively #'dante-type-at)))
+(defcustom sboo-haskell-eldoc nil
+
+  "Which type-provider `sboo-haskell-doc-current-info' will call.
+
+Each symbol represents a particular type (/ info / docs / etc) provider."
+
+  :type '(choice (const nil)
+                 (const dante
+                        :tag "`dante-type-at'"))
+
+  :safe  t
+  :group 'sboo)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-haskell-doc-current-info ()
+  "Custom `haskell-doc-current-info'."
+
+  (pcase sboo-haskell-eldoc
+    
+    ('dante
+
+     (when (commandp #'dante-type-at)
+       (dante-type-at nil)))
+
+    ;; ^ (`dante-type-at' `nil') only echoes (c.f. doesn't insert).
+
+    (_
+
+     nil)))
 
 ;; ^ `dante'+`eldoc' integration.
 ;;
@@ -23,6 +48,8 @@
 ;;
 ;; 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Hacks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun haskell-mode-after-save-handler ()
@@ -72,6 +99,32 @@
     (dante-restart)
 
    (dante-mode 1)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar sboo-haskell-prettify-symbols-alist
+  
+  '(("::" . ?∷)
+    ("=>" . ?⇒)
+    ("->" . ?→)
+    ("<-" . ?←)
+    ("forall" . ?∀))
+
+  "")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-haskell-prettify-symbols ()
+
+  (interactive)
+
+  (if prettify-symbols-mode
+
+      (prettify-symbols-mode 0)
+
+    (progn
+      (setq-local prettify-symbols-alist sboo-haskell-prettify-symbols-alist)
+      (prettify-symbols-mode 1))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-haskell)
