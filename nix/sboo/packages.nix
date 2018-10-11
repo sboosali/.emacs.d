@@ -65,9 +65,13 @@ stablePackages = with stable; [
  ########################################
 
  real-auto-save
- yasnippet
  projectile
- 
+
+ #########################################
+
+ company
+ yasnippet
+
  #########################################
 
  haskell-mode
@@ -84,13 +88,27 @@ stablePackages = with stable; [
 
 melpaPackages = with melpa; [
 
+  #company-yasnippet
+  #company-abbrev
+  #company-dabbrev
+
+  company-ghc
+  company-ghci
+  company-cabal
+  company-web
+  company-restclient
+  company-anaconda
+
  ####################
 
  ghc
- company-ghci
  dante
- helm-hayoo
+
  ##intero          # needs `stack` system-package
+
+ ####################
+
+ anaconda-mode
 
  ####################
 
@@ -106,8 +124,6 @@ melpaPackages = with melpa; [
 
  ####################
 
- ####################
-
  nix-mode
  paredit
 
@@ -116,21 +132,27 @@ melpaPackages = with melpa; [
  #magit          # <C-x g>
 
  direnv         # needs `direnv` system-package
- #multi-term
  neotree
  wgrep
+
+ multi-term
 
  markdown-mode 
  edit-indirect
 
+ ####################
+
  json-mode
  yaml-mode
+
+ restclient
 
  ####################
 
  helm-dash
  helm-make
  helm-swoop
+ helm-hayoo
 
  ####################
 
