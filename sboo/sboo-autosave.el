@@ -2,6 +2,8 @@
 ;;; `:init'
 
 (defun sboo-autosave-init! ()
+  "Initialize `auto-save-visited-mode' variables."
+  
   (interactive)
 
   (setq auto-save-visited-interval 1)
@@ -16,6 +18,7 @@
 ;;; `:config'
 
 (defun sboo-autosave-config! ()
+  "Configure `auto-save-visited-mode'."
   (interactive)
 
   (auto-save-visited-mode 1)

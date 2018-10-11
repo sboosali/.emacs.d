@@ -78,20 +78,6 @@ Wraps `sboo-install-p'."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun emacs-subdir (FilePath)
-  "Return « `emacs-directory'/`FilePath'/ ».
-
-  i.e. Return the relative directory `FilePath', 
-  as an absolute sub-directory of `emacs-directory'.
-
-  Calls `file-name-as-directory' and `file-truename'.
-  "
-
-  (truename-as-directory (concat emacs-directory
-				 FilePath)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun emacs-file (FilePath)
   "Return « `emacs-directory'/`FilePath' ».
 
@@ -103,6 +89,20 @@ Wraps `sboo-install-p'."
 
   (file-truename (concat emacs-directory
 			 FilePath)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun emacs-subdir (FilePath)
+  "Return « `emacs-directory'/`FilePath'/ ».
+
+  i.e. Return the relative directory `FilePath', 
+  as an absolute sub-directory of `emacs-directory'.
+
+  Calls `file-name-as-directory' and `file-truename'.
+  "
+
+  (truename-as-directory (concat emacs-directory
+				 FilePath)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -181,6 +181,14 @@ Wraps `sboo-install-p'."
   (sboo-file "sboo-init.el")
 
   "Main configuration (like `user-init-file') for the `sboo'-profile.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-custom-file
+
+  (sboo-file "sboo-custom.el")
+
+  "Separate `custom-file' from `user-init-file'.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

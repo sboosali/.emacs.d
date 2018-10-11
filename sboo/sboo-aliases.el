@@ -46,7 +46,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defalias '/ras 'real-auto-save-mode)
+;(defalias '/ras 'real-auto-save-mode)
 
 (defalias '/pg #'projectile-grep)
 (defalias '/pf #'projectile-find-file)

@@ -51,7 +51,7 @@ e.g. Prompt \"~/.emacs.d$ \" holds directory \"~/.emacs.d\".")
 
 ;; ^ e.g. matches this command prompt
 
-(setq dirtrack-list (list sboo-prompt-regexp 1))
+(setq dirtrack-list (list sboo-prompt-regexp 0))
 
 (add-hook 'shell-mode-hook #'dirtrack-mode)
 

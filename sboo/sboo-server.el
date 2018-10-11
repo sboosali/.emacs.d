@@ -30,6 +30,7 @@
           ;; i.e. "/tmp/emacs<UserId>/<ServerName>"
 
   (unless (file-exists-p server-socket-file)
+
     (server-start))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

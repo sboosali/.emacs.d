@@ -1,36 +1,27 @@
 ;;; -*- lexical-binding: t -*-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; General Settings.
+
+;;; General Settings
 ;;
 ;; Settings should be both **fast** and **safe**
 ;; (like the `:init' initialization in `use-package').
 ;; 
 ;; Most settings are literally just `setq' statements.
 ;;
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (prefer-coding-system 'utf-8)
 
-(setq truncate-lines nil)
-
-;; ^ 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Settings.
-;;
-;; I want these few settings to be always present,
-;; even if the rest of this file fails, 
-;; for easier debugging.
-;;
-;; Thus, this section must not have any errors itself,
-;; nor do anything too complicated.
-;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prefer-coding-system 'utf-8)
+(setq undo-limit        20000000)
+(setq undo-strong-limit 40000000)
+
+;; ^ ensure undo limits are as high as possible.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -48,6 +39,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(setq truncate-lines nil)
+
 (setq require-final-newline      nil)
 (setq mode-require-final-newline nil)
 
@@ -56,11 +49,6 @@
 (setq-default indent-tabs-mode nil)
 
 ;; ^ Prevent Extraneous Tabs
-;;
-;; `setq-default' vs `setq':
-;;
-;; `setq-default' sets a values **only in** buffers that don't already have their own (i.e. `buffer-local') values for the variable.
-;;
 
 (show-paren-mode t)
 
@@ -185,6 +173,47 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setenv "LD_PRELOAD" "") ;;HACK;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Minibuffers
+;;
+;; common Minibuffers include:
+;;
+;; - `minibuffer-inactive-mode': the search prompt.
+;; - 
+;; -
+;;
+;;
+
+;;; `setq-default'
+;;
+;; `setq-default' sets a values **only in** buffers that don't already have their own (i.e. `buffer-local') values for the variable.
+;;
+;; `setq-default' vs `setq': 
+;;
+
+;;; `undo'
+;;
+;; the "internal" undo behavior is:
+;;
+;; - To redo, just Press Ctrl+g first then undo. further undo will be redo. 
+;; - Press Ctrl+g again to reverse direction. ("If you are careful, one can avoid the undo/redo roller-coaster confusion.")
+;;
+;; > all external undo-packages have corruption problems.
+
+;;; e.g. Mode Discovery
+;; 
+;; [1] open a mini-buffer (e.g. `C-s` for the search mini-buffer, a.k.a `minibuffer-inactive-mode');
+;; [2] then, focused on the minibuffer, run `describe-mode` (i.e. `C-h m`).
+;;
+
+;;; Links
+;;
+;; - http://ergoemacs.org/emacs/emacs_best_redo_mode.html
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-settings)
