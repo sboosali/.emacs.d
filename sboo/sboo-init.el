@@ -331,6 +331,14 @@
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-haskell-compilation nil t)
+
+  
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: (Other) Configuration ;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -405,11 +413,40 @@
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package markdown-mode
+
+  :mode
+  (("README\\.md\\'" . gfm-mode)
+   ("\\.md\\'"       . markdown-mode)
+   ("\\.markdown\\'" . markdown-mode))
+
+  :bind (:map markdown-mode-map
+              ("TAB" . dabbrev-expand)
+         :map gfm-mode-map
+              ("TAB" . dabbrev-expand))
+
+  :init
+  (setq markdown-command "multimarkdown")
+
+  :commands (markdown-mode gfm-mode))
+
+;; ^ 
+;;
+;; `gfm-mode' abbreviates "GitHub-flavored markdown".
+;;
+;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; `wgrep' notes...
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; `wgrep' notes
+
 ;; KeyBindings:
 ;;
 ;; You can edit the text in the grep buffer after typing C-c C-p. After that the changed text is highlighted. The following keybindings are defined:
@@ -438,6 +475,38 @@
 
 ;; See: https://github.com/mhayashi1120/Emacs-wgrep
 ;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; `markdown-mode' notes
+
+;; markdown-specific editing features:
+;; 
+;; - Change heading level two ways.
+;; (1) By cycling with:
+;;     * ‘C-c C--’ or `M-<left>’
+;;     * `C-c C-=’ or `M-<right>’
+;; (2) By re-issuing a heading insertion command when the point is at a heading. e.g.:
+;;     * ‘C-c C-t 4’
+;; will replace the current heading with a level-four heading.
+;; 
+;; - Section navigation via `outline-minor-mode', using the same keybindings as in org-mode:
+;;     * ‘C-c C-f’
+;;     * ‘C-c C-b’
+;;     * ‘C-c C-u’
+;;     * ‘C-c C-p’
+;;     * ‘C-c C-n’
+;; 
+;; - Reorder list items with:
+;;     * `M-<up>’
+;;     * `M-<down>’
+;; 
+
+;; See:
+;;     - https://jblevins.org/projects/markdown-mode/
+;;     - 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-init)

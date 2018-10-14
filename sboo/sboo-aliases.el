@@ -52,7 +52,9 @@
 (defalias '/pf #'projectile-find-file)
 (defalias '/pc #'projectile-compile-project)
 
-(defalias '/neo  'neotree)
+(defalias '/fle #'flycheck-list-errors)
+
+;(defalias '/neo  'neotree)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
