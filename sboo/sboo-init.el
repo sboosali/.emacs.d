@@ -229,6 +229,36 @@
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; External Packages: ProgrammingLanguages ;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-nix nil t)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (use-package nix-mode
+
+    :interpreter (("nix"       . nix-mode)
+                  ("nix-build" . nix-mode)
+                  ("nix-env"   . nix-mode)
+                  )
+
+    :mode        (("\\.nix\\'" . nix-mode)
+                  )
+    ;; :init
+    ;; (add-hook 'nix-mode-hook #')
+
+    )
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (use-package nix-repl)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: `company-*' Configurations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -339,6 +369,44 @@
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; External Packages: Formats ;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package markdown-mode
+
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'"       . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+
+  :bind (:map markdown-mode-map
+              ("TAB" . dabbrev-expand)
+         :map gfm-mode-map
+              ("TAB" . dabbrev-expand))
+
+  :init (setq markdown-command "multimarkdown")
+
+  :commands (markdown-mode gfm-mode))
+
+;; ^ 
+;;
+;; `gfm-mode' abbreviates "GitHub-flavored markdown".
+;;
+;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package yaml-mode
+
+  :mode (("\\.yaml\\'" . yaml-mode)
+         ("\\.yml\\'"  . yaml-mode)
+         )
+
+  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: (Other) Configuration ;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -411,31 +479,6 @@
   ;; Mnemonic: "w" for "write-mode" (from "read-only-mode").
 
   ())
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package markdown-mode
-
-  :mode
-  (("README\\.md\\'" . gfm-mode)
-   ("\\.md\\'"       . markdown-mode)
-   ("\\.markdown\\'" . markdown-mode))
-
-  :bind (:map markdown-mode-map
-              ("TAB" . dabbrev-expand)
-         :map gfm-mode-map
-              ("TAB" . dabbrev-expand))
-
-  :init
-  (setq markdown-command "multimarkdown")
-
-  :commands (markdown-mode gfm-mode))
-
-;; ^ 
-;;
-;; `gfm-mode' abbreviates "GitHub-flavored markdown".
-;;
-;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

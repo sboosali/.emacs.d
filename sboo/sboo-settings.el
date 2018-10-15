@@ -69,7 +69,13 @@
 
 ;; ^ "peeking" behavior when scrolling.
 
-(column-number-mode 1)
+(when (>= emacs-major-version 26)
+  (global-linum-mode +1))
+
+;; ^ 
+
+(column-number-mode +1)
+
 ;; ^ Always show column numbers.
 ;;
 ;; (By default, only row numbers are shown).
