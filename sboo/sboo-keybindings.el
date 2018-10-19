@@ -1,11 +1,17 @@
 ;;; -*- lexical-binding: t -*-
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Global Keybindings
+;;; Commentary:
+
+;; Global Keybindings:
 ;;
 ;; global keybindings for builtin-commands (mostly).
 ;;
-;;
+;; 
+
+;;; Code:
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Single-Character Keybindings...
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (global-set-key (kbd "TAB") #'dabbrev-expand)
@@ -20,6 +26,8 @@
 (global-set-key (kbd "<print>")  #'kill-ring-save)
 (global-set-key (kbd "<insert>") #'yank)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Function-Key Keybindings (`<f_>')...
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (global-set-key (kbd "<f1>")  #'dabbrev-completion)
@@ -40,6 +48,8 @@
 (global-set-key (kbd "<f12>") #'execute-extended-command)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Meta Keybindings (`M-')...
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (global-set-key (kbd "M-a") #'mark-whole-buffer-buffer)
 (global-set-key (kbd "M-r") #'query-replace-regexp)
@@ -47,9 +57,51 @@
 (global-set-key (kbd "M-<up>")   #'beginning-of-buffer)
 (global-set-key (kbd "M-<down>") #'end-of-buffer)
 
-(global-set-key (kbd "C-o") 'other-window)
-(global-set-key (kbd "C-;") 'comment-region)
-(global-set-key (kbd "C-M-m") 'maximize-frame)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Control Keybindings (`C-')...
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-set-key (kbd "C-o") #'other-window)
+(global-set-key (kbd "C-;") #'comment-region)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Control+Meta Keybindings (`C-M-')...
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-set-key (kbd "C-M-m") #'maximize-frame)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Super (`s-') Keybindings...
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Management/Navigation for Buffers/Windows/Frames
+
+(global-set-key (kbd "s-o") #'other-window)       ;TODO;
+(global-set-key (kbd "s-s") #'sboo-launch-shell)
+(global-set-key (kbd "s-t") #'sboo-launch-term)
+(global-set-key (kbd "s-h") #'sboo-split-window-left-right)
+
+;;; Inserting Unicode characters
+
+(global-set-key (kbd "s-,") #'sboo-insert-angle-quote-left)
+(global-set-key (kbd "s-.") #'sboo-insert-angle-quote-right)
+(global-set-key (kbd "s-=") #'sboo-insert-triple-equals-sign)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; "User" Keybindings...
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; `C-c...' is reserved for users
+
+;(define-key sboo-map (kbd "")   #')
+
+;; ^ Template: (define-key sboo-map (kbd "")   #')
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Other Keybindings...
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; `ctl-x-map'
 
 (global-set-key (kbd "C-x f")   #'find-file)
 (global-set-key (kbd "C-x C-f") #'find-file)
@@ -59,6 +111,8 @@
 ;(global-set-key (kbd "<apps>") 'list-buffers)
 ;(global-set-key (kbd "<menu>") 'list-buffers)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; On `TAB' vs `<tab>':
@@ -91,6 +145,33 @@
 ;;     keyboard-quit
 ;;
 ;;
+
+;;; `*-map'
+;;
+;; `overriding-local-map'
+;; `search-map'
+;; `isearch-mode-map'
+;; `query-replace-map'
+;; `text-mode-map'
+;; `comint-mode-map'
+;; `flymake-mode-map'
+;; `'
+;; `'
+;;
+;; `helm-M-x'
+;; `helm-comp-read-map'
+;; `snippet-mode-map'
+;; `company-active-map'
+;; `markdown-mode-mouse-map'
+
+
+;;; toolbar
+;;
+;; `tool-bar-map'
+;; `compilation-mode-tool-bar-map'
+;; `'
+;; `'
+;; `'
 
 ;;; Links:
 ;;
