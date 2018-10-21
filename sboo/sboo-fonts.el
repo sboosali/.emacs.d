@@ -9,8 +9,8 @@
   e.g. M-x sboo-set-font RET Iosevka
   "
 
-  (interactive "sFont name [C-h v font-family-list]: ") ;;TODO `try-completion; from `font-family-list'.
-  
+  (interactive (list (completing-read "Font name: " (font-family-list) nil t)))
+
   ;; ^ `"s"` means "read a string from the user until they press RET".
 
   (if (find-font (font-spec :name FONT))
@@ -26,9 +26,7 @@
     
     nil))
 
-;; ^
-;;
-;; NOTE to list all (available) fonts:
+;; ^ NOTE to list all (available) fonts:
 ;; 
 ;;     M-: (print (font-family-list))
 ;;
@@ -36,7 +34,14 @@
 ;; > You can toggle this on/off using ‘M-x buffer-face-mode’. 
 ;; > Internally, this uses ‘face-map-add-relative’ to remap faces. 
 ;; > For example, (face-remap-add-relative 'default :family "Source Code Pro" :height 140)
+;;
 ;; 
+
+;; ^ `completing-read':
+;;
+;; (completing-read PROMPT COLLECTION &optional PREDICATE REQUIRE-MATCH
+;; INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -52,7 +57,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-config-fonts ()
+(defun sboo-fonts-config! ()
 
   "Configuration of Fonts.
 
@@ -81,4 +86,4 @@
 ;; 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ {} <> "'`  ~-_/|\?
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'sboo-settings-fonts)
+(provide 'sboo-fonts)
