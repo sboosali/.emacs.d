@@ -36,7 +36,7 @@
 ;; <f3> is 'kmacro-start-macro-or-insert-counter
 ;; <f4> is 'kmacro-start-macro-or-insert-counter
 
-(global-set-key (kbd "<f8>")  #'list-buffers)
+(global-set-key (kbd "<f7>")  #'list-buffers)
                                         ;TODO fix keyboard layout
 ;; (global-set-key (kbd "<f5>")  #'list-buffers)
 ;; (global-set-key (kbd "<f6>")  #'xah-prior-user-buffer)
