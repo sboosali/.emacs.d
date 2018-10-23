@@ -1,0 +1,305 @@
+
+
+
+
+
+
+
+
+
+
+https://github.com/bradwright/emacs-d/blob/master/packages/init-edit-server.el
+
+
+
+;;; `sboo-keymap'
+
+(defconst sboo-map-prefix-key (kbd "<s>")
+
+  "Prefix Key for `sboo-map'.
+
+Why not not the default keymap reserved for users, `C-c'? Because (1) that conflicts with `cua-mode', and (2) many packages don't respect that convention anyways.
+
+`<s>' is called the "Super" Key. On my keyboard (on a Windows laptop running Linux), it's the Windows-Logo Key.")
+
+
+
+(defconst sboo-map (make-sparse-keymap)
+
+  "“User” KeyBindings. 
+
+Mostly:
+
+* (1) `sboo-*' commands (like `sboo-set-font');
+* (2) keymaps grouped by mode (like `<s>-g' as a keymap for `magit' commands), or sometimes by function.
+
+See:
+
+* URL `http://ergoemacs.org/emacs/elisp_create_major_mode_keymap.html'.
+* URL `http://ergoemacs.org/emacs_manual/elisp/Keymaps.html'.
+
+Current Keybindings:
+
+\\{sboo-map}")
+
+
+;; ^ "A prefix key is a key sequence whose binding is a keymap. The keymap defines what to do with key sequences that extend the prefix key. For example, C-x is a prefix key, and it uses a keymap that is also stored in the variable ctl-x-map. This keymap defines bindings for key sequences starting with C-x."
+
+
+(cl-defmacro sboo-key (KEYSEQUENCE FUNCTION)
+
+  "Declare a keybinding within `sboo-map'.
+
+Parameters:
+
+KEYSEQUENCE: a string for `kbd'.
+
+FUNCTION: an **unquoted** function name.
+
+Examples:
+
+(sboo-key \"g l\" magit-status)
+
+    ⇒ (`define-key' `sboo-map'
+                (kbd \"g l\")
+                #'magit-status)
+"
+
+  `(define-key ,sboo-map 
+               (kbd ,KEYSEQUENCE)
+               (function ,FUNCTION)))
+
+;; ^
+
+;(cl-defmacro sboo-key! (:keys KEYS :bind FUNCTION)
+
+
+
+(defun load-sboo-map ()
+  ""
+
+  ()
+  (global-set-key sboo-map-prefix-key 'sboo-map))
+
+
+(defun unload-sboo-map ()
+  ""
+
+  ()
+  (global-unset-key sboo-map-prefix-key)
+
+
+
+
+
+;;TODO sboo-menu-map
+
+See:
+
+* URL `http://ergoemacs.org/emacs_manual/elisp/Menu-Keymaps.html'.
+* URL `'.
+* URL `'.
+
+
+
+
+
+
+
+
+
+
+
+;;; Bootstrap `use-package'
+
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+
+
+
+
+;;; Git UI
+
+(use-package magit
+  :defer t
+
+ :bind (("C-c g" . magit-status)
+         ("C-c C-g l" . magit-file-log))
+
+
+:init (progn
+
+("g s" . magit-status)
+("g l" . magit-file-log)
+
+
+(setq global-auto-revert-mode t)
+(setq auto-revert-verbose t)
+
+    ;; open magit status in same window as current buffer
+     magit-status-buffer-switch-function 'switch-to-buffer
+
+     ;; highlight word/letter changes in hunk diffs
+     magit-diff-refine-hunk t
+
+
+     ;; ask me if I want to include a revision when rewriting
+     magit-rewrite-inclusive 'ask
+
+
+     ;; ask me to save buffers
+     ;magit-save-some-buffers t
+
+     ;; pop the process buffer if we're taking a while to complete
+     magit-process-popup-time 10
+
+
+     ;; ask me if I want a tracking upstream
+     magit-set-upstream-on-push 'askifnotset
+
+  :config (progn
+
+
+())
+
+;; ^ See: 
+;;
+;; * URL `https://github.com/magit/magit'
+;; * URL `https://magit.vc/manual/magit.html#Automatic-Reverting-of-File_002dVisiting-Buffers'
+;;
+
+
+
+   ;; we no longer need vc-git
+    (delete 'Git vc-handled-backends)
+    ;; make magit status go full-screen but remember previous window
+    ;; settings
+    ;; from: http://whattheemacsd.com/setup-magit.el-01.html
+    (defadvice magit-status (around magit-fullscreen activate)
+      (window-configuration-to-register :magit-fullscreen)
+      ad-do-it
+      (delete-other-windows))
+
+    ;; Close popup when commiting - this stops the commit window
+    ;; hanging around
+    ;; From: http://git.io/rPBE0Q
+    (defadvice git-commit-commit (after delete-window activate)
+      (delete-window))
+
+    (defadvice git-commit-abort (after delete-window activate)
+      (delete-window))
+
+    ;; these two force a new line to be inserted into a commit window,
+    ;; which stops the invalid style showing up.
+    ;; From: http://git.io/rPBE0Q
+    (defun magit-commit-mode-init ()
+      (when (looking-at "\n")
+        (open-line 1)))
+
+    (add-hook 'git-commit-mode-hook 'magit-commit-mode-init))
+  :config
+  (progn
+    ;; restore previously hidden windows
+    (defadvice magit-quit-window (around magit-restore-screen activate)
+      (let ((current-mode major-mode))
+        ad-do-it
+        ;; we only want to jump to register when the last seen buffer
+        ;; was a magit-status buffer.
+        (when (eq 'magit-status-mode current-mode)
+          (jump-to-register :magit-fullscreen))))
+
+
+
+
+
+
+
+
+;; NOTE re: « C-m » & « C-i »
+;;
+;; Emacs within a TerminalEmulator can't distinguish:
+;;
+;; * « C-m » from « <return> »
+;; * « C-i » from « <tab> »,
+;;
+;;  Why? Because they're translated by the TerminalEmulator before reaching any process (/ application).
+;;
+;; e.g. « C-h c C-m » prints « RET runs the command newline ».
+;; e.g. « C-h c C-i » prints « TAB runs the command tab ».
+;;
+;; See:
+;;
+;; * URL `https://stackoverflow.com/a/4322265/1337806:
+;; * URL `https://emacs.stackexchange.com/questions/17509/how-to-distinguish-c-i-from-tab'
+;;
+
+
+
+
+
+
+;; yaml-mode doesn't autoload
+(use-package yaml-mode
+  :mode ("\\.ya?ml\\'" . yaml-mode)
+  :config
+  (progn
+    (put 'yaml-indent-offset 'safe-local-variable 'integerp)))
+
+
+
+
+
+(use-package yasnippet
+  :diminish yas-minor-mode
+  :init
+  (progn
+    (yas-global-mode 1)
+
+    (defun sboo-disable-yas-minor-mode () (interactive) (yas-minor-mode -1))
+
+    ;; we don't want yasnippet running in terminals
+    (add-hook 'term-mode-hook #'sboo-disable-yas-minor-mode)
+
+    (setq yas/prompt-functions '(yas/ido-prompt yas/completing-prompt));;TODO helm?
+
+  ()))
+
+
+
+
+
+(use-package markdown-mode
+  :mode (("\\.md$" . markdown-mode)
+         ("\\.markdown$" . markdown-mode))
+  :config
+  (progn
+    (setq markdown-imenu-generic-expression
+      '(("title"  "^\\(.*\\)[\n]=+$" 1)
+        ("h2-"    "^\\(.*\\)[\n]-+$" 1)
+        ("h1"   "^# \\(.*\\)$" 1)
+        ("h2"   "^## \\(.*\\)$" 1)
+        ("h3"   "^### \\(.*\\)$" 1)
+        ("h4"   "^#### \\(.*\\)$" 1)
+        ("h5"   "^##### \\(.*\\)$" 1)
+        ("h6"   "^###### \\(.*\\)$" 1)
+        ("fn"   "^\\[\\^\\(.*\\)\\]" 1)))
+
+    (add-hook 'markdown-mode-hook
+              (lambda ()
+                (setq imenu-generic-expression markdown-imenu-generic-expression)))))
+
+
+
+
+
+
+
+
+
+;; Load custom settings if present
+(setq custom-file "~/.emacs.d/custom.el")
+(if (file-exists-p custom-file)
+    (load custom-file))
