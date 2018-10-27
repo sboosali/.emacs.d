@@ -4,10 +4,6 @@
 
 
 
-
-
-
-
 https://github.com/bradwright/emacs-d/blob/master/packages/init-edit-server.el
 
 

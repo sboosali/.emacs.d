@@ -11,8 +11,9 @@
  '(package-selected-packages (quote (helm)))
  '(safe-local-variable-values
    (quote
-    ((dante-project-root . "~/haskell/enumerate/")
-     (dante-target . "lib:enumerate")
+    ((eval progn
+           (dante-mode -1)
+           (flycheck-mode -1))
      (dante-project-root . "~/haskell/skeletor/")
      (dante-project-root . "~/haskell/haskell-project-skeleton/")
      (dante-target . "lib:haskell-project")
