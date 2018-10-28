@@ -55,6 +55,7 @@
 
 (global-set-key (kbd "M-a") #'mark-whole-buffer-buffer)
 (global-set-key (kbd "M-r") #'query-replace-regexp)
+(global-set-key (kbd "M-g") #'goto-line)
 
 (global-set-key (kbd "M-<up>")   #'beginning-of-buffer)
 (global-set-key (kbd "M-<down>") #'end-of-buffer)

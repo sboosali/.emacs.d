@@ -142,12 +142,15 @@
 
     :interpreter (("runhaskell"  . haskell-mode)
                   ("runghc"      . haskell-mode)
-                  ("stack"       . haskell-mode))
+                  ("stack"       . haskell-mode)
+                  )
 
     :mode        (("\\.hs\\'"    . haskell-mode)
                   ("\\.lhs\\'"   . haskell-mode)
                   ("\\.hsig\\'"  . haskell-mode)
-                  ("\\.hsc\\'"   . haskell-mode))
+                  ("\\.hsc\\'"   . haskell-mode)
+                  ("\\.chs\\'"   . haskell-mode)
+                  )
 
     ;;; :hook        ((haskell-mode . interactive-haskell-mode))
 
