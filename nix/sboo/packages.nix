@@ -129,7 +129,7 @@ melpaPackages = with melpa; [
 
  ####################
 
- #magit          # <C-x g>
+ magit          # <C-x g>
 
  direnv         # needs `direnv` system-package
  neotree
@@ -215,14 +215,13 @@ melpaPackages = with melpa; [
 
  ########################
 
- move-text
- treemacs
- tabbar-ruler
+ request
+ # ^ https://tkf.github.io/emacs-request/manual.html
 
  ########################
 
- request
- # ^ https://tkf.github.io/emacs-request/manual.html
+ org.org
+ # ^ 
 
  ########################
 
@@ -231,18 +230,7 @@ melpaPackages = with melpa; [
 
  ########################
 
- org.org
-
- ########################
-
- palimpsest
-
- ########################
-
- which-key
- # ^ https://github.com/justbur/emacs-which-key/blob/master/README.org
-
- ########################
+ # ^
 
 ];
 
@@ -251,6 +239,43 @@ melpaPackages = with melpa; [
 optionalPackages = with melpa; [
 
 # helm-colors
+
+ move-text
+ # ^ 
+
+ treemacs
+ # ^ 
+
+ tabbar-ruler
+ # ^ 
+
+ palimpsest
+ # ^ 
+
+ which-key
+ # ^ https://github.com/justbur/emacs-which-key/blob/master/README.org
+
+ elpa.xpm
+ # ^ major-mode for editing XPM image files.
+ # (is on ELPA)
+
+ mediawiki
+ # ^ major-mode for editing mediawiki-buffers.
+ # (e.g. Wikipedia's markdown)
+
+ # rainbow-mode
+ # # ^ Color-ize Hex RGB Codes.
+ # # (e.g. "#00ff00" looks green)
+
+ volatile-highlights
+ # ^ slightly shade recently-pasted region(s).
+
+ goto-chg
+ # ^ Go to the place where you last changed something.
+
+ # ^
+
+ # ^
 
 ];
 

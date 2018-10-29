@@ -37,6 +37,12 @@
 
 ;; ^ No region when nothing is highlighted.
 
+(setq kill-whole-line t)
+
+;; ^ « C-k » eats newline (a.k.a. "kills the whole line").
+;;
+;; Thus, we can type « C-k » where before we typed « C-k C-k ».
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq truncate-lines nil)
@@ -171,8 +177,25 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; (setq echo-keystrokes 0.1)
+
+;; (setq mouse-yank-at-point t)
+
+;; (setq switch-to-buffer-preserve-window-point t)
+
+;; (setq select-enable-clipboard t)
+;; (setq select-enable-primary   t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (ffap-bindings)
 ;; ^ a.k.a. `find-file-at-point'
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; File Extensions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-to-list 'auto-mode-alist (cons "\\.xpm\\'" #'c-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hacks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

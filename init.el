@@ -1,7 +1,7 @@
 ;;; init.el --- SBoo's Emacs Configuration -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq debug-on-error t)
+(setq debug-on-error nil);;TODO environment-variable
 
 (when (boundp 'user-init-file) (find-file user-init-file))
 

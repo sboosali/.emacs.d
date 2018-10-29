@@ -33,14 +33,24 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; (let ((bindings '(("-" . split-window-below)
+;;                   ("|" . split-window-right)
+;;                   ("d" . delete-window)
+;;                   ("n" . other-window)
+;;                   ("h" . windmove-left)
+;;                   ("j" . windmove-down)
+;;                   ("k" . windmove-up)
+;;                   ("l" . windmove-right))))
+
 (let ((bindings '(("-" . split-window-below)
-                  ("|" . split-window-right)
-                  ("d" . delete-window)
-                  ("n" . other-window)
-                  ("h" . windmove-left)
-                  ("j" . windmove-down)
-                  ("k" . windmove-up)
-                  ("l" . windmove-right))))
+
+                  ("i t" . image-toggle-display)
+
+                  ("p g" . #'projectile-grep)
+                  ("p f" . #'projectile-find-file)
+                  ("p c" . #'projectile-compile-project)
+
+                  )))
 
  (sboo-bind-keys! bindings sboo-keymap))
 

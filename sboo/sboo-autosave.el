@@ -18,14 +18,17 @@
 ;;; `:config'
 
 (defun sboo-autosave-config! ()
+
   "Configure `auto-save-visited-mode'."
   (interactive)
 
   (auto-save-visited-mode 1)
+
   ;; ^ Autosave by overwriting the visited file.
   ;; 
   ;; `auto-save-visited-mode' is a GlobalMinorMode.
   ;;
+  ;; Enable globally.
 
   ())
 

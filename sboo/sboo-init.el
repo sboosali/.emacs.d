@@ -84,6 +84,77 @@
 
   (add-startup-hook! #'sboo-autosave-config!))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-auto-mode nil t)
+
+  (sboo-add-auto-mode-basename       "LICENSE" #'text-mode)
+  (sboo-add-auto-mode-basename       "TODO"    #'text-mode)
+  (sboo-add-auto-mode-basename       "NOTES"   #'text-mode)
+
+  (sboo-add-auto-mode-file-extension "knsrc"   #'conf-mode)
+  ;; ^ `.knsrc' files have the `INI' format, which `conf-mode' supports.
+
+  ;;TODO any file that ends in `rc`, should we default to 'conf-mode or to 'sh-mode?
+  ;;;(add-to-list 'auto-mode-alist ("rc\\'" . #'conf-mode))
+  ;;;(add-to-list 'auto-mode-alist ("rc\\'" . #'sh-mode))
+
+  (sboo-add-auto-mode-file-extension "xml"     #'sgml-mode)
+  ;; ^ `nxml-mode' vs `sgml-mode'.
+
+  ())
+
+;; ^ `auto-mode-alist' maps filepaths to major-modes.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-desktop nil t)
+
+  (setq desktop-dirname sboo-desktop-directory)
+  ;; ^
+
+  (setq desktop-restore-eager 10)
+  ;; ^ The maximum number of buffers to restore immediately;
+  ;; the remaining buffers are restored lazily (when Emacs is idle).
+  ;;
+  ;; NOTE `10' is instant, `100' takes a few seconds.
+
+  (setq desktop-load-locked-desktop t)
+  ;; ^ `t' means "load the desktop (on startup) without asking"
+
+  (setq desktop-auto-save-timeout 30)
+  ;; ^ Unit-Of-Time is seconds.
+  ;;
+  ;; (NOTE the auto-saves are saved to a separate file). [TODO i.e.?]
+
+  (setq desktop-path (list sboo-desktop-directory))
+  ;; ^ 
+
+  (add-to-list 'desktop-modes-not-to-save 'dired-mode)
+  (add-to-list 'desktop-modes-not-to-save 'Info-mode)
+  (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
+  ;; ^ Buffers which should not be saved, either by mode or by name.
+
+  (add-startup-hook! #'sboo-desktop-config!)
+
+  ())
+
+;; ^ `desktop-mode'.
+
+;; ^ NOTE We launch via « emacs --no-desktop »,
+;; then configure and enable `desktop-mode' ourselves.
+;;
+;; This delays loading files until all modes have been properly configured.
+;;
+;; Otherwise, for example, `.nix` files aren't properly registered with `nix-mode`
+;; when they are opened, even when `sboo-desktop` follows `sboo-nix`;
+;; and thus need `revert-buffer`. 
+;;
+
+;TODO `desktop-save` on emacs exit (i.e. `C-x C-c`).
+
+;TODO (desktop-read sboo-desktop-directory)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Internal Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -378,44 +449,6 @@
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: Formats ;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package markdown-mode
-
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'"       . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-
-  :bind (:map markdown-mode-map
-              ("TAB" . dabbrev-expand)
-         :map gfm-mode-map
-              ("TAB" . dabbrev-expand))
-
-  :init (setq markdown-command "multimarkdown")
-
-  :commands (markdown-mode gfm-mode))
-
-;; ^ 
-;;
-;; `gfm-mode' abbreviates "GitHub-flavored markdown".
-;;
-;; 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package yaml-mode
-
-  :mode (("\\.yaml\\'" . yaml-mode)
-         ("\\.yml\\'"  . yaml-mode)
-         )
-
-  )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: (Other) Configuration ;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -460,6 +493,22 @@
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; `magit': "eMAcs GIT".
+
+(use-package magit
+
+  :bind (("s-g s" . magit-status)
+         )
+  ;; ^ 
+
+  :config
+  ;;(setq magit-save-repository-buffers 'dontask)
+  (setq magit-completing-read-function #'helm-completing-read)
+  ;; ^ 
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; `wgrep': "Writeable GREP".
 
 (use-package wgrep
@@ -490,7 +539,64 @@
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; Finalization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; External Packages: Formats ;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package markdown-mode
+
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'"       . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+
+  :bind (:map markdown-mode-map
+              ("TAB" . dabbrev-expand)
+         :map gfm-mode-map
+              ("TAB" . dabbrev-expand))
+
+  :init (setq markdown-command "multimarkdown")
+
+  :commands (markdown-mode gfm-mode))
+
+;; ^ 
+;;
+;; `gfm-mode' abbreviates "GitHub-flavored markdown".
+;;
+;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package yaml-mode
+
+  :mode (("\\.yaml\\'" . yaml-mode)
+         ("\\.yml\\'"  . yaml-mode)
+         )
+
+  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (use-package xpm
+;;   :commands (xpm-grok xpm-finish xpm-raster xpm-as-xpm xpm-put-points xpm-generate-buffer)
+;;   :mode (("\\.xpm\\'" . c-mode))
+;;   ; :mode (("\\.xpm\\'" . xpm-mode))
+;;   ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; External Packages: Miscellaneous ;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;(require which-key ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;(require rainbow-mode ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;(require volatile-highlights ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Finalization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when (require 'sboo-fonts nil t)
