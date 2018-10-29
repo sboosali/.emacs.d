@@ -109,35 +109,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when (require 'sboo-desktop nil t)
-
-  (setq desktop-dirname sboo-desktop-directory)
-  ;; ^
-
-  (setq desktop-restore-eager 10)
-  ;; ^ The maximum number of buffers to restore immediately;
-  ;; the remaining buffers are restored lazily (when Emacs is idle).
-  ;;
-  ;; NOTE `10' is instant, `100' takes a few seconds.
-
-  (setq desktop-load-locked-desktop t)
-  ;; ^ `t' means "load the desktop (on startup) without asking"
-
-  (setq desktop-auto-save-timeout 30)
-  ;; ^ Unit-Of-Time is seconds.
-  ;;
-  ;; (NOTE the auto-saves are saved to a separate file). [TODO i.e.?]
-
-  (setq desktop-path (list sboo-desktop-directory))
-  ;; ^ 
-
-  (add-to-list 'desktop-modes-not-to-save 'dired-mode)
-  (add-to-list 'desktop-modes-not-to-save 'Info-mode)
-  (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
-  ;; ^ Buffers which should not be saved, either by mode or by name.
-
-  (add-startup-hook! #'sboo-desktop-config!)
-
-  ())
+  (sboo-desktop-init!)
+  (add-startup-hook! #'sboo-desktop-config!))
 
 ;; ^ `desktop-mode'.
 
@@ -151,9 +124,19 @@
 ;; and thus need `revert-buffer`. 
 ;;
 
-;TODO `desktop-save` on emacs exit (i.e. `C-x C-c`).
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;TODO (desktop-read sboo-desktop-directory)
+;; (use-package compile
+;;   :bind (("s-m" . compile))
+;;   :config 
+;;          
+;;                 compilation-read-command nil
+;;                 compile-command "make")
+;;  ())
+
+(when (require 'sboo-compilation nil t)
+  (sboo-compilation-init!)
+  ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Internal Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;

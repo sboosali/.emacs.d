@@ -1,28 +1,65 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; my `compilation-mode' configuration.
+;; My `compilation-mode' configuration.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq compilation-always-kill t)
+(require 'compile)
 
- ;; ^TODO
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; `:init'
 
-;TODO
-;; ^ continuously recompile, on each save.
+(defun sboo-compilation-init! ()
 
-(setq
- next-error-highlight                 t
- next-error-follow-minor-mode         t)
+  "Initialize `compilation-mode' variables."  
+  (interactive)
 
- ;; ^ start at the first error (link).
+  ;;TODO ;; ^ continuously recompile, on each save.
 
- ;;TODO cabal new-build doesn't prefix errors with subdir, maybe cd (or `with-default-directory'??) first?      
- ;; (setq compilation-auto-jump-to-first-error t)
+  (setq compilation-ask-about-save nil)
+
+  ;; ^ Save buffer(s) (without asking).
+
+  (setq compilation-always-kill t)
+
+  ;; ^ `t' means TODO.
+
+  (setq compilation-scroll-output t)
+
+  ;; ^ 
+
+  (setq next-error-highlight         t)
+  (setq next-error-follow-minor-mode t)
+
+  ;; ^ start at the first error (link).
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; `:config'
+
+(defun sboo-compilation-config! ()
+
+  "Configure `compilation-mode' and enable it."
+  (interactive)
+
+  ;; ^ Compilation.
+  ;; 
+  ;; `compilation-mode' is a MajorMode.
+
+  ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; e.g. add NodeJS error format
+;; NOTE The `compilation-mode' configuration also affects `projectile-compile-project'.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; e.g. add NodeJS error format:
 ;; 
 ;; See
 ;; - https://benhollis.net/blog/2015/12/20/nodejs-stack-traces-in-emacs-compilation-mode/
@@ -43,6 +80,8 @@
 ;;
 ;; ;; ^ [2] register that (named) regex.
 ;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; See:
 ;;     - 

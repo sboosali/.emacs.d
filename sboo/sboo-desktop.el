@@ -1,17 +1,61 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; My configuration for the `desktop' package.
+;;; -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;; Configuration for the `desktop' package.
 ;;
 ;; TODO: (Multiple) Desktop "Sessions"
-;; 
+
+;;; Code:
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'desktop)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Definitions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar sboo-desktop-directory emacs-directory)
 
 ;; ^ `desktop-dirname' is `~/.emacs.d' by default.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; `:init'
+
+(defun sboo-desktop-init! ()
+
+  "Initialize `desktop-mode' variables."
+  (interactive)
+
+  (setq desktop-dirname sboo-desktop-directory)
+  ;; ^
+
+  (setq desktop-restore-eager 10)
+  ;; ^ The maximum number of buffers to restore immediately;
+  ;; the remaining buffers are restored lazily (when Emacs is idle).
+  ;;
+  ;; NOTE `10' is instant, `100' takes a few seconds.
+
+  (setq desktop-load-locked-desktop t)
+  ;; ^ `t' means "load the desktop (on startup) without asking"
+
+  (setq desktop-auto-save-timeout 30)
+  ;; ^ Unit-Of-Time is seconds.
+  ;;
+  ;; (NOTE the auto-saves are saved to a separate file). [TODO i.e.?]
+
+  (setq desktop-path (list sboo-desktop-directory))
+  ;; ^ 
+
+  (add-to-list 'desktop-modes-not-to-save 'dired-mode)
+  (add-to-list 'desktop-modes-not-to-save 'Info-mode)
+  (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
+  ;; ^ Buffers which should not be saved, either by mode or by name.
+
+  ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; `:config'
@@ -32,9 +76,18 @@
 
   ())
 
+;TODO `desktop-save` on emacs exit (i.e. `C-x C-c`).
+
+;TODO (desktop-read sboo-desktop-directory)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; `desktop.el' Documentation
+;; 
+;; 
+;;
 
 ;; `desktop-save':
 ;;
@@ -193,8 +246,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; See:
+;;; Links
+;;
 ;;     - https://www.emacswiki.org/emacs/Desktop
+;;     - 
+;;     - 
 ;;     - 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

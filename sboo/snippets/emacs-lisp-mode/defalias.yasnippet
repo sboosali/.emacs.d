@@ -6,5 +6,5 @@
 # contributor : Spiros Boosalis
 #
 # --
-(defalias '${1:$(apply #'string (mapcar #'string-to-char (split-string yas-text "[-/]+" t)))} #'${1:some-command})
+(defalias '/${1:$(apply #'string (mapcar #'string-to-char (split-string yas-text "[-/]+" t)))} #'${1:some-command})
 $0
