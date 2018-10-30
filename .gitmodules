@@ -10,3 +10,12 @@
 [submodule "real-auto-save"]
 	path = submodules/real-auto-save
 	url = https://github.com/ChillarAnand/real-auto-save
+[submodule "dash"]
+	path = submodules/dash
+	url = https://github.com/magnars/dash.el.git
+[submodule "s"]
+	path = submodules/s
+	url = https://github.com/magnars/s.el.git
+[submodule "f"]
+	path = submodules/f
+	url = https://github.com/rejeep/f.el

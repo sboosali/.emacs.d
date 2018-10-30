@@ -1,10 +1,10 @@
 # sboosali's `~/.emacs.d` and `init.el`
 
-## description
+## Description
 
-## features
+## Features
 
-## installation
+## Installation
 
 ```sh
 $ git clone https://github.com/sboosali/.emacs.d && cd .emacs.d 
@@ -18,4 +18,11 @@ Submodule 'use-package' (https://github.com/jwiegley/use-package) registered for
 ...
 ```
 
-## 
+## Dependencies
+
+### Vendored Dependencies
+
+* `dash`-2.14.1
+* `s`-1.12.0
+* `f`-v0.20.0
+
