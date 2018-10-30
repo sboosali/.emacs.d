@@ -31,7 +31,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (global-set-key (kbd "<f1>")  #'dabbrev-completion)
-(global-set-key (kbd "<f2>")  #'isearch-forward-regexp)
+(global-set-key (kbd "<f2>")  #'sboo-search)
 
 ;; <f3> is 'kmacro-start-macro-or-insert-counter
 ;; <f4> is 'kmacro-start-macro-or-insert-counter
@@ -113,6 +113,44 @@
 
 ;(global-set-key (kbd "<apps>") 'list-buffers)
 ;(global-set-key (kbd "<menu>") 'list-buffers)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Local Keybindings...
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; `isearch-mode-map'
+
+(progn
+  (define-key isearch-mode-map (kbd "<up>")    #'isearch-ring-retreat)
+  (define-key isearch-mode-map (kbd "<down>")  #'isearch-ring-advance)
+
+  (define-key isearch-mode-map (kbd "<left>")  #'isearch-repeat-backward)
+  (define-key isearch-mode-map (kbd "<right>") #'isearch-repeat-forward)
+  ())
+
+  ;; ^ provides these (single-keypress) keybindings:
+  ;; 
+  ;; → 
+  ;; next occurrence
+  ;; 
+  ;; ← 
+  ;; previous occurrence
+  ;; 
+  ;; ↑
+  ;; previous search term
+  ;; 
+  ;; ↓
+  ;; next search term
+  ;; 
+  ;; Enter
+  ;; exit isearch
+  ;; 
+
+;; ^ 
+;;TODO minibuffer-local-isearch-map (kbd "<f2>") #'isearch-repeat-forward)
+;; 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

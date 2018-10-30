@@ -152,6 +152,19 @@
 ;;;  (sboo-config-fonts))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-make nil t)
+  (add-hook 'makefile-mode-hook #'sboo-show-trailing-whitespace))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: Installation ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -484,11 +497,10 @@
          )
   ;; ^ 
 
-  :config
-  ;;(setq magit-save-repository-buffers 'dontask)
-  (setq magit-completing-read-function #'helm-completing-read)
-  ;; ^ 
+  :init
+  (setq magit-save-repository-buffers 'dontask)
 
+  :config
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -97,6 +97,50 @@
 
   "The location of my emacs dotfiles.")
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Constants ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst platform
+
+  (cond
+
+   ((or (memq system-type   '(gnu/linux)))
+
+    'platform-linux)
+
+   ((or (memq system-type   '(windows-nt ms-dos))
+        (memq window-system '(w32 pc)))
+
+    'platform-windnows)
+
+   ((or (memq system-type   '(darwin))
+        (memq window-system '(mac ns)))
+
+    'platform-apple)
+
+   ((or (eq window-system 'x))  ;; TODO and Wayland?
+    ;; ^ X11 runs on non-Linux operating-systems too (like Apple).
+
+    'platform-linux)
+
+   (t
+    'platform-unknown))
+
+  "The current platform, a symbol (prefixed with `platform-').
+
+One of: 
+
+* '`platform-linux'
+* '`platform-windows'
+* '`platform-apple'
+* '`platform-unknown'
+
+Depends on the variables `system-type' and `window-system'.")
+
+;; TODO? `case'
+;; (case window-system
+;;  ('mac (require 'sboo-macintosh)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

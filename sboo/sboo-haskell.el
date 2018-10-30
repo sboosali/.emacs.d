@@ -48,6 +48,8 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
 ;;
 ;; 
 
+;; TODO (make-local-variable 'eldoc-documentation-function) (setq eldoc-documentation-function 'scheme-get-current-symbol-info)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hacks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
