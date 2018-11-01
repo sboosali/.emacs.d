@@ -160,6 +160,15 @@ Wraps `sboo-install-p'."
 
   "Directory whose (per-major-mode) subdirectories contain my YASnippets files.")
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-theme-directory 
+
+  (sboo-subdir "themes/")
+
+  "Directory with themes (`.el' files which `provide-theme').")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-file (FilePath)

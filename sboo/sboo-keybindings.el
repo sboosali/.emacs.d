@@ -31,7 +31,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (global-set-key (kbd "<f1>")  #'dabbrev-completion)
-(global-set-key (kbd "<f2>")  #'sboo-search)
+(global-set-key (kbd "<f2>")  #'isearch-forward-regexp)
+
+;; ^ Alternatives:
+;;
+;;   * #'isearch-forward-regexp
+;;   * #'sboo-search
+;;   * 
 
 ;; <f3> is 'kmacro-start-macro-or-insert-counter
 ;; <f4> is 'kmacro-start-macro-or-insert-counter

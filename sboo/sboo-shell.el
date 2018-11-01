@@ -62,6 +62,14 @@ e.g. Prompt \"~/.emacs.d$ \" holds directory \"~/.emacs.d\".")
 ;; ^ filename extensions to ignore during completion.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-local-unset-tab ()
+ 
+  "`local-unset-key' for `<tab>'."
+
+  (local-unset-key (kbd "<tab>")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
