@@ -19,3 +19,6 @@
 [submodule "f"]
 	path = submodules/f
 	url = https://github.com/rejeep/f.el
+[submodule "solarized"]
+	path = submodules/solarized
+	url = https://github.com/bbatsov/solarized-emacs

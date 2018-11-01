@@ -74,7 +74,7 @@
 (sboo-load-file! "sboo-commands.el")
 (sboo-load-file! "sboo-keybindings.el")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when (>= emacs-major-version 26)
 
@@ -84,7 +84,20 @@
 
   (add-startup-hook! #'sboo-autosave-config!))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (>= emacs-major-version 24)
+
+  (add-to-list 'custom-theme-load-path sboo-theme-directory)
+
+  ;;(load-theme 'solarized-light :no-confirm)
+  ())
+
+;; ^ `load-theme':
+;;
+;; (defun load-theme (THEME &optional NO-CONFIRM NO-ENABLE)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when (require 'sboo-auto-mode nil t)
 
@@ -106,7 +119,7 @@
 
 ;; ^ `auto-mode-alist' maps filepaths to major-modes.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when (require 'sboo-desktop nil t)
   (sboo-desktop-init!)
@@ -158,9 +171,30 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-prog-mode nil t)
-  (dolist (HOOK sboo-prog-mode-hooks)
-    (add-hook 'prog-mode-hook HOOK))
+;; (when (require 'sboo-prog nil t)
+;;   (dolist (HOOK sboo-prog-mode-hooks)
+;;     (add-hook 'prog-mode-hook HOOK)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-shell nil t)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (defadvice term-char-mode (after term-char-mode-fixes ())
+
+    (set (make-local-variable 'cua-mode) nil)
+    ;; ^ Disable `cua-mode' to enable `?\C-x' for escaping.
+    (set (make-local-variable 'transient-mark-mode) nil)
+    (set (make-local-variable 'global-hl-line-mode) nil)
+
+    (ad-activate 'term-char-mode)
+
+    (term-set-escape-char ?\C-x))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (add-hook 'term-mode-hook #'sboo-local-unset-tab))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -228,10 +262,18 @@
     ;;; :hook        ((haskell-mode . interactive-haskell-mode))
 
     :init
-    (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
+    (setq haskell-doc-current-info #'sboo-haskell-doc-current-info)
+
     (add-hook 'haskell-mode-hook #'sboo-haskell-prettify-symbols)
 
-    (setq haskell-doc-current-info #'sboo-haskell-doc-current-info)
+    ;; (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
+    ;;
+    ;; ^ `haskell-process' repeatedly spams errors for working projects,
+    ;; stealing focus from the current buffer.
+
+    (remove-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+
+    ;; ^ See « https://wiki.haskell.org/Emacs/Inferior_Haskell_processes ».
 
     :config
     
@@ -240,7 +282,7 @@
 
        '(haskell-process-type             (quote cabal-new-repl))
        
-       '(haskell-process-path-ghci        "cabal")
+       ;;'(haskell-process-path-ghci        "cabal")
 
        ;; '(haskell-process-type             (quote stack-ghci))
        ;; '(haskell-process-path-ghci        "stack")
@@ -389,6 +431,40 @@
 
   (define-key company-active-map (kbd "<backtab>") #'sboo-company-complete-common-or-previous-cycle)
 
+  (bind-keys :map company-active-map
+
+             ("<kp-1>"      . sboo-company-complete-1)
+             ("<kp-end>"    . sboo-company-complete-1)
+
+             ("<kp-2>"      . sboo-company-complete-2)
+             ("<kp-down>"   . sboo-company-complete-2)
+
+             ("<kp-3>"      . sboo-company-complete-3)
+             ("<kp-next>"   . sboo-company-complete-3)
+
+             ("<kp-4>"      . sboo-company-complete-4)
+             ("<kp-left>"   . sboo-company-complete-4)
+
+             ("<kp-5>"      . sboo-company-complete-5)
+             ("<kp-begin>"  . sboo-company-complete-5)
+
+             ("<kp-6>"      . sboo-company-complete-6)
+             ("<kp-right>"  . sboo-company-complete-6)
+
+             ("<kp-7>"      . sboo-company-complete-7)
+             ("<kp-home>"   . sboo-company-complete-7)
+
+             ("<kp-8>"      . sboo-company-complete-8)
+             ("<kp-up>"     . sboo-company-complete-8)
+
+             ("<kp-9>"      . sboo-company-complete-9)
+             ("<kp-prior>"  . sboo-company-complete-9)
+
+             ("<kp-0>"      . sboo-company-complete-10)
+             ("<kp-insert>" . sboo-company-complete-10)
+
+             )
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (use-package company-cabal
@@ -464,9 +540,12 @@
     ;; [2] Show the project name instead.
 
     :config
-    (setq projectile-globally-ignored-directories    (append sboo-exclusions-directories       projectile-globally-ignored-directories))
-    (setq projectile-globally-ignored-files          (append sboo-exclusions-file-names        projectile-globally-ignored-files))
-    (setq projectile-globally-ignored-file-suffixes  (append sboo-exclusions-file-extensions   projectile-globally-ignored-file-suffixes))
+    (setq projectile-globally-ignored-directories
+          (append sboo-exclusions-directories       projectile-globally-ignored-directories))
+    (setq projectile-globally-ignored-files
+          (append sboo-exclusions-file-names        projectile-globally-ignored-files))
+    (setq projectile-globally-ignored-file-suffixes
+          (append sboo-exclusions-file-extensions   projectile-globally-ignored-file-suffixes))
     ()))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

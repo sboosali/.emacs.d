@@ -4,6 +4,20 @@
 
 
 
+Error during redisplay: (jit-lock-function 12541) signaled (invalid-regexp "Unmatched ) or \\)") [3 times]
+
+
+
+File mode specification error: (invalid-function (function sboo-color-comment-keywords))
+
+
+
+
+
+
+
+
+
 
 https://bitbucket.org/justinhj/company-custom-dictionary/src/master/
 

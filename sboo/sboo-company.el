@@ -59,6 +59,75 @@
                #'company-tern))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; `company-complete-number' Utilities ;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; `company-complete-number' :
+;;
+;; (company-complete-number N)
+;; Insert the Nth candidate visible in the tooltip.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-company-complete-1 () "Specialized `company-complete-number'."
+       (interactive)
+       (company-complete-number 1))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-company-complete-2 () "Specialized `company-complete-number'."
+       (interactive)
+       (company-complete-number 2))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-company-complete-3 () "Specialized `company-complete-number'."
+       (interactive)
+       (company-complete-number 3))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-company-complete-4 () "Specialized `company-complete-number'."
+       (interactive)
+       (company-complete-number 4))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-company-complete-5 () "Specialized `company-complete-number'."
+       (interactive)
+       (company-complete-number 5))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-company-complete-6 () "Specialized `company-complete-number'."
+       (interactive)
+       (company-complete-number 6))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-company-complete-7 () "Specialized `company-complete-number'."
+       (interactive)
+       (company-complete-number 7))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-company-complete-8 () "Specialized `company-complete-number'."
+       (interactive)
+       (company-complete-number 8))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-company-complete-9 () "Specialized `company-complete-number'."
+       (interactive)
+       (company-complete-number 9))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-company-complete-10 () "Specialized `company-complete-number'."
+       (interactive)
+       (company-complete-number 10))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Definitions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

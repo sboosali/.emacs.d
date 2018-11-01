@@ -60,6 +60,17 @@ See `sboo-long-line-length' (e.g ≥80 columns)."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defcustom sboo-comment-keywords-haskell
+
+  '( "<BLANKLINE>"
+   )
+
+  "Keywords (to highlight) within comments, under `haskell-mode'.")
+
+;;TODO "<BLANKLINE>" for Haskell comments (a `doctest' keyword).
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ; TODO (defvar sboo--cached--comment-keywords 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -70,7 +81,7 @@ See `sboo-long-line-length' (e.g ≥80 columns)."
  
   "A regexp that matches a string in `STRINGS'."
 
-  (when (require 's nil :noerror)
+  (when (require 's nil :noerror);;TODO manage depencies better
 
     (s-wrap (s-join "\\|" STRINGS) "\\(" "\\)")))
 
@@ -104,10 +115,30 @@ See `sboo-comment-keywords' (e.g. NOTE and TODO)."
 (defvar sboo-prog-mode-hooks
 
         '( #'sboo-color-long-lines
-        ;; #'sboo-color-comment-keywords
+           #'sboo-color-comment-keywords
          )
 
   "For `prog-mode-hook' (i.e. all program files).")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; ;;;###autoload(defvar fixme-mode nil)
+;; (define-minor-mode fixme-mode  
+
+;;   "A minor mode for making FIXME and other warnings stand out"
+
+;;   nil
+;;   " Fixme"
+;;   nil
+;;   :global
+
+;;   :group fixme-mode
+;;   :version fixme-mode-version
+
+
+;;   (if fixme-mode
+;;       (fixme-reload-keywords)
+;;   (fixme-remove-keywords)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -124,4 +155,4 @@ See `sboo-comment-keywords' (e.g. NOTE and TODO)."
 ;;     - 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'sboo-prog-mode)
+(provide 'sboo-prog)
