@@ -198,7 +198,21 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(when (require 'dired nil t)
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (bind-keys :map dired-mode-map
+             ("w" . wdired-change-to-wdired-mode) ;; Mnemonic: [w]dired.
+             )
+
+  ;; ^ Shadows `dired-copy-filename-as-kill':
+  ;;
+  ;; (define-key map "w" 'dired-copy-filename-as-kill)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
