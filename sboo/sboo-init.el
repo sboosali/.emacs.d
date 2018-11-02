@@ -113,8 +113,8 @@
   (add-to-list 'custom-theme-load-path sboo-theme-directory)
 
   (progn
-    (load-theme   'sboo-high-contrast :no-confirm)
-    (enable-theme 'sboo-high-contrast))
+    (load-theme   'sboo-high-contrast-inverted-colors :no-confirm)
+    (enable-theme 'sboo-high-contrast-inverted-colors))
 
   ())
 
