@@ -84,19 +84,6 @@
 
   (add-startup-hook! #'sboo-autosave-config!))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(when (>= emacs-major-version 24)
-
-  (add-to-list 'custom-theme-load-path sboo-theme-directory)
-
-  ;;(load-theme 'solarized-light :no-confirm)
-  ())
-
-;; ^ `load-theme':
-;;
-;; (defun load-theme (THEME &optional NO-CONFIRM NO-ENABLE)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when (require 'sboo-auto-mode nil t)
@@ -118,6 +105,22 @@
   ())
 
 ;; ^ `auto-mode-alist' maps filepaths to major-modes.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (>= emacs-major-version 24)
+
+  (add-to-list 'custom-theme-load-path sboo-theme-directory)
+
+  (progn
+    (load-theme   'sboo-high-contrast :no-confirm)
+    (enable-theme 'sboo-high-contrast))
+
+  ())
+
+;; ^ `load-theme':
+;;
+;; (defun load-theme (THEME &optional NO-CONFIRM NO-ENABLE)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
