@@ -62,21 +62,19 @@
 ;; Variables ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defgroup sboo-theme nil
-
+(defgroup sboo-group nil
   "My themes' configuration."
-
-  :group 'theme)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcustom sboo-default-theme 'sboo-high-contrast-sboo-inverted-colors
+(defcustom sboo-default-theme 'sboo-high-contrast-inverted-colors
 
   "The theme which is enabled by default."
 
   :type  'symbol
   :safe  t
-  :group 'sboo-theme)
+  :group 'sboo-group)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Faces: Haskell ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -96,9 +94,9 @@
 
   `((t (:bold       t
         :foreground ,sboo-inverted-purple)
-        ))
-  "Custom face for `haskell-operator-face'."
+       ))
 
+  "Custom face for `haskell-operator-face'."
   :group 'sboo-haskell-appearence)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

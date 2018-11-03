@@ -70,6 +70,22 @@
 ;;
 ;; M-x `list-faces-display'
 ;; M-x `list-colors-display'
+;;
+;; « C-h f custom-theme-set-faces »:
+;;
+;; (custom-theme-set-faces THEME &rest ARGS)
+;;
+;; ARGS is a list, where each entry is a list of
+;;
+;; « (FACE SPEC [NOW [COMMENT]]) »
+;;
+;; 
+
+;; Links:
+;;
+;; - https://en.wikipedia.org/wiki/Web_colors
+;; - 
+;;
 
 ;;; Code:
 
@@ -92,8 +108,9 @@
 
 ;; Secondary Colors
 
-(defvar inverted-purple "Chocolate"
-  "The color « purple » is (additively-)inverted « chocolate ».")
+(defvar inverted-purple "Chartreuse"
+  "The color « purple » is (additively-)inverted « green+yellow ».")
+;; ^ GreenYellow, Chartreuse, Chocolate.
 
 (defvar inverted-yellow "Blue"
   "The color « yellow » is (additively-)inverted « blue ».")
@@ -118,7 +135,7 @@
 
 ;; Soft Colors
 
-(defvar inverted-soft-orange "Teal"
+(defvar inverted-salmon "Teal"
   "The color « salmon » is (additively-)inverted « teal ».")
 
 (defvar inverted-soft-purple "Olive"
@@ -129,6 +146,26 @@
 
 (defvar inverted-aqua "Crimson"
   "The color « aqua » is (additively-)inverted « crimson ».")
+
+(defvar inverted-azure "Chocolate"
+  "The color « azure » (~ deep blue) is (additively-)inverted « chocolate ».")
+
+(defvar inverted-sand "MidnightBlue"
+  "The color « sand » (pale yellow/brown) is (additively-)inverted « Midnight Blue ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Dark Colors
+
+(defvar inverted-dark-purple "LightGreen"
+  "The color « dark Purple » is (additively-)inverted « light Green ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Light Colors
+
+(defvar inverted-light-green "DarkMagenta"
+  "The color « light Green » is (additively-)inverted « dark Magenta ».")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Theme ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -169,19 +206,42 @@
  '(vcursor                                    ((t (:foreground "red" :background "orange" :underline t))))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; Haskell Mode
+ ;;
+ ;; NOTE Faces which `:inherit' from others must come BEFORE them.
+ ;;      In particular, `haskell-*-face's must precede `font-lock-*-face's.
+ ;;
+
+ `(haskell-operator-face                    ((t (:foreground ,inverted-azure :bold t))))
+ `(haskell-type-face                        ((t (:foreground ,inverted-yellow))))
+ `(haskell-constructor-face                 ((t (:foreground ,inverted-olive))))
+ `(haskell-keyword-face                     ((t (:foreground ,inverted-dark-purple))))
+ `(haskell-definition-face                  ((t (:foreground ,inverted-aqua :underline nil))))
+
+ ;; `(haskell-quasi-quote-face                 ((t (:foreground ""))))
+ ;; `(haskell-hole-face                        ((t (:foreground ""))))
+
+ ;; `(haskell-literate-comment-face            ((t (:foreground ""))))
+ `(haskell-pragma-face                      ((t (:foreground ,inverted-salmon))))
+ `(haskell-liquid-haskell-annotation-face   ((t (:foreground ,inverted-salmon))))
+
+ ;; `(haskell-error-face                       ((t (:foreground ""))))
+ ;; `(haskell-warning-face                     ((t (:foreground ""))))
+
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  ;; For Programs
 
- `(font-lock-keyword-face                     ((t (:bold t              :foreground ,inverted-olive))))
+ `(font-lock-keyword-face                     ((t (:bold t              :foreground ,inverted-dark-purple))))
  `(font-lock-builtin-face                     ((t (:bold t              :foreground ,inverted-yellow))))
  `(font-lock-constant-face                    ((t (:bold t :underline t :foreground ,inverted-olive))))
- `(font-lock-string-face                      ((t (:bold t              :foreground ,inverted-orange))))
+ `(font-lock-string-face                      ((t (:bold t              :foreground ,inverted-salmon :italic t))))
 
  `(font-lock-type-face                        ((t (:bold t              :foreground ,inverted-yellow))))
  `(font-lock-function-name-face               ((t (:bold t              :foreground ,inverted-yellow))))
  `(font-lock-variable-name-face               ((t (:bold t              :foreground ,inverted-olive))))
 
  `(font-lock-comment-face                     ((t (                     :foreground ,inverted-red))))
- `(font-lock-doc-face                         ((t (:bold t              :foreground ,inverted-red))))
+ `(font-lock-doc-face                         ((t (                     :foreground ,inverted-red :background "MistyRose"))))
  `(font-lock-preprocessor-face                ((t (:bold t              :foreground ,inverted-olive))))
 
 ;;TODO `(font-lock-error-face                       ((t (:bold t              :foreground ,inverted-orange))))
@@ -227,39 +287,6 @@
  ;; Makefile Mode
 
  '(makefile-space-face                        ((t (:background "hotpink"))))
-
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- ;; Haskell Mode
-
- ;; '(haskell-operator-face                    ((t (:foreground ""))))
- ;; '(haskell-type-face                        ((t (:foreground ""))))
- ;; '(haskell-constructor-face                 ((t (:foreground ""))))
- ;; '(haskell-keyword-face                     ((t (:foreground ""))))
- ;; '(haskell-definition-face                  ((t (:foreground ""))))
-
- ;; '(haskell-quasi-quote-face                 ((t (:foreground ""))))
- ;; '(haskell-hole-face                        ((t (:foreground ""))))
-
- ;; '(haskell-literate-comment-face            ((t (:foreground ""))))
- ;; '(haskell-pragma-face                      ((t (:foreground ""))))
- ;; '(haskell-liquid-haskell-annotation-face   ((t (:foreground ""))))
-
- ;; '(haskell-error-face                       ((t (:foreground ""))))
- ;; '(haskell-warning-face                     ((t (:foreground ""))))
-
- ;; '(haskell-debug-heading-face               ((t (:foreground ""))))
- ;; '(haskell-debug-keybinding-face            ((t (:foreground ""))))
- ;; '(haskell-debug-muted-face                 ((t (:foreground ""))))
- ;; '(haskell-debug-newline-face               ((t (:foreground ""))))
- ;; '(haskell-debug-trace-number-face          ((t (:foreground ""))))
- ;; '(haskell-debug-warning-face               ((t (:foreground ""))))
-
- ;; '(haskell-interactive-face-compile-error   ((t (:foreground ""))))
- ;; '(haskell-interactive-face-compile-warning ((t (:foreground ""))))
- ;; '(haskell-interactive-face-garbage         ((t (:foreground ""))))
- ;; '(haskell-interactive-face-prompt          ((t (:foreground ""))))
- ;; '(haskell-interactive-face-prompt2         ((t (:foreground ""))))
- ;; '(haskell-interactive-face-result          ((t (:foreground ""))))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  ;; Miscellaneous Modes
