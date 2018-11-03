@@ -14,9 +14,9 @@
     ((eval progn
            (dante-mode -1)
            (flycheck-mode -1))
-     (dante-target . "lib:enumerate")
-     (dante-project-root . "~/haskell/enumerate/")
      (dante-target . "lib:enumerate-function")
+     (dante-project-root . "~/haskell/enumerate/")
+     (dante-target . "lib:enumerate")
      (dante-project-root . "~/haskell/skeletor/")
      (dante-project-root . "~/haskell/haskell-project-skeleton/")
      (dante-target . "lib:haskell-project")

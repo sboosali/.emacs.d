@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+#
+# key         : =inverted
+# name        : `defvar` declaration for an inverted color.
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+(defvar inverted-${1:red} "${2:$(capitalize yas-text)}"
+  "The color « $1 » is (additively-)inverted « ${2:cyan} ».")
+$0

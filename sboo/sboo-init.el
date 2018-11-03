@@ -108,13 +108,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (>= emacs-major-version 24)
+(when (and (>= emacs-major-version 24)
+           (require 'sboo-theme nil :no-error))
 
   (add-to-list 'custom-theme-load-path sboo-theme-directory)
 
-  (progn
-    (load-theme   'sboo-high-contrast-inverted-colors :no-confirm)
-    (enable-theme 'sboo-high-contrast-inverted-colors))
+  (sboo-theme-set!)
 
   ())
 

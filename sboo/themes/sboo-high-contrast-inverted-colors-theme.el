@@ -34,10 +34,104 @@
 ;; "Intuitive" meaning that, for exampple, errors are red
 ;; (not blue or green, as when a light-color theme with red errors
 ;; is inverted (i.e. seen from a screen whose colors are inverted).
+
+;; Color Inversions:
 ;;
+;; - Blue inverts-to Yellow
+;; - Purple inverts-to NeonGreen
+;; -  inverts-to 
+;; -  inverts-to 
+;; - Firebrick inverts-to Teal
+;; - DarkGreen inverts-to Fuschia
+;; - Darkgoldenrod inverts-to Azure
+;; -  inverts-to 
+;; -  inverts-to 
+;; -  inverts-to 
+;; -  inverts-to 
+;; -  inverts-to 
+;; -  inverts-to 
+;; -  inverts-to 
+;; -  inverts-to 
+
+;; Secondary (Additive) Colors
+;;
+;; "A secondary color is formed by the sum of two primary colors of equal intensity: cyan is green+blue, magenta is red+blue, and yellow is red+green."
+
+;; Font Lock
+;;
+;; For exmaple, in the ELisp expression « (require 'sboo-theme nil :no-error) »:
+;;
+;; * `font-lock-keyword-face'  — colors symbol literals         (i.e. « require »).
+;; * `font-lock-builtin-face'  — colors keyword-symbol literals (i.e. « :noerror »). 
+;; * `font-lock-constant-face' — colors symbol literals         (i.e. « sboo-theme »).
+;;
+
+;; Development
+;;
+;; M-x `list-faces-display'
+;; M-x `list-colors-display'
 
 ;;; Code:
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Primary Colors: RGB
+
+(defvar inverted-red "Cyan"
+  "The color « red » is (additively-)inverted « cyan ».")
+
+(defvar inverted-blue "Orange"
+  "The color « blue » is (additively-)inverted « orange ».")
+
+(defvar inverted-green "Magenta"
+  "The color « green » is (additively-)inverted « magenta ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Secondary Colors
+
+(defvar inverted-purple "Chocolate"
+  "The color « purple » is (additively-)inverted « chocolate ».")
+
+(defvar inverted-yellow "Blue"
+  "The color « yellow » is (additively-)inverted « blue ».")
+
+(defvar inverted-orange "DeepSkyBlue"
+  "The color « orange » is (additively-)inverted « DeepSkyBlue ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Hot Colors (i.e. Neon, that "pop" against a dark background)
+
+(defvar inverted-hot-pink "Lime"
+  "The color « hot pink » is (additively-)inverted « lime ».")
+
+(defvar inverted-hot-green "Fuchsia"
+  "The color « hot green » is (additively-)inverted « Fuchsia ».")
+
+(defvar inverted-hot-orange "DeepSkyBlue"
+  "The color « hot orange » is (additively-)inverted « DeepSkyBlue ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Soft Colors
+
+(defvar inverted-soft-orange "Teal"
+  "The color « salmon » is (additively-)inverted « teal ».")
+
+(defvar inverted-soft-purple "Olive"
+  "The color « soft purple » is (additively-)inverted « olive ».")
+
+(defvar inverted-olive "DarkSlateBlue"
+  "The color « olive » is (additively-)inverted « Dark Slate Blue ».")
+
+(defvar inverted-aqua "Crimson"
+  "The color « aqua » is (additively-)inverted « crimson ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Theme ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (deftheme sboo-high-contrast-inverted-colors
@@ -46,6 +140,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (custom-theme-set-faces
+
  'sboo-high-contrast-inverted-colors
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -53,7 +148,7 @@
  '(default                                    ((t (:background "white" :foreground "black"))))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- ;;; Highlights
+ ;; Highlights
 
  '(region                                     ((t (:background "black" :foreground "white" :bold 1))))
  '(secondary-selection                        ((t (:background "black" :foreground "white" :bold 1))))
@@ -61,10 +156,10 @@
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  ;; Fonts
 
- '(bold                                       ((t (:bold t :underline t))))
- '(italic                                     ((t (:bold t :underline t))))
- '(underline                                  ((t (:bold t :underline t))))
- '(bold-italic                                ((t (:bold t :underline t))))
+ '(bold                                       ((t (:bold t))))
+ '(italic                                     ((t (        :italic t))))
+ '(underline                                  ((t (:bold t           :underline t))))
+ '(bold-italic                                ((t (:bold t :italic t))))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  ;; Mouse
@@ -74,33 +169,40 @@
  '(vcursor                                    ((t (:foreground "red" :background "orange" :underline t))))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; For Programs
+
+ `(font-lock-keyword-face                     ((t (:bold t              :foreground ,inverted-olive))))
+ `(font-lock-builtin-face                     ((t (:bold t              :foreground ,inverted-yellow))))
+ `(font-lock-constant-face                    ((t (:bold t :underline t :foreground ,inverted-olive))))
+ `(font-lock-string-face                      ((t (:bold t              :foreground ,inverted-orange))))
+
+ `(font-lock-type-face                        ((t (:bold t              :foreground ,inverted-yellow))))
+ `(font-lock-function-name-face               ((t (:bold t              :foreground ,inverted-yellow))))
+ `(font-lock-variable-name-face               ((t (:bold t              :foreground ,inverted-olive))))
+
+ `(font-lock-comment-face                     ((t (                     :foreground ,inverted-red))))
+ `(font-lock-doc-face                         ((t (:bold t              :foreground ,inverted-red))))
+ `(font-lock-preprocessor-face                ((t (:bold t              :foreground ,inverted-olive))))
+
+;;TODO `(font-lock-error-face                       ((t (:bold t              :foreground ,inverted-orange))))
+ `(font-lock-warning-face                     ((t (:bold t              :foreground ,inverted-orange))))
+
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  ;; Borders
 
  '(border                                     ((t (:foreground "black"))))
  '(fringe                                     ((t (:background "grey95"))))
+
  '(modeline                                   ((t (:background "black" :foreground "white" :bold 1))))
  '(modeline-buffer-id                         ((t (:background "black" :foreground "white" :bold 1))))
  '(modeline-mousable                          ((t (:background "black" :foreground "white" :bold 1))))
  '(modeline-mousable-minor-mode               ((t (:background "black" :foreground "white" :bold 1))))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- ;;; For Programs
-
- '(font-lock-builtin-face                     ((t (:bold t :foreground "Red"))))
- '(font-lock-comment-face                     ((t (:bold t :foreground "Firebrick"))))
- '(font-lock-constant-face                    ((t (:bold t :underline t :foreground "Blue"))))
- '(font-lock-function-name-face               ((t (:bold t :foreground "Blue"))))
- '(font-lock-keyword-face                     ((t (:bold t :foreground "Purple"))))
- '(font-lock-string-face                      ((t (:bold t :foreground "DarkGreen"))))
- '(font-lock-type-face                        ((t (:bold t :foreground "ForestGreen"))))
- '(font-lock-variable-name-face               ((t (:bold t :foreground "DarkGoldenrod"))))
- '(font-lock-warning-face                     ((t (:bold t :foreground "Red"))))
-
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  ;;; Parenthesis Matching
 
- '(show-paren-match-face                      ((t (:background "turquoise"))))
- '(show-paren-mismatch-face                   ((t (:foreground "white" :background "purple"))))
+ '(show-paren-match-face                      ((t (:background "purple"))))
+ '(show-paren-mismatch-face                   ((t (:foreground "white" :background "turquoise"))))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  ;;; Widgets
@@ -125,6 +227,39 @@
  ;; Makefile Mode
 
  '(makefile-space-face                        ((t (:background "hotpink"))))
+
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; Haskell Mode
+
+ ;; '(haskell-operator-face                    ((t (:foreground ""))))
+ ;; '(haskell-type-face                        ((t (:foreground ""))))
+ ;; '(haskell-constructor-face                 ((t (:foreground ""))))
+ ;; '(haskell-keyword-face                     ((t (:foreground ""))))
+ ;; '(haskell-definition-face                  ((t (:foreground ""))))
+
+ ;; '(haskell-quasi-quote-face                 ((t (:foreground ""))))
+ ;; '(haskell-hole-face                        ((t (:foreground ""))))
+
+ ;; '(haskell-literate-comment-face            ((t (:foreground ""))))
+ ;; '(haskell-pragma-face                      ((t (:foreground ""))))
+ ;; '(haskell-liquid-haskell-annotation-face   ((t (:foreground ""))))
+
+ ;; '(haskell-error-face                       ((t (:foreground ""))))
+ ;; '(haskell-warning-face                     ((t (:foreground ""))))
+
+ ;; '(haskell-debug-heading-face               ((t (:foreground ""))))
+ ;; '(haskell-debug-keybinding-face            ((t (:foreground ""))))
+ ;; '(haskell-debug-muted-face                 ((t (:foreground ""))))
+ ;; '(haskell-debug-newline-face               ((t (:foreground ""))))
+ ;; '(haskell-debug-trace-number-face          ((t (:foreground ""))))
+ ;; '(haskell-debug-warning-face               ((t (:foreground ""))))
+
+ ;; '(haskell-interactive-face-compile-error   ((t (:foreground ""))))
+ ;; '(haskell-interactive-face-compile-warning ((t (:foreground ""))))
+ ;; '(haskell-interactive-face-garbage         ((t (:foreground ""))))
+ ;; '(haskell-interactive-face-prompt          ((t (:foreground ""))))
+ ;; '(haskell-interactive-face-prompt2         ((t (:foreground ""))))
+ ;; '(haskell-interactive-face-result          ((t (:foreground ""))))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  ;; Miscellaneous Modes
@@ -154,25 +289,25 @@
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
  '(cperl-array-face                           ((t (:foreground "Blue" :background "lightyellow2" :bold t))))
- '(cperl-hash-face                            ((t (:foreground "Red" :background "lightyellow2" :bold t :italic t))))
+ '(cperl-hash-face                            ((t (:foreground "Red"  :background "lightyellow2" :bold t :italic t))))
  '(cperl-nonoverridable-face                  ((t (:foreground "chartreuse3"))))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
  '(custom-button-face                         ((t (nil))))
- '(custom-changed-face                        ((t (:foreground "white" :background "blue"))))
+ '(custom-changed-face                        ((t (:foreground "white"  :background "blue"))))
  '(custom-documentation-face                  ((t (nil))))
- '(custom-face-tag-face                       ((t (:underline t))))
- '(custom-group-tag-face                      ((t (:foreground "blue" :underline t))))
- '(custom-group-tag-face-1                    ((t (:foreground "red" :underline t))))
+ '(custom-face-tag-face                       ((t (                                             :underline t))))
+ '(custom-group-tag-face                      ((t (:foreground "blue"                           :underline t))))
+ '(custom-group-tag-face-1                    ((t (:foreground "red"                            :underline t))))
  '(custom-invalid-face                        ((t (:foreground "yellow" :background "red"))))
- '(custom-modified-face                       ((t (:foreground "white" :background "blue"))))
- '(custom-rogue-face                          ((t (:foreground "pink" :background "black"))))
- '(custom-saved-face                          ((t (:underline t))))
- '(custom-set-face                            ((t (:foreground "blue" :background "white"))))
+ '(custom-modified-face                       ((t (:foreground "white"  :background "blue"))))
+ '(custom-rogue-face                          ((t (:foreground "pink"   :background "black"))))
+ '(custom-saved-face                          ((t (                                             :underline t))))
+ '(custom-set-face                            ((t (:foreground "blue"   :background "white"))))
  '(custom-state-face                          ((t (:foreground "dark green"))))
- '(custom-variable-button-face                ((t (:bold t :underline t))))
- '(custom-variable-tag-face                   ((t (:foreground "blue" :underline t))))
+ '(custom-variable-button-face                ((t (                                     :bold t :underline t))))
+ '(custom-variable-tag-face                   ((t (:foreground "blue"                           :underline t))))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -408,6 +408,22 @@ Version 2015-04-09"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun sboo-insert-dash ()
+  
+  "`insert' \"—\", the \"EM DASH\" Unicode character."
+  (interactive)
+  
+  (insert "—"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-insert-null ()
+  
+  "`insert' \"∅\", the \"EMPTY SET\" Unicode character."
+  (interactive)
+  
+  (insert "∅"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Commands that Gracefully Degrade ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
