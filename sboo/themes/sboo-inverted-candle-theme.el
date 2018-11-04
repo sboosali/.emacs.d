@@ -1,4 +1,4 @@
-;;; sboo-red-black-monochrome-inverted-colors-theme.el --- (Inverted) Red/Black.
+;;; sboo-inverted-candle-theme.el --- (Inverted) "Candle" Colors (red, orange, yellow, black).
 
 ;; Copyright (C) 2005, 2006  Xavier Maillard <zedek@gnu.org>
 ;; Copyright (C) 2005, 2006  Brian Palmer <bpalmer@gmail.com>
@@ -150,14 +150,14 @@
 ;; Theme ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(deftheme sboo-red-black-monochrome-inverted-colors
+(deftheme sboo-inverted-candle
   "Black-Red Quasi-Monochrome (Oligochrome?) theme for Inverted-Colors.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (custom-theme-set-faces
 
- 'sboo-red-black-monochrome-inverted-colors
+ 'sboo-inverted-candle
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -521,7 +521,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(provide-theme 'sboo-red-black-monochrome-inverted-colors)
+(provide-theme 'sboo-inverted-candle)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; sboo-red-black-monochrome-inverted-colors-theme.el ends here
+;;; sboo-inverted-candle-theme.el ends here
