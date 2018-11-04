@@ -6,7 +6,7 @@
 ;; Copyright (C) 2018 by Spiros Boosalis
 
 ;; Author: Spiros Boosalis <samboosalis@gmail.com>
-;; URL: https://github.com/.emacs.d/sboo/themes/sboo-high-contrast-inverted-colors-theme.el
+;; URL: https://raw.githubusercontent.com/sboosali/.emacs.d/master/sboo/themes/sboo-high-contrast-inverted-colors-theme.el
 ;; Version: 0.01
 
 ;; This program is free software; you can redistribute it and/or modify
