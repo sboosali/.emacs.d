@@ -33,8 +33,8 @@
 
   (package-initialize)
   
-  ;;(sboo-register-submodule! "helm/")
-  (sboo-register-submodule! "real-auto-save/")
+  ;;(sboo-register-submodule-packages! "helm/")
+  (sboo-register-submodule-packages! "real-auto-save/")
 
   ())
 

@@ -25,7 +25,7 @@
 
 (defun add-to-load-path! (FilePath)
 
-  "Register `FilePath' with `load-path'.
+  "Register `FilePath' (a directory containing ELisp packages/features) with `load-path'.
 
   `FilePath':
   
@@ -108,17 +108,25 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (and (>= emacs-major-version 24)
-           (require 'sboo-theme nil :noerror))
-
-  (add-to-list 'custom-theme-load-path sboo-theme-directory)
-  (sboo-theme-set!)
-
-  ())
+;; (when (and (>= emacs-major-version 24)
+;;            (require 'sboo-theme nil :noerror))
+;;   (add-to-list 'custom-theme-load-path sboo-theme-directory)
+;;   (sboo-theme-set!)
+;;   ())
 
 ;; ^ `load-theme':
 ;;
 ;; (defun load-theme (THEME &optional NO-CONFIRM NO-ENABLE)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;(defvar sboo-submodule-solarized-directory
+
+(when (>= emacs-major-version 24)
+  (sboo-register-submodule-packages! "solarized")
+  (sboo-register-submodule-themes!   "solarized")
+  (load-theme 'solarized :noconfirm)
+  ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -226,11 +234,11 @@
 (pcase (sboo-install-p)
 
   ('submodules (progn
-                 (sboo-register-submodule! "use-package/")
-                 (sboo-register-submodule! "helm/")
+                 (sboo-register-submodule-packages! "use-package/")
+                 (sboo-register-submodule-packages! "helm/")
                  
                  (when (< emacs-major-version 26)
-                   (sboo-register-submodule! "real-auto-save/"))))
+                   (sboo-register-submodule-packages! "real-auto-save/"))))
 
   ('melpa      (progn
                  (sboo-load-file! "sboo-packages-by-installing.el")))

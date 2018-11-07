@@ -262,17 +262,37 @@ e.g.:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-register-submodule! (DirectoryName)
+(defun sboo-register-submodule-packages! (SubmoduleDirectory)
 
-  "Register `DirectoryName' with `load-path', under `sboo-vendored-package-directory'.
+  "Register `SubmoduleDirectory' with `load-path', under `sboo-vendored-package-directory'.
 
 See the file `./scripts/add-submodule.sh'."
 
   (let ((DirectoryPath 
          (truename-as-directory (concat sboo-vendored-package-directory
-					DirectoryName))))
+					SubmoduleDirectory)))
+         )
 
-    (add-to-list 'load-path DirectoryPath)))
+    (progn
+      (add-to-list 'load-path DirectoryPath)
+      DirectoryPath)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-register-submodule-themes! (SubmoduleDirectory)
+
+  "Register `SubmoduleDirectory' with `custom-theme-load-path', under `sboo-vendored-package-directory'.
+
+See the file `./scripts/add-submodule.sh'."
+
+  (let ((DirectoryPath 
+         (truename-as-directory (concat sboo-vendored-package-directory
+					SubmoduleDirectory)))
+        )
+
+    (progn
+      (add-to-list 'custom-theme-load-path DirectoryPath)
+      DirectoryPath)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -293,6 +313,32 @@ See the file `./scripts/add-submodule.sh'."
   ;;TODO (interactive )
 
   (require FeatureSymbol nil NoError))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun add-to-theme-path! (Directory)
+
+  "Register `Directory' (a directory containing Emacs themes) with `custom-theme-load-path'.
+
+  `Directory':
+  
+  * /must/ be an absolute filepath to a directory; (TODO)
+  
+  * /should/ use forward-slashes, e.g. `.../.../...'
+    (they're automatically converted to the platform-specifc directory-separator character);
+  
+  * /may/ start with `~/' 
+    (tildes are expanded to the user's home directory);
+
+  * /may/ end with a forward-slash (e.g. `sboo/' or `sboo')
+    (a trailing is added if absent).
+  "
+
+  (let ((Directory
+         (file-name-as-directory (file-truename Directory)))
+        )
+
+  (add-to-list 'custom-theme-load-path)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
