@@ -1,15 +1,9 @@
 [submodule "use-package"]
 	path = submodules/use-package
 	url = https://github.com/jwiegley/use-package
-[submodule "dante"]
-	path = submodules/dante
-	url = https://github.com/jyp/dante
 [submodule "helm"]
 	path = submodules/helm
 	url = https://github.com/emacs-helm/helm
-[submodule "real-auto-save"]
-	path = submodules/real-auto-save
-	url = https://github.com/ChillarAnand/real-auto-save
 [submodule "dash"]
 	path = submodules/dash
 	url = https://github.com/magnars/dash.el.git
