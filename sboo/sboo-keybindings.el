@@ -48,6 +48,7 @@
 ;; (global-set-key (kbd "<f6>")  #'xah-prior-user-buffer)
 ;; (global-set-key (kbd "<f7>")  #'xah-next-user-buffer) 
 ;; (global-set-key (kbd "<f8>")  nil)
+(global-set-key (kbd "<f8>")  'compile)                     ;; 
 
 (global-set-key (kbd "<f9>")  #'undo)
 (global-set-key (kbd "<f10>") #'keyboard-quit)

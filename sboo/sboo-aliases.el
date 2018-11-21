@@ -67,6 +67,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defalias '/bs #'bookmark-set)
+(defalias '/bg #'bookmark-jump)        ; abbreviates "bookmark get"
+(defalias '/bl #'bookmark-bmenu-list)  ; abbreviates "bookmark list"
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; (defalias '/wm   #'whitespace-mode)
 ;; (defalias '/gwm  #'global-whitespace-mode)
 ;; (defalias '/glm  #'global-linum-mode)
@@ -104,6 +110,8 @@
 (defalias '/ms #'magit-status)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defalias '/hr #'dante-restart) ; mnemonic: "h" for "Haskell".
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+#
+# key         : =mkopt
+# name        : Define a partially-applied « mkOption » on « type » (e.g. mkIntOption).
+# condition   : (= (length "=mkopt") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+##################################################
+
+mk${1:$(capitalize yas-text)}Option = old:
+  mkOption (old // { type = types.${1:type}; });
+
+$0

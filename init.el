@@ -1,12 +1,11 @@
 ;;; init.el --- SBoo's Emacs Configuration -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
 (package-initialize)
+
+(setq package-enable-at-startup nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq debug-on-error nil);;TODO environment-variable
 
@@ -16,18 +15,18 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq package-enable-at-startup nil)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (let* ((EmacsDirectory (or user-emacs-directory
 			   "~/.emacs.d/"))
        (SbooDirectory  (file-name-as-directory (concat EmacsDirectory
 						       "sboo/")))
+       (SbooCustom     (file-truename (concat SbooDirectory
+					      "sboo-custom.el")))
        (SbooFile       (file-truename (concat SbooDirectory
 					      "sboo-init.el"))))   ;;TODO EnvironmentVars
 
-  (load SbooFile nil nil t t))
+  (progn
+    (setq custom-file SbooCustom)       ; redirect custom file early.
+    (load SbooFile nil nil t t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -36,28 +35,3 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Customization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(haskell-ask-also-kill-buffers nil)
- '(haskell-interactive-popup-errors nil)
- '(haskell-process-args-cabal-repl (list "--ghc-option=-ferror-spans"))
- '(haskell-process-path-ghci "cabal")
- '(haskell-process-type (quote cabal-new-repl))
- '(package-selected-packages (quote (helm)))
- '(safe-local-variable-values
-   (quote
-    ((dante-project-root . "~/haskell/skeletor/")
-     (dante-project-root . "~/haskell/haskell-project-skeleton/")
-     (dante-target . "lib:haskell-project")
-     (dante-project-root . "~/haskell/spiros/")
-     (dante-target . "lib:spiros")
-     (lexical-binding . t)))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

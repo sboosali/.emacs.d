@@ -188,6 +188,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Enable disabled commands:
+
+(put 'upcase-region   'disabled nil)  ;; « C-x C-u »: same as M-u, but on whole regions.
+(put 'downcase-region 'disabled nil)  ;; « C-x C-l »: same as M-l, but on whole regions.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (ffap-bindings)
 ;; ^ a.k.a. `find-file-at-point'
 

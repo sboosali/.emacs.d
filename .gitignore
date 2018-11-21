@@ -37,8 +37,9 @@ result-*
 .cask/
 
 ########################################
-# `savehist`
+# `savehist
 savehist.el
+history
 
 ########################################
 # `desktop`

@@ -59,6 +59,28 @@
 (setq custom-file sboo-custom-file)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(dolist (BINDING '( (lexical-binding . t)
+                    ))
+  (add-to-list 'safe-local-variable-values BINDING))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(dolist (BINDING '( (progn (dante-mode 0) (flycheck-mode 0))
+                    ))
+  (add-to-list 'safe-local-eval-forms BINDING))
+
+;; ^ URL `http://endlessparentheses.com/a-quick-guide-to-directory-local-variables.html'
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(put 'dante-target       'safe-local-variable #'stringp)
+(put 'dante-project-root 'safe-local-variable #'stringp)
+
+;; ^ Ensure `dante-*' variables are marked as "safe strings".
+;; (NOTE `dante' does this, but haskell files may be opened before(?) `dante' is loaded.)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Register LoadPaths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -161,6 +183,41 @@
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package shell
+
+  :config
+
+  (push
+   (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
+   ;; ^
+   ;;
+   ;; How To Override The Default Behavior Of  "M-x shell" Opening A New Buffer In Another Window (e.g. splitting).
+   ;;
+   ;; see:
+   ;;    https://stackoverflow.com/questions/40301732/m-x-shell-open-shell-in-other-windows
+   ;;
+   ;; >  The command `shell` uses `pop-to-buffer`.
+   ;; > If you have the Emacs source code, you can see it for yourself by running `C-h d f shell` to open the function's documentation (and then clicking the link to the function's source).
+   ;; `pop-to-buffer` can be configured via `display-buffer-alist`. 
+
+  :bind
+
+  ( ("<s>-s" . shell)
+  
+    :map shell-mode-map
+
+    ("<kp-prior>" . comint-previous-input)
+    ;; ^ <prior> is the page-up key.
+    ;; `comint-previous-input` is like "press down in a terminal-emulator".
+    
+    ("<kp-next>" . 'comint-next-input)
+    ;; ^ <next> is the page-down key.
+    ;; `comint-next-input` is like "press up in a terminal-emulator".
+
+    ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Internal Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -220,8 +277,57 @@
   ;; (define-key map "w" 'dired-copy-filename-as-kill)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'bookmark nil t)
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ())
+
+;; ^ Some bookmarking commands:
+;;
+;; ‘C-x r m’ – set a bookmark at the current location (e.g. in a file)
+;; ‘C-x r b’ – jump to a bookmark
+;; ‘C-x r l’ – list your bookmarks
+;; ‘M-x bookmark-delete’ – delete a bookmark by name
+;;
+;; Your personal bookmark file is defined by option ‘bookmark-default-file’, which defaults to `~/.emacs.d/bookmarks
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'saveplace nil 'noerror)
+
+  (setq-default save-place t)
+  ;TODO; (setq save-place-file (expand-file-name "save-point-places" user-emacs-directory))
 
   ())
+
+;; ^ Save point position between sessions.
+;;
+;; "Save the position I was in each file, i.e. no scrolling down to paragraph N or function foo when I reopen my files."
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'savehist nil 'noerror)
+
+  (setq savehist-additional-variables '(search-ring regexp-search-ring))
+
+  (setq savehist-file (emacs-file "savehist.el"))
+
+  (savehist-mode t)
+
+  ())
+
+;; ^ Save History.
+;;
+;; Save mode-line history between sessions.
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -699,6 +805,75 @@
 ;;(require volatile-highlights ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'volatile-highlights nil 'noerror)
+  (volatile-highlights-mode t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (use-package which-key
+;;   ;;
+;;   :diminish which-key-mode
+;;   ;;
+;;   :init
+;;   (setq which-key-idle-secondary-delay 0.5)
+;;   (setq which-key-idle-delay           1.0)
+;;   ;;
+;;   :config
+;;   (which-key-mode t))
+;; ;; ^ After 1 second of an unfinished key-press,
+;; ;; show the documentation of the sub-keys available in the key sequence.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; `package--builtins':
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; these features (below) can be configured with `use-package',
+;; because they are actual packages.
+;;
+;; See: (describe-variable 'package--builtins)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package calendar
+  :defer t
+  :config (setq calendar-week-start-day 1))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package vc
+  :defer t
+  :config (setq vc-follow-symlinks t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; no multiframe ediff please
+(use-package ediff
+  :defer t
+  :config (setq ediff-window-setup-function 'ediff-setup-windows-plain))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Builtin Features:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Non-Package features must be configured more because,
+;; with `with-eval-after-load', `define-key', etc.
+
+(with-eval-after-load 'comint
+
+  (bind-key "<up>"   'comint-previous-matching-input-from-input comint-mode-map)
+  (bind-key "<down>" 'comint-next-matching-input-from-input     comint-mode-map)
+
+  (setq comint-scroll-to-bottom-on-output 'others)
+  (setq comint-scroll-to-bottom-on-input  'this)
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Finalization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -772,6 +947,22 @@
 ;; See:
 ;;     - https://jblevins.org/projects/markdown-mode/
 ;;     - 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; DirEd
+
+;; `dired-sidebar':
+;;
+;; https://github.com/jojojames/dired-sidebar/blob/master/readme.org
+
+;; `dired-hack':
+;;
+;; https://github.com/Fuco1/dired-hacks/blob/master/README.md#dired-subtree
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
