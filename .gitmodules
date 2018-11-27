@@ -16,3 +16,6 @@
 [submodule "solarized"]
 	path = submodules/solarized
 	url = https://github.com/sellout/emacs-color-theme-solarized.git
+[submodule "dante"]
+	path = submodules/dante
+	url = https://github.com/jyp/dante
