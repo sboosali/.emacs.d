@@ -115,7 +115,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;(defalias '/neo  #'neotree)
+(defalias '/d  #'ranger)  ; mnemonic: "d" for "Directory".
+                                        ;
+;; ^ directory sidebar with automatic viewing (click filename to open it in a buffer).
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

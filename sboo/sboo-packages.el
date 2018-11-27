@@ -15,10 +15,14 @@
   '(
     use-package
     helm                ;;TODO;; (helm . "3.0")
-    real-auto-save
-    
+
+    dash
+    s
+    f
+
     haskell-mode
     yasnippet
+    projectile
    )
 
   "Packages which **must** to be installed.
@@ -29,18 +33,24 @@ These packages should also be vendored, for reliability.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar sboo-other-packages
+(defvar sboo-important-packages
 
   '(
     dante
 
-    yasnippet
-    projectile
     flycheck
+   )
 
-    dash
-    s
-    f
+  "Packages which **should** to be installed.
+
+A name/version `alist'.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar sboo-other-packages
+
+  '(
+    objed
    )
 
   "Packages which **should** to be installed.
@@ -53,6 +63,7 @@ A name/version `alist'.")
 (defvar sboo-all-packages
 
   (append sboo-critical-packages
+          sboo-important-packages
           sboo-other-packages)
 
   "All packages I'd like to be installed.
@@ -64,8 +75,8 @@ A name/version `alist'.")
 (defvar sboo-package-archives
 
   '(
-    ;;;("melpa"        . "https://melpa.org/packages/")
     ("melpa-stable" . "https://stable.melpa.org/packages/")
+    ("melpa"        . "https://melpa.org/packages/")
    )
 
   "Override `package-archives':

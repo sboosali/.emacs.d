@@ -331,8 +331,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: Installation ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -352,6 +350,33 @@
   ('nixpkgs    (progn))
 
   (_           (progn)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; External Packages: `package.el' ;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-packages nil t)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (dolist (ARCHIVE sboo-package-archives)
+    (add-to-list 'package-archives ARCHIVE 'do-append))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (when (>= emacs-major-version 26)
+    (async-start #'package-refresh-contents))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ())
+
+;; ^ `async-start':
+;;
+;;     (async-start START-FUNC &optional FINISH-FUNC)
+;;
+;; Execute START-FUNC (often a lambda) in a subordinate Emacs process.
+;; When done, the return value is passed to FINISH-FUNC.  Example:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: Core Configuration ;;;;;;;;
