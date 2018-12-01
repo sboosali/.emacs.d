@@ -7,13 +7,14 @@
 (require 'package)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Variables ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar sboo-critical-packages
 
   '(
     use-package
+
     helm                ;;TODO;; (helm . "3.0")
 
     dash
@@ -58,18 +59,7 @@ A name/version `alist'.")
 A name/version `alist'.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-(defvar sboo-all-packages
-
-  (append sboo-critical-packages
-          sboo-important-packages
-          sboo-other-packages)
-
-  "All packages I'd like to be installed.
-
-A name/version `alist'.")
-
+;; Variables ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar sboo-package-archives
@@ -85,6 +75,18 @@ A name/version `alist'.")
   * add MELPA Stable
   * use HTTPS
   ")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar sboo-all-packages
+
+  (append sboo-critical-packages
+          sboo-important-packages
+          sboo-other-packages)
+
+  "All packages I'd like to be installed.
+
+A name/version `alist'.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

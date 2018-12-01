@@ -189,4 +189,4 @@
 ;;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'sboo-unicode)
+(provide 'sboo-utilities)
