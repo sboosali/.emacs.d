@@ -1,4 +1,7 @@
 ;; -*- lexical-binding: t; -*-
+
+(require 'sboo-utilities)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar sboo-default-fixed-width-font-name "Iosevka"
@@ -10,12 +13,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-set-font (FONT)
-  "Sets the font of the `current-buffer' to `FONT`. 
-  
-`FONT` is a string.
+  "Sets the font of the `current-buffer' to `FONT'.
 
-e.g. « M-: (sboo-set-font ‘Iosevka’) »
-e.g. « M-x sboo-set-font RET Iosevka »
+`FONT' is a string.
+
+Examples:
+
+* « M-: (sboo-set-font ‘Iosevka’) »
+* « M-x sboo-set-font RET Iosevka »
+
 "
 
   (interactive (list
@@ -67,7 +73,7 @@ e.g. « M-x sboo-set-font RET Iosevka »
   "Register ‘sboo-default-fixed-width-font-name’ (my default font) for `HOOK' (the given hook).
 "
   (interactive (list
-                (completing-read "Hook: " () nil t)))
+                (sboo-read-hook)))
 
   (add-hook HOOK #'sboo-set-default-font))
 

@@ -1,10 +1,18 @@
 ;; -*- lexical-binding: t; -*-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'cl)     ;; "CommonLisp"
+
+;;; Commentary:
+
 ;; Utilities without Dependencies.
 ;;
 ;; Both General-Purpose and Special-Purpose.
 ;;
 ;; TODO clean up, del stuff.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -183,10 +191,95 @@
       shell-command-switch "-ic")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Hooks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar sboo-hook-regex "-\\(hook\\|functions\\)$"
+
+  "By convention, a variable is a hook if it ends with « -hook » or « -functions ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-hook-p (VARIABLE)
+  "Whether the symbol `VARIABLE' is a hook.
+
+Examples:
+
+    M-: (sboo-hook-p 'find-file-hook)
+    t
+
+    M-: (sboo-hook-p 'tooltip-functions)
+    t
+
+    M-: (sboo-hook-p 'not-a-hook-variable)
+    nil
+"
+
+  (let ((STRING (symbol-name VARIABLE)))
+    (integerp (string-match sboo-hook-regex STRING))))
+
+;; ^
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-get-hook-variables ()
+  "Return a list of all hooks.
+
+i.e. Global variables matching `sboo-hook-regex'."
+
+  (let ((HOOKS '()))
+
+    (cl-flet ((ADD-HOOK (s)
+                        (if (sboo-hook-p s) (push s HOOKS))))
+
+      (progn
+        (mapatoms #'ADD-HOOK obarray)
+        HOOKS))))
+
+;; ^ NOTE `add-to-list' doesn't work with local variables?
+
+;; ^ Examples:
+;;
+;;     M-: (length (sboo-get-hook-variables))
+;;     1011
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-read-hook ()
+
+  "Read a hook variable (which exists), with completion, returning the symbol.
+
+See `sboo-hook-regex'."
+
+  (intern (completing-read "Hook: " (sboo-get-hook-variables) nil t)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; 
+;;; DOCS `string-match'
+;;
+;; Examples:
+;;
+;;     M-: (string-match "-\\(hook\\|functions\\)$" "find-file-hook")
+;;     9
+;;
+;;     M-: (string-match "-\\(hook\\|functions\\)$" "tooltip-functions")
+;;     7
+;;
+;;     M-: (string-match "-\\(hook\\|functions\\)$" "some-non-hook-variable")
+;;     nil
+;;
+;;     M-: (integerp (string-match "-\\(hook\\|functions\\)$" "find-file-hook"))
+;;     t
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-utilities)

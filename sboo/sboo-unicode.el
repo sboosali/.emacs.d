@@ -1,8 +1,8 @@
 ;; -*- lexical-binding: t; -*-
 
-(require 'cl)
-(require 'subr-x)
-(require 'mule)
+(require 'cl)     ;; "CommonLisp"
+(require 'subr-x) ;; "SUBRoutine-eXtRAS"
+(require 'mule)   ;; "MUltiLingual Environment"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -103,7 +103,7 @@ Examples:
 ;; Functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-read-character-name ()
+(defun sboo-read-character-name-via-collection ()
 
   "Read a Unicode character name, returning the string `NAME'.
 
@@ -112,6 +112,25 @@ Haskell Type « :: IO String ».
 See `ucs-names'."
 
   (completing-read "Unicode character name: " sboo-unicode-names-list nil t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-read-character-name-with-annotations ()
+
+  "Read a Unicode character name, returning the string `NAME'.
+
+Annotates each completion candidate with the unicode character being named.
+
+Haskell Type « :: IO String ».
+
+Calls `completing-read' with ‘(elisp)Programmed Completion’".
+
+  (completing-read "Unicode character name: " sboo-unicode-names-list nil t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;TODO function (not command) alias?
+;; (defalias sboo-read-character-name #'sboo-read-character-name-with-annotations)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -148,7 +167,7 @@ Examples:
 See `sboo-unicode-names-hash-table'."
 
   (interactive (list
-                (sboo-read-character-name)))
+                (sboo-read-character-name-with-annotations)))
 
   (let ((CHAR (gethash NAME ucs-names)))
     CHAR))
@@ -168,7 +187,7 @@ Like `insert-char', but:
 "
 
   (interactive (list
-                (sboo-read-character-name)))
+                (sboo-read-character-name-with-annotations)))
 
   (let ((CHAR (sboo-get-character-by-name NAME)))
 
@@ -271,6 +290,13 @@ Like `insert-char', but:
 ;; > omitted or nil, it defaults to 1.
 ;; > 
 
+;; NOTE `completion-extra-properties':
+;;
+;; * :annotation-function
+;; * :exit-function
+;;
+;; 
+
 ;;; DOCS `cl-flet':
 ;;
 ;; e.g.
@@ -284,7 +310,6 @@ Like `insert-char', but:
 ;;
 ;; ./share/emacs/26.1/lisp/international/uni-name.el 
 ;; 
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-unicode)
