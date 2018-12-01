@@ -252,7 +252,8 @@ i.e. Global variables matching `sboo-hook-regex'."
 
 See `sboo-hook-regex'."
 
-  (intern (completing-read "Hook: " (sboo-get-hook-variables) nil t)))
+  (intern
+   (completing-read "Hook: " (sboo-get-hook-variables) nil t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
