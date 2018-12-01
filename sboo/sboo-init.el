@@ -335,6 +335,14 @@
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Internal Packages: Utilities ;; ;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'sboo-unicode nil t)
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: Installation ;;;;;;;;;;;;;;
@@ -990,14 +998,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; DirEd
 
-(use-package ranger
-  :defer t
-
-  :init
-  (setq ranger-preview-file t)
-  (setq ranger-show-literal nil)
-
-  ())
+;; (use-package ranger
+;;   :defer t
+;;
+;;   :init
+;;   (setq ranger-preview-file t)
+;;   (setq ranger-show-literal nil)
+;;   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

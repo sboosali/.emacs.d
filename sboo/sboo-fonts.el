@@ -1,15 +1,25 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -*- lexical-binding: t; -*-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar sboo-default-fixed-width-font-name "Iosevka"
+
+  "The (fixed-width) font I use (by default) for programs, config files, etc.
+
+`Iosevka' is an open-source font, designed for code. See URL `https://be5invis.github.io/Iosevka'.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-set-font (FONT)
   "Sets the font of the `current-buffer' to `FONT`. 
   
-  `FONT` is a string.
+`FONT` is a string.
 
-  e.g. M-: (sboo-set-font ‘Iosevka’)
-  e.g. M-x sboo-set-font RET Iosevka
-  "
+e.g. « M-: (sboo-set-font ‘Iosevka’) »
+e.g. « M-x sboo-set-font RET Iosevka »
+"
 
-  (interactive (list (completing-read "Font name: " (font-family-list) nil t)))
+  (interactive (list
+                (completing-read "Font name: " (font-family-list) nil t)))
 
   ;; ^ `"s"` means "read a string from the user until they press RET".
 
@@ -45,15 +55,21 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-set-font-to-iosevka ()
+(defun sboo-set-default-font ()
   (interactive)
-  (sboo-set-font "Iosevka"))
+  (sboo-set-font
+   sboo-default-fixed-width-font-name))
 
-;; ^ `Iosevka' is an open-source font, designed for code.
-;;
-;; See
-;;     - https://be5invis.github.io/Iosevka/
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-register-default-font-for-hook (HOOK)
+
+  "Register ‘sboo-default-fixed-width-font-name’ (my default font) for `HOOK' (the given hook).
+"
+  (interactive (list
+                (completing-read "Hook: " () nil t)))
+
+  (add-hook HOOK #'sboo-set-default-font))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -61,14 +77,26 @@
 
   "Configuration of Fonts.
 
-  Use the ‘Iosevka’ font for all buffers with code.
+Use the ‘Iosevka’ font for all buffers with code.
 
-  (i.e. whose `major-mode' inherits from `prog-mode';
-  e.g. `lisp-mode', `haskell-mode', `nix-mode', etc).
-  " 
+(i.e. whose `major-mode' inherits from `prog-mode';
+e.g. `lisp-mode', `haskell-mode', `nix-mode', etc).
+"
+  (interactive)
 
-  (add-hook 'prog-mode-hook
-            #'sboo-set-font-to-iosevka))
+  (dolist (HOOK '(prog-mode-hook
+                  haskell-cabal-mode-hook
+                  ))
+
+    (add-hook HOOK #'sboo-set-default-font)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-set-font-to-iosevka ()
+  (interactive)
+  (sboo-set-font "Iosevka"))
+
+;; ^ (for convenience).
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

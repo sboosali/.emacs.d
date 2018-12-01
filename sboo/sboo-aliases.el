@@ -6,6 +6,10 @@
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'sboo-utilities)
+(require 'sboo-unicode)
+;(require 'sboo-functions)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Single-Character Aliases ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -38,7 +42,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defalias '/ic #'insert-char)
+(defalias '/ic #'sboo-insert-character-by-name)
+;;(defalias '/ic #'insert-char)
 
 (defalias '/rq #'query-replace-regexp)
 (defalias '/rs #'replace-string)
