@@ -115,9 +115,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defalias '/d  #'ranger)  ; mnemonic: "d" for "Directory".
-                                        ;
+(defalias '/fs #'ranger)  ; mnemonic: "fs" for "File System".
+
 ;; ^ directory sidebar with automatic viewing (click filename to open it in a buffer).
+
+;;TODO ; mnemonic: "d" for "Directory".
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -33,7 +33,7 @@
   (setq desktop-dirname sboo-desktop-directory)
   ;; ^
 
-  (setq desktop-restore-eager 50)
+  (setq desktop-restore-eager 100)
   ;; ^ The maximum number of buffers to restore immediately;
   ;; the remaining buffers are restored lazily (when Emacs is idle).
   ;;

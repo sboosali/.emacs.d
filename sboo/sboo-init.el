@@ -114,8 +114,13 @@
   (sboo-add-auto-mode-basename       "TODO"    #'text-mode)
   (sboo-add-auto-mode-basename       "NOTES"   #'text-mode)
 
+  (sboo-add-auto-mode-file-extension "rc"      #'conf-mode)
+  ;; ^ Most `.rc' files (including « ~/.config/xfce4/panel/*-*.rc »),
+  ;; have the `INI' format, which `conf-mode' supports.
+
   (sboo-add-auto-mode-file-extension "knsrc"   #'conf-mode)
-  ;; ^ `.knsrc' files have the `INI' format, which `conf-mode' supports.
+  ;; ^ `.knsrc' files (for KDE)
+  ;; have the `INI' format, which `conf-mode' supports.
 
   ;;TODO any file that ends in `rc`, should we default to 'conf-mode or to 'sh-mode?
   ;;;(add-to-list 'auto-mode-alist ("rc\\'" . #'conf-mode))
@@ -360,12 +365,21 @@
   ;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (dolist (ARCHIVE sboo-package-archives)
-    (add-to-list 'package-archives ARCHIVE 'do-append))
+    (add-to-list 'package-archives ARCHIVE 'append))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (when (>= emacs-major-version 26)
     (async-start #'package-refresh-contents))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (setq package-load-list sboo-all-packages)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;;(package-initialize)
+  ;;NOTE we call `package-initialize' in `init.el'.
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -975,6 +989,17 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; DirEd
+
+(use-package ranger
+  :defer t
+
+  :init
+  (setq ranger-preview-file t)
+  (setq ranger-show-literal nil)
+
+  ())
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; `dired-sidebar':
 ;;
