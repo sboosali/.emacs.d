@@ -1,0 +1,10 @@
+;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*- 
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("cabal.project schema"
+ (filename . "~/configuration/submodules/cabal/Cabal/doc/nix-local-build.rst")
+ (front-context-string . "Configuring buil")
+ (rear-context-string . "on to Hackage.\n\n")
+ (position . 23724))
+)
