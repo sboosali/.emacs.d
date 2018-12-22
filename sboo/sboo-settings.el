@@ -199,6 +199,31 @@
 ;; ^ a.k.a. `find-file-at-point'
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; DirEd ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-dired-settings ()
+  "My `dired' settings (auto-refresh)."
+
+  (setq dired-auto-revert-buffer t)
+  ())
+
+(add-hook 'dired-mode-hook #'sboo-dired-settings)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ProcEd ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-proced-settings ()
+  "My `proced' settings (auto-refresh)."
+
+  (setq proced-auto-update-interval 3)  ; in Seconds.
+  (proced-toggle-auto-update +1)
+  ())
+
+(add-hook 'proced-mode-hook #'sboo-proced-settings)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; File Extensions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -245,6 +270,20 @@
 ;; [1] open a mini-buffer (e.g. `C-s` for the search mini-buffer, a.k.a `minibuffer-inactive-mode');
 ;; [2] then, focused on the minibuffer, run `describe-mode` (i.e. `C-h m`).
 ;;
+
+;;; `dired':
+;;
+;; <>
+;;
+;; 
+
+;;; `proced':
+;;
+;; <https://www.masteringemacs.org/article/displaying-interacting-processes-proced>
+;; 
+;; `proced` abbreviates "PROCess EDitor".
+;; 
+;; 
 
 ;;; Links
 ;;

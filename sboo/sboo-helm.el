@@ -7,15 +7,14 @@
 
   "Initialize `helm' variables.
 
-  Fast & Safe (only `setq's a few `defvar's).
-  "
+Fast & Safe (only `setq's or `defvar's).
+"
   (interactive)
 
   (progn
 
-     (setq
-      helm-mode-fuzzy-match                 t
-      helm-completion-in-region-fuzzy-match t)
+     (setq helm-mode-fuzzy-match                 t)
+     (setq helm-completion-in-region-fuzzy-match t)
 
      ;; ^ fuzzy-matching.
 
@@ -41,10 +40,10 @@
 
   "Require `helm' and configure `helm-mode'.
 
-  Idempotent (invoking it twice is the same as calling once).
+Idempotent (invoking it twice is the same as calling once).
 
-  Safe (doesn't throw an error when the package can't be `load'ed).
-  "
+Safe (doesn't throw an error when the package can't be `load'ed).
+"
   (interactive)
 
   (when (require 'helm-config nil t)

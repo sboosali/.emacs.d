@@ -366,6 +366,19 @@ Version 2015-04-09"
 ;;   (projectile-grep))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Macros
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-kmacro-insert-counter-letter ()
+
+  "Inserts a,b,c(,...) when `kmacro-counter' is 0,1,2,(,...)."
+  (interactive)
+
+  (progn
+    (insert (make-string 1 (+ ?a kmacro-counter)))
+    (kmacro-add-counter 1)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Unicode insertion.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

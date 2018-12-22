@@ -14,8 +14,8 @@
 
 Via `get-char-code-property'."
 
-  (interactive (list
-                (read-char-exclusive)))
+  ;; (interactive (list
+  ;;               (read-char-exclusive)))
 
   (get-char-code-property CHAR 'name))
 
@@ -59,6 +59,22 @@ Via `ucs-names'."
   ucs-names)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-get-unicode-completion-description-hash-table ()
+
+  "Construct `sboo-unicode-completion-descriptions-hash-table'.
+
+Via `ucs-names'."
+
+  (unless ucs-names
+    (ucs-names))
+  ;; ^ Initialize if uninitialized.
+
+  ucs-names
+
+  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Variables ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -97,7 +113,48 @@ Examples:
     ?•
 ")
 
-;; (gethash "BULLET" ucs-names)
+;; M-: (gethash "BULLET" ucs-names)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;###autoload
+(defvar sboo-unicode-completion-descriptions-hash-table (sboo-get-unicode-completion-description-hash-table)
+
+  "The mapping from each Unicode character `name' to a description thereof.
+
+This description combines the name of the character with said character being named.
+In particular, each table-key is a Unicode Character Codepoint (the table-value) 
+prepended to its Unicode Character Name (with a space).
+For example, one entry is:
+
+    (:key   \"• BULLET\"
+     :value ?•
+    )
+
+Provides caching for completion.
+
+NOTE Why does this exist when `sboo-unicode-names-hash-table' does too? 
+Because currently (circa 2018), `helm' doesn't support the `:annotation-function' property of `completion-extra-properties'.
+
+Derived from `ucs-names'.
+
+Haskell Type « :: Map String Char ».
+
+Examples:
+
+    M-: (gethash \"• BULLET\" sboo-unicode-completion-descriptions-hash-table)
+    ?•
+
+    M-: (gethash \"BULLET\" sboo-unicode-completion-descriptions-hash-table)
+    nil
+
+    M-: (gethash \"•\" sboo-unicode-completion-descriptions-hash-table)
+    nil
+")
+
+;; ^
+;;     M-: (gethash "• BULLET" sboo-unicode-completion-descriptions-hash-table)
+;;     ?•
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -115,6 +172,32 @@ See `ucs-names'."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun sboo-annotate-character-name-with-character-literal (NAME)
+
+  "Annotate `NAME' (e.g. \"BULLET\") with the char itself (e.g. ?•).
+
+Haskell Type « :: String -> String ».
+"
+  ;TODO(throw 'sboo NAME)
+
+  (let ((CHAR
+         (gethash NAME sboo-unicode-names-hash-table)))
+
+    (if CHAR
+        (let ((PRINTABLE
+               t)) ;;TODO check 'general-category for whether character is printable (or is control)
+
+          (if PRINTABLE
+              (let ((ANNOTATED
+                     (format-message "%s  %s" (char-to-string CHAR) NAME)))
+              ;; (let ((ANNOTATION
+              ;;        (format-message " %s" (char-to-string CHAR))))
+
+                ANNOTATED)
+            NAME)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun sboo-read-character-name-with-annotations ()
 
   "Read a Unicode character name, returning the string `NAME'.
@@ -123,11 +206,52 @@ Annotates each completion candidate with the unicode character being named.
 
 Haskell Type « :: IO String ».
 
-Calls `completing-read' with ‘(elisp)Programmed Completion’".
+Calls `completing-read' with ‘(elisp)Programmed Completion’"
 
-  (completing-read "Unicode character name: " sboo-unicode-names-list nil t))
+  (let ((completion-extra-properties
+         '(:annotation-function sboo-annotate-character-name-with-character-literal)))
+
+    (completing-read "Unicode character name: " sboo-unicode-names-hash-table nil t)))
+
+;; ^
+;;     M-: (message (sboo-read-character-name-with-annotations))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-read-character-with-literals-displayed ()
+
+  "Read a Unicode character name, returning the string `NAME'.
+
+Prepends each completion candidate with the unicode character being named
+(which must then be stripped back out).
+
+Haskell Type « :: IO String ».
+
+Calls `completing-read' with ‘(elisp)Programmed Completion’"
+
+  (let* ((COMPLETION
+          (completing-read "Unicode character (char & name): " sboo-unicode-completion-descriptions-hash-table nil t))
+         (CHAR
+          (gethash COMPLETION sboo-unicode-completion-descriptions-hash-table)))
+
+    CHAR))
+
+;; ^
+;;     M-: (message (sboo-read-character-with-literals-displayed))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-read-character (&optional METHOD)
+
+  "Read a Unicode character name, returning the string `NAME'.
+
+Wraps `sboo-read-character-with-literals-displayed', `sboo-read-character-name-with-annotations', `sboo-read-character-name-via-collection'.
+"
+
+  (let ((CHAR-READER
+         (if METHOD METHOD #'sboo-read-character-with-literals-displayed))) ;TODO shorter aliases (than full names) in keywors).
+
+    (call-interactively CHAR-READER)))
 
 ;;TODO function (not command) alias?
 ;; (defalias sboo-read-character-name #'sboo-read-character-name-with-annotations)
@@ -146,7 +270,12 @@ See `ucs-names'.
 
 Also see `read-character-by-name', which doesn't support fuzzy-matching."
 
-  (completing-read "Unicode character name: " sboo-unicode-names-hash-table nil t)) ;TODO convert hash-table to alist? completion ignores values.
+  (completing-read "Unicode character name: "
+                   sboo-unicode-completion-descriptions-hash-table
+                   nil
+                   t))
+
+ ;TODO convert hash-table to alist? completion ignores keys/cars/etc of given collection.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -305,6 +434,13 @@ Like `insert-char', but:
 ;;    (cl-flet ((f (x) (* x x)))
 ;;      (f 7))
 ;;
+
+;;; DOCS `char-to-string':
+;;
+;; e.g.
+;;
+;;    M-: (char-to-string ?•)
+;;    "•"
 
 ;;; See:
 ;;

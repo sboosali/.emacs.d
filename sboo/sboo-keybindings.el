@@ -84,21 +84,106 @@
 ;;; Super (`s-') Keybindings...
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Management/Navigation for Buffers/Windows/Frames
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; « s-<FUNCTIONKEY> »
 
-(global-set-key (kbd "s-o") #'other-window)       ;TODO;
+;;(global-set-key (kbd "s-<f1>")  #')
+;;(global-set-key (kbd "s-<f2>")  #')
+(global-set-key (kbd "s-<f3>")  #'sboo-kmacro-insert-counter-letter)
+;;(global-set-key (kbd "s-<f4>")  #')
+;;(global-set-key (kbd "s-<f5>")  #')
+;;(global-set-key (kbd "s-<f6>")  #')
+;;(global-set-key (kbd "s-<f7>")  #')
+;;(global-set-key (kbd "s-<f8>")  #')
+;;(global-set-key (kbd "s-<f9>")  #')
+;;(global-set-key (kbd "s-<f10>") #')
+;;(global-set-key (kbd "s-<f11>") #')
+;;(global-set-key (kbd "s-<f12>") #')
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; « s-<NUMBER> »
+
+(global-set-key (kbd "s-1") #'delete-other-windows)
+(global-set-key (kbd "s-2") #'split-window-below)
+(global-set-key (kbd "s-3") #'split-window-right)
+;;(global-set-key (kbd "s-4") #')
+;;(global-set-key (kbd "s-5") #')
+;;(global-set-key (kbd "s-6") #')
+;;(global-set-key (kbd "s-7") #')
+;;(global-set-key (kbd "s-8") #')
+;;(global-set-key (kbd "s-9") #')
+;;(global-set-key (kbd "s-0") #')
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; « s-<LETTER> »
+
+;;(global-set-key (kbd "s-a") #')
+;;(global-set-key (kbd "s-b") #')
+;;(global-set-key (kbd "s-c") #')
+(global-set-key (kbd "s-d") #'dired)
+(global-set-key (kbd "s-e") #'eval-last-sexp)
+(global-set-key (kbd "s-f") #'find-file-at-point)
+;;(global-set-key (kbd "s-g") #')
+(global-set-key (kbd "s-h") #'sboo-split-window-left-right) ;TODO
+;;(global-set-key (kbd "s-i") #')
+;;(global-set-key (kbd "s-j") #')
+;;(global-set-key (kbd "s-k") #')
+;;(global-set-key (kbd "s-l") #')
+;;(global-set-key (kbd "s-m") #')
+;;(global-set-key (kbd "s-n") #')
+(global-set-key (kbd "s-o") #'other-window)
+(global-set-key (kbd "s-p") #'proced)
+;;(global-set-key (kbd "s-q") #')
+;;(global-set-key (kbd "s-r") #')
 (global-set-key (kbd "s-s") #'sboo-launch-shell)
 (global-set-key (kbd "s-t") #'sboo-launch-term)
-(global-set-key (kbd "s-h") #'sboo-split-window-left-right)
+;;(global-set-key (kbd "s-u") #')
+;;(global-set-key (kbd "s-v") #')
+;;(global-set-key (kbd "s-w") #')
+;;(global-set-key (kbd "s-x") #')
+;;(global-set-key (kbd "s-y") #')
+;;(global-set-key (kbd "s-z") #')
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; « s-<SYMBOL> »
+
+;;(global-set-key (kbd "s-`")           #')
+(global-set-key (kbd "s--")           #'text-scale-decrease)
+(global-set-key (kbd "s-=")           #'text-scale-increase)
+;;(global-set-key (kbd "s-<backspace>") #')
+;;(global-set-key (kbd "s-TAB")         #'dabbrev-completion)
+;;(global-set-key (kbd "s-[")           #')
+;;(global-set-key (kbd "s-]")           #')
+;;(global-set-key (kbd "s-\\")          #')
+;;(global-set-key (kbd "s-;")           #')
+;;(global-set-key (kbd "s-'")           #')
+;;(global-set-key (kbd "s-RET")         #')
+;;(global-set-key (kbd "s-,")           #')
+;;(global-set-key (kbd "s-.")           #')
+;;(global-set-key (kbd "s-/")           #')
+;;(global-set-key (kbd "s-SPC")         #')
+;;(global-set-key (kbd "s-<up>")        #')
+;;(global-set-key (kbd "s-<down>")      #')
+;;(global-set-key (kbd "s-<left>")      #')
+;;(global-set-key (kbd "s-<right>")     #')
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Management/Navigation for Buffers/Windows/Frames
+
+;; (global-set-key (kbd "s-o") #'other-window)       ;TODO;
+;; (global-set-key (kbd "s-s") #'sboo-launch-shell)
+;; (global-set-key (kbd "s-t") #'sboo-launch-term)
+;; (global-set-key (kbd "s-h") #'sboo-split-window-left-right)
 
 ;;; Inserting Unicode characters
 
-(global-set-key (kbd "s-,") #'sboo-insert-angle-quote-left)
-(global-set-key (kbd "s-.") #'sboo-insert-angle-quote-right)
+(global-set-key (kbd "s-M-,") #'sboo-insert-angle-quote-left)
+(global-set-key (kbd "s-M-.") #'sboo-insert-angle-quote-right)
 
-(global-set-key (kbd "s--") #'sboo-insert-dash)
-(global-set-key (kbd "s-=") #'sboo-insert-triple-equals-sign)
-(global-set-key (kbd "s-0") #'sboo-insert-null)
+(global-set-key (kbd "s-M--") #'sboo-insert-dash)
+(global-set-key (kbd "s-M-=") #'sboo-insert-triple-equals-sign)
+(global-set-key (kbd "s-M-0") #'sboo-insert-null)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; "User" Keybindings...
