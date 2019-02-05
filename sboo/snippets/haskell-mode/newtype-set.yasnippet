@@ -1,0 +1,41 @@
+# -*- mode: snippet -*-
+#
+# key         : =newset
+# name        : [sboo] a Set-`newtype` of some Item.
+# condition   : (= (length "=newset") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+--------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+newtype $1 = $1
+
+  (Set ($2))
+
+  deriving stock    (Generic)
+  deriving stock    (Show, Read)
+  deriving newtype  (Eq, Ord)
+
+  deriving newtype  (Semigroup, Monoid)
+  deriving newtype  (NFData{-, Hashable-})
+
+--------------------------------------------------
+
+instance IsList $1 where
+
+  type Item ($1) = $2
+
+  fromList = Set.fromList > coerce
+  toList   = coerce > Set.toList
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------

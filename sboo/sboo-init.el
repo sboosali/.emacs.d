@@ -114,6 +114,9 @@
   (sboo-add-auto-mode-basename       "TODO"    #'text-mode)
   (sboo-add-auto-mode-basename       "NOTES"   #'text-mode)
 
+  (sboo-add-auto-mode-basename       ".gitignore"     #'conf-mode)
+  (sboo-add-auto-mode-basename       ".gitattributes" #'conf-mode)
+
   (sboo-add-auto-mode-file-extension "rc"      #'conf-mode)
   ;; ^ Most `.rc' files (including « ~/.config/xfce4/panel/*-*.rc »),
   ;; have the `INI' format, which `conf-mode' supports.

@@ -1,0 +1,37 @@
+# -*- mode: snippet -*-
+#
+# key         : =new=functor
+# name        : [sboo] a `Functor` `newtype` (with lifted instances).
+# condition   : (= (length "=new=functor") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+--------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+newtype $1 a = $1
+
+  ($2 a)
+
+  deriving stock    (Functor, Foldable, Traversable)
+
+  deriving stock    (Generic)
+  deriving stock    (Show, Read)
+  deriving newtype  (Eq, Ord)
+  deriving newtype  (NFData, Hashable)
+
+  deriving stock    (Generic1)
+  deriving newtype  (Show1, Read1)
+  deriving newtype  (Eq1, Ord1)
+  deriving newtype  (NFData1, Hashable1)
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
