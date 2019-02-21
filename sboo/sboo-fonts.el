@@ -61,10 +61,9 @@ Examples:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sboo-set-default-font ()
-  (interactive)
-  (sboo-set-font
-   sboo-default-fixed-width-font-name))
+(defun sboo-set-default-font () (interactive)
+
+  (sboo-set-font sboo-default-fixed-width-font-name))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -92,6 +91,8 @@ e.g. `lisp-mode', `haskell-mode', `nix-mode', etc).
 
   (dolist (HOOK '(prog-mode-hook
                   haskell-cabal-mode-hook
+                  conf-mode
+                  yaml-mode
                   ))
 
     (add-hook HOOK #'sboo-set-default-font)))

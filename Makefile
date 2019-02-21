@@ -9,6 +9,8 @@ Cask?=cask
 
 EmacsOptions?=--debug-init --no-desktop --maximized --no-splash --name=SBoo
 
+Timestamp ?=$(shell date +%d-%m-%Y+%H:%M)
+
 ##################################################
 # Default / Miscellaneous ########################
 ##################################################
@@ -53,3 +55,10 @@ test: configure
 .PHONY: test
 
 ##################################################
+
+exec:
+	~/.nix-profile/bin/emacs --name=SBoo/Nixpkgs/$(Timestamp) --maximized --no-splash &disown
+
+.PHONY: exec
+
+#

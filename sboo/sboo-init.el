@@ -110,18 +110,26 @@
 
 (when (require 'sboo-auto-mode nil t)
 
-  (sboo-add-auto-mode-basename       "LICENSE" #'text-mode)
-  (sboo-add-auto-mode-basename       "TODO"    #'text-mode)
-  (sboo-add-auto-mode-basename       "NOTES"   #'text-mode)
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  (sboo-add-auto-mode-basename       ".gitignore"     #'conf-mode)
-  (sboo-add-auto-mode-basename       ".gitattributes" #'conf-mode)
+  (sboo-add-auto-mode-basename "LICENSE" #'text-mode)
+  (sboo-add-auto-mode-basename "TODO"    #'text-mode)
+  (sboo-add-auto-mode-basename "NOTES"   #'text-mode)
 
-  (sboo-add-auto-mode-file-extension "rc"      #'conf-mode)
+  (sboo-add-auto-mode-basename ".gitignore"     #'conf-mode)
+  (sboo-add-auto-mode-basename ".gitattributes" #'conf-mode)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (sboo-add-auto-mode-file-extension "service" #'conf-mode)
+
+  (sboo-add-auto-mode-file-extension "rc" #'conf-mode)
+
   ;; ^ Most `.rc' files (including « ~/.config/xfce4/panel/*-*.rc »),
   ;; have the `INI' format, which `conf-mode' supports.
 
-  (sboo-add-auto-mode-file-extension "knsrc"   #'conf-mode)
+  (sboo-add-auto-mode-file-extension "knsrc" #'conf-mode)
+
   ;; ^ `.knsrc' files (for KDE)
   ;; have the `INI' format, which `conf-mode' supports.
 
@@ -129,8 +137,12 @@
   ;;;(add-to-list 'auto-mode-alist ("rc\\'" . #'conf-mode))
   ;;;(add-to-list 'auto-mode-alist ("rc\\'" . #'sh-mode))
 
-  (sboo-add-auto-mode-file-extension "xml"     #'sgml-mode)
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (sboo-add-auto-mode-file-extension "xml" #'sgml-mode)
   ;; ^ `nxml-mode' vs `sgml-mode'.
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   ())
 
@@ -336,6 +348,23 @@
 ;;
 ;; Save mode-line history between sessions.
 ;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (require 'man nil 'noerror)
+
+  (set-face-attribute 'Man-overstrike nil :inherit font-lock-type-face    :bold t)
+  (set-face-attribute 'Man-underline  nil :inherit font-lock-keyword-face :underline t)
+
+  ())
+
+;; (set-face-attribute 'Man-overstrike nil :inherit 'bold :foreground "orange red")
+;; (set-face-attribute 'Man-underline nil :inherit 'underline :foreground "forest green")
+
+;; Or to be theme agnostic:
+
+;; (set-face-attribute 'Man-overstrike nil :inherit font-lock-type-face :bold t)
+;; (set-face-attribute 'Man-underline nil :inherit font-lock-keyword-face :underline t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

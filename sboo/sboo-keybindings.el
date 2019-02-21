@@ -81,6 +81,21 @@
 (global-set-key (kbd "C-M-m") #'maximize-frame)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; KeyPad (`kp-' Keybindings...
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;TODO; (add-to-list 'display-buffer-alist '("\\*Flycheck errors\\*" display-buffer-same-window (inhibit-same-window)))
+
+(defun sboo-flycheck ()
+  (interactive)
+  (progn
+    (delete-other-windows)
+    (flycheck-list-errors)
+    ()))
+
+(global-set-key (kbd "<kp-divide>") #'sboo-flycheck)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Super (`s-') Keybindings...
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -139,7 +154,7 @@
 (global-set-key (kbd "s-t") #'sboo-launch-term)
 ;;(global-set-key (kbd "s-u") #')
 ;;(global-set-key (kbd "s-v") #')
-;;(global-set-key (kbd "s-w") #')
+(global-set-key (kbd "s-w") #'list-flycheck-errors)
 ;;(global-set-key (kbd "s-x") #')
 ;;(global-set-key (kbd "s-y") #')
 ;;(global-set-key (kbd "s-z") #')
