@@ -170,6 +170,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(setq mouse-1-click-follows-link t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (setq Buffer-menu-name-width 30)
 ;; (setq Buffer-menu-size-width 6)
 

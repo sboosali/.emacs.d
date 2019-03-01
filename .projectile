@@ -1,5 +1,10 @@
+-/.cask
+
 -/db
+-/snapshots
+-/desktops
+
 -/sergv
 -/vendor/dante
 -/vendor/use-package
--/snapshots
+

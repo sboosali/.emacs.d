@@ -451,6 +451,35 @@
   (sboo-load-file! "sboo-init-real-auto-save.el"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; External Packages: Miscellaneous ;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package flycheck
+
+  :defer t
+  ;;^
+  ;; deferred because flycheck is "more framework than application".
+  ;; i.e. any "application" package will `require` it whenever needed (e.g. `dante`), and afaik, it's not useful alone.
+
+  ;;TODO;; style « *Flycheck error messages* »
+
+  ;;TODO;; mode of « *Flycheck errors* » (e.g. « *Flycheck errors for buffer ...* »)
+
+  :bind ;;TODO move to hook for any `prog-mode'.
+
+  (("<kp-divide>" . flycheck-list-errors)
+   ("<kp-down>"   . flycheck-next-error)        ; i.e. KeyPad 6.
+   ("<kp-up>"     . flycheck-previous-error)))  ; i.e. KeyPad 4.
+
+;; See
+;;     - « https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-flycheck.el »
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; External Packages: Haskell Configuration ;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -743,7 +772,7 @@
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: (Other) Configuration ;;;;;
+;;; External Packages: Miscellaneous ;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when (require 'sboo-projectile nil t)

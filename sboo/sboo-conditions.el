@@ -10,32 +10,196 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'cl-lib)
+ 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Environment Variables: Names ;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (defconst SBOO_EMACS_PROFILE_BUILTINS_ONLY "SBOO_EMACS_PROFILE_BUILTINS_ONLY"
+
+;;   "See `sboo-profile-builtins-only'.
+
+;;   Example Usage: « $ SBOO_EMACS_PROFILE_BUILTINS_ONLY=1 emacs ... ».")
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (defconst SBOO_EMACS_PROFILE_SBOO_ONLY "SBOO_EMACS_PROFILE_SBOO_ONLY"
+
+;;   "See `sboo-profile-sboo-only'.
+
+;;   Example Usage: « $ SBOO_EMACS_PROFILE_SBOO_ONLY=1 emacs ... ».")
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (defconst SBOO_EMACS_PROFILE_ "SBOO_EMACS_PROFILE_"
+
+;;   "See `sboo-profile-'.
+
+;;   Example Usage: « $ SBOO_EMACS_PROFILE_=1 emacs ... ».")
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (defconst SBOO_EMACS_PROFILE_ "SBOO_EMACS_PROFILE_"
+
+;;   "See `sboo-profile-'.
+
+;;   Example Usage: « $ SBOO_EMACS_PROFILE_=1 emacs ... ».")
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (defconst SBOO_EMACS_PROFILE_ "SBOO_EMACS_PROFILE_"
+
+;;   "See `sboo-profile-'.
+
+;;   Example Usage: « $ SBOO_EMACS_PROFILE_=1 emacs ... ».")
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (defconst SBOO_EMACS_PROFILE_ "SBOO_EMACS_PROFILE_"
+
+;;   "See `sboo-profile-'.
+
+;;   Example Usage: « $ SBOO_EMACS_PROFILE_=1 emacs ... ».")
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;; Environment Variables: Values ;;;;;;;;;;;;;;;;;
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (defvar sboo-emacs-profile-builtins-only
+
+;;   (getenv SBOO_EMACS_PROFILE_BUILTINS_ONLY)
+
+;;   "Whether to configure Emacs with only emacs-builtins: No custom scripts; No package downloads."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Environment Variables ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst sboo-environment-variable-profile "EMACS_PROFILE"
+(defconst sboo-environment-variable--profile-builtins "SBOO_EMACS_PROFILE_BUILTINS"
+
+  "See `sboo-profile-builtins'.
+
+  Example Usage: « $ SBOO_EMACS_PROFILE_BUILTINS=1 emacs ... ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-environment-variable--profile-minimal "SBOO_EMACS_PROFILE_MINIMAL"
+
+  "See `sboo-profile-minimal'.
+
+  Example Usage: « $ SBOO_EMACS_PROFILE_MINIMAL=1 emacs ... ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-environment-variable--profile-small "SBOO_EMACS_PROFILE_SMALL"
+
+  "See `sboo-profile-small'.
+
+  Example Usage: « $ SBOO_EMACS_PROFILE_SMALL=1 emacs ... ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-environment-variable--profile-large "SBOO_EMACS_PROFILE_LARGE"
+
+  "See `sboo-profile-large'.
+
+  Example Usage: « $ SBOO_EMACS_PROFILE_LARGE=1 emacs ... ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-environment-variable--profile-full "SBOO_EMACS_PROFILE_FULL"
+
+  "See `sboo-profile-full'.
+
+  Example Usage: « $ SBOO_EMACS_PROFILE_FULL=1 emacs ... ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-environment-variable--profile-builtins "SBOO_EMACS_PROFILE_BUILTINS"
+
+  "See `sboo-profile-builtins'.
+
+  Example Usage: « $ SBOO_EMACS_PROFILE_=1 BUILTINSEMACS ... ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-environment-variable--profile-personal "SBOO_EMACS_PROFILE_PERSONAL"
+
+  "See `sboo-profile-personal'.
+
+  Example Usage: « $ SBOO_EMACS_PROFILE_=1 PERSONALEMACS ... ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-environment-variable--profile-external "SBOO_EMACS_PROFILE_EXTERNAL"
+
+  "See `sboo-profile-external'.
+
+  Example Usage: « $ SBOO_EMACS_PROFILE_=1 EXTERNALEMACS ... ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defconst sboo-environment-variable--profile- "SBOO_EMACS_PROFILE_"
+
+  "See `sboo-profile-'.
+
+  Example Usage: « $ SBOO_EMACS_PROFILE_=1 emacs ... ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defconst sboo-environment-variable--profile- "SBOO_EMACS_PROFILE_"
+
+  "See `sboo-profile-'.
+
+  Example Usage: « $ SBOO_EMACS_PROFILE_=1 emacs ... ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defconst sboo-environment-variable--profile- "SBOO_EMACS_PROFILE_"
+
+  "See `sboo-profile-'.
+
+  Example Usage: « $ SBOO_EMACS_PROFILE_=1 emacs ... ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defconst sboo-environment-variable--profile- "SBOO_EMACS_PROFILE_"
+
+  "See `sboo-profile-'.
+
+  Example Usage: « $ SBOO_EMACS_PROFILE_=1 emacs ... ».")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-environment-variable-profile "SBOO_EMACS_PROFILE"
 
   "See `sboo-profile'.
 
-  Example Usage: « $ EMACS_PROFILE=minimal emacs ».")
+  Example Usage: « $ SBOO_EMACS_PROFILE=minimal emacs ».")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst sboo-environment-variable-install "EMACS_INSTALL"
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Environment Variables ;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst sboo-environment-variable-install "SBOO_EMACS_INSTALL"
 
   "See `sboo-install-p'.
 
-  Example Usage: « $ EMACS_INSTALL=t emacs ».")
+  Example Usage: « $ SBOO_EMACS_INSTALL=t emacs ».")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst sboo-environment-variable-directory "EMACS_SBOO_DIR"
+(defconst sboo-environment-variable-directory "SBOO_EMACS_SBOO_DIR"
 
   "See `sboo-directory'.
 
-  Example Usage: « $ EMACS_SBOO_DIR=~/configuration/submodules/.emacs.d/sboo emacs --debug-init ».")
+  Example Usage: « $ SBOO_EMACS_SBOO_DIR=~/configuration/submodules/.emacs.d/sboo emacs --debug-init ».")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -145,6 +309,43 @@ Depends on the variables `system-type' and `window-system'.")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; size words (alternate naming for the profiling environment variables):
+;;
+;; * 
+;; * small, large, 
+;; * minor, major
+;; * first, second, third, fourth, ...
+;; * smallest, smaller, bigger, biggest
+;; * part, full, 
+;; * 
+
+;; descriptive words (alternate naming for the profiling environment variables):
+;;
+;; * 
+;; * builtins, personal, external
+;; * builtins-only, personal-only, external-too
+;; * stable, provisional, experimental (like Hackage/Haddocks `portability`)
+;; * 1st-party, 2nd-party, 3rd-party, 
+;; * 
+
+;;(defconst sboo-environment-variable- "SBOO_EMACS_"
+;;
+;;  "See `sboo-'.
+;;
+;;  Example Usage: « $ SBOO_EMACS_=1 emacs ... ».")
+
+;;(defconst sboo-environment-variable--profile- "SBOO_EMACS_PROFILE_"
+;;
+;;  "See `sboo-profile-'.
+;;
+;;  Example Usage: « $ SBOO_EMACS_PROFILE_=1 emacs ... ».")
+
+;;(defconst SBOO_ENVIRONMENT_VARIABLE_BUILTINS "SBOO_EMACS_BUILTINS"
+;;
+;;  "See `sboo-builtins'.
+;;
+;;  Example Usage: « $ SBOO_EMACS_PROFILE_BUILTINS=1 emacs ... ».")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'sboo-conditions)

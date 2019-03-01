@@ -11,6 +11,49 @@
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Commands & Utilities
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; the Commands — will be bound in a keybinding (below)
+;; the Utilities — may be used to define the keybindings (below) 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-isearch-dabbrev-expand ()
+
+ "`dabbrev-expand' for the (text in the) search minibuffer.
+"
+
+ (interactive)
+
+ (progn
+
+   ;; (with-current-buffer (current-minibuffer) )
+   (dabbrev-expand 0) ;;TODO
+
+   ()))
+ 
+;; ^ 
+;; 
+;; 
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;TODO; (add-to-list 'display-buffer-alist '("\\*Flycheck errors\\*" display-buffer-same-window (inhibit-same-window)))
+
+(defun sboo-flycheck ()
+  (interactive)
+  (progn
+    (delete-other-windows)
+    (flycheck-list-errors)
+    ()))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Single-Character Keybindings...
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -31,13 +74,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (global-set-key (kbd "<f1>")  #'dabbrev-completion)
-(global-set-key (kbd "<f2>")  #'isearch-forward-regexp)
+(global-set-key (kbd "<f2>")  #'helm-swoop)
 
 ;; ^ Alternatives:
 ;;
 ;;   * #'isearch-forward-regexp
 ;;   * #'sboo-search
-;;   * 
+;;   * #'helm-swoop
 
 ;; <f3> is 'kmacro-start-macro-or-insert-counter
 ;; <f4> is 'kmacro-start-macro-or-insert-counter
@@ -83,15 +126,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; KeyPad (`kp-' Keybindings...
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;TODO; (add-to-list 'display-buffer-alist '("\\*Flycheck errors\\*" display-buffer-same-window (inhibit-same-window)))
-
-(defun sboo-flycheck ()
-  (interactive)
-  (progn
-    (delete-other-windows)
-    (flycheck-list-errors)
-    ()))
 
 (global-set-key (kbd "<kp-divide>") #'sboo-flycheck)
 
@@ -228,14 +262,38 @@
 ;;; Local Keybindings...
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;; `minibuffer-local-map'
+
+(let ((*MAP* minibuffer-local-map))
+
+  (define-key *MAP* (kbd "<tab>")   #'dabbrev-expand)
+  (define-key *MAP* (kbd "TAB")     #'dabbrev-expand)
+
+  ())
+
+;; `minibuffer-local-map':
+;;
+;; Default keymap to use when reading from the minibuffer.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; `isearch-mode-map'
 
-(progn
-  (define-key isearch-mode-map (kbd "<up>")    #'isearch-ring-retreat)
-  (define-key isearch-mode-map (kbd "<down>")  #'isearch-ring-advance)
+(let ((*MAP* isearch-mode-map))
 
-  (define-key isearch-mode-map (kbd "<left>")  #'isearch-repeat-backward)
-  (define-key isearch-mode-map (kbd "<right>") #'isearch-repeat-forward)
+;  (define-key *MAP* (kbd "<f2>")    #'sboo-isearch)
+
+  (define-key *MAP* (kbd "<up>")    #'isearch-ring-retreat)
+  (define-key *MAP* (kbd "<down>")  #'isearch-ring-advance)
+
+  (define-key *MAP* (kbd "<left>")  #'isearch-repeat-backward)
+  (define-key *MAP* (kbd "<right>") #'isearch-repeat-forward)
+
+  (define-key *MAP* (kbd "<tab>")   #'dabbrev-expand)
+  (define-key *MAP* (kbd "TAB")     #'dabbrev-expand)
+
+  ;; (define-key *MAP* (kbd "<tab>")   #'sboo-isearch-dabbrev-expand)
+
   ())
 
   ;; ^ provides these (single-keypress) keybindings:
@@ -261,6 +319,25 @@
 ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; `compilation-minor-mode-map'
+
+(when (require 'compile nil t)
+
+      (let ((*MAP* compilation-minor-mode-map))
+
+        (define-key *MAP* (kbd "<kp-next>")  #'compilation-next-error)
+        (define-key *MAP* (kbd "<kp-prior>") #'compilation-previous-error)
+
+        (define-key *MAP* (kbd "<kp-down>")  #'compilation-next-file)
+        (define-key *MAP* (kbd "<kp-up>")    #'compilation-previous-file)
+
+        ()))
+
+  ;; ^ provides these (single-keypress) keybindings:
+  ;; 
+
+;; `compilation-minor-mode-map' is a parent of `compilation-mode-map'.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
