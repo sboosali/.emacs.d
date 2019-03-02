@@ -1,0 +1,90 @@
+;;----------------------------------------------;;
+
+data XdgDirectory
+
+  = XdgData
+    -- ^ For data files (e.g. images).
+    --   Defaults to @~\/.local\/share@ and can be
+    --   overridden by the @XDG_DATA_HOME@ environment variable.
+    --   On Windows, it is @%APPDATA%@
+    --   (e.g. @C:\/Users\//\<user\>/\/AppData\/Roaming@).
+    --   Can be considered as the user-specific equivalent of @\/usr\/share@.
+
+  | XdgConfig
+    -- ^ For configuration files.
+    --   Defaults to @~\/.config@ and can be
+    --   overridden by the @XDG_CONFIG_HOME@ environment variable.
+    --   On Windows, it is @%APPDATA%@
+    --   (e.g. @C:\/Users\//\<user\>/\/AppData\/Roaming@).
+    --   Can be considered as the user-specific equivalent of @\/etc@.
+
+  | XdgCache
+    -- ^ For non-essential files (e.g. cache).
+    --   Defaults to @~\/.cache@ and can be
+    --   overridden by the @XDG_CACHE_HOME@ environment variable.
+    --   On Windows, it is @%LOCALAPPDATA%@
+    --   (e.g. @C:\/Users\//\<user\>/\/AppData\/Local@).
+    --   Can be considered as the user-specific equivalent of @\/var\/cache@.
+
+;;----------------------------------------------;;
+
+(pcase sboo-xdg-platform
+
+  ('posix ())
+
+  ('windows ())
+  
+  (_ ()))
+
+;;----------------------------------------------;;
+
+
+(cl-defun sboo-xdg-xyz (path &key subdir)
+
+  "Make an xdg path for xyz files, from PATH.
+
+Inputs:
+
+• PATH   — a string. the suffix of the filepath to output.
+• SUBDIR — a string. if non-nil (or absent), prefix PATH with SUBDIR.
+
+Output: a string. \"$XDG_XYZ_HOME/SUBDIR/PATH\".
+
+Example:
+
+• M-: (sboo-xdg-xyz \"directory/basename.txt\")
+      \"~/.directory/basename.txt\"
+
+• M-: (sboo-xdg-xyz \"basename.txt\" :subdir \"directory\")
+      \"~/.directory/basename.txt\"
+
+« $XDG_XYZ_HOME » defaults to:
+
+• « ~/.xyz » — on POSIX.
+• «  » — on Windows.'
+
+Use for (e.g. ).
+
+See URL `https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html'.
+
+Related:
+
+• `sboo-xdg-xyz-default'
+• `sboo-xdg-xyz-environment'"
+
+  (let ((XdgPathEnvironment (getenv "XDG_XYZ_HOME"))
+        (XdgPathDefault     "~/.xyz")
+        (XdgPath            (if XdgPathEnvironment
+                                XdgPathEnvironment
+                              (file-name-as-directory XdgPathDefault)))
+        (SubDirectory       (if subdir
+                                (file-name-as-directory subdir)
+                              ""))
+        )
+
+    (file-truename (cocnat XdgPath Subdir Path))))
+
+;;----------------------------------------------;;
+
+
+;;----------------------------------------------;;

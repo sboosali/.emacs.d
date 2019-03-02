@@ -53,6 +53,12 @@
   (add-hook 'emacs-startup-hook FunctionSymbol))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -296,15 +302,36 @@
   ;;
   ;; (define-key map "w" 'dired-copy-filename-as-kill)
 
+  (setq wdired-allow-to-change-permissions t)
+
+  ;; ^ Edit permission bits directly.
+  ;; wdired ensures you can only enter valid permission bits.
+
+  (setq wdired-allow-to-redirect-links t)
+
+  ;; ^ Change symlinks.
+
+  (setq wdired-use-dired-vertical-movement 'sometimes)
+
+  ;; ^ `sometimes' means — Emacs will move the point to the beginning of filename, if the point is before it.
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ())
+
+;; ^ WDired
+;;
+;; <https://www.masteringemacs.org/article/wdired-editable-dired-buffers>
+;;
+;; 
+;;
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when (require 'bookmark nil t)
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  
+  (setq bookmark-default-file (sboo-xdg "bookmarks.el"))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ())
@@ -785,12 +812,16 @@
     ;; [2] Show the project name instead.
 
     :config
+
     (setq projectile-globally-ignored-directories
           (append sboo-exclusions-directories       projectile-globally-ignored-directories))
+
     (setq projectile-globally-ignored-files
           (append sboo-exclusions-file-names        projectile-globally-ignored-files))
+
     (setq projectile-globally-ignored-file-suffixes
           (append sboo-exclusions-file-extensions   projectile-globally-ignored-file-suffixes))
+
     ()))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -814,9 +845,8 @@
     :config
     (yas-reload-all t)
     (yas-global-mode 1)
-    ())
 
-  ())
+    ()))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; `magit': "eMAcs GIT".
