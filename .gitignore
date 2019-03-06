@@ -58,8 +58,7 @@ ido.last
 
 ########################################
 # `bookmarks`
-./bookmarks
-bookmarks.el
+bookmarks
 
 ########################################
 # `YASnippet`

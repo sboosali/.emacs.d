@@ -338,11 +338,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'bookmark nil :noerror)
+(when (require 'sboo-bookmark nil :noerror)
 
-  (sboo-desktop-init!)
+  (sboo-bookmark-init!)
 
-  (add-startup-hook! #'sboo-desktop-config!))
+  (add-startup-hook! #'sboo-bookmark-config!))
 
 ;; ^ Some bookmarking commands:
 ;;

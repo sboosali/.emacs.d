@@ -48,7 +48,7 @@
 
   (if (require 'sboo-xdg nil :noerror)
 
-      (setq bookmark-default-file (sboo-xdg-cache "bookmarks.el" :subdir "emacs/bookmark"))
+      (setq bookmark-default-file (sboo-xdg-data "bookmarks.el" :subdir "emacs/bookmark"))
 
     (setq bookmark-default-file "bookmarks.el"))
 
@@ -64,7 +64,7 @@
 
   (interactive)
 
-  (make-directory (file-name-directory sboo-bookmark-directory)
+  (make-directory (file-name-directory bookmark-default-file)
                   :create-parent-directories)
 
   ())
