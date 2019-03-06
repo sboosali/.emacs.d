@@ -56,7 +56,11 @@
 ;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defmacro sboo-append-to-list! (variable list)
 
+  "Append (the value) LIST to (the variable) VARIABLE."
+
+  `(setq ,variable (append ,list ,variable)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -114,7 +118,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-auto-mode nil t)
+(when (require 'sboo-auto-mode nil :noerror)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -179,7 +183,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when (require 'sboo-desktop nil :noerror)
+
   (sboo-desktop-init!)
+
+  ;; (if (require 'sboo-xdg nil :noerror)
+  ;;     (setq bookmark-default-file (sboo-xdg-cache "desktop.el"))
+  ;;   (setq bookmark-default-file "desktop.el"))
+
   (add-startup-hook! #'sboo-desktop-config!))
 
 ;; ^ `desktop-mode'.
@@ -204,7 +214,7 @@
 ;;                 compile-command "make")
 ;;  ())
 
-(when (require 'sboo-compilation nil t)
+(when (require 'sboo-compilation nil :noerror)
   (sboo-compilation-init!)
   ())
 
@@ -247,7 +257,7 @@
 ;;; Internal Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-server nil t)
+(when (require 'sboo-server nil :noerror)
   (add-startup-hook! #'server-start-unless-running))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -258,18 +268,18 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-make nil t)
+(when (require 'sboo-make nil :noerror)
   (add-hook 'makefile-mode-hook #'sboo-show-trailing-whitespace))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (when (require 'sboo-prog nil t)
+;; (when (require 'sboo-prog nil :noerror)
 ;;   (dolist (HOOK sboo-prog-mode-hooks)
 ;;     (add-hook 'prog-mode-hook HOOK)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-shell nil t)
+(when (require 'sboo-shell nil :noerror)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -290,7 +300,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'dired nil t)
+(when (require 'dired nil :noerror)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -328,13 +338,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'bookmark nil t)
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(when (require 'bookmark nil :noerror)
 
-  (setq bookmark-default-file (sboo-xdg "bookmarks.el"))
+  (sboo-desktop-init!)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ())
+  (add-startup-hook! #'sboo-desktop-config!))
 
 ;; ^ Some bookmarking commands:
 ;;
@@ -405,7 +413,7 @@
 ;;; Internal Packages: Utilities ;; ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-unicode nil t)
+(when (require 'sboo-unicode nil :noerror)
 
   ())
 
@@ -435,7 +443,7 @@
 ;;; External Packages: `package.el' ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-packages nil t)
+(when (require 'sboo-packages nil :noerror)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -510,7 +518,7 @@
 ;;; External Packages: Haskell Configuration ;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-haskell nil t)
+(when (require 'sboo-haskell nil :noerror)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -613,6 +621,8 @@
 
     (setq sboo-haskell-eldoc 'dante)
 
+    (setq dante-tap-type-time 2)
+
     ())
 
   ;; ^ Configure `dante':
@@ -628,7 +638,7 @@
 ;;; External Packages: ProgrammingLanguages ;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-nix nil t)
+(when (require 'sboo-nix nil :noerror)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -658,7 +668,7 @@
 ;;; External Packages: `company-*' Configurations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-company nil t)
+(when (require 'sboo-company nil :noerror)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -792,7 +802,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-haskell-compilation nil t)
+(when (require 'sboo-haskell-compilation nil :noerror)
 
   
 
@@ -802,31 +812,32 @@
 ;;; External Packages: Miscellaneous ;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-projectile nil t)
+(when (require 'sboo-projectile nil :noerror)
 
   (use-package projectile
 
-    ;;;TODO :delight '(:eval (concat " " (projectile-project-name)))  
+    ;;;TODO :delight '(:eval (concat " " (projectile-project-name)))
+
     ;; ^
     ;; [1] Hide the mode name for projectile-mode;
     ;; [2] Show the project name instead.
 
     :config
 
-    (setq projectile-globally-ignored-directories
-          (append sboo-exclusions-directories       projectile-globally-ignored-directories))
+    (sboo-append-to-list! projectile-globally-ignored-directories
+                          sboo-exclusions-directories)
 
-    (setq projectile-globally-ignored-files
-          (append sboo-exclusions-file-names        projectile-globally-ignored-files))
+    (sboo-append-to-list! projectile-globally-ignored-files
+                          sboo-exclusions-file-names)
 
-    (setq projectile-globally-ignored-file-suffixes
-          (append sboo-exclusions-file-extensions   projectile-globally-ignored-file-suffixes))
+    (sboo-append-to-list! projectile-globally-ignored-file-suffixes
+                          sboo-exclusions-file-extensions)
 
     ()))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-yasnippets nil t)
+(when (require 'sboo-yasnippets nil :noerror)
 
   (use-package yasnippet
 
@@ -1023,7 +1034,7 @@
 ;;;; Finalization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (require 'sboo-fonts nil t)
+(when (require 'sboo-fonts nil :noerror)
   (sboo-fonts-config!))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

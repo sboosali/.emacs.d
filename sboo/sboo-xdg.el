@@ -1,13 +1,33 @@
+;;; -*- lexical-binding: t -*-
 
+;;; Commentary:
+
+;; `sboo-xdg' implements the XDG BaseDirectories specification (cross-platform).
+;;
+;; See:
+;;
+;; * `sboo-xdg-config'.
+;; * `sboo-xdg-data'.
+;; * `sboo-xdg-cache'.
+;;
+;; 
+;;
+
+;;; Code:
 
 ;;----------------------------------------------;;
-;; Imports
+;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
+
+;; Builtins:
 
 (require 'cl)
+(require 'pcase)
+
+;;
 
 ;;----------------------------------------------;;
-;; Utilities
+;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 
 (defun sboo-xdg-platform ()
@@ -490,5 +510,4 @@ Related:
 ;;
 
 ;;----------------------------------------------;;
-
 (provide 'sboo-xdg)

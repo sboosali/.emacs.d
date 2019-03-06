@@ -10,14 +10,14 @@
 
 ;;; Code:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 ;;; Commands & Utilities
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 ;; the Commands — will be bound in a keybinding (below)
 ;; the Utilities — may be used to define the keybindings (below) 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 (defun sboo-isearch-dabbrev-expand ()
 
@@ -38,11 +38,7 @@
 ;; 
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 ;;TODO; (add-to-list 'display-buffer-alist '("\\*Flycheck errors\\*" display-buffer-same-window (inhibit-same-window)))
 
@@ -53,9 +49,32 @@
     (flycheck-list-errors)
     ()))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
+
+(defvar sboo-events-C-g (listify-key-sequence "\C-g")
+
+  "« C-g », as a list of events.")
+
+;;----------------------------------------------;;
+
+(defun sboo-press-C-g ()
+
+  "Press « C-g » (i.e. `keyboard-quit').
+
+Why add events to the event loop, and not just the invoke the command itself?
+See URL `https://emacs.stackexchange.com/questions/2461/how-can-i-simulate-an-arbitary-key-event-from-elisp'."
+
+  (interactive)
+
+  (setq unread-command-events sboo-events-C-g))
+
+;; ^ 
+;;
+;; 
+
+;;==============================================;;
 ;;; Single-Character Keybindings...
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 (global-set-key (kbd "TAB") #'dabbrev-expand)
 ;(global-set-key (kbd "TAB") #'dabbrev-completion)
@@ -64,14 +83,16 @@
 
 ;; ^ `<backtab>' is (translated from?) `<S-TAB>'.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 (global-set-key (kbd "<print>")  #'kill-ring-save)
 (global-set-key (kbd "<insert>") #'yank)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(global-set-key (kbd "<pause>")  #'sboo-press-C-g)
+
+;;==============================================;;
 ;;; Function-Key Keybindings (`<f_>')...
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 (global-set-key (kbd "<f1>")  #'dabbrev-completion)
 (global-set-key (kbd "<f2>")  #'helm-swoop)
@@ -99,9 +120,9 @@
 (global-set-key (kbd "<f11>") #'pp-eval-expression) 
 (global-set-key (kbd "<f12>") #'execute-extended-command)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 ;;; Meta Keybindings (`M-')...
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 (global-set-key (kbd "M-a") #'mark-whole-buffer-buffer)
 (global-set-key (kbd "M-r") #'query-replace-regexp)
@@ -110,30 +131,33 @@
 (global-set-key (kbd "M-<up>")   #'beginning-of-buffer)
 (global-set-key (kbd "M-<down>") #'end-of-buffer)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 ;;; Control Keybindings (`C-')...
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 (global-set-key (kbd "C-o") #'other-window)
 (global-set-key (kbd "C-;") #'comment-region)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 ;;; Control+Meta Keybindings (`C-M-')...
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 (global-set-key (kbd "C-M-m") #'maximize-frame)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 ;;; KeyPad (`kp-' Keybindings...
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 (global-set-key (kbd "<kp-divide>") #'sboo-flycheck)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Super (`s-') Keybindings...
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(global-set-key (kbd "<kp-left>")  #'next-buffer)
+(global-set-key (kbd "<kp-right>") #'previous-buffer)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
+;;; Super (`s-') Keybindings...
+;;==============================================;;
+
+;;==============================================;;
 ;; « s-<FUNCTIONKEY> »
 
 ;;(global-set-key (kbd "s-<f1>")  #')
@@ -149,7 +173,7 @@
 ;;(global-set-key (kbd "s-<f11>") #')
 ;;(global-set-key (kbd "s-<f12>") #')
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 ;; « s-<NUMBER> »
 
 (global-set-key (kbd "s-1") #'delete-other-windows)
@@ -163,7 +187,7 @@
 ;;(global-set-key (kbd "s-9") #')
 ;;(global-set-key (kbd "s-0") #')
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 ;; « s-<LETTER> »
 
 ;;(global-set-key (kbd "s-a") #')
@@ -171,29 +195,29 @@
 ;;(global-set-key (kbd "s-c") #')
 (global-set-key (kbd "s-d") #'dired)
 (global-set-key (kbd "s-e") #'eval-last-sexp)
-(global-set-key (kbd "s-f") #'find-file-at-point)
+(global-set-key (kbd "s-f") #'describe-function)
 ;;(global-set-key (kbd "s-g") #')
 (global-set-key (kbd "s-h") #'sboo-split-window-left-right) ;TODO
 ;;(global-set-key (kbd "s-i") #')
 ;;(global-set-key (kbd "s-j") #')
-;;(global-set-key (kbd "s-k") #')
+(global-set-key (kbd "s-k") #'describe-key)
 ;;(global-set-key (kbd "s-l") #')
 ;;(global-set-key (kbd "s-m") #')
 ;;(global-set-key (kbd "s-n") #')
-(global-set-key (kbd "s-o") #'other-window)
+(global-set-key (kbd "s-o") #'find-file-at-point) ;MNEMONIC: "Open file". ;OLD: other-window.
 (global-set-key (kbd "s-p") #'proced)
 ;;(global-set-key (kbd "s-q") #')
 ;;(global-set-key (kbd "s-r") #')
 (global-set-key (kbd "s-s") #'sboo-launch-shell)
 (global-set-key (kbd "s-t") #'sboo-launch-term)
 ;;(global-set-key (kbd "s-u") #')
-;;(global-set-key (kbd "s-v") #')
+(global-set-key (kbd "s-v") #'describe-variable)
 (global-set-key (kbd "s-w") #'list-flycheck-errors)
 ;;(global-set-key (kbd "s-x") #')
 ;;(global-set-key (kbd "s-y") #')
 ;;(global-set-key (kbd "s-z") #')
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 ;; « s-<SYMBOL> »
 
 ;;(global-set-key (kbd "s-`")           #')
@@ -216,7 +240,7 @@
 ;;(global-set-key (kbd "s-<left>")      #')
 ;;(global-set-key (kbd "s-<right>")     #')
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 ;;; Management/Navigation for Buffers/Windows/Frames
 
@@ -234,9 +258,9 @@
 (global-set-key (kbd "s-M-=") #'sboo-insert-triple-equals-sign)
 (global-set-key (kbd "s-M-0") #'sboo-insert-null)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 ;;; "User" Keybindings...
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 ;;; `C-c...' is reserved for users
 
@@ -244,23 +268,23 @@
 
 ;; ^ Template: (define-key sboo-map (kbd "")   #')
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 ;;; Other Keybindings...
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 ;;; `ctl-x-map'
 
 (global-set-key (kbd "C-x f")   #'find-file)
 (global-set-key (kbd "C-x C-f") #'find-file)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 ;(global-set-key (kbd "<apps>") 'list-buffers)
 ;(global-set-key (kbd "<menu>") 'list-buffers)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 ;;; Local Keybindings...
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 ;;; `minibuffer-local-map'
 
@@ -275,7 +299,7 @@
 ;;
 ;; Default keymap to use when reading from the minibuffer.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 ;;; `isearch-mode-map'
 
@@ -318,7 +342,7 @@
 ;;TODO minibuffer-local-isearch-map (kbd "<f2>") #'isearch-repeat-forward)
 ;; 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 ;;; `compilation-minor-mode-map'
 
@@ -339,9 +363,9 @@
 
 ;; `compilation-minor-mode-map' is a parent of `compilation-mode-map'.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
+;;; Notes --------------------------------------;;
+;;==============================================;;
 
 ;;; On `TAB' vs `<tab>':
 ;;
@@ -407,5 +431,5 @@
 ;; - https://emacs.stackexchange.com/questions/2461/how-can-i-simulate-an-arbitary-key-event-from-elisp
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 (provide 'sboo-keybindings)

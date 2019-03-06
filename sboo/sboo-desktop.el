@@ -2,28 +2,66 @@
 
 ;;; Commentary:
 
-;; Configuration for the `desktop' package.
+;;----------------------------------------------;;
+;; Configuration for the `desktop' (builtin) package.
 ;;
 ;; TODO: (Multiple) Desktop "Sessions"
+;;
+;;----------------------------------------------;;
 
 ;;; Code:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Imports -------------------------------------;;
+;;----------------------------------------------;;
+
+;; builtin packages:
+
+(require 'cl)
+(require 'pcase)
 
 (require 'desktop)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Definitions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; sboo packages:
 
-(defvar sboo-desktop-directory emacs-directory)
+(require 'sboo-xdg nil :noerror)
+
+;;----------------------------------------------;;
+;; Utilities -----------------------------------;;
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+;; Variables -----------------------------------;;
+;;----------------------------------------------;;
+
+(defvar sboo-desktop-directory
+
+  (if (require 'sboo-xdg nil :noerror)
+
+      (sboo-xdg-data "" :subdir "emacs/desktop")
+
+    emacs-directory)
+
+  "`desktop-dirname' under « $XDG_DATA_DIR ».")
 
 ;; ^ `desktop-dirname' is `~/.emacs.d' by default.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; `:init'
+;;----------------------------------------------;;
+
+(defvar sboo-desktop-file
+
+  (concat (file-name-as-directory sboo-desktop-directory)
+          (concat desktop-base-file-name ".el"))
+
+  "`desktop-base-file-name' under « $XDG_DATA_DIR ».")
+
+;; ^ `desktop-dirname' is `~/.emacs.d' by default.
+
+;;----------------------------------------------;;
+;;; Functions ----------------------------------;;
+;;----------------------------------------------;;
+;;; `:init'      (sboo-xdg-data "" :subdir "emacs/desktop")
+
 
 (defun sboo-desktop-init! ()
 
@@ -57,13 +95,17 @@
 
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;;; `:config'
 
 (defun sboo-desktop-config! ()
 
   "Load (`desktop-read') and enable (`desktop-save-mode')."
+
   (interactive)
+
+  (make-directory (file-name-directory sboo-desktop-directory)
+                  :create-parent-directories)
 
   (desktop-read)
 
@@ -76,13 +118,33 @@
 
   ())
 
-;TODO `desktop-save` on emacs exit (i.e. `C-x C-c`).
+;TODO `desktop-save' on emacs exit (i.e. `C-x C-c`).
 
-;TODO (desktop-read sboo-desktop-directory)
+;; Notes:
+;;
+;; (desktop-save DIRNAME :release :only-if-changed "...")
+;;
+;; e.g. « (desktop-save sboo-desktop-directory) »
+;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+
+(defun sboo-desktop-save ()
+ 
+  "The function `desktop-save' for the feature `sboo-desktop'."
+
+  (interactive)
+
+  (let ((RELEASE         nil)
+        (ONLY-IF-CHANGED t)
+        (VERSION         nil)
+        )
+
+  (desktop-save sboo-desktop-directory RELEASE ONLY-IF-CHANGED VERSION)))
+
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
 
 ;;; `desktop.el' Documentation
 ;; 
@@ -94,7 +156,7 @@
 ;;     (desktop-save DIRNAME &optional RELEASE ONLY-IF-CHANGED VERSION)
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; `desktop-path':
 ;;
@@ -144,7 +206,7 @@
 ;;
 ;; 
 	
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; the `desktop+` package:
 ;; 
@@ -154,7 +216,7 @@
 ;; (desktop-create sboo-desktop-name-default)
 ;; (desktop+-load   sboo-desktop-name-default)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; the `desktop` lock-file holds the PID of the Emacs process that called `desktop-save` on the lock-file's directory.
 ;;
@@ -169,7 +231,7 @@
 ;; 31194
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; `desktop-save`
 ;;
@@ -181,7 +243,7 @@
 ;; Optional parameter RELEASE says whether we’re done with this desktop. 
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
  ;;  (defun sboo-desktop-owner-advice (original &rest args)
 
@@ -225,7 +287,7 @@
  ;;  ;;     - https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html
  ;;  ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; e.g.
 ;; Automatically save and restore sessions:
@@ -244,7 +306,7 @@
 ;;       (desktop-save-mode 1))
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;;; Links
 ;;
@@ -253,5 +315,5 @@
 ;;     - 
 ;;     - 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 (provide 'sboo-desktop)

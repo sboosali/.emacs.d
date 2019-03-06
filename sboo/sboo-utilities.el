@@ -9,15 +9,15 @@
 ;; Both General-Purpose and Special-Purpose.
 ;;
 ;; TODO clean up, del stuff.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Utilities -----------------------------------;;
+;;----------------------------------------------;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Munging
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-tokenize (STRING) (let ((*separators* "[-/]+") (*omit-nulls* t)) (split-string STRING *separators* *omit-nulls*)))
 
@@ -36,7 +36,7 @@
 ;; (keep it a one-liner, for easy transfer).
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-abbreviate (STRING) (let ((*separators* "[-/]+") (*omit-nulls* t)) (apply #'string (mapcar #'string-to-char (split-string STRING *separators* *omit-nulls*)))))
 
@@ -51,16 +51,16 @@
 ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Creating-Strings.html
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Filesystem
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;;
 
 (defun sboo-find-user-init-file ()
   (interactive)
   (find-file user-init-file))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; https://emacs.stackexchange.com/questions/7475/recursively-go-up-to-find-makefile-and-compile
 
@@ -74,18 +74,13 @@
        (find-file-other-window filepath)
        (message "[find-file-in-ancestor-directory] not found: `%s`" FILE)))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (defun press-C-g ()
+;;   (interactive)
+;;   (setq unread-command-events (listify-key-sequence "\C-g")))
 
-;; 
-;;
-;; https://emacs.stackexchange.com/questions/2461/how-can-i-simulate-an-arbitary-key-event-from-elisp
-(defun press-C-g ()
-  (interactive)
-  (setq unread-command-events (listify-key-sequence "\C-g")))
+;;----------------------------------------------;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;;  
 
 ;; see http://ivanmalison.github.io/dotfiles/
@@ -130,14 +125,14 @@
   (if (region-active-p) (call-interactively 'eval-region)
     (call-interactively 'eval-last-sexp)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-kill-file-buffers-matching-file-extension (SUFFIX)
   ""
   (interactive)
   )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-message-warning (input)
 
@@ -155,7 +150,7 @@
 ;;     - https://stackoverflow.com/questions/2742435/in-emacs-how-do-i-display-a-message-in-the-minibuffer-with-font-face-properties
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-copy-buffer-filepath-to-clipboard ()
   "Put the current file name on the clipboard.
@@ -173,7 +168,7 @@
         (clipboard-kill-region (point-min) (point-max)))
       (message filename))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-restore-default-shell-command-switch ()
    "Restores the default `shell-command-switch'. 
@@ -190,15 +185,15 @@
      (setq
       shell-command-switch "-ic")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Hooks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defvar sboo-hook-regex "-\\(hook\\|functions\\)$"
 
   "By convention, a variable is a hook if it ends with « -hook » or « -functions ».")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-hook-p (VARIABLE)
   "Whether the symbol `VARIABLE' is a hook.
@@ -220,7 +215,7 @@ Examples:
 
 ;; ^
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-get-hook-variables ()
   "Return a list of all hooks.
@@ -244,7 +239,7 @@ i.e. Global variables matching `sboo-hook-regex'."
 ;;     1011
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-read-hook ()
 
@@ -255,15 +250,15 @@ See `sboo-hook-regex'."
   (intern
    (completing-read "Hook: " (sboo-get-hook-variables) nil t)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;;  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;;; DOCS `string-match'
 ;;
@@ -282,5 +277,5 @@ See `sboo-hook-regex'."
 ;;     t
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 (provide 'sboo-utilities)

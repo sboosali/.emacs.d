@@ -2,8 +2,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq
- sboo-exclusions--global--directories      '(".sboo" "ignore")
- sboo-exclusions--global--file-names       '()
+ sboo-exclusions--global--directories      '(".sboo" "tmp" "ignore" ".git" ".dropbox-dist" ".nixnote")
+ sboo-exclusions--global--file-names       '(".bash_history_eternal")
  sboo-exclusions--global--file-extensions  '("~" "#" "log"))
 
 (setq
