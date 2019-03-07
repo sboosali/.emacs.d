@@ -215,8 +215,10 @@
 ;;  ())
 
 (when (require 'sboo-compilation nil :noerror)
+
   (sboo-compilation-init!)
-  ())
+
+  (add-startup-hook! #'sboo-compilation-config!))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -825,13 +827,13 @@
     :config
 
     (sboo-append-to-list! projectile-globally-ignored-directories
-                          sboo-exclusions-directories)
+                          sboo-excluded-directories)
 
     (sboo-append-to-list! projectile-globally-ignored-files
-                          sboo-exclusions-file-names)
+                          sboo-excluded-file-names)
 
     (sboo-append-to-list! projectile-globally-ignored-file-suffixes
-                          sboo-exclusions-file-extensions)
+                          sboo-excluded-file-extensions)
 
     ()))
 

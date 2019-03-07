@@ -29,6 +29,7 @@
 ;;; Settings -----------------------------------;;
 ;;----------------------------------------------;;
 
+(cl-pushnew "~" completion-ignored-extensions) ;TODO
 (cl-pushnew "#" completion-ignored-extensions) ;TODO
 
 ;; ^ `completion-ignored-extensions':

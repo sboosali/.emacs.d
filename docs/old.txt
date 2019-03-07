@@ -174,12 +174,90 @@ Depends on the variables `system-type' and `window-system'.")
 
   
 ;;----------------------------------------------;;
+  (use-package dante
+    :after    haskell
+
+    :commands (dante-mode dante-restart)
+
+    :bind (:map haskell-mode-map
+                (("C-c d" . sboo-dante-mode)))
+
+;;;  :hook ((haskell-mode . flycheck-mode)
+;;;         (haskell-mode . dante-mode))
+
+    :init
+    (add-hook 'haskell-mode-hook #'flycheck-mode)
+    (add-hook 'haskell-mode-hook #'dante-mode)
+
+    :config
+    (setq dante-repl-command-line-methods-alist
+          sboo-dante-repl-command-line-methods-alist)
+
+    (setq sboo-haskell-eldoc 'dante)
+
+    (setq dante-tap-type-time 2)
+
+    ())
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+(defun sboo--ghc-pragma-read (prompt candidates)
+
+  "Read a candidate from CANDIDATES.
+
+Output:
+
+• a string.
+
+Related:
+
+• `sboo-ghc-pragma-read-pragma'.
+• `sboo-ghc-pragmas-alist'."
+
+  (interactive)
+
+  (completing-read (format "%s: " prompt)
+                   candidates))
 
 ;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-read-pragma ()
+
+  "Read a GHC pragma.
+
+Related:
+
+• `sboo-ghc-pragmas-alist'."
+
+  (interactive)
+
+  (let ((prompt     "Pragma")
+        (candidates sboo-ghc-pragmas)
+        )
+
+    (completing-read (format "%s: " prompt)
+                     candidates)))
+
+;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-insert-pragma (&optional pragma)
+
+  "Insert a GHC pragma, reading it if PRAGMA is nil.
+
+Related:
+
+• `sboo-ghc-pragma-read-pragma'."
+
+  (interactive (list
+                (sboo-ghc-pragma-read-pragma)))
+
+  (let* ((STRING (format "{-# %s #-}" pragma))
+         )
+
+    (insert STRING "\n")))
+
+;;----------------------------------------------;;
+
 
 ;;----------------------------------------------;;
 

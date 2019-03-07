@@ -73,6 +73,36 @@ See URL `https://emacs.stackexchange.com/questions/2461/how-can-i-simulate-an-ar
 ;; 
 
 ;;==============================================;;
+
+(defun sboo-next-definition ()
+
+  "Jump ahead to the next haskell definition.
+
+Wraps `forward-thing'."
+
+  (interactive)
+
+  (forward-thing 'defun +1))
+
+;; ^ 
+
+;;----------------------------------------------;;
+
+(defun sboo-prior-definition ()
+
+  "Jump back to the prior haskell definition.
+
+Wraps `forward-thing'."
+
+  (interactive)
+
+  (forward-thing 'defun -1))
+
+;;----------------------------------------------;;
+
+;; ^ 
+
+;;==============================================;;
 ;;; Single-Character Keybindings...
 ;;==============================================;;
 
@@ -152,6 +182,9 @@ See URL `https://emacs.stackexchange.com/questions/2461/how-can-i-simulate-an-ar
 
 (global-set-key (kbd "<kp-left>")  #'next-buffer)
 (global-set-key (kbd "<kp-right>") #'previous-buffer)
+
+(global-set-key (kbd "<kp-up>")   #'sboo-prior-definition)
+(global-set-key (kbd "<kp-down>") #'sboo-next-definition)
 
 ;;==============================================;;
 ;;; Super (`s-') Keybindings...

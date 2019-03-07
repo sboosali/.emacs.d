@@ -1,10 +1,38 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; -*- lexical-binding: t -*-
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ElDoc ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Commentary:
+
+;; Configuration for the Haskell programming language.
+;;
+;; See:
+;;
+;; * `sboo-haskell-eldoc'
+;; * `sboo-dante-cabal-new-repl'
+;; * `'
+;;
+;; 
+;;
+
+;;; Code:
+
+;;----------------------------------------------;;
+;; Imports -------------------------------------;;
+;;----------------------------------------------;;
+
+;; Builtins:
+
+;; (require 'cl)
+;; (require 'pcase)
+
+;;
+
+;;----------------------------------------------;;
+;; Utilities -----------------------------------;;
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+;; Variables -----------------------------------;;
+;;----------------------------------------------;;
 
 (defcustom sboo-haskell-eldoc nil
 
@@ -16,12 +44,59 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
                  (const dante
                         :tag "`dante-type-at'"))
 
-  :safe  t
+  :safe t
+
   :group 'sboo)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+
+(defcustom sboo-haskell-prettify-symbols-alist
+
+  '(("::"     . ?∷)
+    ("=>"     . ?⇒)
+    ("->"     . ?→)
+    ("<-"     . ?←)
+    ("forall" . ?∀)
+
+    ("=="     . ?≡)
+    ("/="     . ?≠)
+    ("<="     . ?≤)
+    (">="     . ?≥)
+
+    ("-:"     . ?⫣)
+    ("=:"     . ?⫤)
+
+    ;; ("<>"     . ?)
+
+    ;; ("<$>"    . ?)
+    ;; ("<*>"    . ?⊗)
+    ;; ("<|>"    . ?)
+    ;; ("<+>"    . ?⊕)
+
+    ;; (">>"     . ?)
+    ;; ("<<"     . ?)
+    ;; (">>="    . ?)
+    ;; ("=<<"    . ?)
+
+    ;;(""     . ?)
+    )
+
+  "`prettify-symbols-alist' for Haskell."
+
+  :type '(alist :key-type   (string    :tag "String to match")
+                :value-type (character :tag "Char to show")
+                )
+
+  :safe t
+
+  :group 'sboo)
+
+;;----------------------------------------------;;
+;; ElDoc ---------------------------------------;;
+;;----------------------------------------------;;
 
 (defun sboo-haskell-doc-current-info ()
+
   "Custom `haskell-doc-current-info'."
 
   (pcase sboo-haskell-eldoc
@@ -50,33 +125,32 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
 
 ;; TODO (make-local-variable 'eldoc-documentation-function) (setq eldoc-documentation-function 'scheme-get-current-symbol-info)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Hacks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Hacks ---------------------------------------;;
+;;----------------------------------------------;;
 
-(defun haskell-mode-after-save-handler ()
-  (progn))
+(defun haskell-mode-after-save-handler () (progn))
 
  ;; ^ HACK fixes this pseudo-error:
  ;;
  ;;     Error running timer ‘real-auto-save-buffers’: (void-function haskell-mode-after-save-handler)
  ;; 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Dante ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Dante ---------------------------------------;;
+;;----------------------------------------------;;
 
 (defun sboo-dante-cabal-new-repl (root)
 
-  "Locate a `cabal.project' file.
-  "
+  "Locate a `cabal.project' file in project-directory ROOT."
+
   (interactive)
 
   (when (or (directory-files root nil ".+\\.project$") (file-exists-p "cabal.project"))
 
     '("cabal" "new-repl" dante-target "--builddir=dist-dante")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defvar sboo-dante-repl-command-line-methods-alist
 
@@ -86,7 +160,7 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
 
   "Override `dante-repl-command-line-methods-alist'.")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-dante-mode ()
   
@@ -102,19 +176,7 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
 
    (dante-mode 1)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defvar sboo-haskell-prettify-symbols-alist
-  
-  '(("::" . ?∷)
-    ("=>" . ?⇒)
-    ("->" . ?→)
-    ("<-" . ?←)
-    ("forall" . ?∀))
-
-  "")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-haskell-prettify-symbols ()
 
@@ -126,7 +188,12 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
 
     (progn
       (setq-local prettify-symbols-alist sboo-haskell-prettify-symbols-alist)
+
       (prettify-symbols-mode 1))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
 (provide 'sboo-haskell)

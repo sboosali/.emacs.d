@@ -70,7 +70,7 @@
 
 ;;----------------------------------------------;;
 
-(defalias '/ic #'insert-char)
+(defalias '/ic #'sboo-insert-character-by-name)
 
 ;;(defalias '/ic #'sboo-insert-character-by-name)
 ;;(defalias '/ic #'insert-char)

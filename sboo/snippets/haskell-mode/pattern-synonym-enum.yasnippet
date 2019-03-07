@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+#
+# key         : =pattern=enum
+# name        : [sboo] define a Pattern Synonym (i.e. « pattern ... »).
+# condition   : (= (length "=pattern=enum") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+--------------------------------------------------
+
+-- | 
+
+pattern $1 :: $3
+pattern $1 = $2
+
