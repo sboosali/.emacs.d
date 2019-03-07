@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# key: =pragma
+# name: any pragma {-# ... #-} (INLINE, COMPLETE, LINE, etc)
+# condition: (= (length "=pragma") (current-column))
+# contributor: Spiros Boosalis <samboosalis@gmail.com>
+# --
+{-# `
+(when (fboundp #'sboo-ghc-pragma-read-pragma)
+  (sboo-ghc-pragma-read-pragma))
+` #-}
+$0

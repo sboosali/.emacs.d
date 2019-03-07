@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# key: =inlineable
+# name: an INLINEABLE pragma
+# condition: (<= (current-column) (+ 4 (length "=inlineable")))
+# contributor: Spiros Boosalis <samboosalis@gmail.com>
+# --
+
+{-# INLINEABLE `
+(if (fboundp 'sboo-ghc-get-name-of-prior-definition)
+    (sboo-ghc-get-name-of-prior-definition)
+  (read-string "Haskell Variable: "))
+` #-}
+$0
