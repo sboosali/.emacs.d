@@ -64,15 +64,30 @@ Output:
 
 • a list of strings.
 
+Example:
+
+• M-x sboo-ghc-pragma-read<RET>
+      Pragma: LANGUAGE<RET>
+      Language Extension: RecordWildCards<RET>
+    ⇒ ()
+  
+
 Related:
 
-• `sboo-ghc-pragma-read-pragma'.
-• `sboo-ghc-pragmas-alist'."
+• `sboo-ghc-pragmas-alist'.
+• `sboo-ghc-pragma-read-pragma'."
 
   (interactive)
 
-  (completing-read (format "%s: " prompt)
-                   candidates))
+  (let ((PRAGMA-NAME (sboo-ghc-pragma-read-pragma))
+        )
+
+    (let* ((READ-PRAGMA-VALUES (alist-get PRAGMA-NAME sboo-ghc-pragmas-alist nil nil #'string-equal))
+           (PRAGMA-VALUES      (funcall READ-PRAGMA-VALUES))
+           (PRAGMA-LIST        (cons PRAGMA-NAME PRAGMA-VALUES))
+           )
+
+      PRAGMA-LIST)))
 
 ;;----------------------------------------------;;
 
@@ -87,7 +102,7 @@ Related:
   (interactive)
 
   (let ((prompt     "Pragma")
-        (candidates sboo-ghc-pragmas)
+        (candidates sboo-ghc-pragmas-list)
         )
 
     (completing-read (format "%s: " prompt)
@@ -117,7 +132,7 @@ Related:
         (candidates )
         )
 
-  (sboo-ghc-pragma-read prompt candidates)))
+    (completing-read (format "%s: " prompt) candidates)))
 
 ;;----------------------------------------------;;
 
@@ -135,11 +150,14 @@ Related:
 
   (interactive)
 
-  (let ((prompt     "String")
-        (candidates nil)
+  (let ((prompt "String")
+        (escape (if (require 'json nil :no-error)
+                    #'json-encode-string
+                  #'prin1-to-string))
         )
 
-  (sboo-ghc-pragma-read prompt candidates)))
+    (funcall escape
+     (read-string (format "%s: " prompt)))))
 
 ;;----------------------------------------------;;
 
@@ -161,13 +179,137 @@ Related:
 
   (interactive)
 
-  (let ((prompt     "")
+  (let ((prompt     "(Haskell) Variable")
         (candidates )
         )
 
-  (sboo-ghc-pragma-read prompt candidates)))
+    (completing-read (format "%s: " prompt) candidates)))
 
 ;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-read-language-extension ()
+
+  "Read a GHC language extension.
+
+Related:
+
+• `sboo-ghc-language-extensions'."
+
+  (interactive)
+
+  (let ((prompt     "Language Extension")
+        (candidates sboo-ghc-language-extensions)
+        )
+
+    (completing-read (format "%s: " prompt)
+                     candidates)))
+
+;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-read-compiler-option ()
+
+  "Read a GHC compiler option.
+
+Related:
+
+• `sboo-ghc-compiler-options'."
+
+  (interactive)
+
+  (let ((prompt     "GHC Option")
+        (candidates sboo-ghc-compiler-options)
+        )
+
+    (completing-read (format "%s: " prompt)
+                     candidates)))
+
+;;----------------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-read-LANGUAGE ()
+
+  "Returns `sboo-ghc-pragma-read-language-extension' as a list."
+
+  (interactive)
+
+  (list (sboo-ghc-pragma-read-language-extension)))
+
+;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-read-GHC_OPTION ()
+
+  "Returns `sboo-ghc-pragma-read-compiler-option' as a list."
+
+  (interactive)
+
+  (list (sboo-ghc-pragma-read-compiler-option)))
+
+;;----------------------------------------------;;
+
+(defun sboo-ghc-read-WARNING ()
+
+  "Returns `sboo-ghc-read-string' as a list."
+
+  (interactive)
+
+  (list (sboo-ghc-read-string)))
+
+;;----------------------------------------------;;
+
+(defun sboo-ghc-read-DEPRECATED ()
+
+  "Returns `sboo-ghc-read-string' as a list."
+
+  (interactive)
+
+  (list (sboo-ghc-read-string)))
+
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+
+     ;; ("MINIMAL"      . sboo-ghc-read-MINIMAL)
+     ;; ("COMPLETE"     . sboo-ghc-read-COMPLETE)
+
+     ;; ("INLINE"       . sboo-ghc-read-INLINE)
+     ;; ("NOINLINE"     . sboo-ghc-read-INLINE)
+     ;; ("INLINABLE"    . sboo-ghc-read-INLINABLE)
+     ;; ("CONLIKE"      . sboo-ghc-read-CONLIKE)
+
+     ;; ("RULES"        . sboo-ghc-read-RULES)
+
+     ;; ("SPECIALIZE"   . sboo-ghc-read-SPECIALIZE)
+
+     ;; ("OVERLAPPING"  . sboo-ghc-read-OVERLAPPING)
+     ;; ("OVERLAPPABLE" . sboo-ghc-read-OVERLAPPABLE)
+     ;; ("OVERLAPS"     . sboo-ghc-read-OVERLAPS)
+     ;; ("INCOHERENT"   . sboo-ghc-read-INCOHERENT)
+
+;;----------------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-insert (&optional tokens)
+
+  "Insert a GHC pragma comment, reading its name (and any mandatory values) if TOKENS is nil.
+
+Inputs:
+
+• TOKENS — a list of strings.
+
+Related:
+
+• `sboo-ghc-pragma-read-pragma'."
+
+  (interactive (list
+                (sboo-ghc-pragma-read)))
+
+  (let* ((STRING (format "{-# %s #-}"
+                         (string-join tokens " ")))
+         )
+
+    (insert STRING)))
 
 ;;----------------------------------------------;;
 
@@ -188,34 +330,8 @@ Related:
     (insert STRING)))
 
 ;;----------------------------------------------;;
-
-;;----------------------------------------------;;
 ;; Aliases -------------------------------------;;
 ;;----------------------------------------------;;
-
-(defalias 'sboo-ghc-read-WARNING    #'sboo-ghc-read-string)
-(defalias 'sboo-ghc-read-DEPRECATED #'sboo-ghc-read-string)
-
-     ;; ("LANGUAGE"     . sboo-ghc-read-LANGUAGE)
-
-     ;; ("OPTIONS_GHC"  . sboo-ghc-read-OPTIONS_GHC)
-
-     ;; ("MINIMAL"      . sboo-ghc-read-MINIMAL)
-     ;; ("COMPLETE"     . sboo-ghc-read-COMPLETE)
-
-     ;; ("INLINE"       . sboo-ghc-read-INLINE)
-     ;; ("NOINLINE"     . sboo-ghc-read-INLINE)
-     ;; ("INLINABLE"    . sboo-ghc-read-INLINABLE)
-     ;; ("CONLIKE"      . sboo-ghc-read-CONLIKE)
-
-     ;; ("RULES"        . sboo-ghc-read-RULES)
-
-     ;; ("SPECIALIZE"   . sboo-ghc-read-SPECIALIZE)
-
-     ;; ("OVERLAPPING"  . sboo-ghc-read-OVERLAPPING)
-     ;; ("OVERLAPPABLE" . sboo-ghc-read-OVERLAPPABLE)
-     ;; ("OVERLAPS"     . sboo-ghc-read-OVERLAPS)
-     ;; ("INCOHERENT"   . sboo-ghc-read-INCOHERENT)
 
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
@@ -225,9 +341,9 @@ Related:
 
 (defcustom sboo-ghc-pragmas-alist ;TODO; make internal variable « hashtable ».
 
-  '( ("LANGUAGE"     . sboo-ghc-read-LANGUAGE)
+  '( ("LANGUAGE"     . sboo-ghc-pragma-read-LANGUAGE)
 
-     ("OPTIONS_GHC"  . sboo-ghc-read-OPTIONS_GHC)
+     ("OPTIONS_GHC"  . sboo-ghc-pragma-read-GHC_OPTION)
 
   ;; ("INCLUDE"      . sboo-ghc-read-INCLUDE)
 
@@ -268,37 +384,16 @@ Related:
 
   :safe t
 
-  :group 'sboo)
+  :group 'sboo-haskell)
 
 ;;----------------------------------------------;;
 
-(defcustom sboo-ghc-pragmas
+(defcustom sboo-ghc-pragmas-list
 
-  '( "LANGUAGE"
-     "OPTIONS_GHC"
-     "INCLUDE"
-     "WARNING"
-     "DEPRECATED"
-     "MINIMAL"
-     "INLINE"
-     "NOINLINE"
-     "INLINABLE"
-     "CONLIKE"
-     "LINE"
-     "COLUMN"
-     "RULES"
-     "SPECIALIZE"
-     "UNPACK"
-     "NOUNPACK"
-     "SOURCE"
-     "COMPLETE"
-     "OVERLAPPING"
-     "OVERLAPPABLE"
-     "OVERLAPS"
-     "INCOHERENT"
-     )
+  (mapcar #'car
+          sboo-ghc-pragmas-alist)
 
-  "GHC Pragmas
+  "Known GHC Pragmas
 
 i.e.  « {-# ... #-} »."
 
@@ -306,7 +401,7 @@ i.e.  « {-# ... #-} »."
 
   :safe t
 
-  :group 'sboo)
+  :group 'sboo-haskell)
 
 ;;----------------------------------------------;;
 
@@ -541,7 +636,7 @@ i.e.  « {-# ... #-} »."
      "ViewPatterns"
      )
 
-  "GHC language extensions.
+  "Known GHC language extensions.
 
 i.e. « -X... »."
 
@@ -549,7 +644,7 @@ i.e. « -X... »."
 
   :safe t
 
-  :group 'sboo)
+  :group 'sboo-haskell)
 
 ;;----------------------------------------------;;
 
@@ -1578,7 +1673,7 @@ i.e. « -X... »."
      "-with-rtsopts"
     )
 
-  "GHC compiler options.
+  "Known GHC compiler options.
 
 i.e. « -... »."
 
@@ -1586,7 +1681,7 @@ i.e. « -... »."
 
   :safe t
 
-  :group 'sboo)
+  :group 'sboo-haskell)
 
 ;;----------------------------------------------;;
 

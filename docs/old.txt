@@ -258,6 +258,8 @@ Related:
 
 ;;----------------------------------------------;;
 
+(defalias 'sboo-ghc-read-WARNING    #'sboo-ghc-read-string)
+(defalias 'sboo-ghc-read-DEPRECATED #'sboo-ghc-read-string)
 
 ;;----------------------------------------------;;
 
