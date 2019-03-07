@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# key: =rules
+# name: a RULES pragma
+# condition: (= (length "=rules") (current-column))
+# contributor: Spiros Boosalis <samboosalis@gmail.com> 
+# --
+{-# RULES
+    "$1/$2"  forall $3.  $1 $3  $0=  $2 $3
+  #-}

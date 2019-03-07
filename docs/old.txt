@@ -262,7 +262,7 @@ Related:
 (defalias 'sboo-ghc-read-DEPRECATED #'sboo-ghc-read-string)
 
 ;;----------------------------------------------;;
-
+sboo-ghc-get-names-of-definitions-current-file
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

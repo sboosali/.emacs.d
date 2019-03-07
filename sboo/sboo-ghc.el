@@ -53,6 +53,20 @@ Calls `haskell-ds-move-to-decl'."
     (thing-at-point 'symbol :no-properties)))
 
 ;;----------------------------------------------;;
+
+(defun sboo-ghc-get-variable-names-in-current-file ()
+ 
+  "Get the names of all variables in the current buffer.
+
+Output:
+
+• a list of strings."
+
+  (progn
+  
+    ()))
+
+;;----------------------------------------------;;
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
@@ -136,7 +150,7 @@ Related:
 
 ;;----------------------------------------------;;
 
-(defun sboo-ghc-pragma-read-string ()
+(cl-defun sboo-ghc-read-string (&key prompt)
 
   "Read a haskell string.
 
@@ -146,22 +160,22 @@ Escapes:
 
 Related:
 
-• `sboo-ghc-pragmas-alist'."
+• `'."
 
   (interactive)
 
-  (let ((prompt "String")
+  (let ((PROMPT (or prompt "String"))
         (escape (if (require 'json nil :no-error)
                     #'json-encode-string
                   #'prin1-to-string))
         )
 
     (funcall escape
-     (read-string (format "%s: " prompt)))))
+     (read-string (format "%s: " PROMPT)))))
 
 ;;----------------------------------------------;;
 
-(defun sboo-ghc-read-haskell-variable ()
+(cl-defun sboo-ghc-read-haskell-variable (&key prompt require-match)
 
   "Read a haskell variable.
 
@@ -175,15 +189,49 @@ Output:
 
 Related:
 
-• `sboo-ghc-pragmas-alist'."
+• `'."
 
   (interactive)
 
-  (let ((prompt     "(Haskell) Variable")
-        (candidates )
+  (let ((PROMPT        (format "%s: " (or prompt
+                                          "Haskell Variable")))
+        (REQUIRE-MATCH (or require-match
+                           'confirm))
+        (CANDIDATES    (sboo-ghc-get-variable-names-in-current-file))
         )
 
-    (completing-read (format "%s: " prompt) candidates)))
+    (if CANDIDATES
+        (completing-read PROMPT CANDIDATES nil REQUIRE-MATCH)
+
+      (read-string PROMPT))))
+
+;;----------------------------------------------;;
+
+(defun sboo-ghc-read-haskell-variables ()
+
+  "Read one-or-more haskell variables.
+
+Output:
+
+• a list of strings.
+
+Related:
+
+• `sboo-ghc-read-haskell-variable'."
+
+  (interactive)
+
+  (let ((PROMPT "Haskell Variable (empty to return the list)")
+        (VARS   nil)
+        (VAR    nil)
+        )
+
+    (while (not (string-empty-p
+                 (setq VAR (sboo-ghc-read-haskell-variable :prompt        PROMPT
+                                                           :require-match nil))))
+      (push VAR VARS))
+
+    (nreverse VARS)))
 
 ;;----------------------------------------------;;
 
@@ -197,12 +245,12 @@ Related:
 
   (interactive)
 
-  (let ((prompt     "Language Extension")
-        (candidates sboo-ghc-language-extensions)
+  (let ((PROMPT     "Language Extension")
+        (CANDIDATES sboo-ghc-language-extensions)
         )
 
-    (completing-read (format "%s: " prompt)
-                     candidates)))
+    (completing-read (format "%s: " PROMPT)
+                     CANDIDATES)))
 
 ;;----------------------------------------------;;
 
@@ -216,12 +264,12 @@ Related:
 
   (interactive)
 
-  (let ((prompt     "GHC Option")
-        (candidates sboo-ghc-compiler-options)
+  (let ((PROMPT     "GHC Option")
+        (CANDIDATES sboo-ghc-compiler-options)
         )
 
-    (completing-read (format "%s: " prompt)
-                     candidates)))
+    (completing-read (format "%s: " PROMPT)
+                     CANDIDATES)))
 
 ;;----------------------------------------------;;
 ;;----------------------------------------------;;
@@ -246,9 +294,19 @@ Related:
 
 ;;----------------------------------------------;;
 
-(defun sboo-ghc-read-WARNING ()
+(defun sboo-ghc-pragma-read-WARNING (&optional )
 
-  "Returns `sboo-ghc-read-string' as a list."
+  "Returns `sboo-ghc-read-string' as a list.
+
+Examples (Haskell):
+
+• « module Wobble {-# WARNING \"This is an unstable interface.\" #-} where »
+
+• « {-# WARNING unsafePerformIO \"This is unsafe\" #-} »
+
+Related:
+
+• `sboo-ghc-read-DEPRECATED'."
 
   (interactive)
 
@@ -256,9 +314,21 @@ Related:
 
 ;;----------------------------------------------;;
 
-(defun sboo-ghc-read-DEPRECATED ()
+(defun sboo-ghc-pragma-read-DEPRECATED ()
 
-  "Returns `sboo-ghc-read-string' as a list."
+  "Returns `sboo-ghc-read-string' as a list.
+
+Examples (Haskell):
+
+• « module Wibble {-# DEPRECATED \"This is a legacy interface.\" #-} where »
+
+• « {-# DEPRECATED f, C, T \"Don't use these\" #-} »
+
+• « {-# DEPRECATED foo, bar [\"Don't use these\", \"Use gar instead\"] #-} »
+
+Related:
+
+• `sboo-ghc-read-WARNING'."
 
   (interactive)
 
@@ -266,26 +336,141 @@ Related:
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+(defun sboo-ghc-pragma-read- ()
+
+  "Returns `sboo-ghc-read-string' as a list.
+
+Examples (Haskell):
+
+• «  »
+
+Related:
+
+• `'."
+
+  (interactive)
+
+  (list (sboo-ghc-read-string)))
 
 ;;----------------------------------------------;;
 
-     ;; ("MINIMAL"      . sboo-ghc-read-MINIMAL)
-     ;; ("COMPLETE"     . sboo-ghc-read-COMPLETE)
+(defun sboo-ghc-pragma-read-INLINE ()
 
-     ;; ("INLINE"       . sboo-ghc-read-INLINE)
-     ;; ("NOINLINE"     . sboo-ghc-read-INLINE)
-     ;; ("INLINABLE"    . sboo-ghc-read-INLINABLE)
-     ;; ("CONLIKE"      . sboo-ghc-read-CONLIKE)
+  "Returns `sboo-ghc-read-haskell-variable' as a list.
 
-     ;; ("RULES"        . sboo-ghc-read-RULES)
+Examples (Haskell):
 
-     ;; ("SPECIALIZE"   . sboo-ghc-read-SPECIALIZE)
+• «  »
 
-     ;; ("OVERLAPPING"  . sboo-ghc-read-OVERLAPPING)
-     ;; ("OVERLAPPABLE" . sboo-ghc-read-OVERLAPPABLE)
-     ;; ("OVERLAPS"     . sboo-ghc-read-OVERLAPS)
-     ;; ("INCOHERENT"   . sboo-ghc-read-INCOHERENT)
+Related:
+
+• `'."
+
+  (interactive)
+
+  (list (sboo-ghc-read-haskell-variable)))
+
+;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-read-SPECIALIZE ()
+
+  "Returns `sboo-ghc-read-haskell-binding' as a list.
+
+Examples (Haskell):
+
+• « {-# SPECIALIZE <variable> :: <type> #-} »
+
+Related:
+
+• `'."
+
+  (interactive)
+
+  (list (sboo-ghc-read-haskell-binding)))
+
+;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-read-RULES ()
+
+  "Returns `sboo-ghc-read-string' as a list.
+
+Examples (Haskell):
+
+• « {-# RULES \"map/map\" forall f g xs.  map f (map g xs) = map (f.g) xs #-} »
+
+Related:
+
+• `'."
+
+  (interactive)
+
+  (list (sboo-ghc-read-string)))
+
+;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-read-OVERLAPPING ()
+
+  "Returns `nil' as a list.
+
+Examples (Haskell):
+
+• « instance {-# OVERLAPPING #-} C t where ... »
+
+Related:
+
+• `'.
+
+Links:
+
+• URL `https://downloads.haskell.org/ghc/latest/docs/html/users_guide/glasgow_exts.html#overlapping-overlappable-overlaps-and-incoherent-pragmas'."
+
+  (interactive)
+
+  (list))
+
+;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-read-COMPLETE ()
+
+  "Returns `sboo-ghc-read-haskell-variables' as a list.
+
+Output:
+
+• Comma-Separated Strings.
+
+Examples (Haskell):
+
+• « {-# COMPLETE LeftChoice, RightChoice #-} »
+
+Links:
+
+• URL `https://downloads.haskell.org/ghc/latest/docs/html/users_guide/glasgow_exts.html#complete-pragmas'."
+
+  (interactive)
+
+  (let* ((VARIABLES (sboo-ghc-read-haskell-variables))
+         (STRING (string-join VARIABLES ", "))
+         )
+
+  (list STRING)))
+
+;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-read-MINIMAL ()
+
+  "Returns `sboo-ghc-read-' as a list.
+
+Examples (Haskell):
+
+• «  »
+
+Related:
+
+• `'."
+
+  (interactive)
+
+  (list (sboo-ghc-read-)))
 
 ;;----------------------------------------------;;
 ;;----------------------------------------------;;
@@ -330,6 +515,42 @@ Related:
     (insert STRING)))
 
 ;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-insert-COMPLETE (&optional variables)
+
+  "Insert a « COMPLETE » pragma for VARIABLES.
+
+Inputs:
+
+• VARIABLES — a list of strings.
+
+When invoked interactively, read a list of haskell variables
+for VARIABLES (via `sboo-ghc-read-haskell-variables').
+
+Related:
+
+• `sboo-ghc-pragma-read-COMPLETE'."
+
+  (interactive (list
+                (sboo-ghc-read-haskell-variables)))
+
+  (let* ((STRING-VARIABLES (string-join variables ", "))
+         (STRING-PRAGMA    (format "{-# COMPLETE %s #-}" STRING-VARIABLES))
+         )
+
+    (insert STRING-PRAGMA)))
+
+;;----------------------------------------------;;
+
+(defun sboo-ghc-pragma-insert-UNPACK ()
+
+  "Insert an « UNPACK » pragma."
+
+  (interactive)
+
+  (insert "{-# UNPACK #-}"))
+
+;;----------------------------------------------;;
 ;; Aliases -------------------------------------;;
 ;;----------------------------------------------;;
 
@@ -341,38 +562,42 @@ Related:
 
 (defcustom sboo-ghc-pragmas-alist ;TODO; make internal variable « hashtable ».
 
-  '( ("LANGUAGE"     . sboo-ghc-pragma-read-LANGUAGE)
+  '( ("LANGUAGE"            . sboo-ghc-pragma-read-LANGUAGE)
 
-     ("OPTIONS_GHC"  . sboo-ghc-pragma-read-GHC_OPTION)
+     ("OPTIONS_GHC"         . sboo-ghc-pragma-read-GHC_OPTION)
 
-  ;; ("INCLUDE"      . sboo-ghc-read-INCLUDE)
+  ;; ("INCLUDE"             . sboo-ghc-pragma-read-INCLUDE)
 
-     ("WARNING"      . sboo-ghc-read-WARNING)
-     ("DEPRECATED"   . sboo-ghc-read-DEPRECATED)
+     ("WARNING"             . sboo-ghc-pragma-read-WARNING)
+     ("DEPRECATED"          . sboo-ghc-pragma-read-DEPRECATED)
 
-     ("MINIMAL"      . sboo-ghc-read-MINIMAL)
-     ("COMPLETE"     . sboo-ghc-read-COMPLETE)
+     ("MINIMAL"             . sboo-ghc-pragma-read-MINIMAL)
+     ("COMPLETE"            . sboo-ghc-pragma-read-COMPLETE)
 
-     ("INLINE"       . sboo-ghc-read-INLINE)
-     ("NOINLINE"     . sboo-ghc-read-INLINE)
-     ("INLINABLE"    . sboo-ghc-read-INLINABLE)
-     ("CONLIKE"      . sboo-ghc-read-CONLIKE)
+     ("INLINABLE"           . sboo-ghc-pragma-read-INLINABLE)
 
-     ("RULES"        . sboo-ghc-read-RULES)
+     ("INLINE"              . sboo-ghc-pragma-read-INLINE)
+     ("NOINLINE"            . sboo-ghc-pragma-read-INLINE)
+     ("INLINE   CONLIKE"    . sboo-ghc-pragma-read-INLINE)
+     ("NOINLINE CONLIKE"    . sboo-ghc-pragma-read-INLINE)
 
-     ("SPECIALIZE"   . sboo-ghc-read-SPECIALIZE)
+     ("RULES"               . sboo-ghc-pragma-read-RULES)
 
-     ("UNPACK"       . nil)
-     ("NOUNPACK"     . nil)
+     ("SPECIALIZE"          . sboo-ghc-pragma-read-SPECIALIZE)
+     ("SPECIALIZE INLINE"   . sboo-ghc-pragma-read-SPECIALIZE)
+     ("SPECIALIZE NOINLINE" . sboo-ghc-pragma-read-SPECIALIZE)
 
-     ("OVERLAPPING"  . sboo-ghc-read-OVERLAPPING)
-     ("OVERLAPPABLE" . sboo-ghc-read-OVERLAPPABLE)
-     ("OVERLAPS"     . sboo-ghc-read-OVERLAPS)
-     ("INCOHERENT"   . sboo-ghc-read-INCOHERENT)
+     ("UNPACK"              . nil)
+     ("NOUNPACK"            . nil)
 
-     ;; ("LINE"         . sboo-ghc-read-LINE)
-     ;; ("COLUMN"       . sboo-ghc-read-COLUMN)
-     ;; ("SOURCE"       . sboo-ghc-read-SOURCE)
+     ("OVERLAPPING"         . sboo-ghc-pragma-read-OVERLAPPING)
+     ("OVERLAPPABLE"        . sboo-ghc-pragma-read-OVERLAPPING)
+     ("OVERLAPS"            . sboo-ghc-pragma-read-OVERLAPPING)
+     ("INCOHERENT"          . sboo-ghc-pragma-read-OVERLAPPING)
+
+     ;; ("LINE"             . sboo-ghc-pragma-read-LINE)
+     ;; ("COLUMN"           . sboo-ghc-pragma-read-COLUMN)
+     ;; ("SOURCE"           . sboo-ghc-pragma-read-SOURCE)
      )
 
   "GHC Pragmas and elisp commands (to read them from the user)."

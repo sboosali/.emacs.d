@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# key: =complete
+# name: a COMPLETE pragma
+# condition: (= (length "=complete") (current-column))
+# contributor: Spiros Boosalis <samboosalis@gmail.com> 
+# --
+
+{-# COMPLETE `
+(when (fboundp #'sboo-ghc-read-haskell-variables)
+  (string-join (call-interactively #'sboo-ghc-read-haskell-variables)
+               ", "))
+` #-}
+$0
