@@ -2,26 +2,60 @@
 
 ;;; Commentary:
 
+;;----------------------------------------------;;
+;; My `init.el' (@sboosali on github)
+;;
 ;; Most `use-package' statements are in this file.
+;;
+;; 
+;;
+;;----------------------------------------------;;
 
 ;;; Code:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Imports (Bootstrapped) ;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;;; Imports: -----------------------------------;;
+;;----------------------------------------------;;
 
-(let* ((EmacsDirectory     (or user-emacs-directory
-                               "~/.emacs.d/"))
+;; Builtins:
 
-       (SbooDirectory      (file-name-as-directory (concat EmacsDirectory
-                                                           "sboo/")))
+(require 'cl)
+(require 'pcase)
 
-       (SbooFile           (file-truename (concat SbooDirectory
-                                                  "sboo-definitions.el"))))   ;;TODO EnvironmentVars
+;;----------------------------------------------;;
+;; Imports (Bootstrapped) ----------------------;;
+;;----------------------------------------------;;
 
-  (require 'sboo-definitions SbooFile))
+(eval-and-compile
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (let* ((EmacsDirectory     (or user-emacs-directory
+                                 "~/.emacs.d/"))
+
+         (SbooDirectory      (file-name-as-directory (concat EmacsDirectory
+                                                             "sboo/")))
+
+         (SbooDefinitionsFile (file-truename (concat SbooDirectory
+                                                     "sboo-definitions.el")))
+
+            ;TODO EnvironmentVars
+         )
+
+    (require 'sboo-definitions SbooDefinitionsFile)
+
+  ;; (require 'sboo-conditions SbooConditionsFile)
+
+  ;; (require 'sboo-utilities SbooUtilitiesFile)
+
+    ()))
+
+;; ^ Notes
+;;
+;; • `eval-and-compile' is like `progn' at both run-time AND compile-time.
+;;
+;; • 
+;;
+
+;;----------------------------------------------;;
 
 (defun add-to-load-path! (FilePath)
 
@@ -44,7 +78,7 @@
   (add-to-list 'load-path
      (file-name-as-directory (file-truename FilePath))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun add-startup-hook! (FunctionSymbol)
 
@@ -52,9 +86,9 @@
 
   (add-hook 'emacs-startup-hook FunctionSymbol))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Utilities -----------------------------------;;
+;;----------------------------------------------;;
 
 (defmacro sboo-append-to-list! (variable list)
 
@@ -62,51 +96,205 @@
 
   `(setq ,variable (append ,list ,variable)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+
+(cl-defun sboo-move-to-head-of-alist! (alist-var &key key)
+
+  "`sboo-move-to-head-of-alist' with mutation.
+
+Inputs:
+
+• KEY — is one of: `symbolp', `stringp', or `numberp'.
+
+• ALIST-VAR — is a symbol, representing an `alist' variable.
+          its key-type is equal to the `type-of' KEY.
+
+Output:
+
+• ALIST-VAR.
+
+Examples:
+
+• M-: (setq sboo-xyz '((x . 1) (y . 2) (z . 3) (y . 4)))
+• M-: (sboo-move-to-head-of-alist! 'sboo-xyz :key 'y)
+    ⇒ '((y . 2) (x . 1) (z . 3))
+• M-: sboo-xyz
+    ⇒ '((y . 2) (x . 1) (z . 3))
+
+• M-: (setq sboo-abc '((\"a1\" . 1) (\"b2\" . 2) (\"c3\" . 3)))
+• M-: (sboo-move-to-head-of-alist! 'sboo-abc :key \"b2\")
+    ⇒ '((\"b2\" . 2) (\"a1\" . 1) (\"c3\" . 3))
+• M-: sboo-abc
+    ⇒ '((\"b2\" . 2) (\"a1\" . 1) (\"c3\" . 3))
+
+Laws:
+
+• is idempotent."
+
+  (let ((ASSERTION (boundp alist-var))
+        )
+
+    (if ASSERTION
+
+        (let* ((alist          (symbol-value alist-var))
+
+               (DEFAULT        :sboo-not-found)
+               (TEST           #'equal)
+
+               (VALUE          (alist-get key alist DEFAULT nil TEST))
+               (WAS-KEY-FOUND? (not (eql VALUE DEFAULT)))
+               )
+
+          (if WAS-KEY-FOUND?
+
+              (let* ((PREDICATE (lambda (KV)
+                                  (when (consp KV)
+                                    (let ((K (car KV)))
+                                      (equal key K)))))
+                     (ATTR      (cons key VALUE))
+                     )
+                (set alist-var
+                     (cons ATTR (seq-remove PREDICATE alist))))
+
+            alist))
+
+      (format-message "[sboo-move-to-head-of-alist!] assertion failed in « sboo-move-to-head-of-alist! ALIST-VAR :key KEY »: ALIST-VAR must be a `boundp' symbol; the ALIST-VAR given was « %S »."
+                      alist-var))))
+
+;; ^ Notes
+;;
+;; `alist-get' doesn't invoke `symbol-value' (c.f. `add-to-list'):
+;;
+;; M-: (alist-get 'y 'sboo-xyz)
+;; Wrong argument type, `listp': sboo-xyz »
+;;
+;; `seq-remove' removes all:
+;;
+;; M-: (seq-remove  (lambda (KV) (when (consp KV) (let ((K (car KV))) (equal 'y K))))  '((x . 1) (y . 2) (z . 3) (y . 4)))
+;;  ⇒ '((x . 1) (z . 3))
+;;
+;; `seq-remove' doesn't mutate:
+;;
+;; M-: (progn  (setq sboo-xyz '((x . 1) (y . 2) (z . 3) (y . 4)))  (seq-remove  (lambda (KV) (when (consp KV) (let ((K (car KV))) (equal 'y K))))  (symbol-value 'sboo-xyz))  (symbol-value 'sboo-xyz))
+;;  ⇒ '((x . 1) (y . 2) (z . 3) (y . 4))
+;;
+;; `add-to-list' can postpend (by default, it prepends):
+;;
+;; M-: (progn  (setq sboo-xyz '((x . 1) (y . 2) (z . 3) (y . 4)))  (add-to-list 'sboo-xyz '(a . 5) t)  (symbol-value 'sboo-xyz))
+;;  ⇒ '((x . 1) (y . 2) (z . 3) (y . 4) (a . 5))
+;;
+;; 
+;;
+;; 
+;;
+
+;;----------------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-insert-open-parenthesis ()
+
+  "Insert « \"(\" »."
+
+  (interactive)
+
+  (insert "("))
+
+(defun sboo-insert-close-parenthesis ()
+
+  "Insert « \")\" »."
+
+  (interactive)
+
+  (insert ")"))
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-open-square-bracket ()
+
+  "Insert « \"[\" »."
+
+  (interactive)
+
+  (insert "["))
+
+(defun sboo-insert-close-square-bracket ()
+
+  "Insert « \"]\" »."
+
+  (interactive)
+
+  (insert "]"))
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-open-curly-brace ()
+
+  "Insert « \"}\" »."
+
+  (interactive)
+
+  (insert "{"))
+
+(defun sboo-insert-close-curly-brace ()
+
+  "Insert « \"}\" »."
+
+  (interactive)
+
+  (insert "}"))
+
+;;----------------------------------------------;;
+;;----------------------------------------------;;
+
+
+
+;;----------------------------------------------;;
+;; Settings ------------------------------------;;
+;;----------------------------------------------;;
 
 (setq custom-file sboo-custom-file)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (dolist (BINDING '( (lexical-binding . t)
                     ))
   (add-to-list 'safe-local-variable-values BINDING))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-(dolist (BINDING '( (progn (dante-mode 0) (flycheck-mode 0))
-                    ))
-  (add-to-list 'safe-local-eval-forms BINDING))
+(progn
+  
+  (dolist (BINDING '( (progn (dante-mode 0) (flycheck-mode 0))
+                      ))
+    (add-to-list 'safe-local-eval-forms BINDING))
 
-;; ^ URL `http://endlessparentheses.com/a-quick-guide-to-directory-local-variables.html'
+  ;; ^ URL `http://endlessparentheses.com/a-quick-guide-to-directory-local-variables.html'
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (put 'dante-target       'safe-local-variable #'stringp)
+  (put 'dante-project-root 'safe-local-variable #'stringp)
 
-(put 'dante-target       'safe-local-variable #'stringp)
-(put 'dante-project-root 'safe-local-variable #'stringp)
+  ())
 
 ;; ^ Ensure `dante-*' variables are marked as "safe strings".
 ;; (NOTE `dante' does this, but haskell files may be opened before(?) `dante' is loaded.)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Register LoadPaths ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Register LoadPaths --------------------------;;
+;;----------------------------------------------;;
 
 (add-to-load-path! sboo-root-directory)
 (add-to-load-path! sboo-lisp-directory)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Settings ------------------------------------;;
+;;----------------------------------------------;;
 
 (sboo-load-file! "sboo-settings.el")
 (sboo-load-file! "sboo-aliases.el")
 (sboo-load-file! "sboo-commands.el")
 (sboo-load-file! "sboo-keybindings.el")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (when (>= emacs-major-version 26)
 
@@ -116,11 +304,11 @@
 
   (add-startup-hook! #'sboo-autosave-config!))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;;
 
 (when (require 'sboo-auto-mode nil :noerror)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (sboo-add-auto-mode-basename "LICENSE" #'text-mode)
   (sboo-add-auto-mode-basename "TODO"    #'text-mode)
@@ -129,7 +317,7 @@
   (sboo-add-auto-mode-basename ".gitignore"     #'conf-mode)
   (sboo-add-auto-mode-basename ".gitattributes" #'conf-mode)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (sboo-add-auto-mode-file-extension "service" #'conf-mode)
 
@@ -147,18 +335,18 @@
   ;;;(add-to-list 'auto-mode-alist ("rc\\'" . #'conf-mode))
   ;;;(add-to-list 'auto-mode-alist ("rc\\'" . #'sh-mode))
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;---------------------------;;
 
   (sboo-add-auto-mode-file-extension "xml" #'sgml-mode)
   ;; ^ `nxml-mode' vs `sgml-mode'.
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;---------------------------;;
 
   ())
 
 ;; ^ `auto-mode-alist' maps filepaths to major-modes.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; (when (and (>= emacs-major-version 24)
 ;;            (require 'sboo-theme nil :noerror))
@@ -170,7 +358,7 @@
 ;;
 ;; (defun load-theme (THEME &optional NO-CONFIRM NO-ENABLE)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;;(defvar sboo-submodule-solarized-directory
 
@@ -180,7 +368,7 @@
   (load-theme 'solarized :noconfirm)
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-desktop nil :noerror)
 
@@ -204,7 +392,64 @@
 ;; and thus need `revert-buffer`. 
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+
+;; (use-package desktop
+;;   :config
+;;   (progn
+;;     (defvar modi/no-desktop-read-at-startup nil
+;;       "Set this variable to a non-nil value if you do not want to enable
+;; `desktop-save-mode'.
+;; This variable can be used to start emacs without reading the previously
+;; saved desktop at startup:
+;; > emacs --eval \"(setq modi/no-desktop-read-at-startup t)\"
+;; ")
+;;     ()))
+
+;;----------------------------------------------;;
+
+;; (use-package conf-mode
+
+;;   :init
+;;   ()
+
+;;   :config
+;;     (defun modi/conf-quote-normal ()
+;;       "Enable `conf-quote-normal' for *.setup files."
+;;       (when-let* ((fname (buffer-file-name))
+;;                   (enable-conf-quote-normal (string-match-p "\\.setup.*" fname)))
+;;         ;; Set the syntax of ' and " to punctuation.
+;;         (conf-quote-normal nil)))
+;;     (add-hook 'conf-space-mode-hook #'modi/conf-quote-normal)
+;;   ())
+
+;; `conf-quote-normal':
+;;
+;; « 0 » — Set the syntax of « ' » and « " » to punctuation.
+;; « 1 » — Set the syntax of only « ' » to punctuation.
+;; « 2 » — Set the syntax of only « " » to punctuation.
+;;
+;; 
+
+;;----------------------------------------------;;
+
+(use-package lisp-mode
+
+  :init
+
+  ()
+
+  ;; :bind
+  ;; ("[" . sboo-insert-open-parenthesis)
+  ;; ("]" . sboo-insert-close-parenthesis)
+  ;; ("(" . sboo-insert-open-square-bracket)
+  ;; (")" . sboo-insert-close-square-bracket)
+
+  :config
+
+  ())
+
+;;----------------------------------------------;;
 
 ;; (use-package compile
 ;;   :bind (("s-m" . compile))
@@ -220,7 +465,23 @@
 
   (add-startup-hook! #'sboo-compilation-config!))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+
+(use-package ansi-color
+
+  :config
+
+  (defun sboo-ansi-colors-apply ()
+
+    "`ansi-color-apply-on-region' on whole buffer."
+
+    (interactive)
+
+    (ansi-color-apply-on-region (point-min) (point-max)))
+
+  ())
+
+;;----------------------------------------------;;
 
 (use-package shell
 
@@ -255,35 +516,35 @@
 
     ))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Internal Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;;; Internal Packages --------------------------;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-server nil :noerror)
   (add-startup-hook! #'server-start-unless-running))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (require 'sboo-widgets)
 ;;;  (sboo-minibuffer-config))
 ;;;  (sboo-config-fonts))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-make nil :noerror)
   (add-hook 'makefile-mode-hook #'sboo-show-trailing-whitespace))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; (when (require 'sboo-prog nil :noerror)
 ;;   (dolist (HOOK sboo-prog-mode-hooks)
 ;;     (add-hook 'prog-mode-hook HOOK)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-shell nil :noerror)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;---------------------------;;
 
   (defadvice term-char-mode (after term-char-mode-fixes ())
 
@@ -296,15 +557,15 @@
 
     (term-set-escape-char ?\C-x))
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;---------------------------;;
 
   (add-hook 'term-mode-hook #'sboo-local-unset-tab))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (when (require 'dired nil :noerror)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;---------------------------;;
 
   (bind-keys :map dired-mode-map
              ("w" . wdired-change-to-wdired-mode) ;; Mnemonic: [w]dired.
@@ -327,7 +588,8 @@
 
   ;; ^ `sometimes' means — Emacs will move the point to the beginning of filename, if the point is before it.
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;---------------------------;;
+
   ())
 
 ;; ^ WDired
@@ -338,7 +600,7 @@
 ;;
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-bookmark nil :noerror)
 
@@ -355,7 +617,7 @@
 ;;
 ;; Your personal bookmark file is defined by option ‘bookmark-default-file’, which defaults to `~/.emacs.d/bookmarks
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (when (require 'saveplace nil 'noerror)
 
@@ -369,7 +631,7 @@
 ;; "Save the position I was in each file, i.e. no scrolling down to paragraph N or function foo when I reopen my files."
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (when (require 'savehist nil 'noerror)
 
@@ -386,7 +648,7 @@
 ;; Save mode-line history between sessions.
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (when (require 'man nil 'noerror)
 
@@ -403,7 +665,7 @@
 ;; (set-face-attribute 'Man-overstrike nil :inherit font-lock-type-face :bold t)
 ;; (set-face-attribute 'Man-underline nil :inherit font-lock-keyword-face :underline t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (progn
 
@@ -411,19 +673,19 @@
 
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Internal Packages: Utilities ;; ;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Internal Packages: Utilities ----------------;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-unicode nil :noerror)
 
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: Installation ;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; External Packages: Installation -------------;;
+;;----------------------------------------------;;
 
 (pcase (sboo-install-p)
 
@@ -441,32 +703,32 @@
 
   (_           (progn)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: `package.el' ;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; External Packages: `package.el' -------------;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-packages nil :noerror)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (dolist (ARCHIVE sboo-package-archives)
     (add-to-list 'package-archives ARCHIVE 'append))
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (when (>= emacs-major-version 26)
     (async-start #'package-refresh-contents))
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (setq package-load-list sboo-all-packages)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   ;;(package-initialize)
   ;;NOTE we call `package-initialize' in `init.el'.
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   ())
 
@@ -477,9 +739,9 @@
 ;; Execute START-FUNC (often a lambda) in a subordinate Emacs process.
 ;; When done, the return value is passed to FINISH-FUNC.  Example:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: Core Configuration ;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; External Packages: Core Configuration -------;;
+;;----------------------------------------------;;
 
 (sboo-load-file! "sboo-init-helm.el")
 (sboo-load-file! "sboo-init-use-package.el")
@@ -487,13 +749,14 @@
 (when (< emacs-major-version 26)
   (sboo-load-file! "sboo-init-real-auto-save.el"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: Miscellaneous ;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; External Packages: Miscellaneous ------------;;
+;;----------------------------------------------;;
 
 (use-package flycheck
 
   :defer t
+
   ;;^
   ;; deferred because flycheck is "more framework than application".
   ;; i.e. any "application" package will `require` it whenever needed (e.g. `dante`), and afaik, it's not useful alone.
@@ -505,24 +768,73 @@
   :bind ;;TODO move to hook for any `prog-mode'.
 
   (("<kp-divide>" . flycheck-list-errors)
-   ("<kp-down>"   . flycheck-next-error)        ; i.e. KeyPad 6.
-   ("<kp-up>"     . flycheck-previous-error)))  ; i.e. KeyPad 4.
+   ;; ("<kp-down>"   . flycheck-next-error)        ; i.e. KeyPad 6.
+   ;; ("<kp-up>"     . flycheck-previous-error))   ; i.e. KeyPad 4.
+   )
+
+
+  ())
 
 ;; See
 ;;     - « https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-flycheck.el »
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 
+;; Deft is an Emacs mode for quickly browsing, filtering, and editing
+;; directories of plain text notes, inspired by Notational Velocity.
+;; http://jblevins.org/projects/deft
+;; https://github.com/jrblevin/deft
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: Haskell Configuration ;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (use-package deft
+;;   :config
+
+;;----------------------------------------------;;
+
+(use-package awesome-tab
+
+  :config
+
+  (awesome-tab-mode t)
+
+  ())
+
+;;TODO;; helm-source-list awesome-tab-build-helm-source)
+
+;;----------------------------------------------;;
+
+;; ;;
+;; ;;  bm
+;; ;;  bookmark+ (bmkp)
+;; ;;  Quickly save and restore point using registers
+
+;; ;;; bm
+;; ;; https://github.com/joodland/bm
+;; (use-package bm
+
+;;   :config
+;;   (progn
+;;     (setq-default bm-buffer-persistence t) ; buffer persistence on by default
+
+;;     (when (display-graphic-p) ; Add fringe only if display is graphic (GUI)
+;;       (define-fringe-bitmap 'bm-marker-left [#xF8    ; ▮ ▮ ▮ ▮ ▮ 0 0 0
+;;                                              #xFC    ; ▮ ▮ ▮ ▮ ▮ ▮ 0 0
+;;                                              #xFE    ; ▮ ▮ ▮ ▮ ▮ ▮ ▮ 0
+;;                                              #x0F    ; 0 0 0 0 ▮ ▮ ▮ ▮
+;;                                              #x0F    ; 0 0 0 0 ▮ ▮ ▮ ▮
+;;                                              #xFE    ; ▮ ▮ ▮ ▮ ▮ ▮ ▮ 0
+;;                                              #xFC    ; ▮ ▮ ▮ ▮ ▮ ▮ 0 0
+;;                                              #xF8])) ; ▮ ▮ ▮ ▮ ▮ 0 0 0
+;;     ()))
+
+;;----------------------------------------------;;
+;; External Packages: Haskell Configuration ----;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-haskell nil :noerror)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (use-package haskell
     :demand t
@@ -577,7 +889,7 @@
 
       ()))
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (use-package haskell-decl-scan
     :after    haskell
@@ -589,7 +901,7 @@
     :init
     (add-hook 'haskell-mode-hook #'haskell-decl-scan-mode))
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (use-package haskell-cabal
     :after    haskell
@@ -600,10 +912,12 @@
                   ("\\.project\\'"    . haskell-cabal-mode)
                   ("\\`\\.project\\'" . haskell-cabal-mode)))
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (use-package dante
     :after    haskell
+
+    :load-path "~/.emacs.d/submodules/dante/" ;TODO 
 
     :commands (dante-mode dante-restart)
 
@@ -614,16 +928,23 @@
 ;;;         (haskell-mode . dante-mode))
 
     :init
+
     (add-hook 'haskell-mode-hook #'flycheck-mode)
     (add-hook 'haskell-mode-hook #'dante-mode)
 
     :config
-    (setq dante-repl-command-line-methods-alist
-          sboo-dante-repl-command-line-methods-alist)
 
-    (setq sboo-haskell-eldoc 'dante)
+    (dolist (KEY '(nix new-nix))
+      (setq dante-methods-alist
+            (assq-delete-all KEY dante-methods-alist)))
+
+    (when sboo-dante-default-method
+      (sboo-move-to-head-of-alist! 'dante-methods-alist
+                                   :key sboo-dante-default-method))
 
     (setq dante-tap-type-time 2)
+
+    (setq sboo-haskell-eldoc 'dante)
 
     ())
 
@@ -634,15 +955,17 @@
   ;; 
   ;; 
 
+  ;;------------------------;;
+
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: ProgrammingLanguages ;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; External Packages: ProgrammingLanguages -----;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-nix nil :noerror)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (use-package nix-mode
 
@@ -658,21 +981,21 @@
 
     )
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (use-package nix-repl)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: `company-*' Configurations
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; External Packages: `company-*' Configurations
+;;----------------------------------------------;;
 
 (when (require 'sboo-company nil :noerror)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (use-package company
 
@@ -709,7 +1032,7 @@
 
     :diminish company-mode)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (define-key company-active-map (kbd "TAB") #'company-complete-common-or-cycle)
 
@@ -749,7 +1072,7 @@
 
              )
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (use-package company-cabal
 
@@ -758,7 +1081,7 @@
 
     ())
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   (use-package company-ghci
 
@@ -772,7 +1095,7 @@
 
     ())
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   ;; (use-package company-web
 
@@ -785,7 +1108,7 @@
   ;;     (add-hook HOOK #'sboo-company-javascript))
   ;;   ())
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   ;; (use-package company-anaconda
   ;;   ;
@@ -794,15 +1117,15 @@
   ;;   ;
   ;;   ())
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;
 
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-haskell-compilation nil :noerror)
 
@@ -810,9 +1133,9 @@
 
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: Miscellaneous ;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; External Packages: Miscellaneous ------------;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-projectile nil :noerror)
 
@@ -837,7 +1160,7 @@
 
     ()))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-yasnippets nil :noerror)
 
@@ -861,7 +1184,7 @@
 
     ()))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;;; `magit': "eMAcs GIT".
 
 (use-package magit
@@ -876,7 +1199,7 @@
   :config
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;;; `wgrep': "Writeable GREP".
 
 (use-package wgrep
@@ -906,9 +1229,9 @@
 
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: Formats ;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; External Packages: Formats ------------------;;
+;;----------------------------------------------;;
 
 (use-package markdown-mode
 
@@ -931,7 +1254,7 @@
 ;;
 ;; 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (use-package yaml-mode
 
@@ -941,7 +1264,7 @@
 
   )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; (use-package xpm
 ;;   :commands (xpm-grok xpm-finish xpm-raster xpm-as-xpm xpm-put-points xpm-generate-buffer)
@@ -949,26 +1272,26 @@
 ;;   ; :mode (("\\.xpm\\'" . xpm-mode))
 ;;   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; External Packages: Miscellaneous ;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; External Packages: Miscellaneous ------------;;
+;;----------------------------------------------;;
 
 ;;(require which-key ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;;(require rainbow-mode ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;;(require volatile-highlights ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (when (require 'volatile-highlights nil 'noerror)
   (volatile-highlights-mode t))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; (use-package which-key
 ;;   ;;
@@ -983,39 +1306,39 @@
 ;; ;; ^ After 1 second of an unfinished key-press,
 ;; ;; show the documentation of the sub-keys available in the key sequence.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; `package--builtins':
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; `package--builtins': ------------------------;;
+;;----------------------------------------------;;
 
 ;; these features (below) can be configured with `use-package',
 ;; because they are actual packages.
 ;;
 ;; See: (describe-variable 'package--builtins)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (use-package calendar
   :defer t
   :config (setq calendar-week-start-day 1))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (use-package vc
   :defer t
   :config (setq vc-follow-symlinks t))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; no multiframe ediff please
 (use-package ediff
   :defer t
   :config (setq ediff-window-setup-function 'ediff-setup-windows-plain))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Builtin Features:
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Builtin Features: ---------------------------;;
+;;----------------------------------------------;;
 
 ;; Non-Package features must be configured more because,
 ;; with `with-eval-after-load', `define-key', etc.
@@ -1030,24 +1353,23 @@
 
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; Finalization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Finalization --------------------------------;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-fonts nil :noerror)
   (sboo-fonts-config!))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;;; Notes: -------------------------------------;;
+;;----------------------------------------------;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+;;----------------------------------------------;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; `wgrep' notes
+;;----------------------------------------------;;
+;; `wgrep' notes
 
 ;; KeyBindings:
 ;;
@@ -1078,8 +1400,8 @@
 ;; See: https://github.com/mhayashi1120/Emacs-wgrep
 ;; 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; `markdown-mode' notes
+;;----------------------------------------------;;
+;; `markdown-mode' notes
 
 ;; markdown-specific editing features:
 ;; 
@@ -1107,8 +1429,8 @@
 ;;     - https://jblevins.org/projects/markdown-mode/
 ;;     - 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; DirEd
+;;----------------------------------------------;;
+;; DirEd
 
 ;; (use-package ranger
 ;;   :defer t
@@ -1118,23 +1440,28 @@
 ;;   (setq ranger-show-literal nil)
 ;;   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-;; `dired-sidebar':
+(use-package dired-sidebar
+  :commands (dired-sidebar-toggle-sidebar))
+
+;; ^ `dired-sidebar':
 ;;
 ;; https://github.com/jojojames/dired-sidebar/blob/master/readme.org
+
+;;----------------------------------------------;;
 
 ;; `dired-hack':
 ;;
 ;; https://github.com/Fuco1/dired-hacks/blob/master/README.md#dired-subtree
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+;;----------------------------------------------;;
+;;
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+;;----------------------------------------------;;
+;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 (provide 'sboo-init)

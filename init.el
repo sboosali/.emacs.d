@@ -7,7 +7,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;(setq debug-on-error nil);;TODO environment-variable
+;;(setq debug-on-error t);;TODO environment-variable
 
 (when (boundp 'user-init-file) (find-file user-init-file))
 

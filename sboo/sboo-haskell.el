@@ -81,7 +81,10 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
     ;;(""     . ?)
     )
 
-  "`prettify-symbols-alist' for Haskell."
+  "`prettify-symbols-alist' for Haskell.
+
+Prettify some Applicative methods 
+(á la Applicative Programming with Effects)."
 
   :type '(alist :key-type   (string    :tag "String to match")
                 :value-type (character :tag "Char to show")
@@ -90,6 +93,23 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
   :safe t
 
   :group 'sboo)
+
+;;----------------------------------------------;;
+
+(defun sboo-haskell-set-compile-command ()
+
+  "Set `compile-command' from « .dir-locals.el » and « .project ».
+
+Files:
+
+• the file-buffer's « .dir-locals.el » file.
+• the dominating « .project » file.
+• the dominating « .cabal » file."
+
+  (setq-local compile-command (concat "dmd -de -w -unittest ";TODO
+                                      buffer-file-name)))
+
+;(add-hook 'd-mode-hook #'sboo-haskell-set-compile-command)))
 
 ;;----------------------------------------------;;
 ;; ElDoc ---------------------------------------;;
@@ -140,6 +160,16 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
 ;; Dante ---------------------------------------;;
 ;;----------------------------------------------;;
 
+(defcustom sboo-dante-default-method 'new-impure-nix
+
+  "Default key of `dante-methods-alist'."
+
+  :type  '(symbol :tag "How `dante' launches GHCi.")
+  :safe  t
+  :group 'sboo-haskell)
+
+;;==============================================;;
+
 (defun sboo-dante-cabal-new-repl (root)
 
   "Locate a `cabal.project' file in project-directory ROOT."
@@ -160,7 +190,7 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
 
   "Override `dante-repl-command-line-methods-alist'.")
 
-;;----------------------------------------------;;
+;;==============================================;;
 
 (defun sboo-dante-mode ()
   

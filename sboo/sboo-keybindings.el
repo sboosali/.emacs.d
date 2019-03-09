@@ -11,11 +11,34 @@
 ;;; Code:
 
 ;;==============================================;;
-;;; Commands & Utilities
+;;; Utilities & Commands =======================;;
 ;;==============================================;;
 
 ;; the Commands — will be bound in a keybinding (below)
 ;; the Utilities — may be used to define the keybindings (below) 
+
+;;==============================================;;
+
+(defun sboo-swap-parentheses-and-square-brackets ()
+  
+  "Swap « [ ] » with « (  ) ».
+
+Calls:
+
+• `keyboard-translate'.
+
+Links:
+
+• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
+
+  (progn
+    
+    (keyboard-translate ?\( ?\[)
+    (keyboard-translate ?\[ ?\()
+    (keyboard-translate ?\) ?\])
+    (keyboard-translate ?\] ?\))
+
+    ()))
 
 ;;==============================================;;
 
@@ -100,7 +123,11 @@ Wraps `forward-thing'."
 
 ;;----------------------------------------------;;
 
-;; ^ 
+;;==============================================;;
+;;; Key Translations ===========================;;
+;;==============================================;;
+
+(sboo-swap-parentheses-and-square-brackets)
 
 ;;==============================================;;
 ;;; Single-Character Keybindings...
@@ -386,8 +413,8 @@ Wraps `forward-thing'."
         (define-key *MAP* (kbd "<kp-next>")  #'compilation-next-error)
         (define-key *MAP* (kbd "<kp-prior>") #'compilation-previous-error)
 
-        (define-key *MAP* (kbd "<kp-down>")  #'compilation-next-file)
-        (define-key *MAP* (kbd "<kp-up>")    #'compilation-previous-file)
+        ;; (define-key *MAP* (kbd "<kp-down>")  #'compilation-next-file)
+        ;; (define-key *MAP* (kbd "<kp-up>")    #'compilation-previous-file)
 
         ()))
 

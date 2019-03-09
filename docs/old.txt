@@ -264,22 +264,133 @@ Related:
 ;;----------------------------------------------;;
 sboo-ghc-get-names-of-definitions-current-file
 ;;----------------------------------------------;;
+(defmacro sboo-move-to-head-of-alist! (key alist)
+
+  "Move KEY and its value to the `car' of ALIST.
+
+Inputs:
+
+• KEY — is one of: `symbolp', `stringp', or `numberp'.
+
+• ALIST — is an `alist' variable. 
+          its key-type is equal to the `type-of' KEY.
+
+Output:
+
+• an `alist'.
+
+• ALIST is mutated too."
+
+  `(setq ,variable (append ,list ,variable)))
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+(cl-defun sboo-submodule-directory (package-name &key version)
+  "Return « \"`sboo-submodule-directory'/`PACKAGE-NAME-VERSION'\" ».
+
+Examples:
+
+• M-: (add-to-list 'load-path (sboo-submodule-directory \"use-package\")
+    ⇒ \"/home/sboo/.emacs.d/submodules/use-package/\"
+
+• M-: (add-to-list 'load-path (sboo-submodule-directory \"use-package\" :version \"2.3\")
+    ⇒ \"/home/sboo/.emacs.d/submodules/use-package-2.3/\"
+
+Links:
+
+• URL `https://git-scm.com/book/en/v2/Git-Tools-Submodules'.
+• URL `https://chrisjean.com/git-submodules-adding-using-removing-and-updating/'."
+
+  (let* ((PackageDirectoryPrefix (concat sboo-vendored-package-directory package-name))
+
+	 (VersionSuffix          (if version
+	                             (format "-%s" version)
+                                   ""))
+
+	 (PackageDirectory (file-name-as-directory
+                            (concat PackageDirectoryPrefix VersionSuffix)))
+         )
+
+    PackageDirectory))
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+TODO
+
+  (use-package dante
+     :load-path (sboo-submodule-directory "dante")
+
+;; Error (use-package): Failed to parse package dante: Symbol’s value as variable is void: sboo-submodule-directory
+
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+(cl-defun sboo-deep-copy-alist (alist)
+
+  "Copy ALIST deeply (i.e. recursively).
+
+Inputs:
+
+• ALIST — is an `alist'.
+
+Output:
+
+• an `alist' with the same keys and values as ALIST."
+
+  (mapcar #'copy-sequence alist))
 
 ;;----------------------------------------------;;
 
+(use-package lisp-mode
+
+  :init
+
+  ()
+
+  :bind (:map lisp-mode-map
+              ("[" . sboo-insert-open-parenthesis)
+              ("]" . sboo-insert-close-parenthesis)
+              ("(" . sboo-insert-open-square-bracket)
+              (")" . sboo-insert-close-square-bracket)
+              )
+
+  :config 
+
+  ())
+
 ;;----------------------------------------------;;
+
+(use-package lisp-mode
+
+  :init
+
+  ()
+
+  :bind (:map lisp-mode-map
+              ("[" . sboo-insert-open-parenthesis)
+              ("]" . sboo-insert-close-parenthesis)
+              ("(" . sboo-insert-open-square-bracket)
+              (")" . sboo-insert-close-square-bracket)
+              )
+
+  :config 
+
+  ())
+
+;;----------------------------------------------;;
+
+
+    (when sboo-dante-default-method
+      (setq dante-methods-alist
+            (sboo-move-to-head-of-alist dante-methods-alist :key sboo-dante-default-method)))
+
+;;----------------------------------------------;;
+
+--------------------------------------------------
+--------------------------------------------------
+
+--------------------------------------------------
+--------------------------------------------------
 
 ;;----------------------------------------------;;
 

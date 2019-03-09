@@ -27,6 +27,20 @@
 ;;
 
 ;;----------------------------------------------;;
+;; Types ---------------------------------------;;
+;;----------------------------------------------;;
+
+(defstruct sboo-haskell-symbols
+• Imports
+• Datatypes
+• Variables
+• Typeclasses
+• Instances
+)
+
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 
@@ -54,13 +68,43 @@ Calls `haskell-ds-move-to-decl'."
 
 ;;----------------------------------------------;;
 
+(defun sboo-ghc-get-symbols-in-current-file ()
+
+  "Names of all variables, datatypes, typeclasses, etc in the current buffer.
+
+Output is a `plist' struct with these fields:
+
+• Imports
+• Datatypes
+• Variables
+• Typeclasses
+• Instances
+
+Output:
+
+• a list of strings.
+
+Related:
+
+• `haskell-ds-create-imenu-index'."
+
+  (progn
+  
+    ()))
+
+;;----------------------------------------------;;
+
 (defun sboo-ghc-get-variable-names-in-current-file ()
  
   "Get the names of all variables in the current buffer.
 
 Output:
 
-• a list of strings."
+• a list of strings.
+
+Related:
+
+• `haskell-ds-create-imenu-index'."
 
   (progn
   
@@ -602,9 +646,9 @@ Related:
 
   "GHC Pragmas and elisp commands (to read them from the user)."
 
-  :type '(alist :key-type   (string   :tag "Pragma")
-                :value-type '(choice (const nil)
-                                     (function :tag "Completer/Reader"))
+  :type '(alist :key-type   (string :tag "Pragma")
+                :value-type (choice (const nil)
+                                    (function :tag "Completer/Reader"))
                 )
 
   :safe t

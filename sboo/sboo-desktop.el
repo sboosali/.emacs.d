@@ -30,8 +30,61 @@
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 
+;;==============================================;;
+
+(defvar sboo-star-buffer-regex "\\`\\*.*\\*\\'"
+
+  "Regex which matches a Star Buffer.
+
+Star Buffers are Emacs' naming convention for Internal Buffers.")
+
+;;----------------------------------------------;;
+
+(defun sboo-bury-buffer-if-star-buffer (buffer)
+
+  (when (string-match-p sboo-star-buffer-regex (buffer-name buffer))
+    (bury-buffer buffer)))
+
+;;----------------------------------------------;;
+
+(defun sboo-bury-all-star-buffers ()
+
+  "Bury all star buffers.
+
+URL `http://emacs.stackexchange.com/a/20036/115'."
+
+  (interactive)
+
+  (mapc sboo-bury-buffer-if-star-buffer
+        (buffer-list)))
+
+;; `bury-buffer':
+;;
+;;(bury-buffer &optional BUFFER-OR-NAME)
+;;
+;;Put BUFFER-OR-NAME at the end of the list of all buffers.
+;;There it is the least likely candidate for ‘other-buffer’ to return.
+;;
+;; 
+
+;;==============================================;;
+
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
+;;----------------------------------------------;;
+
+(defvar sboo-no-desktop-read-at-startup nil
+
+      "Set this variable to a non-nil value if you do not want to enable
+`desktop-save-mode'.
+
+This variable can be used to start emacs without reading the previously
+saved desktop at startup:
+
+> emacs --eval \"(setq sboo-no-desktop-read-at-startup t)\"
+
+(NOTE: `defvar' won't overwrite a prior `setq', so this works.)")
+
 ;;----------------------------------------------;;
 
 (defvar sboo-desktop-directory
@@ -56,6 +109,82 @@
   "`desktop-base-file-name' under « $XDG_DATA_DIR ».")
 
 ;; ^ `desktop-dirname' is `~/.emacs.d' by default.
+
+;;----------------------------------------------;;
+
+(defcustom sboo-desktop-globals-to-save
+
+  '((comint-input-ring . 50)
+    desktop-missing-file-warning
+    (dired-regexp-history . 20)
+    (extended-command-history . 30)
+    (face-name-history . 20)
+    (file-name-history . 100)
+    (ido-buffer-history . 100)
+    (ido-last-directory-list . 100)
+    (ido-work-directory-list . 100)
+    (ido-work-file-list . 100)
+    (magit-read-rev-history . 50)
+    (minibuffer-history . 50)
+    (org-refile-history . 50)
+    (org-tags-history . 50)
+    (query-replace-history . 60)
+    (read-expression-history . 60)
+    (regexp-history . 60)
+    (regexp-search-ring . 20)
+    register-alist
+    (search-ring . 20)
+    (shell-command-history . 50)
+    ;; tags-file-name
+    ;; tags-table-list
+    )
+
+  "Extra `desktop-globals-to-save'.
+
+See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c52b4605f700fc4/setup-files/setup-desktop.el#L55'."
+
+  :type  '(repeat (restricted-sexp :match-alternatives (symbolp consp)))
+  :safe  t
+  :group 'sboo-desktop)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-desktop-files-not-to-save
+
+  (let ((default-desktop-files-not-to-save
+          (eval
+           (car (get 'desktop-files-not-to-save
+                     'standard-value))))
+        )
+
+      (setq desktop-files-not-to-save
+
+            (eval
+             `(rx (or (regexp ,default-desktop-files-not-to-save)
+                      (and (or ".desktop"
+                               ;; Don't save .gpg files. Restoring those files
+                               ;; in emacsclient causes a problem as the
+                               ;; password prompt appears before the frame is
+                               ;; loaded.
+                               ".gpg"
+                               ;; If backup files with names like
+                               ;; "file.sv.1.bkp" are saved to the desktop file,
+                               ;; emacsclient crashes at launch.
+                               ".bkp"
+                               ;; don't re-open emacs builtin files (jumped to from `describe-*').
+                               ".el.gz"
+                               ;;
+                               "TAGS")
+                           line-end))))))
+
+  "Extra `desktop-files-not-to-save'.
+
+See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c52b4605f700fc4/setup-files/setup-desktop.el#L81'."
+
+  :type  '(choice (const :tag "None" nil)
+                  regexp)
+  :safe  t
+  :group 'sboo-desktop)
 
 ;;----------------------------------------------;;
 ;;; Functions ----------------------------------;;
@@ -104,15 +233,21 @@
 
   (interactive)
 
+  (setq desktop-globals-to-save
+        (append sboo-desktop-globals-to-save desktop-globals-to-save))
+
+  (setq desktop-files-not-to-save
+        sboo-desktop-files-not-to-save)
+
   (make-directory (file-name-directory sboo-desktop-directory)
                   :create-parent-directories)
 
-  (desktop-read)
+  (add-hook 'desktop-after-read-hook #'sboo-all-bury-star-buffers)
+  (add-hook 'desktop-delay-hook      #'sboo-all-bury-star-buffers)
 
-  ;; ^
-  ;; 
-
-  (desktop-save-mode +1)
+  (when (null sboo-no-desktop-read-at-startup)
+    (desktop-read)
+    (desktop-save-mode +1))
 
   ;; ^ Enable globally.
 
@@ -126,6 +261,8 @@
 ;;
 ;; e.g. « (desktop-save sboo-desktop-directory) »
 ;;
+
+;TODO desktop-save-in-desktop-dir
 
 ;;----------------------------------------------;;
 
@@ -305,6 +442,15 @@
 ;;                                               ; passed after some change in the window configuration.
 ;;       (desktop-save-mode 1))
 ;;
+
+;;----------------------------------------------;;
+
+;;; `desktop-files-not-to-save'
+;;
+;; M-: (eval (car (get 'desktop-files-not-to-save 'standard-value)))
+;;   ⇒ "\\(^/[^/:]*:\\|(ftp)$\\)"
+;;
+;; 
 
 ;;----------------------------------------------;;
 

@@ -1,15 +1,25 @@
 ;; -*- lexical-binding: t; -*-
 
-(require 'cl)     ;; "CommonLisp"
-
 ;;; Commentary:
 
+;;----------------------------------------------;;
 ;; Utilities without Dependencies.
 ;;
 ;; Both General-Purpose and Special-Purpose.
 ;;
 ;; TODO clean up, del stuff.
 ;;----------------------------------------------;;
+
+;;; Code:
+
+;;----------------------------------------------;;
+;; Imports -------------------------------------;;
+;;----------------------------------------------;;
+
+;; builtin packages:
+
+(require 'cl)     ;; "CommonLisp"
+(require 'pcase)  ;; "PatternCASE"
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
@@ -247,17 +257,152 @@ i.e. Global variables matching `sboo-hook-regex'."
 
 See `sboo-hook-regex'."
 
-  (intern
+  (intern-soft
    (completing-read "Hook: " (sboo-get-hook-variables) nil t)))
 
 ;;----------------------------------------------;;
-;;  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utilities: Copying --------------------------;;
 ;;----------------------------------------------;;
+
+(cl-defun sboo-deep-copy (x)
+
+  "Copy datatype X deeply (i.e. recursively).
+
+Inputs:
+
+• X — is a datatype.
+
+      X can be primitive datatype: `booleanp', `symbolp', `stringp', `integerp', `floatp', `functionp'.
+
+      X can be collection datatype: `consp', `listp', `vectorp', `arrayp', `bool-vector-p', `hash-table-p'.
+
+      X can't be an 'implementation' type: `subrp', `byte-code-function-p', etc.
+
+      X can't be an editor type: `bufferp', `case-table-p', `char-table-p', `condition-variable-p', `custom-variable-p', `fontp', `frame-configuration-p', `framep', `keymapp', `markerp', `mutexp', `overlayp', `processp', `recordp', `sequencep', `syntax-table-p', `threadp', `window-configuration-p', `windowp' etc.
+
+Output:
+
+• a new value Y that should `equal' (but shouldn't `eq') X.
+
+NOTE:
+
+• loops infinitely if X is a recurisve value."
+
+  (pcase x
+
+    ((pred symbolp)       x)
+    ((pred integerp)      x)
+    ((pred floatp)        x)
+    ((pred functionp)     x)
+    ((pred stringp)       (mapcar #'sboo-deep-copy x))
+
+    ((pred consp)         (sboo-deep-copy-cons x))
+
+    ((pred listp)         (mapcar #'sboo-deep-copy x))
+    ((pred vectorp)       (mapcar #'sboo-deep-copy x)) ;;TODO;; we must recreate the given collection. « mapcar » is always a list.
+    ((pred arrayp)        (mapcar #'sboo-deep-copy x)) ;;TODO;; we must recreate the given collection. « mapcar » is always a list.
+    ((pred bool-vector-p) (mapcar #'sboo-deep-copy x)) ;;TODO;; we must recreate the given collection. « mapcar » is always a list.
+    ((pred hash-table-p)  (mapcar #'sboo-deep-copy x)) ;;TODO;; we must recreate the given collection. « mapcar » is always a list.
+
+    (_                    x)))
+
+;; ^ Notes
+;;
+;; • 
+;;
+;; • M-: (listp '(x . 1))
+;;       t
+;;
 
 ;;----------------------------------------------;;
 
+(cl-defun sboo-deep-copy-cons (cons)
+
+  "Copy CONS deeply (i.e. recursively).
+
+Inputs:
+
+• CONS — is a `cons' cell.
+
+Output:
+
+• an `cons' with the same `car' and `cdr' as CONS."
+
+  (pcase cons
+
+    (`(,x . ,y)
+
+     (cons (sboo-deep-copy x) (sboo-deep-copy y)))
+
+    (_ cons)))
+
 ;;----------------------------------------------;;
-; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(cl-defun sboo-move-to-head-of-alist (alist &key key)
+
+  "Move KEY and its value to the `car' of ALIST.
+
+Inputs:
+
+• KEY — is one of: `symbolp', `stringp', or `numberp'.
+
+• ALIST — is an `alist' (TODO or a symbol variable).
+          its key-type is equal to the `type-of' KEY.
+
+Output:
+
+• an `alist'.
+
+• the output has the same keys and values as the input (i.e. as ALIST).
+
+• [TODO ALIST is mutated too.]
+
+Examples:
+
+• M-: (sboo-move-to-head-of-alist '((x . 1) (y . 2) (z . 3)) :key 'y)
+    ⇒ '((y . 2) (x . 1) (z . 3))
+  
+Laws:
+
+• is idempotent."
+
+  (let ((ALIST (sboo-deep-copy alist))
+        (KEY   (sboo-deep-copy key))
+        )
+
+    (let ((DEFAULT       :sboo-not-found)
+          (REMOVE?       t)
+          (TEST          (cond
+                          ((stringp KEY) #'string-equal)
+                          (t             #'eql)))
+          )
+
+      (let* ((VALUE          (alist-get KEY ALIST DEFAULT REMOVE? TEST))
+             (ATTR           (cons KEY VALUE))
+             (WAS-KEY-FOUND? (not (eql VALUE DEFAULT)))
+             )
+
+        (if WAS-KEY-FOUND?  
+
+            (cons ATTR
+                  (if REMOVE?
+                      (cl-delete KEY ALIST :key #'car :test TEST)
+                    ALIST))
+
+          ALIST)))))
+
+;;----------------------------------------------;;
+;; -------------------------------------;;
+;;----------------------------------------------;;
+
+;TODO URL `http://ergoemacs.org/emacs/elisp_change_brackets.html'.
+
+;;----------------------------------------------;;
+;; -------------------------------------;;
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+;;; Notes: -------------------------------------;;
 ;;----------------------------------------------;;
 
 ;;; DOCS `string-match'
