@@ -25,7 +25,7 @@ Register onto `makefile-mode-hook', for any Makefile (including Makefile.am and 
 Why? Because « make » is strict about any line in a « Makefile » with trailing whitespace."
   (interactive)
 
-  (setq show-trailing-whitespace t))
+  (setq-local show-trailing-whitespace t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
