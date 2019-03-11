@@ -56,6 +56,25 @@
 ;;
 
 ;;----------------------------------------------;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun sboo-debug ()
+
+ "Toggle `debug-on-error'."
+
+ (interactive)
+
+ (if debug-on-error
+
+     (progn
+       (setq debug-on-error nil)
+       (message "Disable `debug-on-error'."))
+
+   (progn
+     (setq debug-on-error t)
+     (message "Enable `debug-on-error'."))))
+
+;;----------------------------------------------;;
 
 (defun add-to-load-path! (FilePath)
 
@@ -296,9 +315,9 @@ Laws:
 
 ;;----------------------------------------------;;
 
-(when (>= emacs-major-version 26)
-
-  (require 'sboo-autosave)
+(when (and (>= emacs-major-version 26)
+           (require 'sboo-autosave nil :noerror)
+           )
 
   (sboo-autosave-init!)
 
@@ -792,14 +811,13 @@ Laws:
 
 ;;----------------------------------------------;;
 
-(use-package awesome-tab
+;; (use-package awesome-tab
 
-  :config
+;;   :config
 
-  (awesome-tab-mode t)
+;;   (awesome-tab-mode t)
 
-  ())
-
+;;   ())
 ;;TODO;; helm-source-list awesome-tab-build-helm-source)
 
 ;;----------------------------------------------;;
@@ -843,6 +861,7 @@ Laws:
 
     :interpreter (("runhaskell"  . haskell-mode)
                   ("runghc"      . haskell-mode)
+                  ("cabal"       . haskell-mode)
                   ("stack"       . haskell-mode)
                   )
 
@@ -887,7 +906,17 @@ Laws:
 
        '(haskell-interactive-popup-errors nil))
 
-      ()))
+      ())
+
+    (when (require 'sboo-ghc nil :no-error)
+
+      (dolist (EXTENSION sboo-ghc-language-extensions)
+        (cl-pushnew EXTENSION haskell-ghc-supported-extensions :test #'equal))
+
+      (dolist (OPTION sboo-ghc-compiler-options)
+        (cl-pushnew OPTION haskell-ghc-supported-options :test #'equal)))
+
+    ())
 
   ;;------------------------;;
 
@@ -1187,16 +1216,26 @@ Laws:
 ;;----------------------------------------------;;
 ;;; `magit': "eMAcs GIT".
 
-(use-package magit
+(progn
+  
+  (use-package magit
 
-  :bind (("s-g s" . magit-status)
-         )
-  ;; ^ 
+    :bind (("s-g s" . magit-status)
+           )
+    ;; ^ 
 
-  :init
-  (setq magit-save-repository-buffers 'dontask)
+    :init
+    (setq magit-save-repository-buffers 'dontask)
 
-  :config
+    :config
+    ())
+
+  ;;--------------------------;;
+
+  ;; (use-package magithub
+  ;;FIXME crashes magit
+  ;;   )
+
   ())
 
 ;;----------------------------------------------;;

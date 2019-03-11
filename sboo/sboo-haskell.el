@@ -106,8 +106,13 @@ Files:
 • the dominating « .project » file.
 • the dominating « .cabal » file."
 
-  (setq-local compile-command (concat "dmd -de -w -unittest ";TODO
-                                      buffer-file-name)))
+  ;TODO get component from .dir-locals.el, like « sboo-cabal-target ».
+  ;TODO get project-root from locate-dominating-file cabal.project.
+  ;TODO get default-directory from subdirectory of project-root
+
+  (setq-local compile-command
+              (format-message "%s"
+                              "cabal new-build all")))
 
 ;(add-hook 'd-mode-hook #'sboo-haskell-set-compile-command)))
 
@@ -118,6 +123,8 @@ Files:
 (defun sboo-haskell-doc-current-info ()
 
   "Custom `haskell-doc-current-info'."
+
+  (interactive)
 
   (pcase sboo-haskell-eldoc
     
@@ -149,7 +156,7 @@ Files:
 ;; Hacks ---------------------------------------;;
 ;;----------------------------------------------;;
 
-(defun haskell-mode-after-save-handler () (progn))
+;;TODO rm (defun haskell-mode-after-save-handler () (progn))
 
  ;; ^ HACK fixes this pseudo-error:
  ;;
@@ -196,8 +203,8 @@ Files:
   
   "Start/restart `dante'.
   
-  (i.e. `dante-mode' or `dante-restart').
-  "
+(i.e. `dante-mode' or `dante-restart')."
+
   (interactive)
 
   (if (bound-and-true-p 'dante-mode)

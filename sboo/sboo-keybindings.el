@@ -31,14 +31,51 @@ Links:
 
 • URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
 
-  (progn
-    
-    (keyboard-translate ?\( ?\[)
-    (keyboard-translate ?\[ ?\()
-    (keyboard-translate ?\) ?\])
-    (keyboard-translate ?\] ?\))
+  (interactive)
+  
+  (keyboard-translate ?\( ?\[)
+  (keyboard-translate ?\[ ?\()
+  
+  (keyboard-translate ?\) ?\])
+  (keyboard-translate ?\] ?\)))
 
-    ()))
+;;----------------------------------------------;;
+
+(defun sboo-swap-semicolon-and-colon ()
+  
+  "Swap « ; » with « : ».
+
+Calls:
+
+• `keyboard-translate'.
+
+Links:
+
+• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
+
+  (interactive)
+
+  (keyboard-translate ?\: ?\;)
+  (keyboard-translate ?\; ?\:))
+
+;;----------------------------------------------;;
+
+(defun sboo-swap-double-quote-with-single-quote ()
+  
+  "Swap « ' » with « \" ».
+
+Calls:
+
+• `keyboard-translate'.
+
+Links:
+
+• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
+
+  (interactive)
+
+  (keyboard-translate ?\" ?\')
+  (keyboard-translate ?\' ?\"))
 
 ;;==============================================;;
 
@@ -109,7 +146,6 @@ Wraps `forward-thing'."
 
 ;; ^ 
 
-;;----------------------------------------------;;
 
 (defun sboo-prior-definition ()
 

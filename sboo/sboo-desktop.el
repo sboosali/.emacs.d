@@ -55,8 +55,8 @@ URL `http://emacs.stackexchange.com/a/20036/115'."
 
   (interactive)
 
-  (mapc sboo-bury-buffer-if-star-buffer
-        (buffer-list)))
+  (mapcar #'sboo-bury-buffer-if-star-buffer
+          (buffer-list)))
 
 ;; `bury-buffer':
 ;;
@@ -242,8 +242,8 @@ See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c
   (make-directory (file-name-directory sboo-desktop-directory)
                   :create-parent-directories)
 
-  (add-hook 'desktop-after-read-hook #'sboo-all-bury-star-buffers)
-  (add-hook 'desktop-delay-hook      #'sboo-all-bury-star-buffers)
+  (add-hook 'desktop-after-read-hook #'sboo-bury-all-star-buffers)
+  ;(add-hook 'desktop-delay-hook      #'sboo-bury-all-star-buffers)
 
   (when (null sboo-no-desktop-read-at-startup)
     (desktop-read)
