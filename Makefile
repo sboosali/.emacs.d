@@ -2,53 +2,68 @@
 # Variables ######################################
 ##################################################
 
-#Emacs?=emacs
-Emacs?=./result/bin/emacs
+Emacs      ?=emacs
+EmacsBuild ?=emacs  -batch  --funcall=batch-byte-compile
+
+#Emacs ?=emacs
+#Emacs ?=./result/bin/emacs
 
 Cask?=cask
 
-EmacsOptions?=--debug-init --no-desktop --maximized --no-splash --name=SBoo
+EmacsOptions ?=--debug-init --no-desktop --maximized --no-splash --name=SBoo
+
+EmacsDirectory ?=$(CURDIR)
 
 Timestamp ?=$(shell date +%d-%m-%Y+%H:%M)
 
 ##################################################
 # Default / Miscellaneous ########################
 ##################################################
-default: run
 
+default: build
 .PHONY: default
 
 ##################################################
-clean:
-	find sboo/ lisp/  -type f  -name '*.elc'  -exec rm -f \{} \+
+# Build ##########################################
+##################################################
 
-.PHONY: clean
+build:
+
+	$(EmacsBuild)  $(EmacsDirectory)/sboo/*.el
+
+.PHONY: build
 
 ##################################################
-# Install Dependencies ###########################
+# Configure ######################################
 ##################################################
+
+# Install Dependencies:
+
 configure:
 	@exec nix-build
 
 .PHONY: configure
 
 ##################################################
-# Build ##########################################
+# Cask ###########################################
 ##################################################
-build:
+
+cask-build:
 	$(Cask) build
 
-.PHONY: build
+.PHONY: cask-build
 
 ##################################################
 # Emacs: Run / Test. #############################
 ##################################################
+
 run: configure
 	@exec $(Emacs) $(EmacsOptions)
 
 .PHONY: run
 
 ##################################################
+
 test: configure
 	@exec $(Emacs) $(EmacsOptions)
 
@@ -61,4 +76,11 @@ exec:
 
 .PHONY: exec
 
-#
+##################################################
+
+clean:
+	find $(EmacsDirectory)/sboo $(EmacsDirectory)/lisp  -type f  -name '*.elc'  -delete
+
+.PHONY: clean
+
+##################################################

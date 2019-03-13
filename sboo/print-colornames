@@ -1,0 +1,5 @@
+#!/usr/bin/emacs --script
+
+(require 'json)
+
+(prin1 (json-read-file "./colornames.json"))

@@ -11,6 +11,8 @@ temporary/
 secret/
 private/
 
+./sboo/scryfall-default-cards.* #TODO# too large
+
 ########################################
 # nix
 ########################################
