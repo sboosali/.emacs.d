@@ -116,6 +116,10 @@ Related:
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
+;; `haskell-lexeme-looking-at-quasi-quote-literal'
+
+;;----------------------------------------------;;
+
 (defun sboo-ghc-pragma-read ()
 
   "Read a GHC pragma, plus any of that pragma's required inputs.

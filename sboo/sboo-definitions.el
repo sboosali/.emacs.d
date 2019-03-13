@@ -30,42 +30,6 @@ Calls `file-name-as-directory' and `file-truename'."
 
 ;;----------------------------------------------;;
 
-(cl-defun sboo-read-feature (&key prompt require-match initial-input)
-  
-  "Read a `featurep' symbol.
-
-Related:
-
-• `features'"
-
-  (interactive)
-
-  (let ((PROMPT (format "%s: "
-                        (or prompt "Feature")))
-
-        (REQUIRE-MATCH (or require-match t))
-        (INITIAL-INPUT (or initial-input "sboo-"))
-        (CANDIDATES features)
-        )
-
-    (let* ((STRING (completing-read PROMPT CANDIDATES nil REQUIRE-MATCH INITIAL-INPUT))
-           (SYMBOL (intern-soft STRING))
-           )
-
-      SYMBOL)))
-
-;INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
-
-;; ^ Notes
-;;
-;; M-: (type-of features)
-;; 'cons
-;;
-;; 
-;;
-
-;;----------------------------------------------;;
-
 (cl-defmacro sboo-assert! (form &key message) ;TODO;
   
   "Assert that FORM is t.

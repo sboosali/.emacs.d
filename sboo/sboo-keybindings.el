@@ -100,14 +100,20 @@ Links:
 
 ;;==============================================;;
 
-;;TODO; (add-to-list 'display-buffer-alist '("\\*Flycheck errors\\*" display-buffer-same-window (inhibit-same-window)))
+(defun sboo-switch-to-previous-buffer ()
 
-(defun sboo-flycheck ()
+  "Switch to previously open buffer.
+Repeated invocations toggle between the two most recently open buffers.
+
+Calls `switch-to-buffer'.
+
+Links:
+
+• URL `https://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/'"
+
   (interactive)
-  (progn
-    (delete-other-windows)
-    (flycheck-list-errors)
-    ()))
+
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
 
 ;;==============================================;;
 
@@ -221,6 +227,9 @@ Wraps `forward-thing'."
 (global-set-key (kbd "M-r") #'query-replace-regexp)
 (global-set-key (kbd "M-g") #'goto-line)
 
+(global-set-key (kbd "M-`") #'sboo-switch-to-previous-buffer)
+(global-set-key (kbd "M-~") #'sboo-switch-to-previous-buffer)
+
 (global-set-key (kbd "M-<up>")   #'beginning-of-buffer)
 (global-set-key (kbd "M-<down>") #'end-of-buffer)
 
@@ -241,13 +250,13 @@ Wraps `forward-thing'."
 ;;; KeyPad (`kp-' Keybindings...
 ;;==============================================;;
 
-(global-set-key (kbd "<kp-divide>") #'sboo-flycheck)
+(global-set-key (kbd "<kp-end>")   #'delete-other-windows)
 
 (global-set-key (kbd "<kp-left>")  #'next-buffer)
 (global-set-key (kbd "<kp-right>") #'previous-buffer)
 
-(global-set-key (kbd "<kp-up>")   #'sboo-prior-definition)
-(global-set-key (kbd "<kp-down>") #'sboo-next-definition)
+(global-set-key (kbd "<kp-up>")    #'sboo-prior-definition)
+(global-set-key (kbd "<kp-down>")  #'sboo-next-definition)
 
 ;;==============================================;;
 ;;; Super (`s-') Keybindings...

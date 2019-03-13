@@ -784,13 +784,13 @@ Laws:
 
   ;;TODO;; mode of « *Flycheck errors* » (e.g. « *Flycheck errors for buffer ...* »)
 
-  :bind ;;TODO move to hook for any `prog-mode'.
+  :config
 
-  (("<kp-divide>" . flycheck-list-errors)
-   ;; ("<kp-down>"   . flycheck-next-error)        ; i.e. KeyPad 6.
-   ;; ("<kp-up>"     . flycheck-previous-error))   ; i.e. KeyPad 4.
-   )
+  (add-hook 'flycheck-error-list-mode-hook #'visual-line-mode)
 
+  (when (require 'sboo-flycheck nil :no-error)
+    (bind-key "<kp-divide>" #'sboo-flycheck)
+    (add-to-list 'display-buffer-alist sboo-flycheck-display-buffer))
 
   ())
 
@@ -808,6 +808,29 @@ Laws:
 
 ;; (use-package deft
 ;;   :config
+
+;;----------------------------------------------;;
+
+(use-package edit-indirect
+
+  :commands (edit-indirect-region)
+
+  :config
+
+  (defun sboo-edit-indirect-guess-mode (parent-buffer parent-region-begin parent-region-end)
+
+    "Guess the major mode for an edit-indirect buffer.
+
+Calls `set-auto-mode', which parses the « mode » file-local (special) variable 
+(i.e. « -*- mode: ... -*- »)."
+
+    (set-auto-mode t))
+
+  (customize-set-variable 'edit-indirect-guess-mode-function
+                          #'sboo-edit-indirect-guess-mode
+                          "`edit-indirect-guess-mode-function' is `edit-indirect-default-guess-mode' by default.")
+
+  ())
 
 ;;----------------------------------------------;;
 
@@ -911,10 +934,14 @@ Laws:
     (when (require 'sboo-ghc nil :no-error)
 
       (dolist (EXTENSION sboo-ghc-language-extensions)
-        (cl-pushnew EXTENSION haskell-ghc-supported-extensions :test #'equal))
+        (cl-pushnew EXTENSION
+                    haskell-ghc-supported-extensions
+                    :test #'equal))
 
       (dolist (OPTION sboo-ghc-compiler-options)
-        (cl-pushnew OPTION haskell-ghc-supported-options :test #'equal)))
+        (cl-pushnew OPTION
+                    haskell-ghc-supported-options
+                    :test #'equal)))
 
     ())
 

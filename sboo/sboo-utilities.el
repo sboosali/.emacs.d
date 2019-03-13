@@ -401,6 +401,40 @@ Laws:
 ;; -------------------------------------;;
 ;;----------------------------------------------;;
 
+;;==============================================;;
+
+(cl-defun sboo-serialize (&key data file)
+
+  "Write DATA to FILE."
+
+  (interactive (list
+                (symbol-value (intern-soft (completing-read "Serialize variable: " obarray nil t)))
+                (read-file-name "Write to file: ")
+                ))
+
+  (with-temp-file file
+
+    (prin1 data (current-buffer))))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-deserialize (&key file symbol)
+
+  "Read FILE into SYMBOL."
+
+  (interactive (list
+                (read-file-name "Read from file: ")
+                (read-string "Deserialize into variable: ")
+                ))
+
+  (with-temp-buffer
+
+    (insert-file-contents file)
+    (goto-char (point-min))
+    (set symbol (read (current-buffer)))))
+
+;;==============================================;;
+
 ;;----------------------------------------------;;
 ;;; Notes: -------------------------------------;;
 ;;----------------------------------------------;;

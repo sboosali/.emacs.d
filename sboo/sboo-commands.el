@@ -1,4 +1,4 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Custom `interactive' commands.
 ;;
 ;; (This `feature' is "pure" (it has declarations only, no settings)).
@@ -9,20 +9,25 @@
 ;; See my `define-graceful-command` macro, for conveniently defining commands with fallbacks
 ;; (when external packages haven't been installed and/or can't be loaded).
 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+
+;; builtin utilities:
 
 (require 'cl-lib)
+
+;; builtin packages:
+
 (require 'shell)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; personal packages:
 
 (require 'sboo-conditions)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Utilities: Macros ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defmacro define-graceful-command (Name ExternalCommand BuiltinCommand &optional DocString)
 
@@ -50,7 +55,7 @@
 ;; NOTE the predicates succeed even when command is marked with `autoload'.
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (cl-defmacro define-graceful-boolean-command 
 
@@ -83,9 +88,9 @@
 ;; - 
 ;; 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Cycle Through (& Toggle Between) User Buffers
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; Problems with `next-buffer' / `previous-buffer':
 ;;
@@ -98,7 +103,7 @@
 ;;     - http://ergoemacs.org/emacs/elisp_next_prev_user_buffer.html
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun xah-next-user-buffer ()
 
@@ -117,7 +122,7 @@ Version 2016-06-19"
                  (setq i (1+ i)))
         (progn (setq i 100))))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun xah-prior-user-buffer ()
 
@@ -136,7 +141,7 @@ Version 2016-06-19"
                  (setq i (1+ i)))
         (progn (setq i 100))))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun xah-user-buffer-q ()
 
@@ -154,7 +159,7 @@ version 2016-06-18"
       t
       )))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-toggle-buffer ()
 
@@ -172,9 +177,9 @@ version 2016-06-18"
     (other-buffer (current-buffer) 1)))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Window Management,
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-split-window-left-right ();;TODO
 
@@ -194,11 +199,11 @@ version 2016-06-18"
 ;; ^
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Files
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun xah-open-file-at-cursor ()
   "Open the file path under cursor.
@@ -251,9 +256,9 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 ;; - open the file path under cursor, without confirmation;
 ;; - and jump to line number, if the path ends with ":<number>".
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Shell / Terminal.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-launch-shell ();;TODO
 
@@ -280,7 +285,7 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
   ;; NOTE `shell` doesn't have an option for the `'force-same-window` behavior.
   ;; 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-launch-term ()
 
@@ -296,7 +301,7 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filesystem Navigation.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-find-file ()
 
@@ -313,9 +318,9 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 
     (call-interactively #'find-file)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Text Navigation.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 
 (defun xah-search-current-word ()
@@ -350,24 +355,24 @@ Version 2015-04-09"
 
     (isearch-yank-string (buffer-substring-no-properties $p1 $p2))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Projectile.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-projectile-find-file ()
   (interactive)
   (projectile-find-file))
   ;;OLD (projectile-find-file (make-hash-table))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; (defun sboo-projectile-grep ()
 ;;   (interactive)
 ;;   (projectile-grep))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Macros
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-kmacro-insert-counter-letter ()
 
@@ -378,9 +383,9 @@ Version 2015-04-09"
     (insert (make-string 1 (+ ?a kmacro-counter)))
     (kmacro-add-counter 1)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Unicode insertion.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-insert-angle-quote-left ()
   
@@ -390,7 +395,7 @@ Version 2015-04-09"
 
   (insert "« "))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-insert-angle-quote-right ()
   
@@ -400,7 +405,7 @@ Version 2015-04-09"
   
   (insert " »"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-insert-triple-equals-sign ()
   
@@ -410,7 +415,7 @@ Version 2015-04-09"
   
   (insert "≡ "))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-insert-black-circle ()
   
@@ -419,7 +424,7 @@ Version 2015-04-09"
   
   (insert "●"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-insert-dash ()
   
@@ -428,7 +433,7 @@ Version 2015-04-09"
   
   (insert "—"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-insert-null ()
   
@@ -437,9 +442,9 @@ Version 2015-04-09"
   
   (insert "∅"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Commands that Gracefully Degrade ;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;(defun sboo-M-x (PrefixArgument)
 ;
@@ -458,7 +463,7 @@ Version 2015-04-09"
 ;;  (When `helm' isn't loaded/installed, this command falls back 
 ;;  to the standard-library command upon which that package improves.)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-buffers-list (PrefixArgument)
 
@@ -473,7 +478,7 @@ Version 2015-04-09"
 ;;;(defalias sboo-buffers-list helm-buffers-list)
 ;;;(define-graceful-command sboo-buffers-list helm-buffers-list list-buffers)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (define-graceful-command sboo-search
           xah-search-current-word
@@ -489,7 +494,7 @@ Version 2015-04-09"
 ;; - isearch-forward-regexp
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-guess-open-command ()
 
@@ -529,11 +534,130 @@ file of a buffer in an external program."
                       " "
                       _FILENAME_)))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
+
+;;----------------------------------------------;;
+
+;;TODO https://stackoverflow.com/questions/22434484/emacs-modes-highlighting-uses-of-variable-under-point
+
+
+;;==============================================;;
+
+(defvar sboo-comment-h2-alist
+
+  '(
+
+    (haskell-mode    . "--------------------------------------------------")
+    (emacs-lisp-mode . ";;----------------------------------------------;;")
+    (nix-mode        . "#------------------------------------------------#")
+    (bash-mode       . "#------------------------------------------------#")
+    (python-mode     . "#------------------------------------------------#")
+
+    )
+
+  "Comment dividors per `major-mode'.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-comment-h2-default
+
+  "#------------------------------------------------#"
+
+  "The default comment dividor.")
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-comment-h2 ()
+
+  "Insert a (« <h2> »-style) comment dividor.
+
+Related:
+
+• `sboo-comment-h2-alist'
+• `sboo-comment-h2-default'"
+
+  (interactive)
+
+  (let* ((COMMENT (alist-get major-mode sboo-comment-h2-alist))
+        )
+
+    (if COMMENT
+        (insert COMMENT)
+      (insert sboo-comment-h2-default))
+
+    (insert "\n")))
+
+;;==============================================;;
+
+(cl-defun sboo-read-feature (&key prompt require-match initial-input)
+
+  "Read a `featurep' symbol.
+
+Related:
+
+• `features'"
+
+  (interactive)
+
+  (let ((PROMPT (format "%s: "
+                        (or prompt "Feature")))
+
+        (REQUIRE-MATCH (or require-match t))
+        (INITIAL-INPUT (or initial-input "sboo-"))
+        (CANDIDATES features)
+        )
+
+    (let* ((STRING (completing-read PROMPT CANDIDATES nil REQUIRE-MATCH INITIAL-INPUT))
+           (SYMBOL (intern-soft STRING))
+           )
+
+      SYMBOL)))
+
+;; ^ Notes
+;;
+;; M-: (type-of features)
+;; 'cons
+;;
+;; 
+;;
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-read-command (&key prompt require-match initial-input)
+
+  "Read a `commandp' symbol.
+
+Related:
+
+• `obarray'"
+
+  (interactive)
+
+  (let ((PROMPT (format "%s: "
+                        (or prompt "Command")))
+
+        (REQUIRE-MATCH (or require-match t))
+        (INITIAL-INPUT (or initial-input "sboo-"))
+        )
+
+    (let* ((STRING (completing-read PROMPT obarray #'commandp REQUIRE-MATCH INITIAL-INPUT))
+           (SYMBOL (intern-soft STRING))
+           )
+
+      SYMBOL)))
+
+;; ^ Notes
+;;
+;; M-: (type-of obarray)
+;; 'vector
+;;
+
+;;==============================================;;
+
+;;----------------------------------------------;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; Interactive Commands
 ;; ====================
@@ -591,5 +715,5 @@ file of a buffer in an external program."
 ;;    - http://www.wilkesley.org/~ian/xah/emacs/emacs_open_file_path_fast.html
 ;;    - 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 (provide 'sboo-commands)
