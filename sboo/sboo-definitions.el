@@ -1,4 +1,10 @@
-;;; Core Definitions (no Statements) for SBoo's Emacs Configuration -*- lexical-binding: t -*-
+;;; -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;; Core definitions (no statements) for « sboo »'s emacs configuration
+;;
+;; 
 
 ;;; Code:
 

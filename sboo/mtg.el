@@ -46,6 +46,39 @@
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 
+(defun mtg-insert-card (card)
+
+  "Read an MTG card name, from `mtg-card-names'."
+
+  (interactive (list (mtg-read-card-name)))
+
+  (insert card))                        ;TODO different styles, versions (old, new), name-only or full-text or image, surround with backticks, etc.
+
+;;----------------------------------------------;;
+
+(defun mtg-read-card-name ()
+
+  "Read an MTG card name, from `mtg-card-names'."
+
+  (interactive)
+
+  (when (require 'mtg nil :no-error)
+
+    (let ((PROMPT (format "%s: "
+                          "Card name"))
+
+          (PREDICATE     nil)
+          (REQUIRE-MATCH nil)
+          (INITIAL-INPUT nil)
+
+          (CANDIDATES (mtg-card-names))
+          )
+
+      (let* ((STRING (completing-read PROMPT CANDIDATES PREDICATE REQUIRE-MATCH INITIAL-INPUT))
+             )
+
+        STRING))))
+
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;

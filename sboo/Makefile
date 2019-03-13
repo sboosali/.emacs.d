@@ -58,7 +58,7 @@ clean:
 
 mtg-card-names.list.el: mtg-card-names.txt
 
-	./print-mtg-card-names # >  $@
+	./print-mtg-card-names  >  $@
 
 #------------------------------------------------#
 

@@ -774,7 +774,7 @@ Laws:
 
 (use-package flycheck
 
-  :defer t
+  :commands (flycheck-mode)
 
   ;;^
   ;; deferred because flycheck is "more framework than application".
@@ -783,6 +783,10 @@ Laws:
   ;;TODO;; style « *Flycheck error messages* »
 
   ;;TODO;; mode of « *Flycheck errors* » (e.g. « *Flycheck errors for buffer ...* »)
+
+  :init
+
+  (require 'seq)
 
   :config
 
@@ -1525,6 +1529,12 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;----------------------------------------------;;
 ;;
 
+;; (use-package vlf
+
+;;   :config
+;;   (require 'vlf-setup)
+
+;;   )
 
 ;;----------------------------------------------;;
 ;;

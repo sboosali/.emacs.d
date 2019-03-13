@@ -9,7 +9,8 @@
   (with-temp-buffer
     (insert-file-contents file)
     (goto-char (point-min))
-    (split-string (buffer-string) "\n" t)))
+    (mapcar #'read
+     (split-string (buffer-string) "\n" t))))
 
 ;;----------------------------------------------;;
 

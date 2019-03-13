@@ -1,30 +1,21 @@
 # -*- mode: snippet -*-
 #
-# key         : defun
-# name        : a verbose « defun » declaration.
-# condition   : (= (length "defun") (current-column))
+# key         : defun0
+# name        : a verbose (nullary) « defun » declaration.
+# condition   : (= (length "defun0") (current-column))
 # expand-env  : ((yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
 ;;----------------------------------------------;;
 
-(defun sboo-${1:name} (${2:input})
+(defun sboo-${1:name} ()
 
-  "$3.
-
-Inputs:
-
-• ${2:$(upcase yas-text)} — a .
+  "$2.
 
 Output:
 
 • a .
-
-Example:
-
-• M-: (sboo-$1 )
-    ⇒ 
 
 Links:
 
