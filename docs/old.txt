@@ -386,11 +386,21 @@ Output:
 
 ;;----------------------------------------------;;
 
---------------------------------------------------
---------------------------------------------------
+  (defun sboo-edit-indirect-guess-mode (parent-buffer parent-region-begin parent-region-end)
 
---------------------------------------------------
---------------------------------------------------
+    "Guess the major mode for an edit-indirect buffer.
+
+Calls `set-auto-mode', which parses the « mode » file-local (special) variable 
+(i.e. « -*- mode: ... -*- »)."
+
+    (set-auto-mode t)
+
+    (if-let* (
+              )
+
+        ()
+
+      (prog-mode)))
 
 ;;----------------------------------------------;;
 
