@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+#
+# key         : h1-underlined
+# name        : an « h1 » header (via « === »)
+# condition   : (= (length "h1-underlined") (current-column))
+# expand-env  : ((yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+${1:Example H2}
+${1:$(make-string (string-width yas-text) ?\=)}
+
+$0

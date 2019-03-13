@@ -1,10 +1,11 @@
 # -*- mode: snippet -*-
 #
-# key         : =alias
-# name        : a `defalias` declaration.
+# key         : defalias
+# name        : a concise « defalias » declaration.
+# condition   : (= (length "defalias") (current-column))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-# contributor : Spiros Boosalis
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
-(defalias '/${1:$(apply #'string (mapcar #'string-to-char (split-string yas-text "[-/]+" t)))} #'${1:some-command})
+(defalias '/${1:$(apply #'string (mapcar #'string-to-char (split-string yas-text "[-/]+" t)))} #'${1:$(completing-read "Command: " obarray #'commandp t "sboo-")})
 $0

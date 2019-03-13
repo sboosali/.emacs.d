@@ -1,0 +1,38 @@
+# -*- mode: snippet -*-
+#
+# key         : defcom1
+# name        : a verbose, « interactive », unary « defun » declaration.
+# condition   : (= (length "defcom1") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# --
+;;----------------------------------------------;;
+
+;;;###autoload
+(defun sboo-${1:name} (${2:input})
+
+  "$3.
+
+Inputs:
+
+• ${2:$(upcase yas-text)} — a .
+
+Example:
+
+• M-x sboo-$1<RET> $2<RET>
+    ⇒ ()
+
+Links:
+
+• URL `'
+
+Related:
+
+• `sboo-read-$2'"
+
+  (interactive${2:$(if-let* ((INPUT yas-text)) (format " (list (sboo-read-%s))" INPUT) "")})
+
+  (let* ((${2:$(upcase yas-text)} $2)
+        )
+
+    `yas-selected-text`$0))

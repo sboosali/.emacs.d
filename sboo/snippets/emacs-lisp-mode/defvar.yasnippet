@@ -1,10 +1,15 @@
 # -*- mode: snippet -*-
 #
-# key         : =var
-# name        : a `defvar` declaration.
+# key         : defvar
+# name        : a « defvar » declaration.
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-# contributor : Spiros Boosalis
+# contributor : Spiros Boosalis <samboosalis@gmail> 
 #
 # --
-(defvar ${1:some-variable} ${2:nil} "$3")
-$0
+;;----------------------------------------------;;
+
+(defvar sboo-${1:name}
+
+  ${2:nil}
+
+  "$0.")

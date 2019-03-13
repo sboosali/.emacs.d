@@ -1,15 +1,20 @@
 # -*- mode: snippet -*-
 #
-# key         : =group
-# name        : « =group » a `defgroup` declaration.
-# condition   : (= (length "=group") (current-column))
-# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-# contributor : Spiros Boosalis
+# key         : defgroup
+# name        : a concise « defgroup » declaration.
+# condition   : (= (length "defgroup") (current-column))
+# expand-env  : ((yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-(defgroup ${1:`(buffer-name)`} nil
+(defgroup sboo-${1:name}
+
+  nil
+
   "$0."
+
   :group '$2)
 
+  ${2:nil}

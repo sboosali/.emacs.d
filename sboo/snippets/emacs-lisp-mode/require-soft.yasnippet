@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+#
+# key         : require=
+# name        : a « require » expression.
+# condition   : (not (= (length "require") (current-column)))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+(require '`
+(completing-read "Feature: " features nil t "sboo-")
+` t :no-error)

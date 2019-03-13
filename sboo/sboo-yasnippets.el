@@ -1,14 +1,30 @@
 ;;; -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;----------------------------------------------;;
+
 (defun sboo-yas-reload ()
 
-  "Recompile and reload all `.yasnippet' files."
+  "Recompile and reload all « .yasnippet » files."
+
   (interactive)
 
-  (progn
-    (yas-recompile-all)
-    (yas-reload-all)))
+  (yas-recompile-all)
+  (yas-reload-all))
+
+;; http://ergoemacs.org/emacs/emacs_tip_yasnippet_expand_whole_hyphenated_word.html
+;; (setq yas-key-syntaxes '("w_" "w_." "^ "))
+                                        ; default is (yas-try-key-from-whitespace "w_.()" "w_." "w_" "w") (circa 2019-03-12).
+
+
+;; # uuid: unique identifier
+;; This provides to a way to identify a snippet, independent of its name. Loading a second snippet file with the same uuid would replace the previous snippet.
+
+;; group: snippet menu grouping
+;; When expanding/visiting snippets from the menu-bar menu, snippets for a given mode can be grouped into sub-menus . This is useful if one has too many snippets for a mode which will make the menu too long.
+;; The # group: property only affect menu construction (See the YASnippet menu) and the same effect can be achieved by grouping snippets into sub-directories and using the .yas-make-groups special file (for this see Organizing Snippets
+
+;;----------------------------------------------;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -43,7 +59,7 @@
 
 ;; See:
 ;;
-;; - http://joaotavora.github.io/yasnippet/
+;; - URL `http://joaotavora.github.io/yasnippet/'
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

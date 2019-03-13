@@ -1,0 +1,40 @@
+# -*- mode: snippet -*-
+#
+# key         : defun
+# name        : a verbose « defun » declaration.
+# condition   : (= (length "defun") (current-column))
+# expand-env  : ((yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(defun sboo-${1:name} (${2:input})
+
+  "$3.
+
+Inputs:
+
+• ${2:$(upcase yas-text)} — a .
+
+Output:
+
+• a .
+
+Example:
+
+• M-: (sboo-$1 )
+    ⇒ 
+
+Links:
+
+• URL `'
+
+Related:
+
+• `'"
+
+  (let* (()
+        )
+
+    `yas-selected-text`$0))

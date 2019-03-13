@@ -1,0 +1,34 @@
+# -*- mode: snippet -*-
+#
+# key         : defcom
+# name        : a verbose, « interactive » (nullary) « defun » declaration.
+# condition   : (= (length "defcom") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# --
+;;----------------------------------------------;;
+
+
+(defun sboo-${1:name} ()
+
+  "$3.
+
+Example:
+
+• M-x sboo-$1 <RET>
+    ⇒ ()
+
+Links:
+
+• URL \`'
+
+Related:
+
+• \`'"
+
+  (interactive)
+
+  (let* (()
+        )
+
+    `yas-selected-text`$0))

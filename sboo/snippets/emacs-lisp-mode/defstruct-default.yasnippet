@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+#
+# key         : defstruct
+# name        : a « cl-defstruct » declaration.
+# condition   : (= (length "defstruct") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(cl-defstruct (sboo-${1:NAME}
+               (:constructor sboo-$1-create)
+               (:copier      nil))
+
+  ${2:x} ${3:y} $0)
+

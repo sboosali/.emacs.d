@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+#
+# key         : format=
+# name        : the « format » function.
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# --
+(format "${1:example format %s}" "${2:example-value}"$0) ; ⇒ "${1:$(ignore-errors (format (yas-field-value 1) (yas-field-value 2)))}"
