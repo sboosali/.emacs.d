@@ -435,6 +435,109 @@ Laws:
 
 ;;==============================================;;
 
+(defun xah-css-normalize-number-scale (@val @range-max)
+  "Scale *val from range [0, *range-max] to [0, 1]
+The arguments can be int or float.
+Return value is float.
+URL `http://ergoemacs.org/emacs/emacs_CSS_colors.html'
+Version 2016-07-19"
+  (/ (float @val) (float @range-max)))
+
+;;----------------------------------------------;;
+
+(defun xah-css-convert-color-hex-to-vec (@rrggbb)
+  "Convert color *rrggbb from “\"rrggbb\"” string to a elisp vector [r g b], where the values are from 0 to 1.
+Example:
+ (xah-css-convert-color-hex-to-vec \"00ffcc\") ⇒ [0.0 1.0 0.8]
+
+Note: The input string must NOT start with “#”.
+URL `http://ergoemacs.org/emacs/emacs_CSS_colors.html'
+Version 2016-07-19"
+  (vector
+   (xah-css-normalize-number-scale (string-to-number (substring @rrggbb 0 2) 16) 255)
+   (xah-css-normalize-number-scale (string-to-number (substring @rrggbb 2 4) 16) 255)
+   (xah-css-normalize-number-scale (string-to-number (substring @rrggbb 4) 16) 255)))
+
+;;----------------------------------------------;;
+
+(defun xah-css-hex-color-to-hsl ()
+  "Convert color spec under cursor from “#rrggbb” to CSS HSL format.
+ e.g. #ffefd5 ⇒ hsl(37,100%,91%)
+URL `http://ergoemacs.org/emacs/elisp_convert_rgb_hsl_color.html'
+Version 2016-07-19"
+  (interactive)
+
+  (require 'color)
+
+  (let* (
+         ($bds (bounds-of-thing-at-point 'word))
+         ($p1 (car $bds))
+         ($p2 (cdr $bds))
+         ($currentWord (buffer-substring-no-properties $p1 $p2)))
+    (if (string-match "[a-fA-F0-9]\\{6\\}" $currentWord)
+        (progn
+          (delete-region $p1 $p2 )
+          (when (equal (char-before) 35) ; 35 is #
+            (delete-char -1))
+          (insert (xah-css-hex-to-hsl-color $currentWord )))
+      (progn
+        (user-error "The current word 「%s」 is not of the form #rrggbb." $currentWord)))))
+
+;;----------------------------------------------;;
+
+(defun sboo-css-hex-to-hsl-color (hex-str &optional was-called-interactively)
+
+  "Convert HEX-STR color to CSS HSL format.
+
+Output:
+
+• a string. 
+
+Examples: 
+
+• M-: (sboo-css-hex-to-hsl-color \"ffefd5\")
+    ⇒ \"hsl(37,100%,91%)\"
+
+Note: The input string must NOT start with “#”.
+
+Links:
+
+• URL `http://ergoemacs.org/emacs/emacs_CSS_colors.html'"
+
+  (interactive (list (read-string "Hex String (case-insensitive) (e.g. « AC00AB »): ") ;TODO force length=6 (or 3, or 1) and case-insensitive hexadecimal.
+                     t
+                     ))
+
+  (require 'color)
+
+  (let* (($colorVec (xah-css-convert-color-hex-to-vec hex-str))
+
+         ($R        (elt $colorVec 0))
+         ($G        (elt $colorVec 1))
+         ($B        (elt $colorVec 2))
+
+         ($hsl      (color-rgb-to-hsl $R $G $B))
+
+         ($H        (elt $hsl 0))
+         ($S        (elt $hsl 1))
+         ($L        (elt $hsl 2))
+
+         ($h        (* $H 360))
+         ($s        (* $S 100))
+         ($l        (* $L 100))
+
+         (hsl-string (format "hsl(%d,%d%%,%d%%)" $h $s $l))
+         )
+
+    (when was-called-interactively
+      (message "%s" hsl-string))
+
+    hsl-string))
+
+;;==============================================;;
+
+;;==============================================;;
+
 ;;----------------------------------------------;;
 ;;; Notes: -------------------------------------;;
 ;;----------------------------------------------;;
