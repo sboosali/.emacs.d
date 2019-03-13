@@ -30,7 +30,13 @@
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 
+;; sboo-color--*
+
 ;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+;; sboo-color-*
 
 (cl-defun sboo-color-parse-json (&key file string)
 
@@ -64,8 +70,6 @@ Links:
                    (throw 'sboo-color-parse-json))))
          )
 
-    (require 'json)
-
     (let* ((json-object-type 'hash-table)
            (json-array-type  'list)
            (json-key-type    'string)
@@ -87,8 +91,6 @@ Links:
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
-
 (defcustom sboo-color-alist
 
   '( 
@@ -102,14 +104,45 @@ Associates color names with hex values."
                 :value-type (choice (const nil)
                                     (string :tag "Hex value")))
 
-  :safe t
-
+  :safe  t
   :group 'sboo)
 
 ;;----------------------------------------------;;
-;; Functions -----------------------------------;;
+
+(defcustom sboo-color-json-file
+
+  "colornames.json"
+
+  "JSON file of color names.
+
+Schema:
+
+• is « [ {\"name\":\"string\", \"hex\":\"string\"} ] »
+
+Data source for `sboo-color-alist'."
+
+  :type '(string :tag "FILE.json")
+
+  :safe  t
+  :group 'sboo)
+
 ;;----------------------------------------------;;
 
+(defcustom sboo-color-elisp-file
+
+  "colornames.alist.el"
+
+  "Elisp file of color names.
+
+Data source for `sboo-color-alist'."
+
+  :type '(string :tag "FILE.el")
+
+  :safe  t
+  :group 'sboo)
+
+;;----------------------------------------------;;
+;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 
 (cl-defun sboo-color-read (&key prompt require-match initial-input)
@@ -145,7 +178,14 @@ Related:
         (INITIAL-INPUT (or initial-input ""))
         )
 
-    (let* ((STRING (completing-read PROMPT sboo-color-alist nil REQUIRE-MATCH INITIAL-INPUT))
+    (let* ((has_sboo-color-alist_been_set? (not (eq nil sboo-color-alist))) ;TODO; or check/set a global flag, defaulting to X11's « colors.txt »
+
+           (CANDIDATES (progn
+                         (unless has_sboo-color-alist_been_set?
+                           ())
+                         sboo-color-alist))
+
+           (STRING (completing-read PROMPT CANDIDATES nil REQUIRE-MATCH INITIAL-INPUT))
            (COLOR  )
            )
 
@@ -154,6 +194,8 @@ Related:
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
-
+;;
+;; 
+;;
 ;;----------------------------------------------;;
 (provide 'sboo-color)

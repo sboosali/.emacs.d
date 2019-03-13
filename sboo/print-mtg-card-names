@@ -1,0 +1,20 @@
+#!/usr/bin/emacs --script
+
+;;----------------------------------------------;;
+
+(defun sboo--read-lines (file)
+
+  "Read FILE as a list of (quoted) strings (one per line)."
+
+  (with-temp-buffer
+    (insert-file-contents file)
+    (goto-char (point-min))
+    (split-string (buffer-string) "\n" t)))
+
+;;----------------------------------------------;;
+
+(prin1 (sboo--read-lines "./mtg-card-names.txt"))
+
+;;----------------------------------------------;;
+
+;; URL `http://ergoemacs.org/emacs/elisp_read_file_content.html'

@@ -54,10 +54,17 @@ clean:
 ##################################################
 # Files ##########################################
 ##################################################
+#------------------------------------------------#
 
-colornames.alist.el: colornames.json
+mtg-card-names.list.el: mtg-card-names.txt
 
-	./print-colornames > $@
+	./print-mtg-card-names # >  $@
+
+#------------------------------------------------#
+
+mtg-card-names.txt: scryfall-default-cards.json
+
+	cat $^  |  jq ".[].name"  | sort | uniq  >  $@
 
 #------------------------------------------------#
 
@@ -65,6 +72,25 @@ scryfall-default-cards.alist.el: scryfall-default-cards.json
 
 	./print-scryfall-cards > $@
 
+#------------------------------------------------#
+
+colornames.alist.el: colornames.json
+
+	./print-colornames > $@
+
+#------------------------------------------------#
+
+scryfall-default-cards.json:
+
+	wget "https://archive.scryfall.com/json/scryfall-default-cards.json"
+
+#------------------------------------------------#
+
+colornames.json:
+
+	wget "https://unpkg.com/color-name-list@3.64.0/dist/colornames.json"
+
+#------------------------------------------------#
 ##################################################
 # EOF ############################################
 ##################################################

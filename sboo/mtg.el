@@ -34,40 +34,6 @@
 
 ;; color cmc supertypes subtypes layout watermark collector language
 
-    "name"              : "Ancestral Recall",
-
-    "lang"              : "en",
-
-    "scryfall_uri"      : "https://scryfall.com/card/ovnt/2018/ancestral-recall?utm_source=api",
-
-image_uris.png             : "https://img.scryfall.com/cards/png/en/ovnt/2018.png?1523193176",
-image_uris.art_crop        : "https://img.scryfall.com/cards/art_crop/en/ovnt/2018.jpg?1523193176",
-
-    "mana_cost"         : "{U}",
-
-    "cmc"               : 1,
-
-    "type_line"         : "Instant",
-
-    "oracle_text"       : "Target player draws three cards.",
-
-    "colors"            : [ "U" ],
-
-    "color_identity"    : [ "U" ],
-
-      "legalities.standard"        : "not_legal",
-      "legalities.vintage"         : "restricted",
-
-    "rulings_uri"       : "https://api.scryfall.com/cards/d392392e-6c36-44e4-a037-2b788a088891/rulings",
-
-    "rarity"            : "mythic",
-
-    "artist"            : "Raoul Vitale",
-
-    "border_color"      : "black",
-
-    "frame"             : "2015",
-
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
@@ -175,5 +141,41 @@ image_uris.art_crop        : "https://img.scryfall.com/cards/art_crop/en/ovnt/20
 ;;
 ;; 
 ;;
+
+;;TODO....
+;;    "name"              : "Ancestral Recall",
+
+;;     "lang"              : "en",
+
+;;     "scryfall_uri"      : "https://scryfall.com/card/ovnt/2018/ancestral-recall?utm_source=api",
+
+;; image_uris.png             : "https://img.scryfall.com/cards/png/en/ovnt/2018.png?1523193176",
+;; image_uris.art_crop        : "https://img.scryfall.com/cards/art_crop/en/ovnt/2018.jpg?1523193176",
+
+;;     "mana_cost"         : "{U}",
+
+;;     "cmc"               : 1,
+
+;;     "type_line"         : "Instant",
+
+;;     "oracle_text"       : "Target player draws three cards.",
+
+;;     "colors"            : [ "U" ],
+
+;;     "color_identity"    : [ "U" ],
+
+;;       "legalities.standard"        : "not_legal",
+;;       "legalities.vintage"         : "restricted",
+
+;;     "rulings_uri"       : "https://api.scryfall.com/cards/d392392e-6c36-44e4-a037-2b788a088891/rulings",
+
+;;     "rarity"            : "mythic",
+
+;;     "artist"            : "Raoul Vitale",
+
+;;     "border_color"      : "black",
+
+;;     "frame"             : "2015",
+
 ;;----------------------------------------------;;
 (provide 'mtg)
