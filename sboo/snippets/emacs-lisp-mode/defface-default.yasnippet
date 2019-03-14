@@ -1,0 +1,23 @@
+# -*- mode: snippet -*-
+#
+# key         : defface
+# name        : a « defface » declaration.
+# condition   : (= (length "defface") (current-column))
+# expand-env  : ((yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(defface sboo-${1:name}
+
+  ${2:nil}
+
+  "$0."
+
+  :type  '($3)
+
+  :safe  t
+
+  :group 'sboo)
+
