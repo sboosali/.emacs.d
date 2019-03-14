@@ -537,12 +537,147 @@ file of a buffer in an external program."
 
 ;;==============================================;;
 
-;;----------------------------------------------;;
-
 ;;TODO https://stackoverflow.com/questions/22434484/emacs-modes-highlighting-uses-of-variable-under-point
 
 
 ;;==============================================;;
+
+(defvar sboo-comment-character-default
+
+  ?#
+
+  "The default comment character.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-comment-infix-character-default
+
+  ?-
+
+  "The default comment character.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-comment-prefix-string-default
+
+  "#"
+
+  "The default comment character.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-comment-length-default
+
+  50
+
+  "How long comments should be.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-comment-h1-default
+
+  "##################################################"
+
+  "The default comment dividor.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-comment-h2-default
+
+  "#------------------------------------------------#"
+
+  "The default comment dividor.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-comment-character-alist
+
+  '(
+
+    (haskell-mode    . ?\-)
+    (emacs-lisp-mode . ?\;)
+    (nix-mode        . ?\#)
+    (bash-mode       . ?\#)
+    (python-mode     . ?\#)
+
+    )
+
+  "Comment characters per `major-mode'.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-comment-length-alist
+
+  '(
+    )
+
+  "Comment length per `major-mode'.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-comment-infix-character-alist
+
+  '(
+
+    (haskell-mode    . ?\-)
+    (emacs-lisp-mode . ?\-)
+    (nix-mode        . ?\-)
+    (bash-mode       . ?\-)
+    (python-mode     . ?\-)
+
+    )
+
+  "Comment characters per `major-mode'.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-comment-prefix-string-alist
+
+  '(
+
+    (haskell-mode    . "-- ")
+    (emacs-lisp-mode . ";;")
+    (nix-mode        . "#")
+    (bash-mode       . "#")
+    (python-mode     . "#")
+
+    )
+
+  "Comment characters per `major-mode'.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-comment-suffix-string-alist
+
+  '(
+
+    (haskell-mode    . " --")
+    (emacs-lisp-mode . ";;")
+    (nix-mode        . "#")
+    (bash-mode       . "#")
+    (python-mode     . "#")
+
+    )
+
+  "Comment characters per `major-mode'.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-comment-h1-alist
+
+  '(
+
+    (haskell-mode    . "-- ============================================ --")
+    (emacs-lisp-mode . ";;==============================================;;")
+    (nix-mode        . "##################################################")
+    (bash-mode       . "##################################################")
+    (python-mode     . "##################################################")
+
+    )
+
+  "Comment dividors per `major-mode'.")
+
+;;----------------------------------------------;;
 
 (defvar sboo-comment-h2-alist
 
@@ -560,11 +695,150 @@ file of a buffer in an external program."
 
 ;;----------------------------------------------;;
 
-(defvar sboo-comment-h2-default
+(defun sboo-comment-length ()
 
-  "#------------------------------------------------#"
+  "Lookup `sboo-comment-length-alist', defaulting to `sboo-comment-length-default'."
 
-  "The default comment dividor.")
+  (interactive)
+
+  (let* ((MODAL-LENGTH (alist-get major-mode sboo-comment-length-alist))
+         (LENGTH       (if MODAL-LENGTH
+                           MODAL-LENGTH
+                         sboo-comment-length-default))
+         )
+    LENGTH))
+
+;;----------------------------------------------;;
+
+(defun sboo-comment-infix-character ()
+
+  "Lookup `sboo-comment-infix-character-alist', defaulting to `sboo-comment-infix-character-default'."
+
+  (interactive)
+
+  (let* ((MODAL-CHAR (alist-get major-mode sboo-comment-infix-character-alist))
+         (CHAR       (if MODAL-CHAR
+                         MODAL-CHAR
+                       sboo-comment-infix-character-default))
+         )
+    CHAR))
+
+;;----------------------------------------------;;
+
+(defun sboo-comment-prefix-string ()
+
+  "Lookup `sboo-comment-prefix-string-alist', defaulting to `sboo-comment-prefix-string-default'."
+
+  (interactive)
+
+  (let* ((MODAL-STRING (alist-get major-mode sboo-comment-prefix-string-alist))
+         (STRING       (if MODAL-STRING
+                         MODAL-STRING
+                       sboo-comment-prefix-string-default))
+         )
+    STRING))
+
+;;----------------------------------------------;;
+
+(defun sboo-comment-suffix-string ()
+
+  "Lookup `sboo-comment-suffix-string-alist', defaulting to `sboo-comment-suffix-string-default'."
+
+  (interactive)
+
+  (let* ((MODAL-STRING (alist-get major-mode sboo-comment-suffix-string-alist))
+         (STRING       (if MODAL-STRING
+                         MODAL-STRING
+                       sboo-comment-suffix-string-default))
+         )
+    STRING))
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-comment-header (text)
+
+  "Insert a comment section header labeled TEXT.
+
+TEXT gets padded to `sboo-comment-length-default'.
+
+Related:
+
+• `sboo-insert-comment-h2'"
+
+  (interactive (list
+                (read-string "Text: ")
+                ))
+
+  (let* ((MODAL-COMMENT (alist-get major-mode sboo-comment-h2-alist))
+         (COMMENT       (if MODAL-COMMENT
+                            MODAL-COMMENT
+                          sboo-comment-h2-default))
+
+         (LENGTH         (sboo-comment-length))
+         (PREFIX         (sboo-comment-prefix-string))
+         (SUFFIX         (sboo-comment-suffix-string))
+         (PADDING-CHAR   (sboo-comment-infix-character))
+
+         (TEXT          (if (fboundp #'s-capitalize) ;TODO; customizeable sboo-capitalize-string
+                            (s-capitalize text)
+                          text))
+         (TEXT-PREFIX   (concat PREFIX " " TEXT " "))
+         (LINE          (concat (truncate-string-to-width TEXT-PREFIX
+                                                          (- LENGTH (length SUFFIX))
+                                                          nil
+                                                          PADDING-CHAR
+                                                          (char-to-string PADDING-CHAR))
+                                SUFFIX))
+         )
+
+    (progn
+      (insert COMMENT "\n")
+      (insert LINE    "\n")
+      (insert COMMENT "\n")
+      ())))
+
+;; ^ NOTES:
+;;
+;; (truncate-string-to-width STR END-COLUMN &optional START-COLUMN PADDING ELLIPSIS)
+;;
+;; e.g.:
+;;
+;; M-: (truncate-string-to-width "-- Example " (- 24 1) nil ?- "---")
+;;   ⇒ "-- Example ------------"
+;;
+;; M-: (string-width "\n")
+;;   ⇒ 0
+;;
+;; M-: (string-bytes "\x100")
+;;   ⇒ 2
+;;
+;; M-: (length "\n")
+;;   ⇒ 1
+;;
+;; 
+;;
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-comment-h1 ()
+
+  "Insert a (« <h1> »-style) comment dividor.
+
+Related:
+
+• `sboo-comment-h1-alist'
+• `sboo-comment-h1-default'"
+
+  (interactive)
+
+  (let* ((COMMENT (alist-get major-mode sboo-comment-h1-alist))
+        )
+
+    (if COMMENT
+        (insert COMMENT)
+      (insert sboo-comment-h1-default))
+
+    (insert "\n")))
 
 ;;----------------------------------------------;;
 
@@ -658,6 +932,16 @@ Related:
 ;;TODO sboo-read-environment-variable read-envvar-name
 
 ;;==============================================;;
+
+;;TODO emacs copy a lisp expression to the clipboard
+
+;; (kill-new 
+;; https://stackoverflow.com/questions/2178850/how-to-copy-to-clipboard-in-emacs-lisp
+
+;;==============================================;;
+
+;TODO few core buffers like home.nix and emacs.md
+;TODO known dirs like emacs, config, haskell, notes
 
 ;;----------------------------------------------;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
