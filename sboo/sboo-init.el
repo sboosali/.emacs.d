@@ -313,6 +313,8 @@ Laws:
 (sboo-load-file! "sboo-commands.el")
 (sboo-load-file! "sboo-keybindings.el")
 
+;;; TODO add-to-list
+
 ;;----------------------------------------------;;
 
 (when (and (>= emacs-major-version 26)
@@ -685,6 +687,38 @@ Laws:
 ;; (set-face-attribute 'Man-underline nil :inherit font-lock-keyword-face :underline t)
 
 ;;----------------------------------------------;;
+;; `package--builtins': ------------------------;;
+;;----------------------------------------------;;
+
+;; these features (below) can be configured with `use-package',
+;; because they are actual packages.
+;;
+;; See: (describe-variable 'package--builtins)
+
+;;----------------------------------------------;;
+
+(use-package calendar
+  :defer t
+  :config (setq calendar-week-start-day 1))
+
+;;----------------------------------------------;;
+
+(use-package vc
+  :defer t
+  :config (setq vc-follow-symlinks t))
+
+;;----------------------------------------------;;
+
+;; no multiframe ediff please
+(use-package ediff
+  :defer t
+  :config (setq ediff-window-setup-function 'ediff-setup-windows-plain))
+
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+;; Internal Packages: Settings -----------------;;
+;;----------------------------------------------;;
 
 (progn
 
@@ -774,7 +808,7 @@ Laws:
 
 (use-package flycheck
 
-  :commands (flycheck-mode)
+  :defer t
 
   ;;^
   ;; deferred because flycheck is "more framework than application".
@@ -783,10 +817,6 @@ Laws:
   ;;TODO;; style « *Flycheck error messages* »
 
   ;;TODO;; mode of « *Flycheck errors* » (e.g. « *Flycheck errors for buffer ...* »)
-
-  :init
-
-  (require 'seq)
 
   :config
 
@@ -1005,6 +1035,8 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
     (setq dante-tap-type-time 2)
 
     (setq sboo-haskell-eldoc 'dante)
+
+    ;(add-to-list 'display-buffer-alist sboo-dante-display-buffer)
 
     ())
 
@@ -1376,35 +1408,6 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; ;; ^ After 1 second of an unfinished key-press,
 ;; ;; show the documentation of the sub-keys available in the key sequence.
 
-;;----------------------------------------------;;
-;; `package--builtins': ------------------------;;
-;;----------------------------------------------;;
-
-;; these features (below) can be configured with `use-package',
-;; because they are actual packages.
-;;
-;; See: (describe-variable 'package--builtins)
-
-;;----------------------------------------------;;
-
-(use-package calendar
-  :defer t
-  :config (setq calendar-week-start-day 1))
-
-;;----------------------------------------------;;
-
-(use-package vc
-  :defer t
-  :config (setq vc-follow-symlinks t))
-
-;;----------------------------------------------;;
-
-;; no multiframe ediff please
-(use-package ediff
-  :defer t
-  :config (setq ediff-window-setup-function 'ediff-setup-windows-plain))
-
-;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
 ;; Builtin Features: ---------------------------;;
@@ -1512,8 +1515,8 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
-(use-package dired-sidebar
-  :commands (dired-sidebar-toggle-sidebar))
+;; (use-package dired-sidebar
+;;   :commands (dired-sidebar-toggle-sidebar))
 
 ;; ^ `dired-sidebar':
 ;;

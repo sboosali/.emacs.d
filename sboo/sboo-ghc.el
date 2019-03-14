@@ -672,7 +672,7 @@ Related:
 
 i.e.  « {-# ... #-} »."
 
-  :type '(list (string))
+  :type '(repeated (string))
 
   :safe t
 
@@ -938,7 +938,7 @@ i.e. « -X... ».
 
 Comes from « ghc --supported-extensions »."
 
-  :type '(list (string))
+  :type '(repeated (string))
 
   :safe t
 
@@ -2262,7 +2262,7 @@ i.e. « -... ».
 
 Comes from « ghc --show-options »."
 
-  :type '(list (string))
+  :type '(repeated (string))
 
   :safe t
 

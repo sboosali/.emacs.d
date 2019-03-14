@@ -117,6 +117,18 @@ Files:
 ;(add-hook 'd-mode-hook #'sboo-haskell-set-compile-command)))
 
 ;;----------------------------------------------;;
+
+(defvar sboo-dante-display-buffer
+
+  `( ,(rx bos "*dante:")
+     (display-buffer-reuse-window display-buffer-in-side-window)
+   )
+
+  "TODO This display rule tells Emacs to never bring-to-front the internal dante buffer.")
+
+;; e.g. a `dante' buffer: « *dante:spiros:lib:spiros:~/haskell/spiros/* »
+
+;;----------------------------------------------;;
 ;; ElDoc ---------------------------------------;;
 ;;----------------------------------------------;;
 

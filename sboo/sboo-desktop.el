@@ -198,9 +198,11 @@ See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c
   (interactive)
 
   (setq desktop-dirname sboo-desktop-directory)
+
   ;; ^
 
-  (setq desktop-restore-eager 100)
+  (setq desktop-restore-eager 10) ;TODO prioritize a few core buffers like home.nix and emacs.md
+
   ;; ^ The maximum number of buffers to restore immediately;
   ;; the remaining buffers are restored lazily (when Emacs is idle).
   ;;

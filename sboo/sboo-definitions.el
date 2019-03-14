@@ -404,7 +404,8 @@ FEATURE — a symbol.
          (file-name-as-directory (file-truename Directory)))
         )
 
-  (add-to-list 'custom-theme-load-path)))
+    (add-to-list 'custom-theme-load-path
+                 DIRECTORY)))
 
 ;;----------------------------------------------;;
 ;;; Notes: ;;-----------------------------------;;
