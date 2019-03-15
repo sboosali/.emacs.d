@@ -201,7 +201,7 @@ See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c
 
   ;; ^
 
-  (setq desktop-restore-eager 10) ;TODO prioritize a few core buffers like home.nix and emacs.md
+  (setq desktop-restore-eager 500) ;TODO prioritize a few core buffers like home.nix and emacs.md
 
   ;; ^ The maximum number of buffers to restore immediately;
   ;; the remaining buffers are restored lazily (when Emacs is idle).
