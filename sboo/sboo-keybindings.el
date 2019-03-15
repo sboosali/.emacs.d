@@ -170,6 +170,8 @@ Wraps `forward-thing'."
 ;;==============================================;;
 
 (sboo-swap-parentheses-and-square-brackets)
+(sboo-swap-semicolon-and-colon)
+(sboo-swap-double-quote-with-single-quote)
 
 ;;==============================================;;
 ;;; Single-Character Keybindings...
