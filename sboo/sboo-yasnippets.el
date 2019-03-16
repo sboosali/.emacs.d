@@ -3,14 +3,6 @@
 
 ;;----------------------------------------------;;
 
-(defun sboo-yas-reload ()
-
-  "Recompile and reload all « .yasnippet » files."
-
-  (interactive)
-
-  (yas-recompile-all)
-  (yas-reload-all))
 
 ;; http://ergoemacs.org/emacs/emacs_tip_yasnippet_expand_whole_hyphenated_word.html
 ;; (setq yas-key-syntaxes '("w_" "w_." "^ "))

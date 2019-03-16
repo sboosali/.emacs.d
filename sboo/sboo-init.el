@@ -56,7 +56,6 @@
 ;;
 
 ;;----------------------------------------------;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun sboo-debug ()
 
@@ -208,66 +207,6 @@ Laws:
 ;;
 
 ;;----------------------------------------------;;
-;;----------------------------------------------;;
-
-(defun sboo-insert-open-parenthesis ()
-
-  "Insert « \"(\" »."
-
-  (interactive)
-
-  (insert "("))
-
-(defun sboo-insert-close-parenthesis ()
-
-  "Insert « \")\" »."
-
-  (interactive)
-
-  (insert ")"))
-
-;;----------------------------------------------;;
-
-(defun sboo-insert-open-square-bracket ()
-
-  "Insert « \"[\" »."
-
-  (interactive)
-
-  (insert "["))
-
-(defun sboo-insert-close-square-bracket ()
-
-  "Insert « \"]\" »."
-
-  (interactive)
-
-  (insert "]"))
-
-;;----------------------------------------------;;
-
-(defun sboo-insert-open-curly-brace ()
-
-  "Insert « \"}\" »."
-
-  (interactive)
-
-  (insert "{"))
-
-(defun sboo-insert-close-curly-brace ()
-
-  "Insert « \"}\" »."
-
-  (interactive)
-
-  (insert "}"))
-
-;;----------------------------------------------;;
-;;----------------------------------------------;;
-
-
-
-;;----------------------------------------------;;
 ;; Settings ------------------------------------;;
 ;;----------------------------------------------;;
 
@@ -303,6 +242,19 @@ Laws:
 
 (add-to-load-path! sboo-root-directory)
 (add-to-load-path! sboo-lisp-directory)
+
+;;----------------------------------------------;;
+;; Groups --------------------------------------;;
+;;----------------------------------------------;;
+
+;;;###autoload
+(defgroup sboo
+
+  nil
+
+  "Personal customization."
+
+  :link '(url-link "https://github.com/sboosali/.emacs.d#readme"))
 
 ;;----------------------------------------------;;
 ;; Settings ------------------------------------;;
@@ -454,21 +406,7 @@ Laws:
 
 ;;----------------------------------------------;;
 
-(use-package lisp-mode
-
-  :init
-
-  ()
-
-  ;; :bind
-  ;; ("[" . sboo-insert-open-parenthesis)
-  ;; ("]" . sboo-insert-close-parenthesis)
-  ;; ("(" . sboo-insert-open-square-bracket)
-  ;; (")" . sboo-insert-close-square-bracket)
-
-  :config
-
-  ())
+(require 'sboo-elisp nil :noerror)
 
 ;;----------------------------------------------;;
 
@@ -934,7 +872,8 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
     :init
     (setq haskell-doc-current-info #'sboo-haskell-doc-current-info)
 
-    (add-hook 'haskell-mode-hook #'sboo-haskell-prettify-symbols)
+    (dolist (HOOK sboo-haskell-hooks-list)
+      (add-hook 'haskell-mode-hook HOOK))
 
     ;; (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
     ;;
@@ -1063,6 +1002,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
     :interpreter (("nix"       . nix-mode)
                   ("nix-build" . nix-mode)
+                  ("nix-shell" . nix-mode)
                   ("nix-env"   . nix-mode)
                   )
 
@@ -1227,7 +1167,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
-(use-package helm-gtags)
+
 
 ;;----------------------------------------------;;
 
@@ -1277,8 +1217,27 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
     ;; ^ `setq' vs `add-to-list': remove the default.
 
     :config
-    (yas-reload-all t)
+
+    ;;------------------------;;
+
+    (defun sboo-yas-reload (force)
+
+      "Recompile and reload all « .yasnippet » files."
+
+      (interactive "P")
+
+      (yas-recompile-all)
+      (yas-reload-all force))
+
+    ;;------------------------;;
+
+    (sboo-yas-reload t)
+
     (yas-global-mode 1)
+
+    (defalias '/y #'yas-insert-snippet)
+
+    ;;------------------------;;
 
     ()))
 

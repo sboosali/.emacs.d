@@ -113,8 +113,9 @@
 
 ;;----------------------------------------------;;
 
-(defalias '/h1 #'sboo-insert-comment-h1)
-(defalias '/h2 #'sboo-insert-comment-h2)
+(defalias '/h1 #'sboo-insert-comment-h1)     ; Mnemonic: « Header 1 »
+(defalias '/h2 #'sboo-insert-comment-h2)     ; Mnemonic: « Header 2 »
+(defalias '/hc #'sboo-insert-comment-header) ; Mnemonic: « Header Comment »
 
 ;;----------------------------------------------;;
 

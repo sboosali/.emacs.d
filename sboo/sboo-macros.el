@@ -155,6 +155,12 @@ BODY is a form for the function."
     (when validate (setq f (append f `((progn ,@validate)))))
     (setq f (append f `,@body))))
 
+;;TODO error message idiomas:
+;; should state what is wrong (“File does not exist”), not how
+;; things ought to be (“File must exist”).  The convention in Emacs Lisp is
+;; that error messages should start with a capital letter, but should not
+;; end with any sort of punctuation.
+
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
