@@ -19,6 +19,64 @@
 
 ;;==============================================;;
 
+;;----------------------------------------------;;
+
+(defun sboo-jump ()
+
+  "Jump to definition, `major-mode'-specific.
+
+Links:
+
+• URL `'
+
+Related:
+
+• `helm-etags-select'"
+
+  (interactive)
+
+  (let* ()
+
+    (pcase major-mode
+
+      ('emacs-lisp-mode
+       (call-interactively #'xref-find-definitions))
+
+      (_
+       (helm-etags-select nil)))))
+
+;;----------------------------------------------;;
+
+(defun sboo-find ()
+
+  "Search for references, `major-mode'-specific."
+
+  (interactive)
+
+  (let* ()
+
+    (pcase major-mode
+
+      ('emacs-lisp-mode
+       (call-interactively #'xref-find-references))
+
+      (_
+       (helm-etags-select nil)))))
+
+;;----------------------------------------------;;
+
+(defun sboo-find-dwim ()
+
+  "Search for definitions and references (Do-What-I-Mean)."
+
+  (interactive)
+
+  (let* ()
+
+    (sboo-find)))
+
+;;==============================================;;
+
 (defun sboo-swap-parentheses-and-square-brackets ()
   
   "Swap « [ ] » with « (  ) ».
@@ -174,6 +232,12 @@ Wraps `forward-thing'."
 (sboo-swap-double-quote-with-single-quote)
 
 ;;==============================================;;
+;;; Unset ======================================;;
+;;==============================================;;
+
+(global-unset-key (kbd "C-x c"))
+
+;;==============================================;;
 ;;; Single-Character Keybindings...
 ;;==============================================;;
 
@@ -232,6 +296,8 @@ Wraps `forward-thing'."
 (global-set-key (kbd "M-`") #'sboo-switch-to-previous-buffer)
 (global-set-key (kbd "M-~") #'sboo-switch-to-previous-buffer)
 
+(global-set-key (kbd "M-.") #'sboo-jump)
+
 (global-set-key (kbd "M-<up>")   #'beginning-of-buffer)
 (global-set-key (kbd "M-<down>") #'end-of-buffer)
 
@@ -251,6 +317,8 @@ Wraps `forward-thing'."
 ;;==============================================;;
 ;;; KeyPad (`kp-' Keybindings...
 ;;==============================================;;
+
+(global-set-key (kbd "<kp-begin>") #'sboo-find)
 
 (global-set-key (kbd "<kp-end>")   #'delete-other-windows)
 
@@ -304,7 +372,7 @@ Wraps `forward-thing'."
 (global-set-key (kbd "s-e") #'eval-last-sexp)
 (global-set-key (kbd "s-f") #'describe-function)
 ;;(global-set-key (kbd "s-g") #')
-(global-set-key (kbd "s-h") #'sboo-split-window-left-right) ;TODO
+(global-set-key (kbd "s-h") #'helm-command-prefix)
 ;;(global-set-key (kbd "s-i") #')
 ;;(global-set-key (kbd "s-j") #')
 (global-set-key (kbd "s-k") #'describe-key)

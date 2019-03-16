@@ -31,8 +31,53 @@
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
+
+(defun sboo-dante-get-methods ()
+
+  ".
+
+Inputs:
+
+•  — a .
+
+Output:
+
+• a .
+
+Example:
+
+• M-: (sboo-dante-get-methods )
+    ⇒ 
+
+Links:
+
+• URL `'
+
+Related:
+
+• `'"
+
+  (let* (()
+         )
+
+    ))
+
+;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
+
+(defgroup sboo-haskell
+
+  nil
+
+  "Personal Haskell customization."
+
+  :prefix "sboo-haskell-"
+
+  :group 'sboo
+  :group 'haskell)
+
+;;==============================================;;
 
 (defcustom sboo-haskell-eldoc nil
 
@@ -46,7 +91,7 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
 
   :safe t
 
-  :group 'sboo)
+  :group 'sboo-haskell)
 
 ;;----------------------------------------------;;
 
@@ -92,8 +137,52 @@ Prettify some Applicative methods
 
   :safe t
 
-  :group 'sboo)
+  :group 'sboo-haskell)
 
+;;----------------------------------------------;;
+
+(defcustom sboo-haskell-hooks-list
+
+  (list #'sboo-haskell-prettify-symbols
+        #'sboo-haskell-set-compile-command
+        #'subword-mode
+        )
+
+  "Hooks for `haskell-mode'.
+
+Zero-or-more function-symbols."
+
+  :type '(repeat (function))
+
+  :safe t
+  :group 'sboo-haskell)
+
+;;; sub word mode lets you navigate (e.g. M-b) between "sub words" of a camelcased word
+
+;;----------------------------------------------;;
+
+(defcustom sboo-dante-default-method 'new-impure-nix
+
+  "Default key of `dante-methods-alist'."
+
+  :type  '(symbol :tag "How `dante' launches GHCi.")
+  :safe  t
+  :group 'sboo-haskell)
+
+;;==============================================;;
+
+(defvar sboo-dante-display-buffer
+
+  `( ,(rx bos "*dante:")
+     (display-buffer-reuse-window display-buffer-in-side-window)
+   )
+
+  "TODO This display rule tells Emacs to never bring-to-front the internal dante buffer.")
+
+;; e.g. a `dante' buffer: « *dante:spiros:lib:spiros:~/haskell/spiros/* »
+
+;;----------------------------------------------;;
+;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
 (defun sboo-haskell-set-compile-command ()
@@ -113,20 +202,6 @@ Files:
   (setq-local compile-command
               (format-message "%s"
                               "cabal new-build all")))
-
-;(add-hook 'd-mode-hook #'sboo-haskell-set-compile-command)))
-
-;;----------------------------------------------;;
-
-(defvar sboo-dante-display-buffer
-
-  `( ,(rx bos "*dante:")
-     (display-buffer-reuse-window display-buffer-in-side-window)
-   )
-
-  "TODO This display rule tells Emacs to never bring-to-front the internal dante buffer.")
-
-;; e.g. a `dante' buffer: « *dante:spiros:lib:spiros:~/haskell/spiros/* »
 
 ;;----------------------------------------------;;
 ;; ElDoc ---------------------------------------;;
@@ -178,16 +253,6 @@ Files:
 ;;----------------------------------------------;;
 ;; Dante ---------------------------------------;;
 ;;----------------------------------------------;;
-
-(defcustom sboo-dante-default-method 'new-impure-nix
-
-  "Default key of `dante-methods-alist'."
-
-  :type  '(symbol :tag "How `dante' launches GHCi.")
-  :safe  t
-  :group 'sboo-haskell)
-
-;;==============================================;;
 
 (defun sboo-dante-cabal-new-repl (root)
 

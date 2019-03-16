@@ -89,6 +89,62 @@
 ;; 
 
 ;;----------------------------------------------;;
+;; Insertion -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-insert-open-parenthesis ()
+
+  "Insert « \"(\" »."
+
+  (interactive)
+
+  (insert "("))
+
+(defun sboo-insert-close-parenthesis ()
+
+  "Insert « \")\" »."
+
+  (interactive)
+
+  (insert ")"))
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-open-square-bracket ()
+
+  "Insert « \"[\" »."
+
+  (interactive)
+
+  (insert "["))
+
+(defun sboo-insert-close-square-bracket ()
+
+  "Insert « \"]\" »."
+
+  (interactive)
+
+  (insert "]"))
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-open-curly-brace ()
+
+  "Insert « \"}\" »."
+
+  (interactive)
+
+  (insert "{"))
+
+(defun sboo-insert-close-curly-brace ()
+
+  "Insert « \"}\" »."
+
+  (interactive)
+
+  (insert "}"))
+
+;;----------------------------------------------;;
 ;; Cycle Through (& Toggle Between) User Buffers
 ;;----------------------------------------------;;
 
@@ -931,20 +987,45 @@ Related:
 
 ;;TODO sboo-read-environment-variable read-envvar-name
 
-;;==============================================;;
-
 ;;TODO emacs copy a lisp expression to the clipboard
 
 ;; (kill-new 
 ;; https://stackoverflow.com/questions/2178850/how-to-copy-to-clipboard-in-emacs-lisp
 
-;;==============================================;;
-
 ;TODO few core buffers like home.nix and emacs.md
 ;TODO known dirs like emacs, config, haskell, notes
 
 ;;----------------------------------------------;;
-;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Appearence ----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-set-background-color (color)
+
+  "Set the background color to COLOR."
+
+  (interactive (list
+                (read-color "Color: ")))
+
+  (set-background-color color))
+
+;;----------------------------------------------;;
+
+(defun sboo-invert-colors ()
+
+  "Invert all colors in the current theme."
+
+  (interactive)
+
+  (let* ()
+
+    (modify-frame-parameters (selected-frame)
+			     `( (reverse . t)
+                                ))
+
+    ()))
+
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
 ;; Interactive Commands
@@ -1003,5 +1084,5 @@ Related:
 ;;    - http://www.wilkesley.org/~ian/xah/emacs/emacs_open_file_path_fast.html
 ;;    - 
 
-;;----------------------------------------------;;
+;;==============================================;;
 (provide 'sboo-commands)
