@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+#
+# key         : deflist
+# name        : a « defcustom » declaration for « (:repeated ...) » types.
+# condition   : (let ((KEY "deflist")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(defcustom sboo-${1:name}-list
+
+  '( "$3"
+   )
+
+  "$0.
+
+Zero-or-more ${2:value}s."
+
+  :type '(repeated (choice (const nil)
+                           (${4:string} :tag "$2")))
+
+  :safe t
+  :group 'sboo)
+

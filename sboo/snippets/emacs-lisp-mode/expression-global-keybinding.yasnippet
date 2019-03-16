@@ -1,10 +1,10 @@
 # -*- mode: snippet -*-
 #
-# key         : =kbd
-# name        : « global KeyBinDing » a global-set-key expression.
+# key         : global-set-key-
+# name        : a « global-set-key » expression.
+# condition   : (let ((KEY "global-set-key-")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-# contributor : Spiros Boosalis
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
-
-(global-set-key (kbd "${1:C-S-x}") #'${2:some-command})
+(global-set-key (kbd `(identity (read-key-sequence "Key sequence: " t t nil nil))`) #'`(completing-read "Command: " obarray #'commandp t "sboo-")`)

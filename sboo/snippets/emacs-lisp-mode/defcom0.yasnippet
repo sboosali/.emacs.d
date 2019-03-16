@@ -2,12 +2,11 @@
 #
 # key         : defcom
 # name        : a verbose, « interactive » (nullary) « defun » declaration.
-# condition   : (= (length "defcom") (current-column))
+# condition   : (let ((KEY "defcom")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 # --
 ;;----------------------------------------------;;
-
 
 (defun sboo-${1:name} ()
 
@@ -28,7 +27,7 @@ Related:
 
   (interactive)
 
-  (let* (()
+  (let* (
         )
 
     `yas-selected-text`$0))

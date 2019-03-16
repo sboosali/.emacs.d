@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 #
 # key         : provide-config
-# name        : a verbose « provide »d file.
-# condition   : (= (length "provide-config") (current-column))
+# name        : a verbose « provide »d file for a « use-package » statement.
+# condition   : (let ((KEY "provide-config")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 # --
@@ -12,6 +12,9 @@
 
 ;; Configure the `${1:package}' package.
 ;;
+;; • 
+;; • 
+;;
 ;; 
 
 ;;; Code:
@@ -20,28 +23,38 @@
 ;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
-;; Builtins:
+;; builtins:
 
 (require 'cl)
 (require 'pcase)
 
-;; External:
+;;
 
-(require '$1)
-
-;;----------------------------------------------;;
-;; Types ---------------------------------------;;
-;;----------------------------------------------;;
+(eval-when-compile (require 'use-package))
 
 ;;----------------------------------------------;;
-;; Utilities -----------------------------------;;
+;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
-$0
+;;----------------------------------------------;;
+;; Configuration -------------------------------;;
+;;----------------------------------------------;;
+
+(use-package $1
+
+  :init
+
+  ()
+
+  :config
+
+  $0
+
+  ())
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

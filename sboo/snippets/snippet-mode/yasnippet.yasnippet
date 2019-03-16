@@ -1,18 +1,20 @@
 # -*- mode: snippet -*-
 #
-# key         : =yas
-# name        : « =yas » the `.yasnippet` header, with several directives.
-# condition   : (= (length "=yas") (current-column))
-# contributor : Spiros Boosalis
+# key         : yas
+# name        : a verbose « .yasnippet » header.
+# condition   : (let ((KEY "yas")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# type        : snippet
 #
 # --
 # -*- mode: snippet -*-
 #
-# key         : =$1
-# name        : « =$1 » $2.
-# condition   : (= (length "=$1") (current-column))
+# key         : $1
+# name        : a « $2 ».
+# condition   : (let ((KEY "$1")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-# contributor : Spiros Boosalis
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# type        : snippet
 #
 # --
 $0

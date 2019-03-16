@@ -1,0 +1,27 @@
+# -*- mode: snippet -*-
+#
+# key         : defplist
+# name        : a « defcustom » declaration for « (:choice (:const ...)) » types.
+# condition   : (let ((KEY "defplist")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(defcustom sboo-${1:name}-plist
+
+  '( ("$4" . nil)
+   )
+
+  "$0.
+
+Associates `keywordp's with ${3:value}s."
+
+  :type '(plist :key-type   (string :tag "$2")
+                :value-type (choice (const nil)
+                                    (string :tag "$3")))
+
+  :safe t
+  :group 'sboo)
+

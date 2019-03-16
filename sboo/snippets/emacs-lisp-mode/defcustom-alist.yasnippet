@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 #
 # key         : defalist
-# name        : a « defcustom » declaration for « (:choice (:const ...)) » types.
-# condition   : (= (length "defalist") (current-column))
+# name        : a « defcustom » declaration for « (:alist ...) » types.
+# condition   : (let ((KEY "defalist")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
@@ -23,6 +23,5 @@ Associates ${2:key}s with ${3:value}s."
                                     (string :tag "$3")))
 
   :safe t
-
   :group 'sboo)
 

@@ -1,0 +1,22 @@
+# -*- mode: snippet -*-
+#
+# key         : defregex
+# name        : a « defcustom » declaration for « :regexp » types.
+# condition   : (let ((KEY "defregex")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(defcustom sboo-${1:name}-regexp
+
+  (rx bos $0 eos
+   )
+
+  "Regular expression for $1."
+
+  :type 'regexp
+
+  :safe t
+  :group 'sboo)

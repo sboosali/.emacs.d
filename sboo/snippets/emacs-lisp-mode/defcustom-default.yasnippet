@@ -2,7 +2,7 @@
 #
 # key         : defcustom
 # name        : a concise « defcustom » declaration.
-# condition   : (= (length "defcustom") (current-column))
+# condition   : (let ((KEY "defcustom")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
@@ -18,6 +18,5 @@
   :type  '($3)
 
   :safe  t
-
   :group 'sboo)
 
