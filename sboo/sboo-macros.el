@@ -39,8 +39,7 @@ Links:
 • URL `http://kitchingroup.cheme.cmu.edu/blog/2017/03/22/A-better-defun-for-emacs-lisp/'
 • URL `https://github.com/jkitchin/scimax/blob/master/scimax-macros.el'"
 
-  (let* (()
-         )
+  (let* ()
 
     `(cl-defun
 

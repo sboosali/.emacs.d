@@ -380,9 +380,9 @@ Output:
 ;;----------------------------------------------;;
 
 
-    (when sboo-dante-default-method
+    (when sboo-dante-method-default
       (setq dante-methods-alist
-            (sboo-move-to-head-of-alist dante-methods-alist :key sboo-dante-default-method)))
+            (sboo-move-to-head-of-alist dante-methods-alist :key sboo-dante-method-default)))
 
 ;;----------------------------------------------;;
 

@@ -1,6 +1,3 @@
-[submodule "use-package"]
-	path = submodules/use-package
-	url = https://github.com/jwiegley/use-package
 [submodule "helm"]
 	path = submodules/helm
 	url = https://github.com/emacs-helm/helm
@@ -19,3 +16,12 @@
 [submodule "dante"]
 	path = submodules/dante
 	url = https://github.com/jyp/dante
+[submodule "bnf-mode"]
+	path = submodules/bnf-mode
+	url = https://github.com/sergeyklay/bnf-mode
+[submodule "markdown-mode"]
+	path = submodules/markdown-mode
+	url = https://github.com/jrblevin/markdown-mode
+[submodule "use-package"]
+	path = submodules/use-package
+	url = https://github.com/jwiegley/use-package

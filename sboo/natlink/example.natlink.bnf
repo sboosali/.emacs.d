@@ -1,0 +1,78 @@
+##################################################
+# builtins
+##################################################
+
+<dgndictation> imported;
+<dgnletters>   imported;
+
+##################################################
+# public non-terminals
+##################################################
+
+<dictating> exported = say   <dgndictation> [ stop ];
+<spelling>  exported = spell <dgnletters>   [ stop ];
+<keyboard>  exported = press <keysequence>  [ stop ];
+<mouse>     exported =       <click>        [ stop ];
+<commands>  exported =       <command>+     [ stop ];
+
+##################################################
+# private non-terminals
+##################################################
+
+<command> = [<number>] <action>;
+<action>  = {command}; 
+
+#------------------------------------------------#
+
+<keysequence> = <keychord>+
+              | [ <modifiers> ] <dgnletters>;
+<keychord>    = [ <modifiers> ] <key> [ key ];
+<key>         = {key}
+              | "key-code" <number>;
+
+#------------------------------------------------#
+
+<click>  = [ <modifiers> ] [ {multiplier} ] [ <button> ] click;
+<button> = {button}
+         | "button-code" <number>;
+
+#------------------------------------------------#
+
+<motion> = <absolute_motion>
+         | <relative_motion>
+         ;
+
+<absolute_motion> = <ordinal> {locus};
+# ^ absolute motion is `idempotent`.
+
+<ordinal> = last
+          | {ordinal};
+
+<relative_motion> = {cardinal} <vertical_motion>
+                  | {cardinal} <horizontal_motion>
+                  | {cardinal} <temporal_motion>
+                  ;
+# ^ relative motion is `invertible`.
+
+<vertical_motion>   = <vertical_direction>   <vertical_locus>;
+<horizontal_motion> = <horizontal_direction> <horizontal_locus>;
+<temporal_motion>   = <temporal_direction>   <temporal_locus>;
+
+<vertical_direction>   = up   | down     | {vertical_direction};
+<horizontal_direction> = left | right    | {horizontal_direction};
+<temporal_direction>   = next | previous | {temporal_direction};
+
+<vertical_locus>   = line | {vertical_locus};
+<horizontal_locus> = char | {horizontal_locus};
+<temporal_locus>   = page | tab | {temporal_locus};
+
+# ^ these 'locus non-terminals' (i.e. `<*_locus>`)
+# often need more personalization by the user.
+
+#------------------------------------------------#
+
+<modifiers> = {modifier}+;
+
+<number> = {cardinal};
+
+##################################################

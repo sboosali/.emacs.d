@@ -20,6 +20,7 @@
 
 (require 'cl)     ;; "CommonLisp"
 (require 'pcase)  ;; "PatternCASE"
+(require 'subr-x) ;; "SUBRoutines-eXtras"
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
@@ -572,6 +573,96 @@ Links:
     hsl-string))
 
 ;;==============================================;;
+
+(cl-defun sboo-move-to-head-of-alist! (alist-var &key key)
+
+  "`sboo-move-to-head-of-alist' with mutation.
+
+Inputs:
+
+• KEY — is one of: `symbolp', `stringp', or `numberp'.
+
+• ALIST-VAR — is a symbol, representing an `alist' variable.
+          its key-type is equal to the `type-of' KEY.
+
+Output:
+
+• ALIST-VAR.
+
+Examples:
+
+• M-: (setq sboo-xyz '((x . 1) (y . 2) (z . 3) (y . 4)))
+• M-: (sboo-move-to-head-of-alist! 'sboo-xyz :key 'y)
+    ⇒ '((y . 2) (x . 1) (z . 3))
+• M-: sboo-xyz
+    ⇒ '((y . 2) (x . 1) (z . 3))
+
+• M-: (setq sboo-abc '((\"a1\" . 1) (\"b2\" . 2) (\"c3\" . 3)))
+• M-: (sboo-move-to-head-of-alist! 'sboo-abc :key \"b2\")
+    ⇒ '((\"b2\" . 2) (\"a1\" . 1) (\"c3\" . 3))
+• M-: sboo-abc
+    ⇒ '((\"b2\" . 2) (\"a1\" . 1) (\"c3\" . 3))
+
+Laws:
+
+• is idempotent."
+
+  (let ((ASSERTION (boundp alist-var))
+        )
+
+    (if ASSERTION
+
+        (let* ((alist          (symbol-value alist-var))
+
+               (DEFAULT        :sboo-not-found)
+               (TEST           #'equal)
+
+               (VALUE          (alist-get key alist DEFAULT nil TEST))
+               (WAS-KEY-FOUND? (not (eql VALUE DEFAULT)))
+               )
+
+          (if WAS-KEY-FOUND?
+
+              (let* ((PREDICATE (lambda (KV)
+                                  (when (consp KV)
+                                    (let ((K (car KV)))
+                                      (equal key K)))))
+                     (ATTR      (cons key VALUE))
+                     )
+                (set alist-var
+                     (cons ATTR (seq-remove PREDICATE alist))))
+
+            alist))
+
+      (format-message "[sboo-move-to-head-of-alist!] assertion failed in « sboo-move-to-head-of-alist! ALIST-VAR :key KEY »: ALIST-VAR must be a `boundp' symbol; the ALIST-VAR given was « %S »."
+                      alist-var))))
+
+;; ^ Notes
+;;
+;; `alist-get' doesn't invoke `symbol-value' (c.f. `add-to-list'):
+;;
+;; M-: (alist-get 'y 'sboo-xyz)
+;; Wrong argument type, `listp': sboo-xyz »
+;;
+;; `seq-remove' removes all:
+;;
+;; M-: (seq-remove  (lambda (KV) (when (consp KV) (let ((K (car KV))) (equal 'y K))))  '((x . 1) (y . 2) (z . 3) (y . 4)))
+;;  ⇒ '((x . 1) (z . 3))
+;;
+;; `seq-remove' doesn't mutate:
+;;
+;; M-: (progn  (setq sboo-xyz '((x . 1) (y . 2) (z . 3) (y . 4)))  (seq-remove  (lambda (KV) (when (consp KV) (let ((K (car KV))) (equal 'y K))))  (symbol-value 'sboo-xyz))  (symbol-value 'sboo-xyz))
+;;  ⇒ '((x . 1) (y . 2) (z . 3) (y . 4))
+;;
+;; `add-to-list' can postpend (by default, it prepends):
+;;
+;; M-: (progn  (setq sboo-xyz '((x . 1) (y . 2) (z . 3) (y . 4)))  (add-to-list 'sboo-xyz '(a . 5) t)  (symbol-value 'sboo-xyz))
+;;  ⇒ '((x . 1) (y . 2) (z . 3) (y . 4) (a . 5))
+;;
+;; 
+;;
+;; 
+;;
 
 ;;==============================================;;
 

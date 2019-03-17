@@ -116,95 +116,28 @@
 
 ;;----------------------------------------------;;
 
-(cl-defun sboo-move-to-head-of-alist! (alist-var &key key)
+(defun sboo-init-use-package ()
 
-  "`sboo-move-to-head-of-alist' with mutation.
+  "Register and initialize `use-package'.
 
-Inputs:
+Links:
 
-• KEY — is one of: `symbolp', `stringp', or `numberp'.
+• URL `https://github.com/jwiegley/use-package'"
 
-• ALIST-VAR — is a symbol, representing an `alist' variable.
-          its key-type is equal to the `type-of' KEY.
+  (let* ()
 
-Output:
+    (progn
 
-• ALIST-VAR.
+      (sboo-register-submodule-packages! "use-package")
 
-Examples:
+      (progn
 
-• M-: (setq sboo-xyz '((x . 1) (y . 2) (z . 3) (y . 4)))
-• M-: (sboo-move-to-head-of-alist! 'sboo-xyz :key 'y)
-    ⇒ '((y . 2) (x . 1) (z . 3))
-• M-: sboo-xyz
-    ⇒ '((y . 2) (x . 1) (z . 3))
+        (eval-when-compile (require 'use-package))
 
-• M-: (setq sboo-abc '((\"a1\" . 1) (\"b2\" . 2) (\"c3\" . 3)))
-• M-: (sboo-move-to-head-of-alist! 'sboo-abc :key \"b2\")
-    ⇒ '((\"b2\" . 2) (\"a1\" . 1) (\"c3\" . 3))
-• M-: sboo-abc
-    ⇒ '((\"b2\" . 2) (\"a1\" . 1) (\"c3\" . 3))
+        (require 'diminish)
+        (require 'bind-key)
 
-Laws:
-
-• is idempotent."
-
-  (let ((ASSERTION (boundp alist-var))
-        )
-
-    (if ASSERTION
-
-        (let* ((alist          (symbol-value alist-var))
-
-               (DEFAULT        :sboo-not-found)
-               (TEST           #'equal)
-
-               (VALUE          (alist-get key alist DEFAULT nil TEST))
-               (WAS-KEY-FOUND? (not (eql VALUE DEFAULT)))
-               )
-
-          (if WAS-KEY-FOUND?
-
-              (let* ((PREDICATE (lambda (KV)
-                                  (when (consp KV)
-                                    (let ((K (car KV)))
-                                      (equal key K)))))
-                     (ATTR      (cons key VALUE))
-                     )
-                (set alist-var
-                     (cons ATTR (seq-remove PREDICATE alist))))
-
-            alist))
-
-      (format-message "[sboo-move-to-head-of-alist!] assertion failed in « sboo-move-to-head-of-alist! ALIST-VAR :key KEY »: ALIST-VAR must be a `boundp' symbol; the ALIST-VAR given was « %S »."
-                      alist-var))))
-
-;; ^ Notes
-;;
-;; `alist-get' doesn't invoke `symbol-value' (c.f. `add-to-list'):
-;;
-;; M-: (alist-get 'y 'sboo-xyz)
-;; Wrong argument type, `listp': sboo-xyz »
-;;
-;; `seq-remove' removes all:
-;;
-;; M-: (seq-remove  (lambda (KV) (when (consp KV) (let ((K (car KV))) (equal 'y K))))  '((x . 1) (y . 2) (z . 3) (y . 4)))
-;;  ⇒ '((x . 1) (z . 3))
-;;
-;; `seq-remove' doesn't mutate:
-;;
-;; M-: (progn  (setq sboo-xyz '((x . 1) (y . 2) (z . 3) (y . 4)))  (seq-remove  (lambda (KV) (when (consp KV) (let ((K (car KV))) (equal 'y K))))  (symbol-value 'sboo-xyz))  (symbol-value 'sboo-xyz))
-;;  ⇒ '((x . 1) (y . 2) (z . 3) (y . 4))
-;;
-;; `add-to-list' can postpend (by default, it prepends):
-;;
-;; M-: (progn  (setq sboo-xyz '((x . 1) (y . 2) (z . 3) (y . 4)))  (add-to-list 'sboo-xyz '(a . 5) t)  (symbol-value 'sboo-xyz))
-;;  ⇒ '((x . 1) (y . 2) (z . 3) (y . 4) (a . 5))
-;;
-;; 
-;;
-;; 
-;;
+        (setq use-package-verbose t)))))
 
 ;;----------------------------------------------;;
 ;; Settings ------------------------------------;;
@@ -252,7 +185,7 @@ Laws:
 
   nil
 
-  "Personal customization."
+  "« sboo »'s customization."
 
   :link '(url-link "https://github.com/sboosali/.emacs.d#readme"))
 
@@ -424,7 +357,11 @@ Laws:
 
   (add-startup-hook! #'sboo-compilation-config!))
 
-;;----------------------------------------------;;
+;;==============================================;;
+
+(sboo-init-use-package)
+
+;;==============================================;;
 
 (use-package ansi-color
 
@@ -578,7 +515,7 @@ Laws:
 
 ;;----------------------------------------------;;
 
-(when (require 'saveplace nil 'noerror)
+(when (require 'saveplace nil :no-error)
 
   (setq-default save-place t)
   ;TODO; (setq save-place-file (expand-file-name "save-point-places" user-emacs-directory))
@@ -592,7 +529,7 @@ Laws:
 
 ;;----------------------------------------------;;
 
-(when (require 'savehist nil 'noerror)
+(when (require 'savehist nil :no-error)
 
   (setq savehist-additional-variables '(search-ring regexp-search-ring))
 
@@ -609,7 +546,7 @@ Laws:
 
 ;;----------------------------------------------;;
 
-(when (require 'man nil 'noerror)
+(when (require 'man nil :no-error)
 
   (set-face-attribute 'Man-overstrike nil :inherit font-lock-type-face    :bold t)
   (set-face-attribute 'Man-underline  nil :inherit font-lock-keyword-face :underline t)
@@ -735,7 +672,7 @@ Laws:
 ;;----------------------------------------------;;
 
 (sboo-load-file! "sboo-init-helm.el")
-(sboo-load-file! "sboo-init-use-package.el")
+;;(sboo-load-file! "sboo-init-use-package.el")
 
 (when (< emacs-major-version 26)
   (sboo-load-file! "sboo-init-real-auto-save.el"))
@@ -946,7 +883,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
   (use-package dante
     :after    haskell
 
-    :load-path "~/.emacs.d/submodules/dante/" ;TODO 
+    :load-path "~/.emacs.d/submodules/dante" ;TODO 
 
     :commands (dante-mode dante-restart)
 
@@ -967,9 +904,8 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
       (setq dante-methods-alist
             (assq-delete-all KEY dante-methods-alist)))
 
-    (when sboo-dante-default-method
-      (sboo-move-to-head-of-alist! 'dante-methods-alist
-                                   :key sboo-dante-default-method))
+    (when sboo-dante-methods
+      (setq dante-methods sboo-dante-methods))
 
     (setq dante-tap-type-time 2)
 
@@ -1333,6 +1269,16 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
+(use-package bnf-mode
+
+  :load-path "~/.emacs.d/submodules/bnf-mode"
+
+;;  :load-path (sboo-submodule-directory "bnf-mode")
+
+  :commands (bnf-mode))
+
+;;----------------------------------------------;;
+
 ;; (use-package xpm
 ;;   :commands (xpm-grok xpm-finish xpm-raster xpm-as-xpm xpm-put-points xpm-generate-buffer)
 ;;   :mode (("\\.xpm\\'" . c-mode))
@@ -1355,7 +1301,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
-(when (require 'volatile-highlights nil 'noerror)
+(when (require 'volatile-highlights nil :no-error)
   (volatile-highlights-mode t))
 
 ;;----------------------------------------------;;

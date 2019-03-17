@@ -31,38 +31,6 @@
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
-
-(defun sboo-dante-get-methods ()
-
-  ".
-
-Inputs:
-
-•  — a .
-
-Output:
-
-• a .
-
-Example:
-
-• M-: (sboo-dante-get-methods )
-    ⇒ 
-
-Links:
-
-• URL `'
-
-Related:
-
-• `'"
-
-  (let* (()
-         )
-
-    ))
-
-;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
@@ -161,11 +129,33 @@ Zero-or-more function-symbols."
 
 ;;----------------------------------------------;;
 
-(defcustom sboo-dante-default-method 'new-impure-nix
+(defcustom sboo-dante-methods
 
-  "Default key of `dante-methods-alist'."
+  '( new-impure-nix
+     new-build
+     stack
+     )
 
-  :type  '(symbol :tag "How `dante' launches GHCi.")
+  "Susbset of `dante-methods-alist' keys.
+
+How `dante' will truy to launch GHCi."
+
+  :type  '(repeated (symbol :tag "`dante-methods-alist' key."))
+
+  :safe  t
+  :group 'sboo-haskell)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-dante-method-default
+
+  (car sboo-dante-methods)
+
+  "Default key of `dante-methods-alist'.
+
+How `dante' will launch GHCi."
+
+  :type  '(symbol :tag "`dante-methods-alist' key.")
   :safe  t
   :group 'sboo-haskell)
 
