@@ -170,7 +170,7 @@ Links:
 ;; (NOTE `dante' does this, but haskell files may be opened before(?) `dante' is loaded.)
 
 ;;----------------------------------------------;;
-;; Register LoadPaths --------------------------;;
+;; Register ------------------------------------;;
 ;;----------------------------------------------;;
 
 (add-to-load-path! sboo-root-directory)
@@ -201,9 +201,31 @@ Links:
 ;;; TODO add-to-list
 
 ;;----------------------------------------------;;
+;; Themes --------------------------------------;;
+;;----------------------------------------------;;
+
+;;(defvar sboo-submodule-solarized-directory
+
+(ignore-errors
+
+  (when (>= emacs-major-version 24)
+
+    (add-to-theme-path! sboo-theme-directory)
+    (add-to-theme-path! (emacs-subdir "themes"))
+
+    (progn
+      (sboo-register-submodule-packages! "solarized")
+      (sboo-register-submodule-themes!   "solarized")
+      (load-theme 'solarized :no-confirm))
+
+    ()))
+
+;;----------------------------------------------;;
+;; Packages (Builtins) -------------------------;;
+;;----------------------------------------------;;
 
 (when (and (>= emacs-major-version 26)
-           (require 'sboo-autosave nil :noerror)
+           (require 'sboo-autosave nil :no-error)
            )
 
   (sboo-autosave-init!)
@@ -212,7 +234,7 @@ Links:
 
 ;;----------------------------------------------;;;
 
-(when (require 'sboo-auto-mode nil :noerror)
+(when (require 'sboo-auto-mode nil :no-error)
 
   ;;------------------------;;
 
@@ -255,7 +277,7 @@ Links:
 ;;----------------------------------------------;;
 
 ;; (when (and (>= emacs-major-version 24)
-;;            (require 'sboo-theme nil :noerror))
+;;            (require 'sboo-theme nil :no-error))
 ;;   (add-to-list 'custom-theme-load-path sboo-theme-directory)
 ;;   (sboo-theme-set!)
 ;;   ())
@@ -266,21 +288,13 @@ Links:
 
 ;;----------------------------------------------;;
 
-;;(defvar sboo-submodule-solarized-directory
-
-(when (>= emacs-major-version 24)
-  (sboo-register-submodule-packages! "solarized")
-  (sboo-register-submodule-themes!   "solarized")
-  (load-theme 'solarized :noconfirm)
-  ())
-
 ;;----------------------------------------------;;
 
-(when (require 'sboo-desktop nil :noerror)
+(when (require 'sboo-desktop nil :no-error)
 
   (sboo-desktop-init!)
 
-  ;; (if (require 'sboo-xdg nil :noerror)
+  ;; (if (require 'sboo-xdg nil :no-error)
   ;;     (setq bookmark-default-file (sboo-xdg-cache "desktop.el"))
   ;;   (setq bookmark-default-file "desktop.el"))
 
@@ -339,7 +353,7 @@ Links:
 
 ;;----------------------------------------------;;
 
-(require 'sboo-elisp nil :noerror)
+(require 'sboo-elisp nil :no-error)
 
 ;;----------------------------------------------;;
 
@@ -351,7 +365,7 @@ Links:
 ;;                 compile-command "make")
 ;;  ())
 
-(when (require 'sboo-compilation nil :noerror)
+(when (require 'sboo-compilation nil :no-error)
 
   (sboo-compilation-init!)
 
@@ -416,7 +430,7 @@ Links:
 ;;; Internal Packages --------------------------;;
 ;;----------------------------------------------;;
 
-(when (require 'sboo-server nil :noerror)
+(when (require 'sboo-server nil :no-error)
   (add-startup-hook! #'server-start-unless-running))
 
 ;;----------------------------------------------;;
@@ -427,18 +441,18 @@ Links:
 
 ;;----------------------------------------------;;
 
-(when (require 'sboo-make nil :noerror)
+(when (require 'sboo-make nil :no-error)
   (add-hook 'makefile-mode-hook #'sboo-show-trailing-whitespace))
 
 ;;----------------------------------------------;;
 
-;; (when (require 'sboo-prog nil :noerror)
+;; (when (require 'sboo-prog nil :no-error)
 ;;   (dolist (HOOK sboo-prog-mode-hooks)
 ;;     (add-hook 'prog-mode-hook HOOK)))
 
 ;;----------------------------------------------;;
 
-(when (require 'sboo-shell nil :noerror)
+(when (require 'sboo-shell nil :no-error)
 
   ;;---------------------------;;
 
@@ -459,7 +473,7 @@ Links:
 
 ;;----------------------------------------------;;
 
-(when (require 'dired nil :noerror)
+(when (require 'dired nil :no-error)
 
   ;;---------------------------;;
 
@@ -498,7 +512,7 @@ Links:
 
 ;;----------------------------------------------;;
 
-(when (require 'sboo-bookmark nil :noerror)
+(when (require 'sboo-bookmark nil :no-error)
 
   (sboo-bookmark-init!)
 
@@ -605,7 +619,7 @@ Links:
 ;; Internal Packages: Utilities ----------------;;
 ;;----------------------------------------------;;
 
-(when (require 'sboo-unicode nil :noerror)
+(when (require 'sboo-unicode nil :no-error)
 
   ())
 
@@ -635,7 +649,7 @@ Links:
 ;; External Packages: `package.el' -------------;;
 ;;----------------------------------------------;;
 
-(when (require 'sboo-packages nil :noerror)
+(when (require 'sboo-packages nil :no-error)
 
   ;;------------------------;;
 
@@ -782,7 +796,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; External Packages: Haskell Configuration ----;;
 ;;----------------------------------------------;;
 
-(when (require 'sboo-haskell nil :noerror)
+(when (require 'sboo-haskell nil :no-error)
 
   ;;------------------------;;
 
@@ -930,7 +944,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; External Packages: ProgrammingLanguages -----;;
 ;;----------------------------------------------;;
 
-(when (require 'sboo-nix nil :noerror)
+(when (require 'sboo-nix nil :no-error)
 
   ;;------------------------;;
 
@@ -961,7 +975,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; External Packages: `company-*' Configurations
 ;;----------------------------------------------;;
 
-(when (require 'sboo-company nil :noerror)
+(when (require 'sboo-company nil :no-error)
 
   ;;------------------------;;
 
@@ -1095,7 +1109,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
-(when (require 'sboo-haskell-compilation nil :noerror)
+(when (require 'sboo-haskell-compilation nil :no-error)
 
   
 
@@ -1111,7 +1125,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; External Packages: Miscellaneous ------------;;
 ;;----------------------------------------------;;
 
-(when (require 'sboo-projectile nil :noerror)
+(when (require 'sboo-projectile nil :no-error)
 
   (use-package projectile
 
@@ -1136,7 +1150,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
-(when (require 'sboo-yasnippets nil :noerror)
+(when (require 'sboo-yasnippets nil :no-error)
 
   (use-package yasnippet
 
@@ -1343,7 +1357,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; Finalization --------------------------------;;
 ;;----------------------------------------------;;
 
-(when (require 'sboo-fonts nil :noerror)
+(when (require 'sboo-fonts nil :no-error)
   (sboo-fonts-config!))
 
 ;;----------------------------------------------;;

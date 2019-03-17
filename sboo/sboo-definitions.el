@@ -192,18 +192,20 @@ Wraps `sboo-install-p'."
 
   (sboo-subdir "themes/")
 
-  "Directory with themes (`.el' files which `provide-theme').")
+  "Directory with themes.
+
+Themes are « .el » files which `provide-theme'.")
 
 ;;----------------------------------------------;;
 
 (defun sboo-file (FilePath)
+
   "Return « `sboo-root-directory'/`FilePath' ».
 
-  i.e. Return the relative filepath `FilePath', 
-  as an absolute filepath, under `sboo-root-directory'.
+i.e. Return the relative filepath `FilePath', 
+as an absolute filepath, under `sboo-root-directory'.
 
-  Calls `file-truename'.
-  "
+Calls `file-truename'."
 
   (file-truename (concat sboo-root-directory
 			 FilePath)))
