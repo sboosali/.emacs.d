@@ -404,7 +404,343 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
+
+(defun sboo-read-character-name-via-collection ()
+
+  "Read a Unicode character name, returning the string `NAME'.
+
+Haskell Type « :: IO String ».
+
+See `ucs-names'."
+
+  (completing-read "Unicode character name: " sboo-unicode-names-list nil t))
+
 ;;----------------------------------------------;;
+
+(defun sboo-annotate-character-name-with-character-literal (name)
+
+  "Annotate `NAME' (e.g. \"BULLET\") with the char itself (e.g. ?•).
+
+Haskell Type « :: String -> String ».
+"
+  ;TODO(throw 'sboo NAME)
+
+  (let ((CHAR
+         (gethash name sboo-unicode-names-hash-table)))
+
+    (if CHAR
+        (let ((PRINTABLE
+               t)) ;;TODO check 'general-category for whether character is printable (or is control)
+
+          (if PRINTABLE
+              (let ((ANNOTATED
+                     (format-message "%s  %s" (char-to-string CHAR) name)))
+              ;; (let ((ANNOTATION
+              ;;        (format-message " %s" (char-to-string CHAR))))
+
+                ANNOTATED)
+            name)))))
+
+;;----------------------------------------------;;
+
+(defun sboo-read-character-name-with-annotations ()
+
+  "Read a Unicode character name, returning the string `NAME'.
+
+Annotates each completion candidate with the unicode character being named.
+
+Haskell Type « :: IO String ».
+
+Calls `completing-read' with Info node ‘(elisp)Programmed Completion’"
+
+  (let ((completion-extra-properties
+         '(:annotation-function sboo-annotate-character-name-with-character-literal)))
+
+    (completing-read "Unicode character name: " sboo-unicode-names-hash-table nil t)))
+
+;; ^
+;;     M-: (message (sboo-read-character-name-with-annotations))
+
+;;----------------------------------------------;;
+
+(defun sboo-read-character-with-literals-displayed ()
+
+  "Read a Unicode character name, returning the string `NAME'.
+
+Prepends each completion candidate with the unicode character being named
+(which must then be stripped back out).
+
+Haskell Type « :: IO String ».
+
+Calls `completing-read' with ‘(elisp)Programmed Completion’"
+
+  (let* ((COMPLETION
+          (completing-read "Unicode character (char & name): " sboo-unicode-completion-descriptions-hash-table nil t))
+         (CHAR
+          (gethash COMPLETION sboo-unicode-completion-descriptions-hash-table)))
+
+    CHAR))
+
+;; ^
+;;     M-: (message (sboo-read-character-with-literals-displayed))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-read-character (&key method display)
+
+  "Read a Unicode character name, returning the string `NAME'.
+
+Inputs:
+
+• NAME    — a `stringp'. The name of the unicode character.
+• DISPLAY — a `booleanp'. Whether to display the unicode character itself (beside the name).
+
+Wraps `sboo-read-character-with-literals-displayed', `sboo-read-character-name-with-annotations', `sboo-read-character-name-via-collection'."
+
+  (let ((CHAR-READER
+         (if METHOD METHOD #'sboo-read-character-with-literals-displayed))) ;TODO shorter aliases (than full names) in keywords).
+
+    (call-interactively CHAR-READER)))
+
+;;TODO function (not command) alias?
+;; (defalias sboo-read-character-name #'sboo-read-character-name-with-annotations)
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;----------------------------------------------;;
+
+(defun sboo-get-unicode-names-list ()
+
+  "Construct `sboo-unicode-names-list'.
+
+Via `ucs-names'."
+
+  (unless ucs-names
+    (ucs-names))
+  ;; ^ Initialize if uninitialized.
+
+  (hash-table-keys ucs-names))
+
+  ;; (let ((NAMES '()))
+
+  ;;   (progn
+  ;;     (cl-flet ((ADD-CHAR-NAME (CHAR PROPERTIES)
+  ;;                              (add-to-list 'NAMES (aget PROPERTIES 'name)))) ;TODO
+
+  ;;       (map-char-table #'ADD-CHAR-NAME
+  ;;                       char-code-property-table))
+
+  ;;     NAMES)))
+
+;;----------------------------------------------;;
+
+(defun sboo-get-unicode-names-hash-table ()
+
+  "Construct `sboo-unicode-names-hash-table'.
+
+Via `ucs-names'."
+
+  (unless ucs-names
+    (ucs-names))
+  ;; ^ Initialize if uninitialized.
+
+  ucs-names)
+
+;;----------------------------------------------;;
+
+(defun sboo-get-unicode-completion-description-hash-table ()
+
+  "Construct `sboo-unicode-completion-descriptions-hash-table'.
+
+Via `ucs-names'."
+
+  (unless ucs-names
+    (ucs-names))
+  ;; ^ Initialize if uninitialized.
+
+  ucs-names
+
+  )
+
+
+
+
+
+
+
+
+;;;###autoload
+(defvar sboo-unicode-names-list (sboo-get-unicode-names-list)
+
+  "The list of each Unicode character's (unique) `name'.
+
+Haskell Type « :: [String] ».
+
+[TODO ordered list?]
+
+[TODO « Map Char String »]
+
+e.g...
+
+    M-: (consp (member \"BULLET\" sboo-unicode-names-list))
+    t
+
+")
+
+;;----------------------------------------------;;
+
+;;;###autoload
+(defvar sboo-unicode-names-hash-table (sboo-get-unicode-names-hash-table)
+
+  "The mapping from each Unicode character `name' to its character.
+
+Equals `ucs-names'.
+
+Haskell Type « :: Map Char String ».
+
+Examples:
+
+    M-: (gethash \"BULLET\" sboo-unicode-names-hash-table)
+    ?•
+")
+
+;; M-: (gethash "BULLET" ucs-names)
+
+;;----------------------------------------------;;
+
+;;;###autoload
+(defvar sboo-unicode-completion-descriptions-hash-table (sboo-get-unicode-completion-description-hash-table)
+
+  "The mapping from each Unicode character `name' to a description thereof.
+
+This description combines the name of the character with said character being named.
+In particular, each table-key is a Unicode Character Codepoint (the table-value) 
+prepended to its Unicode Character Name (with a space).
+For example, one entry is:
+
+    (:key   \"• BULLET\"
+     :value ?•
+    )
+
+Provides caching for completion.
+
+NOTE Why does this exist when `sboo-unicode-names-hash-table' does too? 
+Because currently (circa 2018), `helm' doesn't support the `:annotation-function' property of `completion-extra-properties'.
+
+Derived from `ucs-names'.
+
+Haskell Type « :: Map String Char ».
+
+Examples:
+
+    M-: (gethash \"• BULLET\" sboo-unicode-completion-descriptions-hash-table)
+    ?•
+
+    M-: (gethash \"BULLET\" sboo-unicode-completion-descriptions-hash-table)
+    nil
+
+    M-: (gethash \"•\" sboo-unicode-completion-descriptions-hash-table)
+    nil")
+
+;; ^
+;;     M-: (gethash "• BULLET" sboo-unicode-completion-descriptions-hash-table)
+;;     ?•
+
+
+
+
+
+
+
+(cl-defun sboo/alist->table (alist &key test size)
+
+  "Create a Hash Table from ALIST.
+
+Inputs:
+
+• ALIST — an association `listp'. 
+• TEST  — a `symbolp' (naming a `functionp'). See `make-hash-table'.
+• SIZE  — an `integerp'. See `make-hash-table'.
+
+Output:
+
+• a `hash-table-p' with the same entries as ALIST (modulo duplicate keys).
+
+Example:
+
+• M-: (sboo/alist->table '((x . 1) (y . 2)) :test #'eq :size 3)
+    ⇒ #s(hash-table size 3 test eq data (x 1 y 2))
+"
+
+  (let* ((TEST  (or test
+                    #'equal))
+
+         (SIZE  (or size
+                    (length alist)))
+
+         (TABLE (make-hash-table :test TEST :size SIZE))
+
+         )
+
+    (progn
+
+      (mapc #'add-entry alist)
+
+      TABLE)))
+
+
+
+(defun sboo-ucs-names-get (name)
+
+  "Get the Unicode Character whose name is NAME.
+
+Inputs:
+
+• NAME — a `stringp'.
+  The name of a Unicode Character.
+
+Output:
+
+• an `integerp'.
+  a Unicode Character codepoint.
+
+Type (Haskell):
+
+• « :: String -> Maybe Char »
+
+Example:
+
+• M-: (format \"%c\" (sboo-ucs-names-get \"BULLET\"))
+    ⇒ \"•\"
+• M-: (sboo-ucs-names-get \"NOT A UNINCODE CHARACTER NAME\")
+    ⇒ nil
+"
+
+  (let* ((NAME   (upcase name))
+         (OBJECT (sboo-ucs-names-table))
+         (TYPE   (type-of OBJECT))
+         (CHAR   (pcase TYPE
+                   ('hash-table (gethash NAME OBJECT))
+                   ('list       (alist-get NAME OBJECT nil nil #'equal))
+                   (_           nil)))
+         )
+
+    CHAR))
+
+;; ^ (format "%c" (sboo-ucs-names-get "BULLET"))
+
+;;----------------------------------------------;;
+
 
 ;;----------------------------------------------;;
 

@@ -1,27 +1,87 @@
-;; -*- lexical-binding: t; -*-
+;;; -*- lexical-binding: t -*-
+
+;;==============================================;;
+;;; Commentary:
+
+;; Fonts.
+;; 
+;; • Iosevka
+;;
+;; 
+
+;;==============================================;;
+;;; Code:
+
+;;----------------------------------------------;;
+;; Imports -------------------------------------;;
+;;----------------------------------------------;;
+
+;; Builtins:
+
+(require 'cl)
+;;(require 'pcase)
+;;(require 'seq)
+
+;; Project:
 
 (require 'sboo-utilities)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Variables -----------------------------------;;
+;;----------------------------------------------;;
 
-(defvar sboo-default-fixed-width-font-name "Iosevka"
+(defvar sboo-default-fixed-width-font-name
 
-  "The (fixed-width) font I use (by default) for programs, config files, etc.
+  "Iosevka"
 
-`Iosevka' is an open-source font, designed for code. See URL `https://be5invis.github.io/Iosevka'.")
+  "My default (fixed-width) font for: programs, configs, etc.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+`Iosevka' is an open-source font, designed for code. 
 
-(defun sboo-set-font (FONT)
+Links:
+
+• URL `https://be5invis.github.io/Iosevka'.")
+
+;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+;; Commands ------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-set-default-font ()
+  "`sboo-set-font' to the `sboo-default-fixed-width-font-name' font family."
+  (interactive)
+  (sboo-set-font sboo-default-fixed-width-font-name))
+
+;;----------------------------------------------;;
+
+(defun sboo-set-font-to-iosevka ()
+  "`sboo-set-font' to the Iosevka font family."
+  (interactive)
+  (sboo-set-font "Iosevka"))
+
+;;----------------------------------------------;;
+
+(defun sboo-set-font (font)
+
   "Sets the font of the `current-buffer' to `FONT'.
 
-`FONT' is a string.
+Inputs:
+
+• FONT is a string.
 
 Examples:
 
-* « M-: (sboo-set-font ‘Iosevka’) »
-* « M-x sboo-set-font RET Iosevka »
+• M-: (sboo-set-font \"Iosevka\")
+• M-x sboo-set-font RET Iosevka
 
+Related:
+
+• `font-family-list'
+• `find-font'
+• `buffer-face-set'
 "
 
   (interactive (list
@@ -29,14 +89,14 @@ Examples:
 
   ;; ^ `"s"` means "read a string from the user until they press RET".
 
-  (if (find-font (font-spec :name FONT))
+  (if (find-font (font-spec :name font))
 
       ;; ^ 
       ;; e.g. (find-font (font-spec :name "iosevka"))
       ;; e.g. (find-font (font-spec :name "garamond"))
     
     (progn
-      (buffer-face-set `(:family ,FONT))
+      (buffer-face-set `(:family ,font))
       (buffer-face-mode)
       t)
     
@@ -59,24 +119,22 @@ Examples:
 ;; INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-(defun sboo-set-default-font () (interactive)
+(defun sboo-register-default-font-for-hook (hook)
 
-  (sboo-set-font sboo-default-fixed-width-font-name))
+  "Register ‘sboo-default-fixed-width-font-name’ with HOOK.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Inputs:
 
-(defun sboo-register-default-font-for-hook (HOOK)
+• HOOK — a `symbolp'.
+         a hook variable. most are named « *-mode-hook »."
 
-  "Register ‘sboo-default-fixed-width-font-name’ (my default font) for `HOOK' (the given hook).
-"
-  (interactive (list
-                (sboo-read-hook)))
+  (interactive (list (sboo-read-hook)))
 
-  (add-hook HOOK #'sboo-set-default-font))
+  (add-hook hook #'sboo-set-default-font))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-fonts-config! ()
 
@@ -97,17 +155,9 @@ e.g. `lisp-mode', `haskell-mode', `nix-mode', etc).
 
     (add-hook HOOK #'sboo-set-default-font)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun sboo-set-font-to-iosevka ()
-  (interactive)
-  (sboo-set-font "Iosevka"))
-
-;; ^ (for convenience).
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
 
 ;; See 
 ;;     - https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-font-check.el
@@ -120,5 +170,5 @@ e.g. `lisp-mode', `haskell-mode', `nix-mode', etc).
 ;; 0123456789abcdefghijklmnopqrstuvwxyz [] () :;,. !@#$^&*
 ;; 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ {} <> "'`  ~-_/|\?
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 (provide 'sboo-fonts)

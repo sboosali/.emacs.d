@@ -1,0 +1,37 @@
+# -*- mode: snippet -*-
+#
+# key         : header
+# name        : an elisp file header.
+# condition   : (let ((KEY "header")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# type        : snippet
+#
+# --
+;;; -*- lexical-binding: t -*-
+
+;;==============================================;;
+;;; Commentary:
+;;==============================================;;
+
+;; $0.
+;; 
+;; • 
+;; • 
+;;
+;; 
+
+;;==============================================;;
+;;; Code:
+;;==============================================;;
+
+;;----------------------------------------------;;
+;; Imports -------------------------------------;;
+;;----------------------------------------------;;
+
+;; Builtins:
+
+(require 'cl)
+;;(require 'pcase)
+;;(require 'seq)
+

@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
 #
 # key         : defenum
-# name        : a « defcustom » declaration for « (:choice (:const ...)) » types.
+# name        : a « defcustom » declaration for « (:radio (:const ...)) » types.
 # condition   : (let ((KEY "defenum")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
@@ -13,12 +13,14 @@
 
   ${2:nil}
 
-  "$0, an enum."
+  "$0.
 
-  :type  '(set (const $2)
-               (const $3)
-               (const $4))
+(An Enum.)"
 
-  :safe  t
+  :type '(radio (const $2)
+                 (const $3)
+                (const $4))
+
+  :safe t
   :group 'sboo)
 

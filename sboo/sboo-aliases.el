@@ -70,10 +70,13 @@
 
 ;;----------------------------------------------;;
 
-(defalias '/ic #'sboo-insert-character-by-name)
+(defalias '/ic  #'sboo-insert-char)
+(defalias '/iu  #'sboo-insert-unicode-name)
 
-;;(defalias '/ic #'sboo-insert-character-by-name)
+;;(defalias '/ic #'sboo-insert-char)
 ;;(defalias '/ic #'insert-char)
+
+;;----------------------------------------------;;
 
 (defalias '/rq #'query-replace-regexp)
 (defalias '/rs #'replace-string)
@@ -137,6 +140,10 @@
 ;; (defalias '/fb   #'flyspell-buffer)
 
 ;;----------------------------------------------;;
+;; Project -------------------------------------;;
+;;----------------------------------------------;;
+
+(defalias '/mtg #'mtg-insert-card)
 
 ;;----------------------------------------------;;
 ;; External Packages ---------------------------;;
@@ -154,6 +161,10 @@
 
 (defalias '/m  #'magit)
 (defalias '/ms #'magit-status)
+
+;;----------------------------------------------;;
+
+(defalias '/yas #'yas-insert-snippet)
 
 ;;----------------------------------------------;;
 

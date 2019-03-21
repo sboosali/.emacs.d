@@ -1,0 +1,27 @@
+# -*- mode: snippet -*-
+#
+# key         : defset
+# name        : a « defcustom » declaration for « (:set ...) » types.
+# condition   : (let ((KEY "defset")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 2) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(defcustom sboo-${1:name}-set
+
+  '( $0
+   )
+
+  "A set of ${2:value}s. 
+
+(Customize via checklist widget)."
+
+  :type '(set (const nil)
+              (const $3)
+              (const $4))
+
+  :safe t
+  :group 'sboo)
+

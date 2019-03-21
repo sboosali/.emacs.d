@@ -56,7 +56,7 @@
 
   (interactive (list (mtg-read-card-name)))
 
-  (insert card))                        ;TODO different styles, versions (old, new), name-only or full-text or image, surround with backticks, etc.
+  (insert card))                        ;TODO different styles, versions (old, new), name-only or full-text or image, surround with backticks, etc. 
 
 ;;----------------------------------------------;;
 
