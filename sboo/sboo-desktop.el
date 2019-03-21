@@ -247,7 +247,7 @@ See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c
   (add-hook 'desktop-after-read-hook #'sboo-bury-all-star-buffers)
   ;(add-hook 'desktop-delay-hook      #'sboo-bury-all-star-buffers)
 
-  (when (null sboo-no-desktop-read-at-startup)
+  (when (and sboo-desktop-enable (null sboo-no-desktop-read-at-startup))
     (desktop-read)
     (desktop-save-mode +1))
 

@@ -296,6 +296,51 @@ Files:
       (prettify-symbols-mode 1))))
 
 ;;----------------------------------------------;;
+
+(cl-defun sboo-add-help-echo (&key echo string region)
+
+  "Add ECHO as « 'kbd-help » and « 'help-echo » display properties to STRING or REGION.
+
+Inputs:
+
+• ECHO   — a string (`stringp'). a message.
+• STRING — a string (`stringp'),
+• REGION — a buffer region (`consp').
+
+Outputs:
+
+• the object (STRING or REGION) that was propertized.
+
+Examples:
+
+• M-: (sboo-add-help-echo :echo \"help\" :region (cons (region-beginning) (region-end)))
+• M-: (insert (sboo-add-help-echo :echo \"help-echo\" :string \"xyz\"))
+
+Related:
+
+• `put-text-property'"
+
+  (let* ((OBJECT (or string region))
+         (START (if string 0
+                  (if region (car region)
+                    (if (region-active-p) (region-beginning)
+                      ()))))
+         (END   (if string (length string)
+                  (if region (cdr region)
+                    (if (region-active-p) (region-end)
+                      ()))))
+         )
+
+    (progn
+      (put-text-property START END 'help-echo echo OBJECT)
+      (put-text-property START END 'kbd-help  echo OBJECT)
+      OBJECT)))
+
+;; `help-echo' — a String or a Function. when the character is hovered over, emacs shows a Tooltip with the `help-echo` String (a Tooltip is either displayed in the Echo Area, or in a popup Tooltip Window). the Function has type `{window, object, position} -> String`.
+;; (insert (sboo-add-help-echo :echo "help-echo" :string "xyz"))
+;; (insert (propertize "xyz" 'help-echo "help-echo"))
+
+;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 

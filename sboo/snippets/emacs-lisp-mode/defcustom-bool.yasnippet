@@ -1,0 +1,22 @@
+# -*- mode: snippet -*-
+#
+# key         : defbool
+# name        : a « defcustom » declaration for « (:boolean) » types.
+# condition   : (let ((KEY "defbool")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(defcustom sboo-${1:name}
+
+  ${2:nil}
+
+  "$0, a `booleanp'."
+
+  :type '(boolean :tag "$3")
+
+  :safe  t
+  :group 'sboo)
+

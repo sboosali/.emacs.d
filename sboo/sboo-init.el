@@ -140,8 +140,141 @@ Links:
         (setq use-package-verbose t)))))
 
 ;;----------------------------------------------;;
+
+(cl-defun sboo-parse-boolean (string &key default)
+
+  "Parse an INI-style or EnvironmentVariable-style boolean.
+
+Inputs:
+
+• STRING — a `stringp'.
+
+Output:
+
+• a `booleanp'.
+
+Examples (true):
+
+• M-: (sboo-parse-boolean \"1\")
+    ⇒ t
+• M-: (sboo-parse-boolean \"yes\")
+    ⇒ t
+• M-: (sboo-parse-boolean \"true\")
+    ⇒ t
+• M-: (sboo-parse-boolean \"y\")
+    ⇒ t
+• M-: (sboo-parse-boolean \"t\")
+    ⇒ t
+• M-: (sboo-parse-boolean \"YES\")
+    ⇒ t
+• M-: (sboo-parse-boolean \"True\")
+    ⇒ t
+
+Examples (false):
+
+• M-: (sboo-parse-boolean \"0\")
+    ⇒ nil
+• M-: (sboo-parse-boolean \"no\")
+    ⇒ nil
+• M-: (sboo-parse-boolean \"false\")
+    ⇒ nil
+• M-: (sboo-parse-boolean \"n\")
+    ⇒ nil
+• M-: (sboo-parse-boolean \"f\")
+    ⇒ nil
+• M-: (sboo-parse-boolean \"NO\")
+    ⇒ nil
+• M-: (sboo-parse-boolean \"False\")
+    ⇒ nil
+
+Examples (default):
+
+• M-: (sboo-parse-boolean \"\")
+    ⇒ nil
+• M-: (sboo-parse-boolean \"\" :default t)
+    ⇒ t"
+
+  (pcase string
+
+    ("1"     t)
+    ("yes"   t)
+    ("true"  t)
+    ("y"     t)
+    ("t"     t)
+    ("YES"   t)
+    ("True"  t)
+
+    ("0"      nil)
+    ("no"     nil)
+    ("false"  nil)
+    ("n"      nil)
+    ("f"      nil)
+    ("NO"     nil)
+    ("False"  nil)
+
+    (_        (if default default nil))))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-getenv-boolean (environment-variable &key (default nil))
+
+  "Get ENVIRONMENT-VARIABLE, parse as a boolean, default to DEFAULT.
+
+Inputs:
+
+• ENVIRONMENT-VARIABLE — a string.
+
+Output:
+
+• a `booleanp'."
+
+  (sboo-parse-boolean (getenv environment-variable)
+                      :default default))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-getenv-number (environment-variable &key (default nil))
+
+  "Get ENVIRONMENT-VARIABLE, parse as a number, default to DEFAULT.
+
+Inputs:
+
+• ENVIRONMENT-VARIABLE — a string.
+
+Output:
+
+• a `numberp'."
+
+  (let ((string (getenv environment-variable)))
+
+    (if (equal nil string)
+        default
+
+      (read-number string))))
+
+;;----------------------------------------------;;
+;; Variables -----------------------------------;;
+;;----------------------------------------------;;
+
+(defvar sboo-desktop-enable
+
+  (condition-case nil
+      (sboo-getenv-boolean "SBOO_EMACS_DESKTOP" :default t)
+    (error t))
+
+  "Whether to `desktop-read'.
+
+Related:
+
+• `sboo-desktop-config!'")
+
+;;----------------------------------------------;;
 ;; Settings ------------------------------------;;
 ;;----------------------------------------------;;
+
+(sboo-init-use-package)
+
+;;==============================================;;
 
 (setq custom-file sboo-custom-file)
 
@@ -373,10 +506,6 @@ Links:
 
 ;;==============================================;;
 
-(sboo-init-use-package)
-
-;;==============================================;;
-
 (use-package ansi-color
 
   :config
@@ -395,21 +524,6 @@ Links:
 
 (use-package shell
 
-  :config
-
-  (push
-   (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
-   ;; ^
-   ;;
-   ;; How To Override The Default Behavior Of  "M-x shell" Opening A New Buffer In Another Window (e.g. splitting).
-   ;;
-   ;; see:
-   ;;    https://stackoverflow.com/questions/40301732/m-x-shell-open-shell-in-other-windows
-   ;;
-   ;; >  The command `shell` uses `pop-to-buffer`.
-   ;; > If you have the Emacs source code, you can see it for yourself by running `C-h d f shell` to open the function's documentation (and then clicking the link to the function's source).
-   ;; `pop-to-buffer` can be configured via `display-buffer-alist`. 
-
   :bind
 
   ( ("<s>-s" . shell)
@@ -424,7 +538,29 @@ Links:
     ;; ^ <next> is the page-down key.
     ;; `comint-next-input` is like "press up in a terminal-emulator".
 
-    ))
+    )
+
+  :config
+
+  (add-hook 'sh-mode-hook 'flycheck-mode)
+
+  ;; ^ FlyCheck builds-in a « shellcheck » checker
+  ;; ^ « shellcheck » is a Bash Linter.
+
+  (push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
+
+   ;; ^
+   ;;
+   ;; How To Override The Default Behavior Of  "M-x shell" Opening A New Buffer In Another Window (e.g. splitting).
+   ;;
+   ;; see:
+   ;;    https://stackoverflow.com/questions/40301732/m-x-shell-open-shell-in-other-windows
+   ;;
+   ;; >  The command `shell` uses `pop-to-buffer`.
+   ;; > If you have the Emacs source code, you can see it for yourself by running `C-h d f shell` to open the function's documentation (and then clicking the link to the function's source).
+  ;; `pop-to-buffer` can be configured via `display-buffer-alist`.
+
+  ())
 
 ;;----------------------------------------------;;
 ;;; Internal Packages --------------------------;;

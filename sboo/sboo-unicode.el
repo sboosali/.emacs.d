@@ -4,22 +4,240 @@
 (require 'subr-x) ;; "SUBRoutine-eXtRAS"
 (require 'mule)   ;; "MUltiLingual Environment"
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Variables -----------------------------------;;
+;;----------------------------------------------;;
 
-(defun sboo-get-char-name (CHAR)
+(defvar sboo-ucs-names
 
-  "Get the Unicode Character Database `name' of the given character `CHAR'.
+  nil
 
-Via `get-char-code-property'."
+  "List of Unicode Character names.
 
-  ;; (interactive (list
-  ;;               (read-char-exclusive)))
+Examples:
 
-  (get-char-code-property CHAR 'name))
+• M-: (nth 891 sboo-ucs-names)
+    ⇒ \"LATIN SMALL LETTER ALPHA\"
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Accessed by Function `sboo-ucs-names'.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-ucs-names-with-namesake-character
+
+  nil
+
+  "List of Unicode Character names.
+
+Examples:
+
+• M-: (nth 891 sboo-ucs-names-with-namesake-character)
+    ⇒ \"ɑ LATIN SMALL LETTER ALPHA\"
+
+Displayed by Function `sboo-read-character-name'.
+
+Like `sboo-ucs-names', but each name is prefixed by the namesake character (plus a space).")
+
+;;----------------------------------------------;;
+
+(defcustom sboo-unicode-display-namesake-default
+
+  t
+
+  "DISPLAY-NAMESAKE argument of `sboo-read-character-by-name'.
+
+Whether `sboo-read-character-by-name' displays, for example:
+
+• \"LATIN SMALL LETTER ALPHA\"   (if nil)
+• \"ɑ LATIN SMALL LETTER ALPHA\" (if t)
+
+a `booleanp'."
+
+  :type '(boolean)
+
+  :safe  t
+  :group 'sboo)
+
+;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+(cl-defun sboo-ucs-names (&key display-namesake)
+
+  "Return all Unicode Character names.
+
+Output:
+
+• a `listp' of `stringp's.
+
+Examples:
+
+• M-: (sboo-ucs-names)
+    ⇒ (\"NULL\" ... \"BULLET\" ...)
+
+• M-: (sboo-ucs-names :display-namesake t)
+    ⇒ (\"  NULL\" ... \"• BULLET\" ...)
+
+Related:
+
+• `ucs-names'
+
+Notes:
+
+• `ucs-names' is a `hash-table-p' on Emacs≥26 and an alist on Emacs≤25."
+
+  (progn
+
+    ;; Initialize:
+
+    (unless (and sboo-ucs-names
+                 sboo-ucs-names-with-namesake-character)
+
+      (let* ((OBJECT (ucs-names))
+             (TYPE   (type-of OBJECT))
+             (NAMES  (pcase TYPE
+                       ('hash-table (hash-table-keys OBJECT))
+                       ('list       (mapcar #'car OBJECT))
+                       (_           OBJECT)))
+             )
+
+        (progn
+
+          (unless sboo-ucs-names
+            (setq sboo-ucs-names NAMES))
+
+          (unless sboo-ucs-names-with-namesake-character
+            (setq sboo-ucs-names-with-namesake-character
+                  (mapcar #'sboo-prefix-namesake-character NAMES))))))
+
+    ;; Access:
+
+    (if (bound-and-true-p display-namesake)
+        sboo-ucs-names-with-namesake-character
+      sboo-ucs-names)))
+
+;;----------------------------------------------;;
+
+(defun sboo-ucs-names-get (name)
+
+  "Get a character by name.
+
+Inputs:
+
+• NAME — a `stringp'.
+
+Output:
+
+• an `integerp'.
+
+Example:
+
+• M-: (format \"%c\" (sboo-ucs-names-get \"BULLET\"))
+    ⇒ \"•\"
+"
+
+  (let* ((NAME   (upcase name))
+         (OBJECT (ucs-names))
+         (TYPE   (type-of OBJECT))
+         (CHAR   (pcase TYPE
+                   ('hash-table (gethash NAME OBJECT))
+                   ('list       (alist-get NAME OBJECT nil nil #'equal))
+                   (_           nil)))
+         )
+
+    CHAR))
+
+;; ^ (format "%c" (sboo-ucs-names-get "BULLET"))
+
+;;----------------------------------------------;;
+
+(defun sboo-prefix-namesake-character (name)
+
+  "Prefix NAME with the char it names.
+
+Inputs:
+
+• NAME — a `stringp'. The name of the unicode character.
+
+Output:
+
+• a `stringp'. 
+  the output `string-width' will always be exactly two more than the input's.
+
+Examples:
+
+    M-: (sboo-prefix-namesake-character \"BULLET\")
+      ⇒ \"• BULLET\"
+
+    M-: (sboo-prefix-namesake-character \"NULL\")
+      ⇒ \"  NULL\"
+
+    M-: (equal (substring (sboo-prefix-namesake-character \"NULL\") 2) \"NULL\")
+      ⇒ t
+
+    M-: (- (string-width (sboo-prefix-namesake-character \"NULL\")) (string-width \"NULL\"))
+      ⇒ 2"
+
+  (let* ((CHAR   (sboo-get-character-by-name name))
+         (STRING (if CHAR
+                     (char-to-string CHAR)
+                   ""))
+         (WIDTH  (string-width STRING))
+         (PREFIX (if (and STRING (= 1 WIDTH))
+                     (concat STRING " ")
+                   "  "))
+         )
+
+    (concat PREFIX name)))
+
+;; (sboo-prefix-namesake-character "BULLET")
+
+;;----------------------------------------------;;
+
+(defun sboo-strip-namesake-character (string)
+
+  "Invert `sboo-prefix-namesake-character'.
+
+Inputs:
+
+• STRING — a `stringp'.
+
+Output:
+
+• a `stringp'. 
+
+Examples:
+
+    M-: (sboo-strip-namesake-character (sboo-prefix-namesake-character \"BULLET\"))
+      ⇒ \"BULLET\""
+
+    (substring string 2))
+
+;;----------------------------------------------;;
+
+(defun sboo-get-char-name (char)
+
+  "Get the Unicode Character Database « 'name » of CHAR.
+
+Inputs:
+
+• CHAR — a character (an `integerp').
+
+Examples:
+
+    M-: (call-interactively #'sboo-get-char-name)
+    Character: c
+    ⇒ \"LATIN SMALL LETTER C\"
+
+Related:
+
+• `get-char-code-property'."
+
+  (interactive (list (read-char-exclusive "Character (press a key): ")))
+
+  (get-char-code-property char 'name))
+
+;;----------------------------------------------;;
 
 (defun sboo-get-unicode-names-list ()
 
@@ -44,7 +262,7 @@ Via `ucs-names'."
 
   ;;     NAMES)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-get-unicode-names-hash-table ()
 
@@ -58,7 +276,7 @@ Via `ucs-names'."
 
   ucs-names)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-get-unicode-completion-description-hash-table ()
 
@@ -74,9 +292,9 @@ Via `ucs-names'."
 
   )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Variables ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;;;###autoload
 (defvar sboo-unicode-names-list (sboo-get-unicode-names-list)
@@ -96,7 +314,7 @@ e.g...
 
 ")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;;;###autoload
 (defvar sboo-unicode-names-hash-table (sboo-get-unicode-names-hash-table)
@@ -115,7 +333,7 @@ Examples:
 
 ;; M-: (gethash "BULLET" ucs-names)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;;;###autoload
 (defvar sboo-unicode-completion-descriptions-hash-table (sboo-get-unicode-completion-description-hash-table)
@@ -149,16 +367,94 @@ Examples:
     nil
 
     M-: (gethash \"•\" sboo-unicode-completion-descriptions-hash-table)
-    nil
-")
+    nil")
 
 ;; ^
 ;;     M-: (gethash "• BULLET" sboo-unicode-completion-descriptions-hash-table)
 ;;     ?•
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+
+(defun sboo-read-character-name (&optional display-namesake)
+
+  "Read a Unicode Character name.
+
+Inputs:
+
+• DISPLAY-NAMESAKE — a `booleanp'. 
+                     Whether to display the unicode character itself (beside the name).
+
+Output:
+
+• a `stringp'.
+  a key of `ucs-names'.
+
+Type (Haskell):
+
+• « :: IO String ».
+
+Related:
+
+• `ucs-names'."
+
+  (interactive (list
+                (if current-prefix-arg t nil)
+                ))
+
+  (let*  ((PROMPT        (format "%s: " "Unicode Character name"))
+          (REQUIRE-MATCH t)
+          (PREDICATE     nil)
+          (CANDIDATES    (if display-namesake
+                             sboo-ucs-names-with-namesake-character
+                           sboo-ucs-names))
+          )
+
+    (let* ((STRING (completing-read PROMPT CANDIDATES PREDICATE REQUIRE-MATCH nil))
+           (NAME   (if display-namesake
+                       (sboo-strip-namesake-character STRING)
+                     STRING))
+           )
+
+      NAME)))
+
+;;----------------------------------------------;;
+
+(defun sboo-read-character-by-name (&optional display-namesake)
+
+  "Read a Unicode Character name, returning the corresponding Unicode Character.
+
+Inputs:
+
+• DISPLAY-NAMESAKE — a `booleanp'. 
+                     Whether to display the unicode character itself (beside the name).
+
+Output:
+
+• an `integerp' (a character).
+  a value of `ucs-names'.
+
+Type (Haskell):
+
+• « :: IO Char ».
+
+Related:
+
+• `ucs-names'.
+• `read-character-by-name' — doesn't support fuzzy-matching."
+
+  (interactive (list
+                (if current-prefix-arg t nil)
+                ))
+
+  (let* ((STRING (sboo-read-character-name display-namesake))
+         (CHAR   (sboo-ucs-names-get STRING))
+         )
+
+    CHAR))
+
+;;----------------------------------------------;;
+;; Commands ------------------------------------;;
+;;----------------------------------------------;;
 
 (defun sboo-read-character-name-via-collection ()
 
@@ -170,9 +466,9 @@ See `ucs-names'."
 
   (completing-read "Unicode character name: " sboo-unicode-names-list nil t))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-(defun sboo-annotate-character-name-with-character-literal (NAME)
+(defun sboo-annotate-character-name-with-character-literal (name)
 
   "Annotate `NAME' (e.g. \"BULLET\") with the char itself (e.g. ?•).
 
@@ -181,7 +477,7 @@ Haskell Type « :: String -> String ».
   ;TODO(throw 'sboo NAME)
 
   (let ((CHAR
-         (gethash NAME sboo-unicode-names-hash-table)))
+         (gethash name sboo-unicode-names-hash-table)))
 
     (if CHAR
         (let ((PRINTABLE
@@ -189,14 +485,14 @@ Haskell Type « :: String -> String ».
 
           (if PRINTABLE
               (let ((ANNOTATED
-                     (format-message "%s  %s" (char-to-string CHAR) NAME)))
+                     (format-message "%s  %s" (char-to-string CHAR) name)))
               ;; (let ((ANNOTATION
               ;;        (format-message " %s" (char-to-string CHAR))))
 
                 ANNOTATED)
-            NAME)))))
+            name)))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-read-character-name-with-annotations ()
 
@@ -206,7 +502,7 @@ Annotates each completion candidate with the unicode character being named.
 
 Haskell Type « :: IO String ».
 
-Calls `completing-read' with ‘(elisp)Programmed Completion’"
+Calls `completing-read' with Info node ‘(elisp)Programmed Completion’"
 
   (let ((completion-extra-properties
          '(:annotation-function sboo-annotate-character-name-with-character-literal)))
@@ -216,7 +512,7 @@ Calls `completing-read' with ‘(elisp)Programmed Completion’"
 ;; ^
 ;;     M-: (message (sboo-read-character-name-with-annotations))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-read-character-with-literals-displayed ()
 
@@ -239,51 +535,40 @@ Calls `completing-read' with ‘(elisp)Programmed Completion’"
 ;; ^
 ;;     M-: (message (sboo-read-character-with-literals-displayed))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-(defun sboo-read-character (&optional METHOD)
+(cl-defun sboo-read-character (&key method display)
 
   "Read a Unicode character name, returning the string `NAME'.
 
-Wraps `sboo-read-character-with-literals-displayed', `sboo-read-character-name-with-annotations', `sboo-read-character-name-via-collection'.
-"
+Inputs:
+
+• NAME    — a `stringp'. The name of the unicode character.
+• DISPLAY — a `booleanp'. Whether to display the unicode character itself (beside the name).
+
+Wraps `sboo-read-character-with-literals-displayed', `sboo-read-character-name-with-annotations', `sboo-read-character-name-via-collection'."
 
   (let ((CHAR-READER
-         (if METHOD METHOD #'sboo-read-character-with-literals-displayed))) ;TODO shorter aliases (than full names) in keywors).
+         (if METHOD METHOD #'sboo-read-character-with-literals-displayed))) ;TODO shorter aliases (than full names) in keywords).
 
     (call-interactively CHAR-READER)))
 
 ;;TODO function (not command) alias?
 ;; (defalias sboo-read-character-name #'sboo-read-character-name-with-annotations)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-(defun sboo-read-character-by-name ()
-
-  "Read a Unicode character name, returning the char `CHAR'.
-
-Haskell Type « :: IO Char ».
-
-See `ucs-names'.
-
-(NOTE `CHAR' is an `integerp'.)
-
-Also see `read-character-by-name', which doesn't support fuzzy-matching."
-
-  (completing-read "Unicode character name: "
-                   sboo-unicode-completion-descriptions-hash-table
-                   nil
-                   t))
-
- ;TODO convert hash-table to alist? completion ignores keys/cars/etc of given collection.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun sboo-get-character-by-name (NAME)
+(cl-defun sboo-get-character-by-name (name)
 
   "Return the Unicode character whose name is `NAME'.
 
-Haskell Type « :: Strinig -> Maybe Char ».
+Inputs:
+
+• NAME — a `stringp'. The name of a Unicode Character.
+
+Type (Haskell):
+
+• « :: String -> Maybe Char »
 
 Examples:
 
@@ -298,33 +583,47 @@ See `sboo-unicode-names-hash-table'."
   (interactive (list
                 (sboo-read-character-name-with-annotations)))
 
-  (let ((CHAR (gethash NAME ucs-names)))
+  (let ((CHAR (gethash name ucs-names)))
+
     CHAR))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-(defun sboo-insert-character-by-name (NAME)
+(defun sboo-insert-character-by-name (name)
 
-  "Insert the Unicode character `NAME', by name.
+  "Insert the Unicode Character named `NAME'.
 
-Wraps `sboo-read-character-by-name'.
+Inputs:
 
-Like `insert-char', but:
+• NAME — a `stringp'. The name of a Unicode Character.
 
-* its completion is more flexible (`helm' will fuzzily-match); and
-* it displays TODO the literal unicode character itself alongside each name.
-"
+Type (Haskell):
 
-  (interactive (list
-                (sboo-read-character-name-with-annotations)))
+• « :: String -> IO () ».
 
-  (let ((CHAR (sboo-get-character-by-name NAME)))
+Notes:
+
+• `sboo-insert-character-by-name' is like `insert-char', but:
+
+    • its completion is more flexible (for example, `helm' can be configured to efficiently fuzzily-match)
+    • it displays the literal unicode character itself alongside each name (when `sboo-unicode-display-namesake-default' is non-nil).
+
+Related:
+
+• `sboo-unicode-display-namesake-default'.
+• `sboo-read-character-name'.
+• `sboo-ucs-names-get'."
+
+  (interactive (list (sboo-read-character-name sboo-unicode-display-namesake-default)
+                     ))
+
+  (let ((CHAR (sboo-ucs-names-get name)))
 
     (insert-char CHAR)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
 
 ;;; DOCS ‘ucs-names’: [TODO]
 ;;
@@ -447,5 +746,5 @@ Like `insert-char', but:
 ;; ./share/emacs/26.1/lisp/international/uni-name.el 
 ;; 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 (provide 'sboo-unicode)

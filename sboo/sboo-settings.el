@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;;; General Settings
 ;;
@@ -16,14 +16,14 @@
 
 (prefer-coding-system 'utf-8)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (setq undo-limit        20000000)
 (setq undo-strong-limit 40000000)
 
 ;; ^ ensure undo limits are as high as possible.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (cua-mode t)
 
@@ -43,7 +43,7 @@
 ;;
 ;; Thus, we can type « C-k » where before we typed « C-k C-k ».
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (setq truncate-lines nil)
 
@@ -65,7 +65,7 @@
 
 ;; ^ `show-paren-style' can be: `expression', `parenthesis', `mixed'.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (setq scroll-step                     1)
 (setq scroll-preserve-screen-position 1)
@@ -95,7 +95,7 @@
 (auto-compression-mode t)
 ;; ^ Transparently open compressed files.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (setq visible-bell t)
 
@@ -115,7 +115,7 @@
 ;(setq initial-buffer-choice 'xah-new-empty-buffer)
 ;; ^ Start Emacs with Empty Buffer
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -133,14 +133,14 @@
 ;; `use-dialog-box' also determines whether to use native file selection windows.
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (add-to-list 'safe-local-variable-values '(lexical-binding . t))
 
 ;; ^ `safe-local-variable-values':
 ;; 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (set-background-color "#f4f4f4")
 
@@ -155,7 +155,7 @@
 ;;(set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
 ;;(set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (setq enable-recursive-minibuffers   t)
 (setq minibuffer-depth-indicate-mode t)
@@ -179,7 +179,7 @@
 
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; (setq echo-keystrokes 0.1)
 
@@ -190,17 +190,55 @@
 ;; (setq select-enable-clipboard t)
 ;; (setq select-enable-primary   t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;; Enable disabled commands:
 
 (put 'upcase-region   'disabled nil)  ;; « C-x C-u »: same as M-u, but on whole regions.
 (put 'downcase-region 'disabled nil)  ;; « C-x C-l »: same as M-l, but on whole regions.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (ffap-bindings)
 ;; ^ a.k.a. `find-file-at-point'
+
+;;----------------------------------------------;;
+
+;;==============================================;;
+
+(defun sboo-display-message-or-buffer (string)
+
+  "`display-message-or-buffer'."
+
+  (when (stringp string)
+    (display-message-or-buffer string)))
+
+;;----------------------------------------------;;
+
+(setq show-help-function #'sboo-display-message-or-buffer)
+
+;; Default `show-help-function' is `tooltip-show-help'.
+
+;;==============================================;;
+
+(setq help-at-pt-display-when-idle t)
+
+;; ^ `help-at-pt-display-when-idle':
+;;
+;; Automatically show local help on point-over.
+;;
+;; If the value is t, the string obtained from any ‘kbd-help’ or
+;; ‘help-echo’ property at point is automatically printed in the
+;; echo area, if nothing else is already displayed there, or after a
+;; quit.  If both ‘kbd-help’ and ‘help-echo’ produce help strings,
+;; ‘kbd-help’ is used.
+;; 
+;; 
+
+(setq help-at-pt-timer-delay       1)
+(help-at-pt-set-timer)
+
+;;==============================================;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; DirEd ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
