@@ -353,8 +353,6 @@ Related:
 ;; Themes --------------------------------------;;
 ;;----------------------------------------------;;
 
-;;(defvar sboo-submodule-solarized-directory
-
 (ignore-errors
 
   (when (>= emacs-major-version 24)
@@ -1472,11 +1470,22 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; External Packages: Miscellaneous ------------;;
 ;;----------------------------------------------;;
 
-;;(require which-key ())
+(use-package rainbow-mode
+
+    :load-path "/nix/store/qnl0dlq0zsvg5rnd6c9grdn1phv9xc7x-emacs-rainbow-mode-1.0.1/share/emacs/site-lisp/elpa/rainbow-mode-1.0.1/" ;FIXME dont hardcode
+
+    :config
+
+    (dolist (HOOK '(prog-hook text-mode))
+      (add-hook HOOK #'rainbow-mode))
+
+    ())
 
 ;;----------------------------------------------;;
 
-;;(require rainbow-mode ())
+(use-package which-key
+
+    )
 
 ;;----------------------------------------------;;
 

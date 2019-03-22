@@ -142,7 +142,8 @@ Jargon:
 
 (defvar anathema-default-colors-alist
 
-  '(("anathema-fg+1"     . "#FFFFEF")
+  '(
+    ("anathema-fg+1"     . "#FFFFEF")
     ("anathema-fg"       . "#DCDCCC")
     ("anathema-fg-1"     . "#656555")
     ("anathema-bg-2"     . "#000000")
@@ -186,7 +187,8 @@ Jargon:
     ("anathema-blue-3"   . "#5C888B")
     ("anathema-blue-4"   . "#4C7073")
     ("anathema-blue-5"   . "#366060")
-    ("anathema-magenta"  . "#DC8CC3"))
+    ("anathema-magenta"  . "#DC8CC3")
+    )
 
   "Color Palette (for the `anathema' theme).
 
