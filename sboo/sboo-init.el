@@ -116,6 +116,30 @@
 
 ;;----------------------------------------------;;
 
+(eval-when-compile
+
+  ;;--------------------------;;
+
+  (defmacro sboo-custom-set (variable expression &optional comment)
+
+    "`custom-set-variables' wrapper."
+    
+    (declare (indent 2) (doc-string 3))
+
+    `(ignore-errors
+       (custom-set-variables
+        (list (quote ,variable) ,expression :eager nil ,comment)))) ;TODO handle variables, not just symbols
+
+  ;;--------------------------;;
+
+  
+
+  ;;--------------------------;;
+
+  ())
+
+;;----------------------------------------------;;
+
 (defun sboo-init-use-package ()
 
   "Register and initialize `use-package'.
@@ -954,7 +978,23 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
                   ("\\.chs\\'"   . haskell-mode)
                   )
 
-    ;;; :hook        ((haskell-mode . interactive-haskell-mode))
+    :hook        ((haskell-mode . interactive-haskell-mode))
+
+    :custom
+    (haskell-tags-on-save                         t "Continuously update via « hasktags ».")
+    (haskell-process-type           'cabal-new-repl "")
+    (haskell-process-log                          t "")
+    (haskell-process-suggest-remove-import-lines  t "")
+    (haskell-process-auto-import-loaded-modules   t "")
+    (haskell-process-suggest-hoogle-imports       t "")
+    (haskell-stylish-on-save                      t "")
+
+;; (custom-set-variables
+;;  '(haskell-ask-also-kill-buffers nil)
+;;  '(haskell-interactive-popup-errors nil)
+;;  '(haskell-process-args-cabal-repl (list "--ghc-option=-ferror-spans"))
+    ;;  '(haskell-process-type '(cabal-new-repl))
+    ;; )
 
     :init
     (setq haskell-doc-current-info #'sboo-haskell-doc-current-info)
@@ -1485,9 +1525,16 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
   (setq comint-scroll-to-bottom-on-output 'others)
   (setq comint-scroll-to-bottom-on-input  'this)
 
+  (sboo-custom-set comint-buffer-maximum-size
+      2000
+    "Increase.")
+
   ())
 
 ;;----------------------------------------------;;
+
+  ;; :custom-face
+  ;; (eruby-standard-face ((t (:slant italic)))))
 
 ;;----------------------------------------------;;
 ;; Finalization --------------------------------;;

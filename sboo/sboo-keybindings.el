@@ -318,15 +318,28 @@ Wraps `forward-thing'."
 ;;; KeyPad (`kp-' Keybindings...
 ;;==============================================;;
 
-(global-set-key (kbd "<kp-begin>") #'sboo-find)
-
-(global-set-key (kbd "<kp-end>")   #'delete-other-windows)
-
-(global-set-key (kbd "<kp-left>")  #'next-buffer)
-(global-set-key (kbd "<kp-right>") #'previous-buffer)
+(global-set-key (kbd "<kp-left>")  #'previous-buffer)
+(global-set-key (kbd "<kp-right>") #'next-buffer)
 
 (global-set-key (kbd "<kp-up>")    #'sboo-prior-definition)
 (global-set-key (kbd "<kp-down>")  #'sboo-next-definition)
+
+(global-set-key (kbd "<kp-begin>") #'sboo-find)
+
+;;(global-set-key (kbd "<kp-home>")   #')
+(global-set-key (kbd "<kp-end>")   #'delete-other-windows)
+
+(global-set-key (kbd "<kp-prior>")    #'flycheck-previous-error)
+(global-set-key (kbd "<kp-next>")     #'flycheck-next-error)
+
+;;(global-set-key (kbd "<kp-insert>")   #')
+;;(global-set-key (kbd "<kp-delete>")   #')
+;;(global-set-key (kbd "<kp-enter>")    #')
+;;(global-set-key (kbd "<kp-add")       #')
+;;(global-set-key (kbd "<kp-subtract>") #')
+;;(global-set-key (kbd "<kp-multiply>") #')
+;;(global-set-key (kbd "<kp-divide>")   #')
+;;(global-set-key (kbd "<kp-")   #')
 
 ;;==============================================;;
 ;;; Super (`s-') Keybindings...

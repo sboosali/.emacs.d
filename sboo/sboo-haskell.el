@@ -344,5 +344,11 @@ Related:
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
+;; ERROR "Couldn't guess that module name. Does it exist?"
+;;
+;; « -fdefer-type-errors »
+
+;; 
+
 ;;----------------------------------------------;;
 (provide 'sboo-haskell)

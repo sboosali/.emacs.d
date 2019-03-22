@@ -4,12 +4,14 @@
 ;;; Commentary:
 ;;==============================================;;
 
-;; Personal (general) settings.
+;; Personal Settings.
 ;; 
-;; Settings should be both **fast** and **safe**
-;; (like the `:init' initialization in `use-package').
+;; Settings should be both **fast** and **safe**,
+;; Like « (use-package :init ...) », they are eager.
 ;; 
-;; Most settings are literally just `setq' statements.
+;; Most settings are literally set-statements.
+;; (`sboo-custom-set', `custom-set-variables', `setq', etc)
+;;
 ;; 
 
 ;;==============================================;;
@@ -20,139 +22,105 @@
 ;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
+(require 'cl)
+
 ;;----------------------------------------------;;
-;; Settings ------------------------------------;;
+;; Utilities -----------------------------------;;
+;;----------------------------------------------;;
+
+(eval-when-compile
+
+  (when (not (fboundp #'sboo-custom-set))
+
+    (defmacro sboo-custom-set (variable expression &optional comment requirements)
+      "`custom-set-variables' wrapper."
+      (declare (indent 2) (doc-string 3))
+      `(ignore-errors
+         (custom-set-variables
+          (list (quote ,variable) ,expression t ,requirements ,comment))))))
+
+;;----------------------------------------------;;
+
+(defun sboo-display-message-or-buffer (string)
+  "`display-message-or-buffer' wrapper."
+
+  (when (stringp string)
+    (display-message-or-buffer string)))
+
+;;----------------------------------------------;;
+
+(defun sboo-proced-settings ()
+  "My `proced' settings (enable Auto-Refresh)."
+
+  (progn
+    (setq proced-auto-update-interval 3)  ; in Seconds.
+    (proced-toggle-auto-update +1)
+    ()))
+
+;;----------------------------------------------;;
+(defun sboo-dired-settings ()
+  "My `dired' settings (enable Auto-Refresh)."
+
+  (progn
+    (setq dired-auto-revert-buffer t)
+    ()))
+
+;;----------------------------------------------;;
+;; Settings: Collective ------------------------;;
 ;;----------------------------------------------;;
 
 (prefer-coding-system 'utf-8)
 
-;;----------------------------------------------;;
+;; ^ UTF-8 is the default Unicode Encoding.
 
-(setq undo-limit        20000000)
-(setq undo-strong-limit 40000000)
-
-;; ^ ensure undo limits are as high as possible.
-
-;;----------------------------------------------;;
-
-(cua-mode t)
+(cua-mode +1)
 
 ;; ^ the standard keybindings: C-c, C-x, C-v, C-z.
 
-(setq cua-keep-region-after-copy t) 
-
-;; ^ Standard Windows behaviour.
-
-(transient-mark-mode 1) 
+(transient-mark-mode +1)
 
 ;; ^ No region when nothing is highlighted.
-
-(setq kill-whole-line t)
-
-;; ^ « C-k » eats newline (a.k.a. "kills the whole line").
-;;
-;; Thus, we can type « C-k » where before we typed « C-k C-k ».
-
-;;----------------------------------------------;;
-
-(setq truncate-lines nil)
-
-(setq require-final-newline      nil)
-(setq mode-require-final-newline nil)
-
-;; ^ Prevent automatic insertion of a final-newline.
-
-(setq-default indent-tabs-mode nil)
-
-;; ^ Prevent Extraneous Tabs
-
-(show-paren-mode t)
-
-;; ^ `show-paren-mode' automatically highlights matching parentheses.
-
-(setq show-paren-delay 0)
-(setq show-paren-style 'expression) 
-
-;; ^ `show-paren-style' can be: `expression', `parenthesis', `mixed'.
-
-;;----------------------------------------------;;
-
-(setq scroll-step                     1)
-(setq scroll-preserve-screen-position 1)
-;; (setq scroll-margin 10)
-;; (setq scroll-conservatively 10000)
-(setq redisplay-dont-pause            t)
-
-;; ^ "peeking" behavior when scrolling.
 
 (when (>= emacs-major-version 26)
   (global-linum-mode +1))
 
-;; ^ 
+;; ^ show Line-Number Sidebar (`linum-mode' is fast, written in C)/
 
 (column-number-mode +1)
 
-;; ^ Always show column numbers.
-;;
-;; (By default, only row numbers are shown).
+;; ^ always show Column Numbers in the Modeline (by default, only Row Numbers are shown).
 
-;;;TODO (add-hook ) 
-;; ^ Disable `overwrite-mode'.
+(global-font-lock-mode +1) 
 
-(global-font-lock-mode t) 
-;; ^ Syntax highlighting, by default.
+;; ^ Syntax Highlighting, by default.
 
-(auto-compression-mode t)
-;; ^ Transparently open compressed files.
+(auto-compression-mode +1)
 
-;;----------------------------------------------;;
+;; ^ automatically open Compressed Files.
 
-(setq visible-bell t)
+(show-paren-mode +1)
 
-;; ^
-;; on user errors, flash a black square on to the screen.
-;; instead of honking loudly through your speakers.
+;; ^ automatically highlight Matching Parentheses.
 
-(setq inhibit-splash-screen     t)
-(setq initial-scratch-message nil)
+(ffap-bindings)
 
-;; ^ fewer startup buffers
+;; ^ « ffap » abbreviates `find-file-at-point'.
 
-(setq initial-major-mode 'text-mode)
-
-;; ^ Set the Default Major Mode for a new Buffer.
-
-;(setq initial-buffer-choice 'xah-new-empty-buffer)
-;; ^ Start Emacs with Empty Buffer
-
-;;----------------------------------------------;;
-
-(defalias 'yes-or-no-p 'y-or-n-p)
+(defalias 'yes-or-no-p #'y-or-n-p)
 
 ;; ^ with `y-or-n-p', you press just one key for boolean prompts.
-;;
-;; i.e. the single character "y", instead of typing out the phrase "yes".
-;;
+;;   (i.e. the single character "y", instead of typing out the phrase "yes".)
 
-(setq use-dialog-box nil)
+;;----------------------------------------------;;
+;; Settings: Faces -----------------------------;;
+;;----------------------------------------------;;
 
-;; ^ `nil' replaces Dialog Boxes with `yes-or-no' prompts.
-;;
-;; i.e. minibuffer prompts, which use the echo area and keyboard input.
-;;
-;; `use-dialog-box' also determines whether to use native file selection windows.
-;;
+;; (custom-set-faces
+;;   `(minibuffer-prompt ((t (:family "Iosevka")))))
 
 ;;----------------------------------------------;;
 
-(add-to-list 'safe-local-variable-values '(lexical-binding . t))
-
-;; ^ `safe-local-variable-values':
-;; 
-
-;;----------------------------------------------;;
-
-(set-background-color "#f4f4f4")
+;(set-background-color "#f4f4f4")
 
  ;; ^
  ;; i.e. R=xF4 G=xF4 B=xF4 
@@ -166,28 +134,112 @@
 ;;(set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
 
 ;;----------------------------------------------;;
+;; Settings: Individual ------------------------;;
+;;----------------------------------------------;;
 
-(setq enable-recursive-minibuffers   t)
-(setq minibuffer-depth-indicate-mode t)
+(sboo-custom-set undo-limit 20000000
+  "maximize Undo History.")
 
-;; ^ minibuffer settings.
+(sboo-custom-set undo-strong-limit 40000000
+  "maximize Undo History.")
+
+;;----------------------------------------------;;
+
+(sboo-custom-set cua-keep-region-after-copy t
+  "standard Windows behavior.")
+
+(sboo-custom-set kill-whole-line t
+  "« C-k » eats newlines (a.k.a. it kills the whole line). By enabling `kill-whole-line', we can type just « C-k » where before we typed « C-k C-k ».")
+
+;;----------------------------------------------;;
+
+(sboo-custom-set truncate-lines nil
+  "enable Continuation Lines.")
+
+(sboo-custom-set require-final-newline nil
+  "no Automatic Insertion of a Final Newline.")
+
+(sboo-custom-set mode-require-final-newline nil
+  "no Automatic Insertion of a Final Newline.")
+
+(sboo-custom-set indent-tabs-mode nil
+  "no Extraneous Tabs.")
+
+(sboo-custom-set show-paren-delay 0
+  "no Delay.")
+
+(sboo-custom-set show-paren-style mixed
+  "highlight the Parenthesized Expression, unless the Matching Parenthesis is visible (not just the Parenthesis).")
+
+;;----------------------------------------------;;
+
+(sboo-custom-set scroll-step                     1
+  "")
+(sboo-custom-set scroll-preserve-screen-position 1
+  "")
+
+;; (sboo-custom-set scroll-margin 10
+;;   "")
+;; (sboo-custom-set scroll-conservatively 10000
+;;   "")
+
+(sboo-custom-set redisplay-dont-pause t
+  "“Peeking” behavior when scrolling.")
+
+;;----------------------------------------------;;
+
+(sboo-custom-set visible-bell t
+  "flash a Black Square onto the screen on User Errors (instead of honking loudly through the speakers).")
+
+(sboo-custom-set inhibit-splash-screen     t "fewer Startup Buffers.")
+(sboo-custom-set initial-scratch-message nil "fewer Startup Buffers.")
+
+(sboo-custom-set initial-major-mode text-mode
+  "the default Major Mode for a new Buffer.")
+
+;(setq initial-buffer-choice 'xah-new-empty-buffer)
+;; ^ Start Emacs with Empty Buffer
+
+(sboo-custom-set linum-format "%3d"
+  "Three-Digit Line-Numbers (e.g. « 001 », not « 1 »).")
+
+;;----------------------------------------------;;
+
+(sboo-custom-set use-dialog-box nil
+  "`nil' replaces Dialog Boxes with `yes-or-no' prompts.")
+
+;; ^ 
 ;;
-;; e.g. you can press "M-x" within a "M-x".
-;; e.g. you can search through (via a second "C-s") the minibuffer of a search command for the (non-mini) buffer (having pressed the first "C-s").
+;; i.e. minibuffer prompts, which use the echo area and keyboard input.
 ;;
-;; e.g. minibuffer displays "M-x [2]" when you've (often accidentally) double-{M-x}'d.
+;; `use-dialog-box' also determines whether to use native file selection windows.
 ;;
 
 ;;----------------------------------------------;;
 
-(setq mouse-1-click-follows-link t)
+(add-to-list 'safe-local-variable-values
+             '(lexical-binding . t))
+
+;; ^ `safe-local-variable-values':
+;; 
+
+;;----------------------------------------------;;
+
+(sboo-custom-set enable-recursive-minibuffers   t
+  "so you can: ① press « M-x » within a « M-x »; ② search through (via a second « C-s ») the minibuffer of a search command for the (non-mini) buffer (having pressed the first « C-s »).")
+
+(sboo-custom-set minibuffer-depth-indicate-mode t
+  "e.g. minibuffer displays « M-x [2] » when you've (often accidentally) double-« M-x »'d.")
+
+;;----------------------------------------------;;
+
+(sboo-custom-set mouse-1-click-follows-link t
+  "Left-Click a HyperLink to open it.")
 
 ;;----------------------------------------------;;
 
 (setq Buffer-menu-name-width 30)
 ;; (setq Buffer-menu-size-width 6)
-
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
 ;;----------------------------------------------;;
 
@@ -202,34 +254,19 @@
 
 ;;----------------------------------------------;;
 
-;; Enable disabled commands:
-
-(put 'upcase-region   'disabled nil)  ;; « C-x C-u »: same as M-u, but on whole regions.
-(put 'downcase-region 'disabled nil)  ;; « C-x C-l »: same as M-l, but on whole regions.
-
-;;----------------------------------------------;;
-
-(ffap-bindings)
-;; ^ a.k.a. `find-file-at-point'
-
-;;==============================================;;
-
-(defun sboo-display-message-or-buffer (string)
-
-  "`display-message-or-buffer'."
-
-  (when (stringp string)
-    (display-message-or-buffer string)))
-
-;;----------------------------------------------;;
-
 (setq show-help-function #'sboo-display-message-or-buffer)
 
 ;; Default `show-help-function' is `tooltip-show-help'.
 
 ;;==============================================;;
 
-(setq help-at-pt-display-when-idle t)
+(sboo-custom-set help-at-pt-display-when-idle t
+  "automatically show Local Help (i.e. the ‘kbd-help’ or ‘help-echo’ Text Property of the character-at-point) on point-over (i.e. when `point' moves there, not when the `cursor' hovers over).")
+
+(progn
+  (sboo-custom-set help-at-pt-timer-delay 1
+    "Wait 1sec before showing Local Help (i.e. the ‘kbd-help’ or ‘help-echo’ Text Property of the character-at-point)")
+  (help-at-pt-set-timer))
 
 ;; ^ `help-at-pt-display-when-idle':
 ;;
@@ -243,31 +280,18 @@
 ;; 
 ;; 
 
-(setq help-at-pt-timer-delay 1)
-(help-at-pt-set-timer)
-
 ;;----------------------------------------------;;
 ;; DirEd ---------------------------------------;;
 ;;----------------------------------------------;;
 
-(defun sboo-dired-settings ()
-  "My `dired' settings (auto-refresh)."
-
-  (setq dired-auto-revert-buffer t)
-  ())
+(sboo-custom-set dired-auto-revert-buffer t
+  "Auto-Refresh.")
 
 (add-hook 'dired-mode-hook #'sboo-dired-settings)
 
 ;;----------------------------------------------;;
 ;; ProcEd --------------------------------------;;
 ;;----------------------------------------------;;
-
-(defun sboo-proced-settings ()
-  "My `proced' settings (auto-refresh)."
-
-  (setq proced-auto-update-interval 3)  ; in Seconds.
-  (proced-toggle-auto-update +1)
-  ())
 
 (add-hook 'proced-mode-hook #'sboo-proced-settings)
 
@@ -278,14 +302,24 @@
 (add-to-list 'auto-mode-alist (cons "\\.xpm\\'" #'c-mode))
 
 ;;----------------------------------------------;;
-;; Faces ---------------------------------------;;
+;; Lisp ----------------------------------------;;
 ;;----------------------------------------------;;
 
-;; (custom-set-faces
-;;   `(minibuffer-prompt ((t (:family "Iosevka")))))
+(setq lisp-indent-function #'common-lisp-indent-function)
 
 ;;----------------------------------------------;;
-;; Hacks ---------------------------------------;;
+;; Settings: non-Customizeable -----------------;;
+;;----------------------------------------------;;
+
+(setq ediff-window-setup-function #'ediff-setup-windows-plain)
+
+;;----------------------------------------------;;
+
+;; Enable disabled commands:
+
+(put 'upcase-region   'disabled nil)  ;; « C-x C-u »: same as M-u, but on whole regions.
+(put 'downcase-region 'disabled nil)  ;; « C-x C-l »: same as M-l, but on whole regions.
+
 ;;----------------------------------------------;;
 
 (setenv "LD_PRELOAD" "") ;;HACK;;

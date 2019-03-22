@@ -32,7 +32,7 @@
 
 (setq sboo-excluded--global--directories      '(".sboo" "tmp" "ignore" ".git" ".dropbox-dist" ".nixnote"))
 (setq sboo-excluded--global--file-extensions  '("~" "#" "log"))
-(setq sboo-excluded--global--file-names       '(".bash_history_eternal"))
+(setq sboo-excluded--global--file-names       '("TAGS" "tags" ".bash_history_eternal"))
 
 ;;----------------------------------------------;;
 

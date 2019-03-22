@@ -70,6 +70,10 @@
 
 ;;----------------------------------------------;;
 
+(defalias '/c #'compile)
+
+;;----------------------------------------------;;
+
 (defalias '/ic  #'sboo-insert-char)
 (defalias '/iu  #'sboo-insert-unicode-name)
 

@@ -20,7 +20,7 @@
 
 ;; Internal:
 
-(require 'mtg-data)
+;;(require 'mtg-data)
 
 ;;----------------------------------------------;;
 ;; Types ---------------------------------------;;
@@ -52,7 +52,7 @@
 
 (defun mtg-insert-card (card)
 
-  "Read an MTG card name, from `mtg-card-names'."
+  "Insert an MTG card name, from `mtg-card-names'."
 
   (interactive (list (mtg-read-card-name)))
 
@@ -60,25 +60,27 @@
 
 ;;----------------------------------------------;;
 
-(defun mtg-read-card-name ()
+(cl-defun mtg-read-card-name (&key )
 
   "Read an MTG card name, from `mtg-card-names'."
 
   (interactive)
 
-  (when (require 'mtg nil :no-error)
+  (when (require 'mtg-data nil :no-error)
 
     (let ((PROMPT (format "%s: "
                           "Card name"))
 
           (PREDICATE     nil)
-          (REQUIRE-MATCH nil)
-          (INITIAL-INPUT nil)
+          (REQUIRE-MATCH t)
+          (DEFAULT       nil)
 
           (CANDIDATES (mtg-card-names))
           )
 
-      (let* ((STRING (completing-read PROMPT CANDIDATES PREDICATE REQUIRE-MATCH INITIAL-INPUT))
+      (let* ((STRING
+              (let ((helm-mode-fuzzy-match nil))
+                (completing-read PROMPT CANDIDATES PREDICATE REQUIRE-MATCH nil nil DEFAULT)))
              )
 
         STRING))))

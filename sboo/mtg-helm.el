@@ -1,19 +1,11 @@
-# -*- mode: snippet -*-
-#
-# key         : provide-default
-# name        : a verbose « provide »d file.
-# condition   : (= (length "provide-default") (current-column))
-# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-# contributor : Spiros Boosalis <samboosalis@gmail.com> 
-# --
 ;;; -*- lexical-binding: t -*-
 
 ;;==============================================;;
 ;;; Commentary:
 
-;; $0.
+;; Helm Integration for MTG.
 ;; 
-;; • 
+;; • `helm' source for `mtg-read-card'.
 ;; • 
 ;;
 ;; 
@@ -30,6 +22,10 @@
 (require 'cl)
 (require 'pcase)
 (require 'seq)
+
+;; project:
+
+(require 'mtg)
 
 ;;----------------------------------------------;;
 ;; Types ---------------------------------------;;
@@ -55,7 +51,9 @@
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 ;; 
+;; Feature `helm-buffers'
 ;; 
-;; 
+;; URL `https://github.com/emacs-helm/helm/wiki/Developing#creating-a-source'
+;;
 ;;==============================================;;
-(provide 'sboo-$1)
+(provide 'mtg-helm)

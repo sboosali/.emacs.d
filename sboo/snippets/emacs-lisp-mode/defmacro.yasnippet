@@ -1,0 +1,42 @@
+# -*- mode: snippet -*-
+#
+# key         : defmacro
+# name        : a verbose « defmacro » declaration.
+# condition   : (let ((KEY "defmacro")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 2) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(eval-when-compile
+
+  (defmacro sboo-${1:name} (${2:symbol} ${3:expression} &optional docstring)
+
+    "$3.
+
+Inputs:
+
+• ${2:$(upcase yas-text)} — an (unquoted) symbol.
+• ${3:$(upcase yas-text)} — an expression.
+• DOCSTRING — a string.
+
+Output:
+
+• ${4:an expression or a \`def*' declaration}.
+
+Example:
+
+• M-: (pp-macroexpand-expression (sboo-$1 xyz '(1 2 3) ""))
+    ⇒ 
+
+Related:
+
+• \`'"
+
+    (declare (indent 1) (doc-string 3))
+
+    (let* ()
+      `(ignore-errors
+         (list $0,symbol ,expression ,docstring)))))
+
