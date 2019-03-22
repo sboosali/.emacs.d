@@ -281,11 +281,14 @@
 ;; quit.  If both ‘kbd-help’ and ‘help-echo’ produce help strings,
 ;; ‘kbd-help’ is used.
 ;; 
-;; 
 
 ;;----------------------------------------------;;
-;; DirEd ---------------------------------------;;
+;; File Extensions:
+
+(add-to-list 'auto-mode-alist (cons "\\.xpm\\'" #'c-mode))
+
 ;;----------------------------------------------;;
+;; DirEd:
 
 (sboo-custom-set dired-auto-revert-buffer t
   "Auto-Refresh.")
@@ -293,20 +296,12 @@
 (add-hook 'dired-mode-hook #'sboo-dired-settings)
 
 ;;----------------------------------------------;;
-;; ProcEd --------------------------------------;;
-;;----------------------------------------------;;
+;; ProcEd:
 
 (add-hook 'proced-mode-hook #'sboo-proced-settings)
 
 ;;----------------------------------------------;;
-;; File Extensions -----------------------------;;
-;;----------------------------------------------;;
-
-(add-to-list 'auto-mode-alist (cons "\\.xpm\\'" #'c-mode))
-
-;;----------------------------------------------;;
-;; Lisp ----------------------------------------;;
-;;----------------------------------------------;;
+;; Lisp:
 
 (setq lisp-indent-function #'common-lisp-indent-function)
 

@@ -219,7 +219,12 @@ Inputs:
 
 Output:
 
-• a `booleanp'."
+• a `booleanp'.
+
+Examples:
+
+• M-: (sboo-getenv-boolean \"\")
+    ⇒ t"
 
   (sboo-parse-boolean (getenv environment-variable)
                       :default default))
@@ -236,14 +241,21 @@ Inputs:
 
 Output:
 
-• a `numberp'."
+• a `numberp'.
 
-  (let ((string (getenv environment-variable)))
+Examples:
 
-    (if (equal nil string)
+• M-: (sboo-getenv-number \"EUID\")
+    ⇒ 1001
+"
+
+  (let ((VALUE (getenv environment-variable))
+        )
+
+    (if (equal nil VALUE)
         default
 
-      (read-number string))))
+      (string-to-number VALUE))))
 
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
@@ -319,12 +331,23 @@ Related:
 ;; Settings ------------------------------------;;
 ;;----------------------------------------------;;
 
-(sboo-load-file! "sboo-settings.el")
-(sboo-load-file! "sboo-aliases.el")
-(sboo-load-file! "sboo-commands.el")
-(sboo-load-file! "sboo-keybindings.el")
+(ignore-errors
 
-;;; TODO add-to-list
+  (sboo-load-file! "sboo-settings.el")
+  (sboo-load-file! "sboo-keybindings.el")
+  (sboo-load-file! "sboo-aliases.el")
+  (sboo-load-file! "sboo-commands.el")
+
+  ;; ^ NOTE `load' these files (rather than `require' them)
+  ;;        because they execute statements (rather than `provide' definitions).
+  ;;
+  ;;        Later configuration (i.e. `sboo-*' features) musn't depend on them
+  ;;        (whether explicitly via `require' or implicitly via reference).
+  ;;        Instead, « sboo-utilities.el » has any general-purpose dependencies.
+  ;;        Hence, we `ignore-errors' (rather than aborting the configuration).
+  ;;
+
+  ())
 
 ;;----------------------------------------------;;
 ;; Themes --------------------------------------;;

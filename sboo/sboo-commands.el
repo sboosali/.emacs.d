@@ -13,17 +13,15 @@
 ;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;----------------------------------------------;;
 
-;; builtin utilities:
+;; builtins:
 
 (require 'cl-lib)
-
-;; builtin packages:
-
 (require 'shell)
 
-;; personal packages:
+;; personal:
 
 (require 'sboo-conditions)
+(require 'sboo-utilities)
 
 ;;----------------------------------------------;;
 ;; Utilities: Macros ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -240,7 +238,7 @@ version 2016-06-18"
 (defun sboo-split-window-left-right ();;TODO
 
   "
-  "
+"
 
   (interactive)
   

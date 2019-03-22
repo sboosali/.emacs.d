@@ -2,7 +2,6 @@
 
 ;;==============================================;;
 ;;; Commentary:
-;;==============================================;;
 
 ;; Completion for Unicode Character Names.
 ;;
@@ -13,7 +12,6 @@
 
 ;;==============================================;;
 ;;; Code:
-;;==============================================;;
 
 ;;----------------------------------------------;;
 ;; Imports -------------------------------------;;
@@ -57,7 +55,23 @@ Examples:
 • M-: (nth 891 sboo-ucs-names-list)
     ⇒ \"LATIN SMALL LETTER ALPHA\"
 
+Related:
+
+• `sboo-unicode--'
+
 Accessed by Function `sboo-ucs-names-list'.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-ucs-names-interesting-list
+
+  nil
+
+  "List of Unicode Character names, filtering away “boring” characters (like ASCII).
+
+Related:
+
+• `sboo-unicode--interesting-character-p'")
 
 ;;----------------------------------------------;;
 
@@ -71,6 +85,10 @@ Examples:
 
 • M-: (nth 891 sboo-ucs-names-annotated-list)
     ⇒ \"ɑ LATIN SMALL LETTER ALPHA\"
+
+Related:
+
+• `sboo-unicode--annotate-character-p'
 
 Displayed by Function `sboo-read-character-name'.
 
@@ -110,7 +128,11 @@ For example, `sboo-unicode-completion-annotate' toggles whether `sboo-read-chara
 
   "Divider between a character and its name, in `sboo-read-character-name' (a `stringp')."
 
-  :type '(string)
+  :type '(choice (string  :tag "Literal text")
+                 (integer :tag "Number of spaces")
+                 (const nil :tag "No divider")) ;TODO or "Fallback to default"?
+
+  ;;:set ;TODO set dirty flag (property?)
 
   :safe  t
   :group 'sboo)
@@ -230,6 +252,50 @@ Notes:
       sboo-ucs-names-list)))
 
 ;;----------------------------------------------;;
+
+(defun sboo-unicode-completion-namesake-divider-string ()
+
+  "Accessor for Variable `sboo-unicode-completion-namesake-divider'.
+
+Output:
+
+• a `stringp'."
+
+  (let* ((OBJECT sboo-unicode-completion-namesake-divider)
+         )
+
+  (pcase OBJECT
+
+    ((pred stringp)  OBJECT)
+    ((pred integerp) (make-string OBJECT ?\ ))
+    ('nil            nil)
+
+    (_ " "))))
+
+;; ^ NOTE «  ?\  » is a space literal character.
+
+;;----------------------------------------------;;
+
+(defun sboo-unicode-completion-namesake-divider-length ()
+
+  "Accessor for Variable `sboo-unicode-completion-namesake-divider'.
+
+Output:
+
+• an `integerp'."
+
+  (let* ((OBJECT sboo-unicode-completion-namesake-divider)
+         )
+
+  (pcase OBJECT
+
+    ((pred stringp)  (length OBJECT))
+    ((pred integerp) OBJECT)
+    ('nil            nil)
+
+    (_ 1))))
+
+;;----------------------------------------------;;
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
@@ -292,12 +358,29 @@ Related:
                         (sboo-unicode--interesting-character-p (thing-at-point 'char))
                       (error nil))
                     (condition-case _
+                        (let ((CLIPBOARD-CONTENTS (car kill-ring)))
+                          (if (and CLIPBOARD-CONTENTS (= 1 (length CLIPBOARD-CONTENTS)))
+                              (substring CLIPBOARD-CONTENTS 0 1)))
+                      (error nil))
+                    (condition-case _
                         (read-char-exclusive "Character (press a key): ")
                                         ;TODO read 1-length string.
                       (error nil))
                     )))
 
-  (get-char-code-property char 'name))
+  (let* ((CHAR (pcase char
+                 ((pred characterp) char)
+                 ((pred stringp)    (aref char 0))
+                 (_ (error "sboo-get-char-name"))))
+
+         (NAME (get-char-code-property CHAR 'name))
+         )
+
+    (progn
+      (when (called-interactively-p 'any)
+        (message NAME))
+
+      NAME)))
 
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
@@ -343,7 +426,9 @@ Related:
                      STRING))
            )
 
-      NAME)))
+      (string-trim-left NAME))))
+
+;; ^ NOTE `string-trim-left' will trim a `sboo-unicode-completion-namesake-divider' any length.
 
 ;;----------------------------------------------;;
 
@@ -440,9 +525,17 @@ Related:
   (interactive (list (sboo-read-character-name)
                      ))
 
-  (let ((CHAR (sboo-ucs-names-get name)))
+  (let* ((NAME name)
+         (CHAR (sboo-ucs-names-get NAME))
+         )
 
-    (insert-char CHAR)))
+    (pcase CHAR
+
+      ('nil              nil)
+      ((pred stringp)    (insert      CHAR))
+      ((pred characterp) (insert-char CHAR))
+
+      (_ (error "sboo-insert-char")))))
 
 ;; M-x (call-interactively #'sboo-insert-char) 
 
@@ -479,20 +572,25 @@ Examples:
     M-: (sboo-unicode--prefix-namesake-character \"NULL\")
       ⇒ \"   NULL\"
 
-    M-: (equal (substring (sboo-unicode--prefix-namesake-character \"NULL\") (length sboo-unicode-completion-namesake-divider)) \"NULL\")
+    M-: (equal (substring (sboo-unicode--prefix-namesake-character \"NULL\") (sboo-unicode-completion-namesake-divider-length)) \"NULL\")
       ⇒ t
 
-    M-: (= (length sboo-unicode-completion-namesake-divider) (- (length (sboo-unicode--prefix-namesake-character \"NULL\")) (length \"NULL\"))
+    M-: (= (sboo-unicode-completion-namesake-divider-length) (- (length (sboo-unicode--prefix-namesake-character \"NULL\")) (length \"NULL\"))
       ⇒ t"
 
-  (let* ((CHAR   (sboo-ucs-names-get name))
-         (STRING (if (and CHAR (sboo-unicode--annotate-character-p CHAR))
-                     (char-to-string CHAR)
-                   " "))
-         (PREFIX (concat STRING sboo-unicode-completion-namesake-divider))
+  (let* ((CHAR    (sboo-ucs-names-get name))
+         (DIV     (sboo-unicode-completion-namesake-divider-string))
          )
 
-    (concat PREFIX name)))
+    (if DIV
+
+        (let* ((STRING (if (and CHAR (sboo-unicode--annotate-character-p CHAR))
+                           (char-to-string CHAR)
+                         " "))
+               )
+          (concat STRING DIV name))
+
+      (char-to-string CHAR))))
 
 ;; « C-x C-e » Tests:
 ;;
@@ -608,9 +706,12 @@ Related:
 
 • `sboo-unicode-completion-namesake-divider'"
 
-  (let* ((LENGTH (length sboo-unicode-completion-namesake-divider))
+  (let* ((LENGTH (sboo-unicode-completion-namesake-divider-length))
          )
-    (substring string (+ 1 LENGTH))))
+
+    (if LENGTH
+        (substring string (+ 1 LENGTH))
+      string)))
 
 ;; (sboo-unicode--strip-namesake-character (sboo-unicode--prefix-namesake-character "BULLET"))
 
@@ -618,7 +719,7 @@ Related:
 
 (defun sboo-unicode--interesting-character-p (char)
 
-  "Whether CHAR is an interesting Unicode Character.
+  "Whether CHAR is an “interesting” Unicode Character.
 
 Inputs:
 
@@ -628,9 +729,16 @@ Output:
 
 • a `booleanp'."
 
-  (let* ()
+  (let* ((UNPRINTABLE?        (< char 32))  ;TODO what about unprintables in higher-ranges? or surrogates?
+         (ASCII-ALPHANUMERIC? (or (and (>= char ?0) (<= char ?9))
+                                  (and (>= char ?A) (<= char ?Z))
+                                  (and (>= char ?a) (<= char ?z))
+                                  ))
+         )
 
-    t))
+    (and (not UNPRINTABLE?)
+         (not ASCII-ALPHANUMERIC?)
+         )))
 
 ;;----------------------------------------------;;
 
@@ -798,5 +906,5 @@ Example:
 ;; ./share/emacs/26.1/lisp/international/uni-name.el 
 ;; 
 
-;;----------------------------------------------;;
+;;==============================================;;
 (provide 'sboo-unicode)
