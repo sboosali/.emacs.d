@@ -186,13 +186,20 @@
 (sboo-custom-set redisplay-dont-pause t
   "“Peeking” behavior when scrolling.")
 
+;;TODO
+;; URL `https://superuser.com/questions/527356/dont-change-the-cursor-position-when-scrolling-in-emacs'
+
 ;;----------------------------------------------;;
 
 (sboo-custom-set visible-bell t
   "flash a Black Square onto the screen on User Errors (instead of honking loudly through the speakers).")
 
+;;----------------------------------------------;;
+
 (sboo-custom-set inhibit-splash-screen     t "fewer Startup Buffers.")
 (sboo-custom-set initial-scratch-message nil "fewer Startup Buffers.")
+
+;;----------------------------------------------;;
 
 (sboo-custom-set initial-major-mode text-mode
   "the default Major Mode for a new Buffer.")
@@ -200,8 +207,23 @@
 ;(setq initial-buffer-choice 'xah-new-empty-buffer)
 ;; ^ Start Emacs with Empty Buffer
 
-(sboo-custom-set linum-format "%3d"
-  "Three-Digit Line-Numbers (e.g. « 001 », not « 1 »).")
+;;----------------------------------------------;;
+
+(sboo-custom-set linum-format 'dynamic)
+
+;; (sboo-custom-set linum-format "%3d"
+;;   "Three-Digit Line-Numbers (e.g. « 001 », not « 1 »).")
+
+;;----------------------------------------------;;
+
+;; (setq echo-keystrokes 0.1)
+
+;; (setq mouse-yank-at-point t)
+
+;; (setq switch-to-buffer-preserve-window-point t)
+
+;; (setq select-enable-clipboard t)
+;; (setq select-enable-primary   t)
 
 ;;----------------------------------------------;;
 
@@ -214,14 +236,6 @@
 ;;
 ;; `use-dialog-box' also determines whether to use native file selection windows.
 ;;
-
-;;----------------------------------------------;;
-
-(add-to-list 'safe-local-variable-values
-             '(lexical-binding . t))
-
-;; ^ `safe-local-variable-values':
-;; 
 
 ;;----------------------------------------------;;
 
@@ -240,17 +254,6 @@
 
 (setq Buffer-menu-name-width 30)
 ;; (setq Buffer-menu-size-width 6)
-
-;;----------------------------------------------;;
-
-;; (setq echo-keystrokes 0.1)
-
-;; (setq mouse-yank-at-point t)
-
-;; (setq switch-to-buffer-preserve-window-point t)
-
-;; (setq select-enable-clipboard t)
-;; (setq select-enable-primary   t)
 
 ;;----------------------------------------------;;
 
@@ -311,7 +314,11 @@
 ;; Settings: non-Customizeable -----------------;;
 ;;----------------------------------------------;;
 
-(setq ediff-window-setup-function #'ediff-setup-windows-plain)
+(add-to-list 'safe-local-variable-values
+             '(lexical-binding . t))
+
+;; ^ `safe-local-variable-values':
+;; 
 
 ;;----------------------------------------------;;
 
@@ -319,6 +326,10 @@
 
 (put 'upcase-region   'disabled nil)  ;; « C-x C-u »: same as M-u, but on whole regions.
 (put 'downcase-region 'disabled nil)  ;; « C-x C-l »: same as M-l, but on whole regions.
+
+;;----------------------------------------------;;
+
+(setq ediff-window-setup-function #'ediff-setup-windows-plain)
 
 ;;----------------------------------------------;;
 

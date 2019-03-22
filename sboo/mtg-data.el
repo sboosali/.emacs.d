@@ -17,13 +17,11 @@
 (require 'cl)
 (require 'pcase)
 (require 'seq)
-
 (require 'json)
+(require 'url)
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
-;;----------------------------------------------;;
-
 ;;----------------------------------------------;;
 
 (defun mtg--is-list-of-string (value)
@@ -97,7 +95,90 @@ Links:
                       :predicate #'mtg--is-list-of-string)))
 
 ;;----------------------------------------------;;
+;; Variables -----------------------------------;;
+;;----------------------------------------------;;
+
+(defcustom mtg-cards
+
+  nil
+
+  "List of all MTG cards (`mtg-card' objects)."
+
+  :type  '(list string)
+
+  :safe  t
+
+  :group 'mtg)
+
+;;----------------------------------------------;;
+
+(defcustom mtg-card-names
+
+  nil
+
+  "List of all MTG cards (name-only)."
+
+  :type  '(list string)
+
+  :safe  t
+
+  :group 'mtg)
+
+;;----------------------------------------------;;
+
+(defcustom mtg-card-names-file-default
+
+  "mtg-card-names"
+
+  "Default filename (or basename) for `mtg-card-names'.
+
+File extension may be:
+
+• ∅
+• « .json »
+• « .txt »
+• « .el »
+• « .list.el »"
+
+  :type '(string :tag "Filename / Basename")
+
+  :safe t
+  :group 'mtg)
+
+;;----------------------------------------------;;
+
+(defcustom mtg-card-names-file-json
+
+  "scryfall-default-cards.json"
+
+  "Source data for `mtg-card-names'."
+
+  :type '(string :tag "JSON File")
+
+  :safe t
+  :group 'mtg)
+
+;;----------------------------------------------;;
 ;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+(cl-defun mtg-cards (&key force)
+
+  "Accessor for variable `mtg-cards'.
+
+Inputs:
+
+• FORCE — a boolean.
+
+Initialize `mtg-cards' from `mtg-cards-file-default', 
+if necessary (or if FORCE is set)."
+
+  (if (or force
+          (not mtg-cards))
+      (mtg-data--load-cards))
+
+  mtg-cards)
+
 ;;----------------------------------------------;;
 
 (cl-defun mtg-card-names (&key force)
@@ -118,42 +199,32 @@ if necessary (or if FORCE is set)."
   mtg-card-names)
 
 ;;----------------------------------------------;;
-;; Variables -----------------------------------;;
-;;----------------------------------------------;;
 
-(defcustom mtg-card-names-file-default
+(cl-defun sboo-mtg-read-scryfall-json (&optional (filename mtg-card-names-file-json))
 
-  "mtg-card-names"
+  "Read a JSON File of MTG cards (in the Scryfall card schema, circa 2019).
 
-  "Default filename (or basename) for `mtg-card-names'.
+Inputs:
 
-File extension may be:
+• FILENAME — a JSON File.
 
-• ∅
-• « .json »
-• « .txt »
-• « .el »
-• « .list.el »"
+Output:
 
-  :type  '(string :tag "Filename / Basename")
+• a set of `mtg-card's.
 
-  :safe  t
+Example:
 
-  :group 'mtg)
+• M-: (sboo-mtg-read-scryfall-json)
+    ⇒ 
 
-;;----------------------------------------------;;
+Links:
 
-(defcustom mtg-card-names
+• URL `https://scryfall.com/docs/api/cards'"
 
-  nil
+  (let* (
+         )
 
-  "List of all MTG card names."
-
-  :type  '(list string)
-
-  :safe  t
-
-  :group 'mtg)
+    (json-read-file filename)))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

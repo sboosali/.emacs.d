@@ -666,6 +666,24 @@ Laws:
 
 ;;==============================================;;
 
+
+(defun byte-compiled-p (func)
+
+  "Whether function FUNC has been byte compiled.
+
+Inputs:
+
+• FUNC — a `symbolp' or `functionp'. Otherwise (for objects of other types), output nil.
+
+Links:
+
+• URL `https://nullprogram.com/blog/2010/07/01'"
+
+  (cond
+   ((symbolp   func) (byte-compiled-p (symbol-function func)))
+   ((functionp func) (not (sequencep func)))
+   (t nil)))
+
 ;;----------------------------------------------;;
 ;;; Notes: -------------------------------------;;
 ;;----------------------------------------------;;
