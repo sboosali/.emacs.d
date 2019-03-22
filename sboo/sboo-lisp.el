@@ -1,4 +1,3 @@
-
 ;;; -*- lexical-binding: t -*-
 
 ;;; Commentary:
@@ -24,45 +23,48 @@
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
-;; Functions -----------------------------------;;
-;;----------------------------------------------;;
+(defcustom sboo-lisp-modes
+
+  '(
+    emacs-lisp-mode
+    lisp-mode
+    )
+
+  "LISP Modes.
+
+(Both major modes or minor modes)."
+
+  :type '(repeat (symbol :tag "Mode"))
+
+  :safe  t
+  :group 'sboo)
 
 ;;----------------------------------------------;;
-;; Commands ------------------------------------;;
-;;----------------------------------------------;;
 
-;;----------------------------------------------;;
-;; Configuration -------------------------------;;
-;;----------------------------------------------;;
+(defcustom sboo-lisp-keywords
 
-(use-package lisp-mode
+  '(
+    "provide-theme"
+    )
 
-  :init
+  "LISP Keywords to highlight."
 
-  ()
+  :type '(repeat (string :tag "Keyword"))
 
-  :config
-
-  (defvar sboo-lisp-keywords
-
-    '( "provide-theme"
-       )
-
-    "Keywords to highlight in elisp/lisp.")
-
-  (dolist (MODE '(emacs-lisp-mode lisp-mode))
-    (font-lock-add-keywords MODE sboo-lisp-keywords))
+  :safe  t
+  :group 'sboo)
 
 ;; (add-to-list emacs-lisp-keywords "provide-theme")
 ;; (font-lock-add-keywords 'emacs-lisp-mode '("\\<provide-theme\\>"))
 ;; (font-lock-add-keywords 'emacs-lisp-mode '())
 
-  ())
-
 ;; ^ See `font-lock-keywords'
 
 ;; ^ See `https://stackoverflow.com/questions/13908192/apply-font-lock-to-quoted-symbols-in-elisp'
+
+;;----------------------------------------------;;
+;; Commands ------------------------------------;;
+;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
@@ -71,4 +73,4 @@
 ;; 
 ;; 
 ;;----------------------------------------------;;
-(provide 'sboo-elisp)
+(provide 'sboo-lisp)

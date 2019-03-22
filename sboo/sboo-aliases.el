@@ -97,6 +97,13 @@
 
 ;;----------------------------------------------;;
 
+(defalias '/gl #'goto-line)
+(defalias '/gc #'goto-char)
+
+;; ^ use `goto-char' with « --debug-init » (from messages like « eval-buffer( ... ) ; Reading at buffer position 7897 »)
+
+;;----------------------------------------------;;
+
 (defalias '/eb   #'eval-buffer)
 (defalias '/er   #'eval-region)
 (defalias '/ed   #'eval-defun)

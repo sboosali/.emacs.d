@@ -74,37 +74,6 @@
      (message "Enable `debug-on-error'."))))
 
 ;;----------------------------------------------;;
-
-(defun add-to-load-path! (FilePath)
-
-  "Register `FilePath' (a directory containing ELisp packages/features) with `load-path'.
-
-  `FilePath':
-  
-  * /must/ be an absolute filepath to a directory; (TODO)
-  
-  * /should/ use forward-slashes, e.g. `.../.../...'
-    (they're automatically converted to the platform-specifc directory-separator character);
-  
-  * /may/ start with `~/' 
-    (tildes are expanded to the user's home directory);
-
-  * /may/ end with a forward-slash (e.g. `sboo/' or `sboo')
-    (a trailing is added if absent).
-  "
-
-  (add-to-list 'load-path
-     (file-name-as-directory (file-truename FilePath))))
-
-;;----------------------------------------------;;
-
-(defun add-startup-hook! (FunctionSymbol)
-
-  "Register `FunctionSymbol' with `emacs-startup-hook'."
-
-  (add-hook 'emacs-startup-hook FunctionSymbol))
-
-;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 
@@ -370,12 +339,20 @@ Related:
     (add-to-theme-path! sboo-theme-directory)
     (add-to-theme-path! (emacs-subdir "themes"))
 
-    (progn
-      (sboo-register-submodule-packages! "solarized")
-      (sboo-register-submodule-themes!   "solarized")
-      (load-theme 'solarized :no-confirm))
-
+    ;; (progn
+    ;;   (sboo-register-submodule-packages! "solarized")
+    ;;   (sboo-register-submodule-themes!   "solarized")
+    ;;   (load-theme 'solarized :no-confirm))
     ()))
+
+;;----------------------------------------------;;
+
+(ignore-errors
+
+  (add-to-icon-path! sboo-icon-directory)
+  (add-to-icon-path! (emacs-subdir "icons"))
+
+  ())
 
 ;;----------------------------------------------;;
 ;; Packages (Builtins) -------------------------;;
@@ -445,8 +422,6 @@ Related:
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
-
 (when (require 'sboo-desktop nil :no-error)
 
   (sboo-desktop-init!)
@@ -510,7 +485,12 @@ Related:
 
 ;;----------------------------------------------;;
 
-(require 'sboo-elisp nil :no-error)
+(when (require 'sboo-elisp nil :no-error)
+
+  (dolist (MODE sboo-lisp-modes)
+    (font-lock-add-keywords MODE sboo-lisp-keywords))
+
+  ())
 
 ;;----------------------------------------------;;
 
@@ -981,13 +961,21 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
     :hook        ((haskell-mode . interactive-haskell-mode))
 
     :custom
-    (haskell-tags-on-save                         t "Continuously update via « hasktags ».")
-    (haskell-process-type           'cabal-new-repl "")
-    (haskell-process-log                          t "")
-    (haskell-process-suggest-remove-import-lines  t "")
-    (haskell-process-auto-import-loaded-modules   t "")
-    (haskell-process-suggest-hoogle-imports       t "")
-    (haskell-stylish-on-save                      t "")
+    (haskell-tags-on-save                         t                              "Continuously update « TAGS » file via « hasktags ».")
+    (haskell-process-type                         'cabal-new-repl                "« cabal new-repl »")
+    (haskell-process-args-cabal-repl             '("--ghc-option=-ferror-spans") "")
+    (haskell-process-log                          t                              "")
+    (haskell-process-suggest-remove-import-lines  t                              "")
+    (haskell-process-auto-import-loaded-modules   t                              "")
+    (haskell-process-suggest-hoogle-imports       t                              "")
+    (haskell-stylish-on-save                      t                              "")
+    (haskell-ask-also-kill-buffers              nil                              "")
+    (haskell-interactive-popup-errors           nil                              "")
+
+       ;;'(haskell-process-path-ghci        "cabal")
+       ;; '(haskell-process-type             (quote stack-ghci))
+       ;; '(haskell-process-path-ghci        "stack")
+
 
 ;; (custom-set-variables
 ;;  '(haskell-ask-also-kill-buffers nil)
@@ -1013,24 +1001,6 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
     :config
     
-    (progn
-      (custom-set-variables
-
-       '(haskell-process-type             (quote cabal-new-repl))
-       
-       ;;'(haskell-process-path-ghci        "cabal")
-
-       ;; '(haskell-process-type             (quote stack-ghci))
-       ;; '(haskell-process-path-ghci        "stack")
-
-       '(haskell-process-args-cabal-repl  (list "--ghc-option=-ferror-spans"))
-
-       '(haskell-ask-also-kill-buffers    nil)
-
-       '(haskell-interactive-popup-errors nil))
-
-      ())
-
     (when (require 'sboo-ghc nil :no-error)
 
       (dolist (EXTENSION sboo-ghc-language-extensions)

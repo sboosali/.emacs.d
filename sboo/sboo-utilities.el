@@ -27,6 +27,15 @@
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
+;; Utilities: Debugging ------------------------;;
+;;----------------------------------------------;;
+
+;;TODO sboo-goto-char-from-error-line
+
+;; ^ e.g. parse «  eval-buffer(#<buffer  *load*-708054> nil "/home/sboo/.emacs.d/sboo/sboo-init.el" nil t)  ; Reading at buffer position 7897 » into:
+;;   '(file "/home/sboo/.emacs.d/sboo/sboo-init.el" char 7897)
+
+;;----------------------------------------------;;
 ;; Munging
 ;;----------------------------------------------;;
 
@@ -666,10 +675,9 @@ Laws:
 
 ;;==============================================;;
 
+(defun sboo-byte-compiled-p (func)
 
-(defun byte-compiled-p (func)
-
-  "Whether function FUNC has been byte compiled.
+  "Whether function FUNC has been `byte-compile'd.
 
 Inputs:
 
@@ -683,6 +691,27 @@ Links:
    ((symbolp   func) (byte-compiled-p (symbol-function func)))
    ((functionp func) (not (sequencep func)))
    (t nil)))
+
+;;----------------------------------------------;;
+
+(defun sboo-require (feature)
+
+  "`require' feature FEATURE.
+
+Interactive `use-package'
+
+Inputs:
+
+FEATURE — a symbol.
+          When invoked interactively, FEATURE comes from `sboo-read-feature'.
+          By default, a personal feature (i.e. named `sboo-*')."
+
+  (interactive (list
+                (sboo-read-feature)))
+
+  (require feature nil :no-error))
+
+;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
 ;;; Notes: -------------------------------------;;

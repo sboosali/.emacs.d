@@ -1,11 +1,13 @@
 ;;; -*- lexical-binding: t -*-
 
+;;==============================================;;
 ;;; Commentary:
 
 ;; Core definitions (no statements) for « sboo »'s emacs configuration
 ;;
 ;; 
 
+;;==============================================;;
 ;;; Code:
 
 ;;----------------------------------------------;;
@@ -47,9 +49,7 @@ Related:
   (cl-assert form))
 
 ;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-;; Environment Variables ;;---------------------;;
+;; Environment Variables -----------------------;;
 ;;----------------------------------------------;;
 
 (defconst sboo-environment-variable-install "EMACS_INSTALL"
@@ -183,18 +183,29 @@ Wraps `sboo-install-p'."
 
   (sboo-subdir "snippets/")
 
-  "Directory whose (per-major-mode) subdirectories contain my YASnippets files.")
+  "Directory whose (per-major-mode) subdirectories contain snippets.
 
+Snippets are « .yasnippet » template files.")
 
 ;;----------------------------------------------;;
 
-(defconst sboo-theme-directory 
+(defconst sboo-theme-directory
 
   (sboo-subdir "themes/")
 
   "Directory with themes.
 
 Themes are « .el » files which `provide-theme'.")
+
+;;----------------------------------------------;;
+
+(defconst sboo-icon-directory
+
+  (sboo-subdir "icons/")
+
+  "Directory with icons.
+
+Icons are « .xpm » (or « .pbm ») files.")
 
 ;;----------------------------------------------;;
 
@@ -367,47 +378,98 @@ See the file `./scripts/add-submodule.sh'."
 
 ;;----------------------------------------------;;
 
-(defun sboo-require! (feature)
+(defun add-to-load-path! (directory)
 
-  "`require' feature FEATURE.
+  "Register DIRECTORY (a directory containing Elisp `provide's) with `load-path'.
 
-Inputs:
+DIRECTORY:
 
-FEATURE — a symbol.
-          When invoked interactively, FEATURE comes from `sboo-read-feature'.
-          By default, a `sboo-*' feature."
+• /must/ be an absolute filepath to a directory; (TODO)
+
+• /should/ use forward-slashes, e.g. `.../.../...'
+  (they're automatically converted to the platform-specifc directory-separator character);
+
+• /may/ start with `~/' 
+  (tildes are expanded to the user's home directory);
+
+• /may/ end with a forward-slash (e.g. `sboo/' or `sboo')
+  (a trailing is added if absent)."
 
   (interactive (list
-                (sboo-read-feature)))
+                (read-directory-name "ELisp Directory: " )))
 
-  (require feature nil :no-error))
+  (let* ((DIRECTORY (file-name-as-directory (file-truename directory)))
+         )
+    (add-to-list 'load-path DIRECTORY)))
 
 ;;----------------------------------------------;;
 
-(defun add-to-theme-path! (Directory)
+(defun add-to-theme-path! (directory)
 
-  "Register `Directory' (a directory containing Emacs themes) with `custom-theme-load-path'.
+  "Register DIRECTORY (a directory containing Emacs `provide-theme's) with `custom-theme-load-path'.
 
-  `Directory':
-  
-  * /must/ be an absolute filepath to a directory; (TODO)
-  
-  * /should/ use forward-slashes, e.g. `.../.../...'
-    (they're automatically converted to the platform-specifc directory-separator character);
-  
-  * /may/ start with `~/' 
-    (tildes are expanded to the user's home directory);
+Related:
 
-  * /may/ end with a forward-slash (e.g. `sboo/' or `sboo')
-    (a trailing is added if absent).
-  "
+• `add-to-load-path!' — (See for details on the DIRECTORY argument.)"
 
-  (let ((Directory
-         (file-name-as-directory (file-truename Directory)))
-        )
+  (interactive (list
+                (read-directory-name "Theme Directory: " )))
 
-    (add-to-list 'custom-theme-load-path
-                 DIRECTORY)))
+  (let* ((DIRECTORY (file-name-as-directory (file-truename directory)))
+         )
+    (add-to-list 'custom-theme-load-path DIRECTORY)))
+
+;;----------------------------------------------;;
+
+(defun add-to-exec-path! (directory)
+
+  "Register DIRECTORY (a directory containing executables) with `exec-path'.
+
+Related:
+
+• `add-to-load-path!' — (See for details on the DIRECTORY argument.)"
+
+  (interactive (list
+                (read-directory-name "Program Directory: " )))
+
+  (let* ((DIRECTORY (file-name-as-directory (file-truename directory)))
+         )
+    (add-to-list 'exec-path DIRECTORY)))
+
+;;----------------------------------------------;;
+
+(defun add-to-icon-path! (directory)
+
+  "Register DIRECTORY (a directory containing bitmap images) with `image-load-path'.
+
+For example, « .../share/emacs/26.1/etc/images/ » contains:
+
+• « undo.xpm » — an icon in the « X PixMap » (XPM) image file format.
+• « undo.pbm » — an icon in the « Portable Bitmap Format » (PBM) image file format.
+
+Links:
+
+• URL `https://en.wikipedia.org/wiki/X_PixMap'
+• URL `https://en.wikipedia.org/wiki/Netpbm_format'
+
+Related:
+
+• `add-to-load-path!' — (See for details on the DIRECTORY argument.)"
+
+  (interactive (list
+                (read-directory-name "Icon Directory: " )))
+
+  (let* ((DIRECTORY (file-name-as-directory (file-truename directory)))
+         )
+    (add-to-list 'image-load-path DIRECTORY)))
+
+;;----------------------------------------------;;
+
+(defun add-startup-hook! (function-symbol)
+
+  "Register FUNCTION-SYMBOL with `emacs-startup-hook'."
+
+  (add-hook 'emacs-startup-hook function-symbol))
 
 ;;----------------------------------------------;;
 ;;; Notes: ;;-----------------------------------;;
@@ -421,5 +483,5 @@ FEATURE — a symbol.
 ;; - https://www.gnu.org/software/emacs/manual/html_node/elisp/Truenames.html
 ;;
 
-;;----------------------------------------------;;
+;;==============================================;;
 (provide 'sboo-definitions)
