@@ -616,7 +616,15 @@ file of a buffer in an external program."
 
   "#"
 
-  "The default comment character.")
+  "The default comment character(s) at the start of a comment.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-comment-suffix-string-default
+
+  "#"
+
+  "The default comment character(s) at the end of a comment.")
 
 ;;----------------------------------------------;;
 
@@ -915,8 +923,6 @@ Related:
       (insert sboo-comment-h2-default))
 
     (insert "\n")))
-
-;;==============================================;;
 
 ;;----------------------------------------------;;
 
@@ -1470,9 +1476,410 @@ Related:
 
     ()))
 
+;;==============================================;;
+
+(defun sboo-invert-color-string (string)
+
+  "Invert a hex string or color name.
+
+Inputs:
+
+• STRING — a `stringp'. Either:
+
+    • a hex string, like « \"#8C5353\" ».
+    • a color name, like « \"red\" ».
+
+Output:
+
+• a `stringp'
+
+Example:
+
+• M-: (sboo-invert-color-string \"#8C5353\")
+    ⇒ \"#73ACAC\"
+• M-: (sboo-invert-color-string \"8c5353\")
+    ⇒ \"73acac\"
+• M-: (sboo-invert-color-string \"red\")
+    ⇒ \"cyan\"
+
+Laws:
+
+• Involution (i.e. it's its own inverse i.e. applying it twice is identity) given Hex-Strings.
+  Not an involution when given Color-Names.
+
+Wraps `color-complement'."
+
+  (interactive (list
+                (thing-at-point 'word)
+                ))
+
+  (let* (                               ;TODO if start with "#" strip then add back. preserve A-F casing.
+         )
+
+    (color-complement string)))
+
+;;----------------------------------------------;;
+
+(defun sboo-invert-color-at-point ()
+
+  "Invert the hex string or color name.
+
+Inputs:
+
+• STRING — a `stringp'. Either:
+
+    • a hex string, like « \"#8C5353\" ».
+    • a color name, like « \"red\" ».
+
+Output:
+
+• a `stringp'
+
+Example:
+
+• M-: (sboo-invert-color-string \"#8C5353\")
+    ⇒ \"#73ACAC\"
+• M-: (sboo-invert-color-string \"8c5353\")
+    ⇒ \"73acac\"
+• M-: (sboo-invert-color-string \"red\")
+    ⇒ \"cyan\"
+
+Laws:
+
+• Involution (i.e. it's its own inverse i.e. applying it twice is identity) given Hex-Strings.
+  Not an involution when given Color-Names.
+
+Wraps `sboo-invert-color-string'."
+
+  (interactive)                         ;TODO region or word, -dwim
+
+  (let* ((WORD (thing-at-point 'word))
+
+         (ORIGINAL-COLOR (sboo-color-p WORD))
+         (INVERSE-COLOR  (sboo-invert-color-string ORIGINAL-COLOR))
+
+         )
+
+    (save-excursion
+
+      (delete-thing 'word)
+      (insert INVERSE-COLOR)
+
+      ())))
+
+;;----------------------------------------------;;
+
+(defun sboo-color-p (color)
+
+  "Whether COLOR is a valid color string.
+
+Inputs:
+
+• COLOR — a `stringp' color, one of:
+
+    • a Hex Value  — 
+    • a Color Name — 
+
+Output:
+
+• a `stringp' or nil.
+  normalized COLOR.
+
+Example:
+
+• M-: (sboo-color-p \"red\")
+    ⇒ \"red\"
+• M-: (sboo-color-p \"RED\")
+    ⇒ \"red\"
+• M-: (sboo-color-p \"der\")
+    ⇒ nil
+
+Links:
+
+• URL `'
+
+Related:
+
+• `'"
+
+  (let* ((COLOR (downcase color))
+         )
+
+    ()))
+
+;;----------------------------------------------;;
+
+(defun sboo-color-name (color)
+
+  "TODO Return the named color closest to COLOR.
+
+Inputs:
+
+• COLOR — a color:
+
+    • a Hex string   — 
+    • an RGB triplet — 
+    • an HSL triplet — 
+    • a Color Name string — 
+
+Output:
+
+• a `stringp'.
+  a Color Name with a minimal `color-distance' from COLOR.
+
+Example:
+
+• M-: (sboo-color-name \"red\")
+    ⇒ \"red\"
+
+Links:
+
+• URL `'
+
+Related:
+
+• `'"
+
+  (let* ()
+
+    ))
+
+;;==============================================;;
+
+(defcustom sboo-things-builtin
+
+  '( symbol
+     list
+     sexp
+     defun
+     filename
+     url
+     email
+     word
+     sentence
+     whitespace
+     line
+     page
+    )
+
+  "Builtin things for `forward-thing' (see `thingatpt').")
+
+;;----------------------------------------------;;
+
+(defcustom sboo-things-custom
+
+  '( 
+   )
+
+  "Custom things for `forward-thing' (besides `sboo-things-builtin')."
+
+  :type '(repeated (symbol :tag "Thing"))
+
+  :safe t
+  :group 'sboo)
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-things (&key (fast nil))
+
+  "List all known things for `forward-thing'.
+
+Inputs:
+
+• FAST — a `booleanp'.
+
+Output:
+
+• a `listp' of `symbolp's.
+
+Example:
+
+• M-: (sboo-things :fast t)
+
+Related:
+
+• `sboo-things-builtin'
+• `sboo-things-custom'
+• `sboo-forward'"
+
+  (let* ((KNOWN-THINGS (append sboo-things-builtin sboo-things-custom))
+         )
+
+    (if fast
+        KNOWN-THINGS
+
+      (let* ((UNKNOWN-THINGS '())
+             (ADD-THING       (lambda (symbol)
+                                (when (sboo-thing-p symbol)
+                                    (push symbol UNKNOWN-THINGS))))
+             )
+
+        (progn
+          (mapatoms ADD-THING obarray)
+          (append KNOWN-THINGS UNKNOWN-THINGS))))))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-forward-ops (&key)
+
+  "List all known things for `forward-thing'.
+
+Inputs:
+
+• FAST — a `booleanp'.
+
+Output:
+
+• a `listp' of `functionp's.
+
+Example:
+
+• M-: (sboo-forward-ops)
+
+Related:
+
+• `'"
+
+  (let* ((FORWARD-OPS    '())
+         (ADD-FORWARD-OP (lambda (symbol)
+                           (let* ((FORWARD-OP (sboo-forward-op symbol)))
+                             (when FORWARD-OP
+                               (push FORWARD-OP FORWARD-OPS)))))
+         )
+
+    (progn
+      (mapatoms ADD-FORWARD-OP obarray)
+      FORWARD-OPS)))
+
+;;----------------------------------------------;;
+
+(defun sboo-thing-p (symbol)
+
+  "Whether SYMBOL is a thing for `forward-p'.
+
+Inputs:
+
+• SYMBOL — a `symbolp'.
+
+Output:
+
+• a `booleanp'.
+
+Example:
+
+• M-: (sboo-thing-p 'word)
+    ⇒ t
+
+• M-: thing (sboo-thing-p 'gabagool)
+    ⇒ nil"
+
+  (if (sboo-forward-op symbol) t nil))
+
+;;----------------------------------------------;;
+
+(defun sboo-forward-op (symbol)
+
+  "Return the movement function of the SYMBOL thing.
+
+Inputs:
+
+• SYMBOL — a `symbolp'.
+
+Output:
+
+• a `functionp' or nil.
+
+Example:
+
+• M-: (sboo-forward-op 'sexp)
+    ⇒ #'`forward-sexp'
+
+• M-: (sboo-forward-op 'acab)
+    ⇒ nil
+
+Notes:
+
+a thing is defined as:
+
+• « 'forward-op » symbols — i.e. any `symbolp' with the « 'forward-op » property.
+• « forward-* » functions — any `functionp's which starts with “forward-”."
+
+  (or (get symbol 'forward-op)
+      (intern-soft (format "forward-%s" symbol))
+      ))
+
+;;----------------------------------------------;;
+
+;;;###autoload
+(cl-defun sboo-forward (thing &optional (count 1))
+
+  "Move COUNT THING(s) forward (i.e. -COUNT THING(s) backward).
+
+Inputs:
+
+• THING — a `symbolp'.
+• COUNT — an `integerp'.
+
+Completion (via function `sboo-things'):
+
+• « 'forward-op » symbols — i.e. any `symbolp' with the « 'forward-op » property (see `get').
+• « forward-* » functions — any `functionp's which starts with “forward-”.
+
+Example:
+
+• M-x sboo-forward <RET> word <RET> -2 <RET>
+   ;; moves two words backward.
+   ;; i.e. « (forward-thing 'word -2) »,
+   ;; i.e. « (forward-word -2) ».
+
+Related:
+
+• `forward-thing'
+• `sboo-forward-op'"
+
+  (interactive (list
+                (intern-soft (completing-read "Thing: " (sboo-things) nil :require-match))
+                (read-number     "Count: " 1)
+                ))
+
+  (let* ((FORWARD-OP (sboo-forward-op thing))
+         )
+
+    (if (functionp FORWARD-OP)
+        (funcall FORWARD-OP count)
+
+      (error "(sboo-forward '%s) — %s is not a thing (for `forward-thing')" thing thing))))
+
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
+
+;; `color' feature:
+;;
+;; M-: (color-name-to-rgb "cyan")
+;;     '(0.0 1.0 1.0)
+;;
+;; M-: (color-rgb-to-hex 0.0 1.0 1.0)
+;;     "#0000ffffffff"
+;;
+;; M-: (color-complement "cyan")
+;;     '(1.0 0.0 0.0)
+;;
+;; M-: (color-values "cyan")
+;;     '(0 65535 65535)
+;;
+;; M-: (color-lighten-name "red" 0.10)
+;;     "#fffe00830083"
+;;
+;; M-: (color-darken-name "red" 0.10)
+;;     "#ff7b00000000"
+;;
+;; M-: (color-saturate-name "red" 0.10)
+;;     "#ffff00000000"
+;;
+;; M-: (color-desaturate-name "red" 0.10)
+;;     "#ffde00200020"
+;;
 
 ;; Interactive Commands
 ;; ====================

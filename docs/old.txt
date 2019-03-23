@@ -1641,6 +1641,42 @@ Example:
 
 ;;----------------------------------------------;;
 
+(cl-defun sboo-things (&key fast)
+
+  "List all known things for `forward-thing'.
+
+Inputs:
+
+• FAST — a `booleanp'.
+
+Output:
+
+• a `listp' of `symbolp's.
+
+Example:
+
+• M-: (sboo-things :fast t)
+
+Related:
+
+• `sboo-things-builtin'
+• `sboo-things-custom'
+• `forward-thing'"
+
+  (let* ((KNOWN-THINGS (append sboo-things-builtin sboo-things-custom))
+         )
+
+    (if fast
+        KNOWN-THINGS
+
+      (let* ((THINGS-VIA-SYMBOL-PROPERTY (mapatoms sboo-thing-by-property &optional obarray))
+             (THINGS-VIA-FUNCTION-NAMES  (mapatoms sboo-thing-by-name     &optional obarray))
+
+             (UNKNOWN-THINGS (append THINGS-VIA-FUNCTION-NAMES THINGS-VIA-SYMBOL-PROPERTY))
+             )
+
+        (append KNOWN-THINGS UNKNOWN-THINGS)))))
+
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

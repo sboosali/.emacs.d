@@ -261,7 +261,7 @@
 
 ;; Default `show-help-function' is `tooltip-show-help'.
 
-;;==============================================;;
+;;----------------------------------------------;;
 
 (sboo-custom-set help-at-pt-display-when-idle t
   "automatically show Local Help (i.e. the ‘kbd-help’ or ‘help-echo’ Text Property of the character-at-point) on point-over (i.e. when `point' moves there, not when the `cursor' hovers over).")
@@ -281,6 +281,11 @@
 ;; quit.  If both ‘kbd-help’ and ‘help-echo’ produce help strings,
 ;; ‘kbd-help’ is used.
 ;; 
+
+;;----------------------------------------------;;
+
+(sboo-custom-set x-underline-at-descent-line t
+  "put the Underline below the Font Bottomline (instead of the Font Baseline).")
 
 ;;----------------------------------------------;;
 ;; File Extensions:

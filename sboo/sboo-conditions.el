@@ -325,6 +325,16 @@ Depends on the variables `system-type' and `window-system'.")
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
+;; `window-system':
+;;
+;; is the window system. it's one of:
+;;
+;; * `graphic` — any graphics-capable display.
+;; * `x` — X11.
+;; * `pc` — for the MS-DOS console.
+;; * `w32` — for MS Windows 9X/NT/2K/XP.
+;; * `tty` — a non-graphics-capable display.
+
 ;; size words (alternate naming for the profiling environment variables):
 ;;
 ;; * 

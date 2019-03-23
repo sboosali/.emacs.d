@@ -1476,8 +1476,12 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
     :config
 
-    (dolist (HOOK '(prog-hook text-mode))
+    (dolist (HOOK '(prog-mode-hook text-mode-hook))
       (add-hook HOOK #'rainbow-mode))
+
+    (dolist (HOOK '())
+      (add-hook HOOK #'rainbow-mode))
+    ;; TODO get list of sub-prog-modes (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
     ())
 

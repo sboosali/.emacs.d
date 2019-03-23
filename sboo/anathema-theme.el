@@ -160,7 +160,7 @@ Jargon:
     ("anathema-red-1"    . "#BC8383")
     ("anathema-red-2"    . "#AC7373")
     ("anathema-red-3"    . "#9C6363")
-    ("anathema-red-4"    . "#8C5353")
+    ("anathema-red-4"    . "#73acac")   ; #8C5353 #73acac
     ("anathema-red-5"    . "#7C4343")
     ("anathema-red-6"    . "#6C3333")
     ("anathema-orange"   . "#DFAF8F")

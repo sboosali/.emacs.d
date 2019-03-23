@@ -713,6 +713,23 @@ FEATURE — a symbol.
 
 ;;----------------------------------------------;;
 
+(defun keyword-to-symbol (keyword)
+
+  "Convert `keywordP' KEYWORD to a `symbolp'.
+
+
+Examples:
+
+• M-: (keyword-to-symbol :foo)
+    ⇒ 'foo
+
+Links:
+
+• URL `https://emacsredux.com/blog/2019/01/10/convert-a-keyword-to-a-symbol/'"
+
+  (intern (substring (symbol-name keyword) 1)))
+
+
 ;;----------------------------------------------;;
 ;;; Notes: -------------------------------------;;
 ;;----------------------------------------------;;
