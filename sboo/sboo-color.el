@@ -38,7 +38,7 @@
 
 ;; sboo-color-*
 
-(cl-defun sboo-color-parse-json (&key file string)
+(cl-defun sboo-color-parse-json (&key json-file json-string)
 
   "Parse a json STRING or FILE, whose schema is a list of `sboo-color-name'.
 
@@ -53,31 +53,40 @@ Output:
 
 Example:
 
-• M-: (sboo-color-parse-json :string \"[{\\\"name\\\":\\\"1975 Earth Red\\\",\\\"hex\\\":\\\"#7a463a\\\"}]\")
+• M-: (sboo-color-parse-json :json-string \"[{\\\"name\\\":\\\"1975 Earth Red\\\",\\\"hex\\\":\\\"#7a463a\\\"}]\")
     ⇒ [ ... ]
 
-• M-: (sboo-color-parse-json :file \"colornames.json\")
+• M-: (sboo-color-parse-json :json-file \"colornames.json\")
     ⇒ [ ... ]
 
 Links:
 
 • URL `https://unpkg.com/color-name-list@3.64.0/dist/colornames.json"
 
-  (let* ((JSON (if string
-                   string
-                 (if file
-                     (read file)
-                   (throw 'sboo-color-parse-json))))
-         )
+  (let* ()
+    (cond
 
-    (let* ((json-object-type 'hash-table)
-           (json-array-type  'list)
-           (json-key-type    'string)
-           (TABLE            (json-read-file file)))
+      ((stringp json-string)
 
-      TABLE)))
+       (with-temp-buffer (insert json-string)
+                         (goto-char 0)
+                         (json-read)))
 
-;; e.g. (sboo-color-parse-json :string "[{\"name\":\"1975 Earth Red\",\"hex\":\"#7a463a\"}]")
+      ((stringp json-file)
+
+       (let* ((json-object-type 'hash-table)
+              (json-array-type  'list)
+              (json-key-type    'string)
+              )
+         (json-read-file json-file)))
+
+      (t (throw 'sboo-color-parse-json)))))
+
+;; ^ e.g.:
+;;
+;; (sboo-color-parse-json :json-string "[{\"name\":\"1975 Earth Red\",\"hex\":\"#7a463a\"}]")
+;; (sboo-color-parse-json :json-file   "colornames.json")
+;;
 
 ;; e.g.
 ;;
@@ -93,8 +102,7 @@ Links:
 
 (defcustom sboo-color-alist
 
-  '( 
-   )
+  nil
 
   "Represents a set of `sboo-color-name's.
 
@@ -145,16 +153,11 @@ Data source for `sboo-color-alist'."
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 
-(cl-defun sboo-color-read (&key prompt require-match initial-input)
+(cl-defun sboo-read-color (&key prompt require-match initial-input)
 
   "Read a color by name, returing a hex string.
 
 Reads from `sboo-color-alist'.
-
-Example:
-
-• M-: (sboo-color-read )
-    ⇒ 
 
 Example:
 
@@ -178,7 +181,7 @@ Related:
         (INITIAL-INPUT (or initial-input ""))
         )
 
-    (let* ((has_sboo-color-alist_been_set? (not (eq nil sboo-color-alist))) ;TODO; or check/set a global flag, defaulting to X11's « colors.txt »
+    (let* ((has_sboo-color-alist_been_set? (if sboo-color-alist t nil)) ;TODO; or check/set a global flag, defaulting to X11's « colors.txt »
 
            (CANDIDATES (progn
                          (unless has_sboo-color-alist_been_set?
@@ -190,6 +193,8 @@ Related:
            )
 
       COLOR)))
+
+;; (sboo-read-color)
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

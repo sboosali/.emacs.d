@@ -1694,7 +1694,8 @@ Output:
 
 Example:
 
-• M-: (sboo-things :fast t)
+• M-: (sboo-things :fast nil)
+    ⇒ '(symbol list sexp defun filename url email word sentence whitespace line page str page op line list word point button symbol sentence paragraph defun char comment whitespace thing sexp)
 
 Related:
 
@@ -1716,7 +1717,12 @@ Related:
 
         (progn
           (mapatoms ADD-THING obarray)
-          (append KNOWN-THINGS UNKNOWN-THINGS))))))
+
+          (let* ((THINGS (append KNOWN-THINGS UNKNOWN-THINGS))
+                 )
+            (progn
+              (sort THINGS #')
+              THINGS)))))))
 
 ;;----------------------------------------------;;
 
@@ -1735,6 +1741,7 @@ Output:
 Example:
 
 • M-: (sboo-forward-ops)
+    ⇒ (list #'forward-page #'forward-line #'forward-list #'forward-word #'forward-point #'forward-button #'forward-symbol #'forward-sentence #'forward-paragraph #'end-of-defun #'forward-char #'forward-comment #'forward-whitespace #'forward-thing #'forward-sexp))
 
 Related:
 
@@ -1743,7 +1750,7 @@ Related:
   (let* ((FORWARD-OPS    '())
          (ADD-FORWARD-OP (lambda (symbol)
                            (let* ((FORWARD-OP (sboo-forward-op symbol)))
-                             (when FORWARD-OP
+                             (when (and FORWARD-OP (functionp FORWARD-OP))
                                (push FORWARD-OP FORWARD-OPS)))))
          )
 
@@ -1793,7 +1800,6 @@ Example:
 
 • M-: (sboo-forward-op 'sexp)
     ⇒ #'`forward-sexp'
-
 • M-: (sboo-forward-op 'acab)
     ⇒ nil
 
@@ -1802,7 +1808,25 @@ Notes:
 a thing is defined as:
 
 • « 'forward-op » symbols — i.e. any `symbolp' with the « 'forward-op » property.
-• « forward-* » functions — any `functionp's which starts with “forward-”."
+• « forward-* » functions — any `functionp's which starts with “forward-”.
+
+most things have « forward-* » functions:
+
+• M-: (sboo-forward-op 'sexp)
+    ⇒ #'`forward-sexp'
+• M-: (intern-soft (format \"forward-sexp\"))
+    ⇒ #'`forward-sexp'
+• M-: (get 'sexp 'forward-op)
+    ⇒ nil
+
+some things have a (differently-named) « 'forward-op » property:
+
+• M-: (sboo-forward-op 'defun)
+    ⇒ #'`end-of-defun'
+• M-: (intern-soft (format \"forward-defun\"))
+    ⇒ nil
+• M-: (get 'defun 'forward-op)
+    ⇒ #'`forward-sexp'"
 
   (or (get symbol 'forward-op)
       (intern-soft (format "forward-%s" symbol))

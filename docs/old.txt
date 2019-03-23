@@ -1679,7 +1679,58 @@ Related:
 
 ;;----------------------------------------------;;
 
+• M-: (sboo-forward-ops)
+
+    ⇒ (list #'forward-str #'forward-page #'forward-op #'forward-line #'forward-list #'forward-word #'forward-point #'forward-button #'forward-symbol #'forward-sentence #'forward-paragraph #'end-of-defun #'forward-char #'forward-comment #'forward-whitespace #'forward-thing #'forward-sexp)
+
+    ⇒ (list #'forward-page #'forward-line #'forward-list #'forward-word #'forward-point #'forward-button #'forward-symbol #'forward-sentence #'forward-paragraph #'end-of-defun #'forward-char #'forward-comment ...))
+
 ;;----------------------------------------------;;
+
+(cl-defun sboo-color-parse-json (&key file string)
+
+  "Parse a json STRING or FILE, whose schema is a list of `sboo-color-name'.
+
+Inputs:
+
+• FILE — a « .json » file.
+• STRING — a json string.
+
+Output:
+
+• a list of `sboo-color-name's.
+
+Example:
+
+• M-: (sboo-color-parse-json :string \"[{\\\"name\\\":\\\"1975 Earth Red\\\",\\\"hex\\\":\\\"#7a463a\\\"}]\")
+    ⇒ [ ... ]
+
+• M-: (sboo-color-parse-json :file \"colornames.json\")
+    ⇒ [ ... ]
+
+Links:
+
+• URL `https://unpkg.com/color-name-list@3.64.0/dist/colornames.json"
+
+  (let* ((JSON (if (stringp string)
+                   string
+                 (if (stringp file)
+                     (read file)
+                   (throw 'sboo-color-parse-json))))
+         )
+
+    (let* ((json-object-type 'hash-table)
+           (json-array-type  'list)
+           (json-key-type    'string)
+           (TABLE            (json-read-file file)))
+
+      TABLE)))
+
+;; ^ e.g.:
+;;
+;; (sboo-color-parse-json :string "[{\"name\":\"1975 Earth Red\",\"hex\":\"#7a463a\"}]")
+;; (sboo-color-parse-json :file   "colornames.json")
+;;
 
 ;;----------------------------------------------;;
 
