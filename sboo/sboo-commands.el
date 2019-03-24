@@ -10,11 +10,12 @@
 ;; (when external packages haven't been installed and/or can't be loaded).
 ;;
 ;;----------------------------------------------;;
-;; Imports ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
 ;; builtins:
 
+(require 'cl)
 (require 'cl-lib)
 (require 'shell)
 
@@ -24,7 +25,7 @@
 (require 'sboo-utilities)
 
 ;;----------------------------------------------;;
-;; Utilities: Macros ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Macros --------------------------------------;;
 ;;----------------------------------------------;;
 
 (defmacro define-graceful-command (Name ExternalCommand BuiltinCommand &optional DocString)
@@ -85,6 +86,20 @@
 ;; - https://stackoverflow.com/questions/37531124/emacs-how-to-use-call-interactively-with-parameter
 ;; - 
 ;; 
+
+;;----------------------------------------------;;
+;; Thing at point ------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-kill-thing-at-point (thing)
+
+  "Kill the `thing-at-point' for the specified kind of THING."
+
+  (let ((BOUNDS (bounds-of-thing-at-point thing)))
+
+    (if BOUNDS
+        (kill-region (car BOUNDS) (cdr BOUNDS))
+      (error "No « %s » at point" thing))))
 
 ;;----------------------------------------------;;
 ;; Insertion -----------------------------------;;
@@ -1558,14 +1573,28 @@ Wraps `sboo-invert-color-string'."
          (ORIGINAL-COLOR (sboo-color-p WORD))
          (INVERSE-COLOR  (sboo-invert-color-string ORIGINAL-COLOR))
 
+         (INVERSE-WORD   (format "%s"
+                                 (color-rgb-to-hex (nth 0 INVERSE-COLOR)
+                                                   (nth 1 INVERSE-COLOR)
+                                                   (nth 2 INVERSE-COLOR))))
          )
 
     (save-excursion
 
-      (delete-thing 'word)
-      (insert INVERSE-COLOR)
+      (sboo-kill-thing-at-point 'word)
 
-      ())))
+      (insert INVERSE-WORD))))
+
+;; e.g. (sboo-invert-color-at-point "#0000ffffffff")
+
+;; ^ NOTE
+;;
+;;   M-: (color-rgb-to-hex 0.0 1.0 1.0)
+;;       "#0000ffffffff"
+;;
+;;   M-: (color-rgb-to-hex @'(0.0 1.0 1.0))
+;;       TODO
+;;
 
 ;;----------------------------------------------;;
 
@@ -1605,7 +1634,7 @@ Related:
   (let* ((COLOR (downcase color))
          )
 
-    ()))
+    (identity COLOR)))
 
 ;;----------------------------------------------;;
 
@@ -1721,8 +1750,12 @@ Related:
           (let* ((THINGS (append KNOWN-THINGS UNKNOWN-THINGS))
                  )
             (progn
-              (sort THINGS #')
+              (remove-duplicates THINGS :test #'eq :from-end t)
               THINGS)))))))
+
+;; ^ NOTE
+;;
+;;   M-: (remove-duplicates '(a b b a) :test #'eq :from-end t)
 
 ;;----------------------------------------------;;
 

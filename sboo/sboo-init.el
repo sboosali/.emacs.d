@@ -780,11 +780,23 @@ Related:
 ;; Internal Packages: Utilities ----------------;;
 ;;----------------------------------------------;;
 
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+
+;; ^ `flyspell-prog-mode' spell-checks comments.
+
+;;----------------------------------------------;;
+
+(add-to-list 'auto-mode-alist (cons "\\.xpm\\'" #'c-mode))
+
+;;----------------------------------------------;;
+
 (when (require 'sboo-unicode nil :no-error)
 
   ())
 
 ;;----------------------------------------------;;
+
+
 
 ;;----------------------------------------------;;
 ;; External Packages: Installation -------------;;
@@ -1440,6 +1452,22 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
+(use-package json-mode
+
+  ;; :disabled
+
+  :mode (("\\.json\\'" . json-mode)
+         )
+
+  :hook ((json-mode . flycheck-mode))
+
+  ;; ^ FlyCheck builds-in a « jsonlint » checker
+  ;; ^ « jsonlint » is a JSON Linter.
+
+  )
+
+;;----------------------------------------------;;
+
 (use-package yaml-mode
 
   :mode (("\\.yaml\\'" . yaml-mode)
@@ -1472,16 +1500,14 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 (use-package rainbow-mode
 
-    :load-path "/nix/store/qnl0dlq0zsvg5rnd6c9grdn1phv9xc7x-emacs-rainbow-mode-1.0.1/share/emacs/site-lisp/elpa/rainbow-mode-1.0.1/" ;FIXME dont hardcode
+    :load-path "/nix/store/qnl0dlq0zsvg5rnd6c9grdn1phv9xc7x-emacs-rainbow-mode-1.0.1/share/emacs/site-lisp/elpa/rainbow-mode-1.0.1/" ;FIXME dont hardcode, must eval at macro-time.
+
+    :hook (prog-mode text-mode)
 
     :config
 
     (dolist (HOOK '(prog-mode-hook text-mode-hook))
       (add-hook HOOK #'rainbow-mode))
-
-    (dolist (HOOK '())
-      (add-hook HOOK #'rainbow-mode))
-    ;; TODO get list of sub-prog-modes (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
     ())
 
@@ -1515,6 +1541,13 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; ;; ^ After 1 second of an unfinished key-press,
 ;; ;; show the documentation of the sub-keys available in the key sequence.
 
+;;----------------------------------------------;;
+
+(use-package eimp
+
+    :hook (image-mode-hook)
+
+    )
 
 ;;----------------------------------------------;;
 ;; Builtin Features: ---------------------------;;

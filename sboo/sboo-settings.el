@@ -47,6 +47,18 @@
   (when (stringp string)
     (display-message-or-buffer string)))
 
+;; Returns either the string shown in the echo area, or when a pop-up
+;; buffer is used, the window used to display it.
+
+;; If MESSAGE is a string, then the optional argument BUFFER-NAME is the
+;; name of the buffer used to display it in the case where a pop-up buffer
+;; is used, defaulting to ‘*Message*’.  In the case where MESSAGE is a
+;; string and it is displayed in the echo area, it is not specified whether
+;; the contents are inserted into the buffer anyway.
+
+;; Optional arguments ACTION and FRAME are as for ‘display-buffer’,
+;; and are only used if a pop-up buffer is displayed.
+
 ;;----------------------------------------------;;
 
 (defun sboo-proced-settings ()
@@ -257,7 +269,7 @@
 
 ;;----------------------------------------------;;
 
-(setq show-help-function #'sboo-display-message-or-buffer)
+;:FIXME;; (setq show-help-function #'sboo-display-message-or-buffer)
 
 ;; Default `show-help-function' is `tooltip-show-help'.
 
@@ -267,8 +279,8 @@
   "automatically show Local Help (i.e. the ‘kbd-help’ or ‘help-echo’ Text Property of the character-at-point) on point-over (i.e. when `point' moves there, not when the `cursor' hovers over).")
 
 (progn
-  (sboo-custom-set help-at-pt-timer-delay 1
-    "Wait 1sec before showing Local Help (i.e. the ‘kbd-help’ or ‘help-echo’ Text Property of the character-at-point)")
+  (sboo-custom-set help-at-pt-timer-delay 3
+    "Wait this many seconds before showing Local Help (i.e. the ‘kbd-help’ or ‘help-echo’ Text Property of the character-at-point)")
   (help-at-pt-set-timer))
 
 ;; ^ `help-at-pt-display-when-idle':
@@ -288,9 +300,9 @@
   "put the Underline below the Font Bottomline (instead of the Font Baseline).")
 
 ;;----------------------------------------------;;
-;; File Extensions:
 
-(add-to-list 'auto-mode-alist (cons "\\.xpm\\'" #'c-mode))
+(sboo-custom-set history-length 10000
+  "increase Minibuffer History.")
 
 ;;----------------------------------------------;;
 ;; DirEd:

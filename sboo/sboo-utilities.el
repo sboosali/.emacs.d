@@ -729,6 +729,40 @@ Links:
 
   (intern (substring (symbol-name keyword) 1)))
 
+;;----------------------------------------------;;
+
+;; TODO
+;; e.g. to get double newlines as a text separator during collection:
+
+;;      (setq register-separator ?+)
+;;      (set-register register-separator "\n\n")
+
+;;      ;; URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Text-Registers.html'
+
+;;----------------------------------------------;;
+
+(progn
+
+  (defun sboo-handle-sigusr1 ()
+    "Handle a SIGUSR1 event.
+
+Example (triggering):
+
+  $ kill -SIGUSR1 $(pgrep emacs)
+
+Related:
+
+• `special-event-map'"
+
+  (interactive)
+
+  (let* ((EVENT last-input-event)
+        )
+    (message "Caught « SIGUSR1 » signal: « %S »" EVENT)))
+
+  (define-key special-event-map [sigusr1] #'sboo-handle-sigusr1))
+
+;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
 ;;; Notes: -------------------------------------;;
