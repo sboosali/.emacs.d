@@ -14,7 +14,7 @@
 
 ;; Builtins:
 
-(require 'cl)
+(require 'cl-lib)
 (require 'pcase)
 (require 'json)
 
@@ -30,21 +30,175 @@
                (:constructor mtg-card-create)
                (:copier      nil))
 
-  name cost types supertypes subtypes colors oracle power-toughness ;TODO power-toughness or strength
-  cmc color-identity
-  image flavor frame layout rarity typeline language artist
-  rulings legality
-  scryfall)
+  (name          nil)
+  (cost          nil)
+  (types         nil)
+  (supertypes    nil)
+  (subtypes      nil)
+  (colors        nil)
+  (oracle        nil)
+  (power         nil)
+  (toughness     nil)
+  (loyalty       nil)
+  
+  (cmc           0)
+  (coloridentity nil)
+  
+  (image         nil)
+  (flavor        nil)
+  (frame         nil)
+  (layout        nil)
+  (rarity        nil)
+  (typeline      nil)
+  (language      nil)
+  (artist        nil)
+  
+  (rulings       nil)
+  (legality      nil)
+  (scryfall      nil)
 
-;; color cmc supertypes subtypes layout watermark collector language
+  )
+
+;; e.g. (mtg-card-create :name "" :cost "" :types "" :supertypes "" :subtypes "" :colors "" :oracle "" :power "" :toughness "" :loyalty "" :cmc 1 :coloridentity "" :image "" :flavor "" :frame "" :layout "" :rarity "" :typeline "" :language "" :artist "" :rulings "" :legality "" :scryfall "")
+
+;;TODO color cmc supertypes subtypes layout watermark collector language
 
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
+(defcustom mtg-max-length-of-card-name
+
+  0
+
+  "The maximum length among card names.
+
+Used for vertically-aligning annotations (among other uses). 
+
+(a natural.)"
+
+  :type '(choice (const nil :tag "Unknown")
+                 (integer :tag "Natural"))
+
+  :safe #'integerp
+  :group 'sboo)
+
 ;;----------------------------------------------;;
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
+
+(cl-defun make-mtg-card (&key name cost types supertypes subtypes colors oracle power toughness loyalty cmc coloridentity image flavor frame layout rarity typeline language artist rulings legality scryfall)
+
+  "Make an `mtg-card'. Smart constructor with validation plus defaulting.
+
+Inputs:
+
+• NAME          — a `stringp'. 
+• COST          — a `listp' of `stringp's, or `stringp'. 
+• TYPES         — a `listp' of `stringp's. 
+• SUPERTYPES    — a `listp' of `stringp's. 
+• SUBTYPES      — a `listp' of `stringp's. 
+• COLORS        — a `listp' of `stringp's. 
+• ORACLE        — a `stringp'. 
+• POWER         — a natural `integerp', or `stringp'. 
+• TOUGHNESS     — a natural `integerp', or `stringp'. 
+• LOYALTY       — a natural `integerp', or `stringp'. 
+• CMC           — a natural `integerp'. 
+• COLORIDENTITY — a `listp' of `stringp's. 
+• IMAGE         — a `stringp'. 
+• FLAVOR        — a `stringp'. 
+• FRAME         — a `stringp'. 
+• LAYOUT        — a `stringp'. 
+• RARITY        — a `stringp'. 
+• TYPELINE      — a `stringp'. 
+• LANGUAGE      — a `stringp'. 
+• ARTIST        — a `stringp'. 
+• RULINGS       — a `stringp'. 
+• LEGALITY      — a `stringp'. 
+• SCRYFALL      — a `stringp'. 
+
+Output:
+
+• an `mtg-card-p'.
+
+Example:
+
+• M-: (make-mtg-card )
+    ⇒ 
+
+Links:
+
+• URL `'
+
+Related:
+
+• `mtg-card-create'"
+
+  (let* ((NAME          name)
+         (COST          cost)
+         (TYPES         types)
+         (SUPERTYPES    supertypes)
+         (SUBTYPES      subtypes)
+         (COLORS        colors)
+         (ORACLE        oracle)
+         (POWER         power)
+         (TOUGHNESS     toughness)
+         (LOYALTY       loyalty)
+         (CMC         cmc)
+         (COLORIDENTITY coloridentity)
+         (IMAGE         image)
+         (FLAVOR        flavor)
+         (FRAME         frame)
+         (LAYOUT        layout)
+         (RARITY        rarity)
+         (TYPELINE      typeline)
+         (LANGUAGE      language)
+         (ARTIST        artist)
+         (RULINGS       rulings)
+         (LEGALITY      legality)
+         (SCRYFALL      scryfall)
+         )
+
+    (mtg-card-create :name NAME :cost COST :types TYPES :supertypes SUPERTYPES :subtypes SUBTYPES :colors COLORS :oracle ORACLE :power POWER :toughness TOUGHNESS :loyalty LOYALTY :cmc CMC :coloridentity COLORIDENTITY :image IMAGE :flavor FLAVOR :frame FRAME :layout LAYOUT :rarity RARITY :typeline TYPELINE :language LANGUAGE :artist ARTIST :rulings RULINGS :legality LEGALITY :scryfall SCRYFALL)))
+
+;;----------------------------------------------;;
+
+(defun mtg-get-card-name-max-length (cards)
+
+  "Get `mtg-max-length-of-card-name'.
+
+Inputs:
+
+• CARDS — a `sequencep' of `mtg-card's.
+
+Output:
+
+• an `integerp'. 
+  a natural (i.e. non-negative number).
+  length is measured by `string-width'.
+
+Example:
+
+• M-: (mtg-get-card-name-max-length )
+    ⇒ 
+
+Related:
+
+• `mtg-max-length-of-card-name'"
+
+  (let* ((MAX-LENGTH (seq-reduce
+                     (lambda (old-length new-card)
+                       (let* ((new-length (string-width (mtg-card-name new-card)))
+                              )
+                         (max old-length new-length)))
+                      cards
+                      0)))
+
+    MAX-LENGTH))
+
+;; M-: (mtg-get-card-name-max-length (mtg-cards))
+
+;; M-: (mtg-get-card-name-max-length (list (mtg-card-create :name "four") (mtg-card-create :name "sixsix") (mtg-card-create :name "1")))
 
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
