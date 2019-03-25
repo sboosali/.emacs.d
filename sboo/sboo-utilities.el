@@ -18,7 +18,7 @@
 
 ;; builtin packages:
 
-(require 'cl)     ;; "CommonLisp"
+(require 'cl-lib)     ;; "CommonLisp"
 (require 'pcase)  ;; "PatternCASE"
 (require 'subr-x) ;; "SUBRoutines-eXtras"
 

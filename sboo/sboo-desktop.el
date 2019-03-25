@@ -17,7 +17,7 @@
 
 ;; builtin packages:
 
-(require 'cl)
+(require 'cl-lib)
 (require 'pcase)
 
 (require 'desktop)

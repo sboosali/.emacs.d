@@ -24,7 +24,7 @@
 
 ;; builtins:
 
-(require 'cl)
+(require 'cl-lib)
 ;;(require 'pcase)
 ;;(require 'seq)
 

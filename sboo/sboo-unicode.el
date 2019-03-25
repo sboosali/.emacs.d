@@ -19,7 +19,7 @@
 
 ;; Builtins:
 
-(require 'cl)     ;; "CommonLisp"
+(require 'cl-lib)     ;; "CommonLisp Library"
 (require 'subr-x) ;; "SUBRoutine-eXtRAS"
 (require 'mule)   ;; "MUltiLingual Environment"
 
@@ -913,7 +913,7 @@ Example:
 ;;
 ;; e.g.
 ;;
-;;    (require 'cl)
+;;    (require 'cl-lib)
 ;;    (cl-flet ((f (x) (* x x)))
 ;;      (f 7))
 ;;

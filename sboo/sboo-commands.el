@@ -15,7 +15,7 @@
 
 ;; builtins:
 
-(require 'cl)
+(require 'cl-lib)
 (require 'cl-lib)
 (require 'shell)
 
@@ -486,6 +486,15 @@ Version 2015-04-09"
 
 ;;----------------------------------------------;;
 
+(defun sboo-insert-bullet ()
+  
+  "`insert' \"•\", the \"BULLET\" Unicode character."
+  (interactive)
+  
+  (insert "•"))
+
+;;----------------------------------------------;;
+
 (defun sboo-insert-black-circle ()
   
   "`insert' \"●\", the \"BLACK CIRCLE\" Unicode character."
@@ -510,6 +519,21 @@ Version 2015-04-09"
   (interactive)
   
   (insert "∅"))
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-circled-1 ()
+  "`insert' \"①\", the \"CIRCLED DIGIT ONE\" Unicode character."
+  (interactive)
+  
+  (insert "①"))
+
+;;----------------------------------------------;;
+
+;; (defun sboo-insert- ()
+;;   "`insert' \"\", the \"\" Unicode character."
+;;   (interactive)
+;;   (insert ""))
 
 ;;----------------------------------------------;;
 ;; Commands that Gracefully Degrade ;;;;;;;;;;;;;;

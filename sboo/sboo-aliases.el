@@ -18,7 +18,7 @@
 
 ;; builtin packages:
 
-(require 'cl)
+(require 'cl-lib)
 
 ;;----------------------------------------------;;
 

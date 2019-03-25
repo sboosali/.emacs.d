@@ -18,7 +18,7 @@
 
 ;; Builtins:
 
-(require 'cl)
+(require 'cl-lib)
 (require 'pcase)
 
 (require 'compile)

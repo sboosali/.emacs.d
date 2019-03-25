@@ -443,12 +443,50 @@ Wraps `forward-thing'."
 
 ;;; Inserting Unicode characters
 
+(global-set-key (kbd "s-M-a") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-b") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-c") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-d") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-e") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-f") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-g") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-h") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-i") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-j") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-k") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-l") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-m") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-n") #'sboo-insert-)
+(global-set-key (kbd "s-M-o") #'sboo-insert-bullet)
+;; (global-set-key (kbd "s-M-p") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-q") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-r") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-s") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-t") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-u") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-v") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-w") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-x") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-y") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-z") #'sboo-insert-)
+
+(global-set-key (kbd "s-M-0") #'sboo-insert-null)
+(global-set-key (kbd "s-M-1") #'sboo-insert-circled-1)
+(global-set-key (kbd "s-M-2") #'sboo-insert-circled-2)
+(global-set-key (kbd "s-M-3") #'sboo-insert-circled-3)
+(global-set-key (kbd "s-M-4") #'sboo-insert-circled-4)
+(global-set-key (kbd "s-M-5") #'sboo-insert-circled-5)
+(global-set-key (kbd "s-M-6") #'sboo-insert-circled-6)
+(global-set-key (kbd "s-M-7") #'sboo-insert-circled-7)
+(global-set-key (kbd "s-M-8") #'sboo-insert-circled-8)
+(global-set-key (kbd "s-M-9") #'sboo-insert-circled-9)
+
 (global-set-key (kbd "s-M-,") #'sboo-insert-angle-quote-left)
 (global-set-key (kbd "s-M-.") #'sboo-insert-angle-quote-right)
-
 (global-set-key (kbd "s-M--") #'sboo-insert-dash)
 (global-set-key (kbd "s-M-=") #'sboo-insert-triple-equals-sign)
-(global-set-key (kbd "s-M-0") #'sboo-insert-null)
+
+;;(global-set-key (kbd "s-M-") #'sboo-insert-)
 
 ;;==============================================;;
 ;;; "User" Keybindings...

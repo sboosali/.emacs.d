@@ -19,7 +19,7 @@
 
 ;; Builtins:
 
-(require 'cl)
+(require 'cl-lib)
 (require 'pcase)
 
 ;;----------------------------------------------;;
