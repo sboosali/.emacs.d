@@ -380,13 +380,13 @@ Wraps `forward-thing'."
 
 ;;(global-set-key (kbd "s-a") #')
 ;;(global-set-key (kbd "s-b") #')
-;;(global-set-key (kbd "s-c") #')
-(global-set-key (kbd "s-d") #'dired)
+(global-set-key (kbd "s-c") #'sboo-insert-char)
+(global-set-key (kbd "s-d") #'xref-find-definitions)
 (global-set-key (kbd "s-e") #'eval-last-sexp)
 (global-set-key (kbd "s-f") #'describe-function)
 ;;(global-set-key (kbd "s-g") #')
 (global-set-key (kbd "s-h") #'helm-command-prefix)
-;;(global-set-key (kbd "s-i") #')
+(global-set-key (kbd "s-i") #'imenu)
 ;;(global-set-key (kbd "s-j") #')
 (global-set-key (kbd "s-k") #'describe-key)
 ;;(global-set-key (kbd "s-l") #')
@@ -395,7 +395,7 @@ Wraps `forward-thing'."
 (global-set-key (kbd "s-o") #'find-file-at-point) ;MNEMONIC: "Open file". ;OLD: other-window.
 (global-set-key (kbd "s-p") #'proced)
 ;;(global-set-key (kbd "s-q") #')
-;;(global-set-key (kbd "s-r") #')
+(global-set-key (kbd "s-r") #'xref-find-references)
 (global-set-key (kbd "s-s") #'sboo-launch-shell)
 (global-set-key (kbd "s-t") #'sboo-launch-term)
 ;;(global-set-key (kbd "s-u") #')
@@ -404,6 +404,10 @@ Wraps `forward-thing'."
 ;;(global-set-key (kbd "s-x") #')
 ;;(global-set-key (kbd "s-y") #')
 ;;(global-set-key (kbd "s-z") #')
+
+;;----------------------------------------------;;
+
+;;(global-set-key (kbd "s-d") #'dired)
 
 ;;==============================================;;
 ;; « s-<SYMBOL> »

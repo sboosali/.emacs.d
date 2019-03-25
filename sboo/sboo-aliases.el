@@ -32,6 +32,18 @@
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 
+;; TODO 
+
+(defun sboo-set-TeX-input-method ()
+
+  "Set the `input-method' to « TeX ».
+
+e.g. with `M-x set-input-method RET TeX RET`, typing `\xi` inputs `ξ`."
+
+  (interactive)
+
+  (set-input-method "TeX" t))
+
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
@@ -70,12 +82,12 @@
 
 ;;----------------------------------------------;;
 
-(defalias '/c #'compile)
+(defalias '/cc #'compile)
 
 ;;----------------------------------------------;;
 
-(defalias '/ic  #'sboo-insert-char)
-(defalias '/iu  #'sboo-insert-unicode-name)
+(defalias '/c  #'sboo-insert-char)
+(defalias '/cu #'sboo-insert-unicode-name)
 
 ;;(defalias '/ic #'sboo-insert-char)
 ;;(defalias '/ic #'insert-char)
@@ -130,6 +142,10 @@
 (defalias '/h1 #'sboo-insert-comment-h1)     ; Mnemonic: « Header 1 »
 (defalias '/h2 #'sboo-insert-comment-h2)     ; Mnemonic: « Header 2 »
 (defalias '/hc #'sboo-insert-comment-header) ; Mnemonic: « Header Comment »
+
+;;----------------------------------------------;;
+
+(defalias '/tex #'sboo-set-TeX-input-method)
 
 ;;----------------------------------------------;;
 

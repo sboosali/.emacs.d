@@ -1491,7 +1491,48 @@ Related:
 
     ()))
 
-;;==============================================;;
+;;----------------------------------------------;;
+;; Colors: Thing -------------------------------;;
+;;----------------------------------------------;;
+
+(put 'color 'forward-op #'sboo-forward-color)
+
+;;;###autoload
+(defun sboo-forward-color (&optional count)
+
+  "`thing-at-point' support for colors.
+
+Inputs:
+
+• COUNT — an `integerp'.
+
+Effect:
+
+• move forwards (or backwards) COUNT (or -COUNT) colors.
+
+Definitions:
+
+• a « 'color » thing can be:
+
+    • a Hex string, like « \"#8C5353\" ».
+    • a color name, like « \"red\" ».
+    • an RGB triplet, like « (1.0 0.0 0.0) ».
+
+Links:
+
+• URL `'
+
+Related:
+
+• `'"
+
+  (let* ()
+
+    ))                                  ;TODO
+
+;;----------------------------------------------;;
+;; Colors: Invert ------------------------------;;
+;;----------------------------------------------;;
 
 (defun sboo-invert-color-string (string)
 

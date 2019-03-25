@@ -141,7 +141,7 @@ For example, `sboo-unicode-completion-annotate' toggles whether `sboo-read-chara
 ;; Functions: Accessors ------------------------;;
 ;;----------------------------------------------;;
 
-(cl-defun sboo-ucs-names-table (&key refresh)
+(cl-defun sboo-ucs-names-table (&key (refresh nil) (only-interesting t))
 
   "Return a mapping of Unicode Character names to Unicode Character codepoints.
 
@@ -152,6 +152,8 @@ Inputs:
 • REFRESH — a `booleanp'.
   If non-nil, rebuild Variable `sboo-ucs-names-table' from `ucs-names'
   (even if they've already been initialized to a non-nil `hash-table-p').
+• ONLY-INTERESTING — a `booleanp'.
+  If non-nil, filter by `sboo-unicode--interesting-character-p'.
 
 Output:
 
@@ -183,17 +185,28 @@ Notes:
                        ('hash-table OBJECT)
                        ('list       (sboo/alist->table OBJECT :test #'equal :size 43000))
                        (_           nil)))
+
+             (TABLE2  (if only-interesting
+                          (let ((NEW-TABLE (copy-hash-table TABLE)))
+                            (maphash (lambda (key value)
+                                       (unless (sboo-unicode--interesting-character-p value)
+                                           (remhash key NEW-TABLE)))
+                                     NEW-TABLE)
+                            NEW-TABLE)
+                        (copy-hash-table TABLE)))
              )
 
-        (setq sboo-ucs-names-table TABLE)))
-    
+        (setq sboo-ucs-names-table TABLE2)))
+
     ;; Access:
 
     sboo-ucs-names-table))
 
+;; M-: (sboo-ucs-names-table :refresh t :only-interesting t)
+
 ;;----------------------------------------------;;
 
-(cl-defun sboo-ucs-names-list (&key refresh annotate)
+(cl-defun sboo-ucs-names-list (&key (refresh nil) (annotate t) (only-interesting t))
 
   "Return all Unicode Character names.
 
@@ -205,6 +218,9 @@ Inputs:
   from `ucs-names', even if they've already been initialized (to a non-nil `listp').
 • ANNOTATE — a `booleanp'.
   Whether to return Variable `sboo-ucs-names-list' or Variable `sboo-ucs-names-annotated-list'.
+• ONLY-INTERESTING — a `booleanp'.
+  If non-nil, keep only “interesting” characters
+  (i.e. filter by `sboo-unicode--interesting-character-p').
 
 Output:
 
@@ -217,6 +233,9 @@ Examples:
 
 • M-: (sboo-ucs-names-list :annotate t)
     ⇒ (\"  NULL\" ... \"• BULLET\" ...)
+
+• M-: (sboo-ucs-names-list :only-interesting t)
+    ⇒ ( ... \"• BULLET\" ...)
 
 Related:
 
@@ -234,7 +253,7 @@ Notes:
               (not (and sboo-ucs-names-list
                         sboo-ucs-names-annotated-list)))
 
-      (let* ((TABLE (sboo-ucs-names-table :refresh refresh))
+      (let* ((TABLE (sboo-ucs-names-table :refresh refresh :only-interesting only-interesting))
              (NAMES (hash-table-keys TABLE))
              )
 
@@ -250,6 +269,8 @@ Notes:
     (if annotate
         sboo-ucs-names-annotated-list
       sboo-ucs-names-list)))
+
+;; M-: (sboo-ucs-names-list :refresh t :annotate t :only-interesting t)
 
 ;;----------------------------------------------;;
 
@@ -382,11 +403,13 @@ Related:
 
       NAME)))
 
+;; TODO e.g. with `M-x set-input-method RET TeX RET`, typing `\xi` inputs `ξ`.
+
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 
-(defun sboo-read-character-name (&optional annotate refresh)
+(defun sboo-read-character-name (&optional refresh annotate only-interesting)
 
   "Read a Unicode Character name.
 
@@ -415,7 +438,7 @@ Related:
           (REQUIRE-MATCH t)
           (PREDICATE     nil)
           (HISTORY       nil)
-          (CANDIDATES    (sboo-ucs-names-list :annotate ANNOTATE :refresh refresh))
+          (CANDIDATES    (sboo-ucs-names-list :annotate ANNOTATE :only-interesting only-interesting :refresh refresh))
           )
 
     (let* ((STRING (let ((completion-ignore-case t))
@@ -454,7 +477,7 @@ Related:
                 (if current-prefix-arg t nil)
                 ))
 
-  (let* ((STRING (sboo-read-character-name))
+  (let* ((STRING (sboo-read-character-name nil t t))
          (CHAR   (sboo-ucs-names-get STRING))
          )
 
@@ -484,7 +507,7 @@ Related:
 
   (interactive)
 
-  (let ((STRING (sboo-read-character-name))
+  (let ((STRING (sboo-read-character-name nil t t))
         (NAME   (upcase STRING))
         )
 
@@ -495,6 +518,7 @@ Related:
 ;;----------------------------------------------;;
 
 ;;TODO;(cl-defun sboo-insert-char (name &key display-properties)
+
 
 (defun sboo-insert-char (name)
 
@@ -522,7 +546,7 @@ Related:
 • `sboo-read-character-name'.
 • `sboo-ucs-names-get'."
 
-  (interactive (list (sboo-read-character-name)
+  (interactive (list (sboo-read-character-name nil t t)
                      ))
 
   (let* ((NAME name)
@@ -535,7 +559,7 @@ Related:
       ((pred stringp)    (insert      CHAR))
       ((pred characterp) (insert-char CHAR))
 
-      (_ (error "sboo-insert-char")))))
+      (_ (error (format "(sboo-insert-char ?%c)" CHAR))))))
 
 ;; M-x (call-interactively #'sboo-insert-char) 
 
