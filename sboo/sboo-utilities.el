@@ -23,6 +23,65 @@
 (require 'subr-x) ;; "SUBRoutines-eXtras"
 
 ;;----------------------------------------------;;
+;; Macros --------------------------------------;;
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+
+(eval-when-compile
+
+  (defmacro sboo-defpure (name arguments docstring &rest expressions)
+
+    "expression.
+
+Inputs:
+
+• NAME        — the function name (a symbol, unquoted).
+• ARGUMENTS   — the function's argument-list (a list of symbols, unquoted).
+• DOCSTRING   — the function's documentation (a string).
+• EXPRESSIONS — the function's body (a list of S-expressions, unquoted).
+
+Output:
+
+• a `defun' declaration.
+
+Example:
+
+• M-: (pp-macroexpand-expression (sboo-defpure sboo-increment (x) \"Increment X.\" (+ 1 x)))
+
+    ⇒ (defun sboo-increment (x)
+        \"Increment X.\"
+        (declare (pure t) (side-effect-free t))
+        (+ 1 x))
+
+Links:
+
+• Info node `(elisp) Standard Properties'.
+
+Related:
+
+• `defun'"
+
+    (declare (indent 2) (doc-string 3))
+
+    (let* ()
+
+      `(defun ,name ,arguments
+         ,docstring
+         (declare (pure t) (side-effect-free t))
+         (progn ,expressions))
+
+      )))
+
+;; e.g.: (pp-macroexpand-expression (sboo-defpure sboo-increment (x) "" (+ 1 x)))
+;;
+;; (defun sboo-increment (x)
+;;   (declare (pure t) (side-effect-free t))
+;;   (+ 1 x))
+
+;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Standard-Properties.html
+
+;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 

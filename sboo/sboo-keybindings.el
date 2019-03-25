@@ -393,7 +393,7 @@ Wraps `forward-thing'."
 ;;(global-set-key (kbd "s-m") #')
 ;;(global-set-key (kbd "s-n") #')
 (global-set-key (kbd "s-o") #'find-file-at-point) ;MNEMONIC: "Open file". ;OLD: other-window.
-(global-set-key (kbd "s-p") #'proced)
+(global-set-key (kbd "s-p") #'compile)
 ;;(global-set-key (kbd "s-q") #')
 (global-set-key (kbd "s-r") #'xref-find-references)
 (global-set-key (kbd "s-s") #'sboo-launch-shell)
@@ -408,6 +408,7 @@ Wraps `forward-thing'."
 ;;----------------------------------------------;;
 
 ;;(global-set-key (kbd "s-d") #'dired)
+;;(global-set-key (kbd "s-p") #'proced)
 
 ;;==============================================;;
 ;; « s-<SYMBOL> »

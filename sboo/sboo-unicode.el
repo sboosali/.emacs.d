@@ -24,7 +24,273 @@
 (require 'mule)   ;; "MUltiLingual Environment"
 
 ;;----------------------------------------------;;
-;; Variables -----------------------------------;;
+;; Variables: Customizeable --------------------;;
+;;----------------------------------------------;;
+
+(defcustom sboo-top-unicode-characters-list
+
+  '(
+    ?•
+    ?→
+    ?«
+    ?»
+    ?“
+    ?”
+    ?⇒
+    ?①
+    ?②
+    ?③
+    ?✔
+    ?✘
+    ?∀
+    ?∃
+    ?∑
+    ?∏
+    ?é
+    ?ñ
+    ?à
+    ?⌥
+    ?^
+    ?⇪
+    ?❖
+    ?⌘
+    ?∈
+    ?∋
+    ?⊆
+    ?⊇
+    ?Σ
+    ?¬
+    ?∝
+    ?∅
+    ?∞
+
+    ;;
+
+    ?α
+    ?β
+    ?γ
+    ?🖮
+    ?🖰
+    ?⇧
+    ?☰
+    ?⭾
+    ?⏎
+    ?⌫
+    ?⌦
+    ?⎋
+    ?⤒
+    ?⤓
+    ?⇤
+    ?⇥
+    ?▲
+    ?▼
+    ?↑
+    ?↓
+    ?→
+    ?←
+    ?❓
+    ?✂
+    ?⎌
+    ?🗘
+    ?🔎
+    ?🔇
+    ?🔉
+    ?🔊
+    ?◼
+    ?⏯
+    ?⏮
+    ?⏭
+    ?⏫
+    ?⏬
+    ?¡
+    ?¿
+    ?―
+    ?¶
+    ?˽
+    ?🗷
+    ?☑
+    ?⓪
+    ?①
+    ?②
+    ?③
+    ?④
+    ?⑤
+    ?⑥
+    ?⑦
+    ?⑧
+    ?⑨
+    ?⑩
+    ?⑪
+    ?⑫
+    ?⑬
+    ?⑭
+    ?⑮
+    ?⑯
+    ?⑰
+    ?⑱
+    ?⑲
+    ?⑳
+    ?👁
+    ?👂
+    ?😃
+    ?👍
+    ?✊
+    ?👉
+    ?🌣
+    ?⛆
+    ?❄
+    ?⛰
+    ?🗺
+    ?☕
+    ?🍄
+    ?🐕
+    ?🐒
+    ?🐘
+    ?🐖
+    ?🐙
+    ?🐬
+    ?🦁
+    ?🚲
+    ?𝄞
+    ?𝄢
+    ?🎹
+    ?🎸
+    ?♩
+    ?♪
+    ?♫
+    ?♬
+    ?♯
+    ?♭
+    ?𝆏
+    ?𝆐
+    ?𝆑
+    ?𝆒
+    ?𝆓
+    ?🅐
+    ?☭
+    ?©
+    ?🄯 
+    ?♻
+    ?㎰
+    ?㎱
+    ?㎲
+    ?㎳
+    ?㎍
+    ?㎎
+    ?㎏
+    ?㎚
+    ?㎛
+    ?㎜
+    ?㎝
+    ?㎞
+    ?㏌
+    ?㎅
+    ?㎆
+    ?㎇
+    ?㏈
+    ?㎐
+    ?㎑
+    ?㎧
+    ?㎨
+    ?㎉
+    ?𝛁
+    ?×
+    ?ℤ
+    ?ℚ
+    ?ℝ
+    ?ℯ
+    ?√
+    ?㏒
+    ?⊕
+    ?⊖
+    ?⊘
+    ?⊚
+    ?⊜
+    ?±
+    ?∉
+    ?∌
+    ?⊈
+    ?⊉
+    ?⨝
+    ?≤
+    ?≥
+    ?≰
+    ?≱
+    ?≡
+    ?≢
+    ?⊨
+    ?⊭
+    ?∄
+    ?∵
+    ?⊦
+    ?⊬
+    ?∧
+    ?∨
+    ?∫
+    ?∂
+    ?⊶
+    ?⊷
+    ?⊸
+    ?（
+    ?）
+    ?［
+    ?］
+    ?｛
+    ? ｝
+    ?︷
+    ?︸
+    ?⎧
+    ?⎨
+    ?⎩
+    ?⟹
+    ?⬳
+    ?⟿
+    ?⭍
+    ?↔
+    ?®
+    ?™
+    ?¼
+    ?½
+    ?¾
+    ?⅓
+    ?⅔
+    ?⅛
+    ?⅜
+    ?⅝
+    ?⅞
+    ?Ⅰ
+    ?Ⅱ
+    ?Ⅲ
+    ?Ⅳ
+    ?Ⅴ
+    ?Ⅵ
+    ?Ⅶ
+    ?Ⅷ
+    ?Ⅸ
+    ?Ⅹ
+    ?Ⅺ
+    ?Ⅻ
+    )
+
+  "Set of Unicode Characters to prioritize during display/selection.
+
+Related:
+
+• `sboo-insert-char'
+
+Links:
+
+• URL `http://xahlee.info/comp/unicode_computing_symbols.html'"
+
+  :type '(repeated (char))
+
+  :safe t
+  :group 'sboo)
+
+;; NOTE 👼 👻 🧙 🧚 🧛 🧜 🧝 🧞 🧟 👿 ⌘ ✲ ⎈ ^ ⌃ ❖ ⌘ ⎇ ⌥ ◆ ◇ ✦ ✧ ⇧ ⇪ 🄰 🅰 ⇪  ⬅ ➡ ⬆ ⬇ ⎉ ⎊ ⎙ ⍰ ❓ ❔ ℹ 🛈 ☾ ⏏ ✉ 🏠 🏡 ⌂ ✂ ✄ ⎌ ↶ ↷ ⟲ ⟳ ↺ ↻ 🔍 🔎 🔅 🔆 🔇 🔈 🔉 🔊 🕨 🕩 🕪 ◼ ⏯ ⏮ ⏭ ⏪ ⏩ ⏫ ⏬ 🥬 🥦 🍄 🍅 🍆 🌶 🥑 🥕 🥒 🥔 🥜 🐭 🐹 🐰 🐶 🐺 🦊 🐵 🐸 🙈 🙉 🙊 🐯 🦁 🦓 🦒 🐴 🐮 🐷 🐻 🐼 🐲 🦄 🐅 🐆 🐘 🦏 🐂 🐃 🐄 🐎 🦌 🐐 🐏 🐑 🐖 🐗 🦛 🐪 🐫 🦍 🦙 🦘 🐉 🦖 🦕 🎹 🎻 🎷 🎺 🎸 🥁 🎵 🎶 🎼 🎜 🎝 ♩ ♪ ♫ ♬ 𝅜 𝅝 𝅗𝅥 𝅘𝅥 𝅘𝅥𝅮 𝅘𝅥𝅯 𝅘𝅥𝅰 𝅘𝅥𝅱 𝅘𝅥𝅲 𝄺 𝄩 𝄻 𝄼 𝄽 𝄾 𝄿 𝅀 𝅁 𝅂 𝄒 𝄓 𝄐 𝄑 𝆏 𝆐 𝆑 𝆒 𝆓 𝄀 𝄁 𝄂 𝄃 𝄄 𝄅 𝄔 𝄕 𝄆 𝄇 𝄈 𝄉 𝄊 𝄋 𝄌 𝄍 𝄎 𝄏 𝄖 𝄗 𝄘 𝄙 𝄚 𝄛 𝄞 𝄡 𝄢 𝄚𝄟 𝄚𝄠 𝄚𝄣 𝄚𝄤 𝄚𝄥 𝄚 𝄦 ♯ 𝄪 𝄰 𝄱 𝄲 𝄳 ♭ 𝄫 𝄬 𝄭 ♮ 𝄮 𝄯
+
+;;----------------------------------------------;;
+;; Variables: Internal -------------------------;;
 ;;----------------------------------------------;;
 
 (defvar sboo-ucs-names-table
@@ -240,10 +506,11 @@ Examples:
 Related:
 
 • `ucs-names'
+• `sboo-top-unicode-characters-list'
 
 Notes:
 
-• `ucs-names' is a `hash-table-p' on Emacs≥26 and an alist on Emacs≤25."
+• `ucs-names' is a `hash-table-p' on Emacs≥26 and an `alistp' on Emacs≤25."
 
   (progn
 
@@ -253,8 +520,11 @@ Notes:
               (not (and sboo-ucs-names-list
                         sboo-ucs-names-annotated-list)))
 
-      (let* ((TABLE (sboo-ucs-names-table :refresh refresh :only-interesting only-interesting))
-             (NAMES (hash-table-keys TABLE))
+      (let* ((TABLE        (sboo-ucs-names-table :refresh refresh :only-interesting only-interesting))
+             (NAMES-KEYS   (hash-table-keys TABLE))
+             (NAMES-TOP    (mapcar #'sboo-unicode-get-char-name sboo-top-unicode-characters-list))
+             (NAMES-SORTED (sboo-unicode--move-sublist-to-front NAMES-TOP NAMES-KEYS :test #'equal))
+             (NAMES        NAMES-SORTED)
              )
 
         (progn
@@ -356,7 +626,7 @@ Example:
 
 ;;----------------------------------------------;;
 
-(defun sboo-get-char-name (char)
+(defun sboo-unicode-get-char-name (char)
 
   "Get the Unicode Character Database « 'name » of CHAR.
 
@@ -366,7 +636,7 @@ Inputs:
 
 Examples:
 
-    M-: (call-interactively #'sboo-get-char-name)
+    M-: (call-interactively #'sboo-unicode-get-char-name)
     Character: c
     ⇒ \"LATIN SMALL LETTER C\"
 
@@ -392,7 +662,7 @@ Related:
   (let* ((CHAR (pcase char
                  ((pred characterp) char)
                  ((pred stringp)    (aref char 0))
-                 (_ (error "sboo-get-char-name"))))
+                 (_ (error "sboo-unicode-get-char-name"))))
 
          (NAME (get-char-code-property CHAR 'name))
          )
@@ -804,6 +1074,59 @@ Example:
           (puthash k v TABLE)))
 
       TABLE)))
+;;----------------------------------------------;;
+
+(cl-defun sboo-unicode--move-sublist-to-front (sublist superlist &key (test #'equal))
+
+  "Pull SUBLIST to the head of SUPERLIST.
+
+Inputs:
+
+• SUBLIST   — a `listp'. items not in SUPERLIST are ignored.
+• SUPERLIST — a `listp'. the relative order of items not in SUBLIST is preserved.
+• TEST      — a `functionp'. how to check items for equality.
+
+Output:
+
+• a `listp'. a new list (copied from SUPERLIST, then modified).
+  has the same items as SUPERLIST, possibly in a different order.
+
+Example:
+
+• M-: (sboo-unicode--move-sublist-to-front '(x y z) '(a b y c x))
+    ⇒ '(x y a b c)
+
+• M-: (sboo-unicode--move-sublist-to-front nil '(a b c))
+   ⇒ '(a b c)
+
+• M-: (sboo-unicode--move-sublist-to-front '(x y z) nil)
+    ⇒ nil
+
+Related:
+
+• `'"
+
+  (let* ((SUPERLIST-COPY (copy-sequence superlist))
+         (SUBLIST-COPY   (remove-duplicates sublist :test test))
+
+         (COMPARE        (lambda (x y)
+
+                            (let ((X-IN-SUBLIST (if (cl-member x SUBLIST-COPY :test test) 1 0))
+                                  (Y-IN-SUBLIST (if (cl-member y SUBLIST-COPY :test test) 1 0))
+                                  )
+                              (cond
+
+                                ((and (> X-IN-SUBLIST 0) (> Y-IN-SUBLIST 0))
+                                 (let ((X-INDEX (cl-position x SUBLIST-COPY :test test))
+                                       (Y-INDEX (cl-position y SUBLIST-COPY :test test))
+                                       )
+                                   (<= X-INDEX Y-INDEX)))
+
+                                (t
+                                 (> X-IN-SUBLIST Y-IN-SUBLIST))))))
+         )
+
+    (cl-stable-sort SUPERLIST-COPY COMPARE)))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
@@ -811,7 +1134,7 @@ Example:
 
 ;;; DOCS ‘ucs-names’: [TODO]
 ;;
-;; « ucs-names » :: « HashMap String Char »
+;; « ucs-names » :: « HashMap String– Char »
 ;;
 ;;     M-: (type-of ucs-names)
 ;;     'hash-table
@@ -924,6 +1247,19 @@ Example:
 ;;
 ;;    M-: (char-to-string ?•)
 ;;    "•"
+
+;; `cl-stable-sort'
+;;
+;;     (cl-sort SEQ PREDICATE :key)
+;;
+;; This function sorts seq into increasing order as determined by using predicate to compare pairs of elements. predicate should return true (non-nil) if and only if its first argument is less than (not equal to) its second argument. For example, < and string-lessp are suitable predicate functions for sorting numbers and strings, respectively; > would sort numbers into decreasing rather than increasing order.
+;; 
+
+;; `cl-position':
+;; 
+;; M-: (cl-position "y" '("x" "y" "z" "y") :test #'equal)
+;;     1
+;; 
 
 ;;; See:
 ;;

@@ -82,6 +82,8 @@
 ;;----------------------------------------------;;
 
 (prefer-coding-system 'utf-8)
+(set-language-environment "UTF-8")
+;;(set-default-coding-systems 'utf-8)
 
 ;; ^ UTF-8 is the default Unicode Encoding.
 
@@ -122,6 +124,16 @@
 
 ;; ^ with `y-or-n-p', you press just one key for boolean prompts.
 ;;   (i.e. the single character "y", instead of typing out the phrase "yes".)
+
+;;----------------------------------------------;;
+;; Settings: Toolbar ---------------------------;;
+;;----------------------------------------------;;
+
+(sboo-custom-set tool-bar-style both
+  "each Icon of the Tool Bar has both Image (above) and Label (below).")
+
+(sboo-custom-set tool-bar-position left 
+  "the Tool Bar is on the left.")
 
 ;;----------------------------------------------;;
 ;; Settings: Faces -----------------------------;;
@@ -320,7 +332,8 @@
 ;;----------------------------------------------;;
 ;; Lisp:
 
-(setq lisp-indent-function #'common-lisp-indent-function)
+(sboo-custom-set lisp-indent-function common-lisp-indent-function
+  "format Property Lists correctly.")
 
 ;;----------------------------------------------;;
 ;; Settings: non-Customizeable -----------------;;
