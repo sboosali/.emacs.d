@@ -1734,7 +1734,39 @@ Links:
 
 ;;----------------------------------------------;;
 
+  (let* ((PLIST (plist-get property-list))
+         )
+
+    (make-mtg-card @PLIST)))
+
 ;;----------------------------------------------;;
+
+  (let* ((SUBLIST   (copy-sequence sublist))
+         (SUPERLIST (copy-sequence superlist))
+         )
+
+    (dolist (ITEM SUPERLIST)
+      (when (member ITEM sublist)
+        (push ITEM SUBLIST)))
+
+    (append SUBLIST SUPERLIST)))
+
+  (let* ((SUBLIST-COPY (copy-sequence sublist))
+         (SUBLIST      nil)
+         (SUPERLIST    nil)
+         )
+
+    (dolist (SUPER-ITEM superlist)
+      (when (member ITEM sublist)
+        (push ITEM SUBLIST)))
+
+    (append SUBLIST SUPERLIST)))
+
+         (COMPARE      (lambda (x y)
+                         (let ((X-IN-SUBLIST (if (member x sublist) t nil))
+                               (Y-IN-SUBLIST (if (member y sublist) t nil))
+                               )
+                           ())))
 
 ;;----------------------------------------------;;
 
