@@ -168,7 +168,7 @@ File extension may be:
 
 Inputs:
 
-• FORCE — a boolean.
+• FORCE — a `booleanp'.
 
 Initialize `mtg-cards' from `mtg-cards-file-default', 
 if necessary (or if FORCE is set)."

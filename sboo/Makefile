@@ -56,6 +56,12 @@ clean:
 ##################################################
 #------------------------------------------------#
 
+mtg-cards.el: scryfall-default-cards.json
+
+	./parse-mtg-cards  >  $@
+
+#------------------------------------------------#
+
 mtg-card-names.list.el: mtg-card-names.txt
 
 	./print-mtg-card-names  >  $@

@@ -1,0 +1,25 @@
+#!/usr/bin/emacs --script
+
+;;----------------------------------------------;;
+
+(require 'mtg)
+
+;;----------------------------------------------;;
+
+;; a Struct Table (a `hash-table-p' of `structp's)
+
+(defun mtg-scripts--parse (file)
+
+  "Read FILE as a list of (quoted) strings (one per line)."
+
+  (with-temp-buffer
+    (insert-file-contents file)
+    (goto-char (point-min))
+    (mapcar #'read
+     (split-string (buffer-string) "\n" t))))
+
+;;----------------------------------------------;;
+
+(prin1 (sboo--read-lines "./scryfall-default-cards.json"))
+
+;;----------------------------------------------;;
