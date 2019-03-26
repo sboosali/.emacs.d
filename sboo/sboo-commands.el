@@ -525,8 +525,42 @@ Version 2015-04-09"
 (defun sboo-insert-circled-1 ()
   "`insert' \"①\", the \"CIRCLED DIGIT ONE\" Unicode character."
   (interactive)
-  
   (insert "①"))
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-circled-2 ()
+  "`insert' \"②\", the \"CIRCLED DIGIT TWO\" Unicode character."
+  (interactive)
+  (insert "②"))
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-circled-3 ()
+  "`insert' \"③\", the \"CIRCLED DIGIT THREE\" Unicode character."
+  (interactive)
+  (insert "③"))
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-double-right-arrow ()
+  "`insert' \"⇒\", the \"RIGHTWARDS DOUBLE ARROW\" Unicode character."
+  (interactive)
+  (insert "⇒"))
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-left-double-quotation-mark ()
+  "`insert' ?“, the \"LEFT DOUBLE QUOTATION MARK\" Unicode character."
+  (interactive)
+  (insert-char ?“))
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-right-double-quotation-mark ()
+  "`insert' ?”, the \"RIGHT DOUBLE QUOTATION MARK\" Unicode character."
+  (interactive)
+  (insert-char ?”))
 
 ;;----------------------------------------------;;
 
@@ -534,6 +568,12 @@ Version 2015-04-09"
 ;;   "`insert' \"\", the \"\" Unicode character."
 ;;   (interactive)
 ;;   (insert ""))
+
+;; M-: (string-join (split-string (downcase "RIGHTWARDS DOUBLE ARROW")) "-")
+;;     "rightwards-double-arrow"
+
+;; M-: (string-join (split-string (upcase "rightwards-double-arrow") "[-]+" :omit-nulls) " ")
+;;     "RIGHTWARDS DOUBLE ARROW"
 
 ;;----------------------------------------------;;
 ;; Commands that Gracefully Degrade ;;;;;;;;;;;;;;

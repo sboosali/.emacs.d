@@ -19,8 +19,6 @@
 
 ;;==============================================;;
 
-;;----------------------------------------------;;
-
 (defun sboo-jump ()
 
   "Jump to definition, `major-mode'-specific.
@@ -486,6 +484,11 @@ Wraps `forward-thing'."
 (global-set-key (kbd "s-M-.") #'sboo-insert-angle-quote-right)
 (global-set-key (kbd "s-M--") #'sboo-insert-dash)
 (global-set-key (kbd "s-M-=") #'sboo-insert-triple-equals-sign)
+
+(global-set-key (kbd "s-M-'")  #'sboo-insert-left-double-quotation-mark)
+(global-set-key (kbd "s-M-\"") #'sboo-insert-right-double-quotation-mark)
+
+(global-set-key (kbd "s-M-<right>") #'sboo-insert-double-right-arrow)
 
 ;;(global-set-key (kbd "s-M-") #'sboo-insert-)
 

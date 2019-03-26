@@ -3,7 +3,7 @@
 # key         : defmacro
 # name        : a verbose « defmacro » declaration.
 # condition   : (let ((KEY "defmacro")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 2) (void-function (= (current-column) (string-width KEY)))))
-# expand-env  : ((yas-wrap-around-region 'nil))
+# expand-env  : ((yas-indent-line 'auto) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
@@ -27,7 +27,7 @@ Output:
 
 Example:
 
-• M-: (pp-macroexpand-expression (sboo-$1 xyz '(1 2 3) ""))
+• M-: (pp-macroexpand-expression (sboo-$1 xyz '(1 2 3) \"\"))
     ⇒ 
 
 Related:

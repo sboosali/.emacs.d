@@ -23,6 +23,113 @@
 (require 'tool-bar)
 
 ;;----------------------------------------------;;
+;; Macros --------------------------------------;;
+;;----------------------------------------------;;
+
+(eval-when-compile
+
+  (defmacro sboo-toolbar (menu-items &optional toolbar-map)
+
+    "toolbar-map.
+
+Inputs:
+
+• MENU-ITEMS — an (unquoted) symbol.
+• TOOLBAR-MAP — a `keymapp' (unquoted).
+
+Output:
+
+• an expression.
+  one `tool-bar-add-item' per `menu-item' in MENU-ITEMS.
+
+Example:
+
+• M-: (pp-macroexpand-expression (sboo-toolbar ()))
+    ⇒ 
+
+Related:
+
+• `tool-bar-add-item'"
+
+    (declare (indent 2))
+
+    (let* ()
+      `(ignore-errors
+
+         (list ,menu-items ,toolbar-map)))))
+
+;;   (new-file menu-item
+;;             "Visit New File..."
+;;             find-file
+;;             :label     "New File"
+;;             :help      "Specify a new file's name, to edit the file"
+;;             :enable    (menu-bar-non-minibuffer-window-p)
+;;             :vert-only t
+
+;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-find-xpm-image (name)
+
+  "Find « NAME.xmp », an X PixMap image.
+
+Inputs:
+
+• NAME — a `stringp'. the name of the image, relative to `image-load-path'. 
+
+Output:
+
+• a `plistp'.
+
+Example:
+
+• M-: (sboo-find-xpm-image \"mpc/play\")
+    ⇒ '(image :type xpm :file \"/nix/store/*-emacs-26.1/share/emacs/26.1/etc/images/mpc/play.xpm\")
+
+• M-: (sboo-find-xpm-image \"mpc/play.xpm\")
+    ⇒ '(image :type xpm :file \"/nix/store/*-emacs-26.1/share/emacs/26.1/etc/images/mpc/play.xpm\")
+
+Links:
+
+• URL `'
+
+Related:
+
+• `find-image'"
+
+  (let* ((NAME (format "%s.xpm"
+                           (file-name-sans-extension name)))
+         )
+
+    (find-image `((:type xpm :file ,NAME)))))
+
+;; M-: (sboo-find-xpm-image "mpc/play.xyz")
+
+;; e.g.                  (file-name-sans-extension "mpc/play")
+;; e.g.                  (file-name-sans-extension "mpc/play.xpm")
+;; e.g. (format "%s.xpm" (file-name-sans-extension "mpc/play.xpm"))
+
+;;----------------------------------------------;;
+
+(defun sboo-pop-local-mark ()
+
+  "Jump back to the last “position” (in the current buffer).
+
+Related:
+
+• `cua-set-mark'
+• `pop-global-mark'"
+
+  (let* (
+         )
+    (cua-set-mark 4)))
+
+;; • (`cua-set-mark' 4) — 「C-u C-SPC」jumps back locally (in the buffer).
+;; • `pop-global-mark' — 「C-x C-SPC」jumps back globally (across buffers).
+;; • `push-mark' — 「C-SPC」`mark's the current `point'.
+
+;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
@@ -30,42 +137,46 @@
 
   (when (keymapp tool-bar-map)
 
-    (let ((MAP (copy-keymap tool-bar-map)))
-
-      (define-key MAP [undo]        nil)
-      (define-key MAP [separator-2] nil)
+    (let ((MAP (copy-keymap tool-bar-map))
+          )
 
       (define-key-after MAP [separator-sboo] menu-bar-separator)
 
-      (tool-bar-local-item
-       "left-arrow" 'previous-error-no-select 'previous-error-no-select MAP
-       :rtl "right-arrow"
-       :help "Goto previous error")
+      (tool-bar-local-item "mpc/play"
+                           #'compile
+                           'compile
+                           MAP
+                           :label  "Compile"
+                           :help   "« M-x compile »"
+                           :enable '(derived-mode-p 'prog-mode)
+                           ;; ^ enable only for `prog-mode' Major Modes.
+                           )
 
-      (tool-bar-local-item
-       "right-arrow" 'next-error-no-select 'next-error-no-select MAP
-       :rtl "left-arrow"
-       :help "Goto next error")
+      ;; (tool-bar-local-item "right-arrow"
+      ;;                      #'
+      ;;                      '
+      ;;                      MAP
+      ;;                      :label  "Forward"
+      ;;                      :help   "« M-x  »"
+      ;;                      :enable t
+      ;;                      :rtl    "left-arrow"
+      ;;                      )
 
-      (tool-bar-local-item
-       "cancel" 'kill-compilation 'kill-compilation MAP
-       :enable '(let ((buffer (compilation-find-buffer)))
-		  (get-buffer-process buffer))
-       :help "Stop compilation")
-
-      (tool-bar-local-item
-       "refresh" 'recompile 'recompile MAP
-       :help "Restart compilation")
+      (tool-bar-local-item "left-arrow"
+                           #'pop-global-mark
+                           'pop-global-mark
+                           tool-bar-map
+                           :label  "Go Back"
+                           :help   "« M-x pop-global-mark »"
+                           :enable t
+                           :rtl    "right-arrow"
+                           )
 
       MAP))
 
   "my Tool Bar.
 
 Add some Icons/Commands to the standard Tool Bar.")
-
-;;----------------------------------------------;;
-;; Functions -----------------------------------;;
-;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
 ;; Configuration -------------------------------;;
@@ -78,13 +189,69 @@ Add some Icons/Commands to the standard Tool Bar.")
 ;; `tool-bar-local-item':
 ;; 
 ;;     (tool-bar-local-item ICON-STRING KEY-DEFINITION KEY-SYMBOL TOOLBAR-KEYMAP &key help enable rtl)
+;;
 ;; > ICON is the base name of a file containing the image to use.  The
 ;; > function will first try to use low-color/ICON.xpm if ‘display-color-cells’
 ;; > is less or equal to 256, then ICON.xpm, then ICON.pbm, and finally
 ;; > ICON.xbm, using ‘find-image’.
 ;;
-;; 
+;; > KEY-DEFINITION is the key definition.
+;; > KEY-SYMBOL is a symbol for the fake function key in the menu keymap.  
+;;
 
-;; 
-;;----------------------------------------------;;
+;; e.g. `find-image':
+;;
+;; M-: (find-image '((:type xpm :file "mpc/play.xpm")))
+;;   ⇒ '(image :type xpm :file "/nix/store/*-emacs-26.1/share/emacs/26.1/etc/images/mpc/play.xpm")
+;;
+;; PBM vs XBM vs XPM:
+;;
+;; • XPM (X PixMap) has superseded XBM (X BitMap).
+;;
+
+;; e.g. a `tool-bar-map' menu-item:
+;;
+;;   (new-file menu-item
+;;             "Visit New File..."
+;;             find-file
+;;             :label     "New File"
+;;             :help      "Specify a new file's name, to edit the file"
+;;             :enable    (menu-bar-non-minibuffer-window-p)
+;;             :vert-only t
+;;             :image (find-image
+;;                      (cond
+;;                        ((not
+;;                          (display-color-p))
+;;                         '((:type pbm :file "new.pbm" :foreground "black" :background "grey75")
+;;                           (:type xbm :file "new.xbm" :foreground "black" :background "grey75")
+;;                           (:type xpm :file "low-color/new.xpm")
+;;                           (:type xpm :file "new.xpm")))
+;;                        ((<
+;;                          (display-color-cells)
+;;                          256)
+;;                         '((:type xpm :file "low-color/new.xpm")
+;;                           (:type xpm :file "new.xpm")
+;;                           (:type pbm :file "new.pbm" :foreground "black" :background "grey75")
+;;                           (:type xbm :file "new.xbm" :foreground "black" :background "grey75")))
+;;                        (t
+;;                         '((:type xpm :file "new.xpm")
+;;                           (:type pbm :file "new.pbm" :foreground "black" :background "grey75")
+;;                           (:type xbm :file "new.xbm" :foreground "black" :background "grey75"))))))
+;;
+;;
+
+;; `tool-bar-add-item':
+;;
+;; M-: (tool-bar-add-item "mpc/play" #'compile 'compile :label "Compile" :help "Run « compile »")
+;;
+;; M-: (tool-bar-local-item "mpc/play" #'compile 'compile tool-bar-map :label "Compile" :help "Run « compile »" :enable t)
+;;
+
+;; "jump back":
+;;
+;; • (`cua-set-mark' 4) — 「C-u C-SPC」jumps back locally (in the buffer).
+;; • `pop-global-mark' — 「C-x C-SPC」jumps back globally (across buffers).
+;;
+
+;;==============================================;;
 (provide 'sboo-toolbar)

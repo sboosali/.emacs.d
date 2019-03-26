@@ -360,10 +360,11 @@ Related:
     (add-to-theme-path! sboo-theme-directory)
     (add-to-theme-path! (emacs-subdir "themes"))
 
-    ;; (progn
-    ;;   (sboo-register-submodule-packages! "solarized")
-    ;;   (sboo-register-submodule-themes!   "solarized")
-    ;;   (load-theme 'solarized :no-confirm))
+    (progn
+      (sboo-register-submodule-packages! "solarized")
+      (sboo-register-submodule-themes!   "solarized")
+      (load-theme 'solarized :no-confirm))
+
     ()))
 
 ;;----------------------------------------------;;

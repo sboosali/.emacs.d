@@ -1769,11 +1769,38 @@ Links:
                            ())))
 
 ;;----------------------------------------------;;
-
+# -*- mode: snippet -*-
+#
+# key         : sboo-insert
+# name        : a « defun » wrapping sboo-insert-char.
+# type        : snippet
+# expand-env  : ((yas-indent-line 'auto) (yas-wrap-around-region 'nil))
+# condition   : (let ((KEY "sboo-insert")) (condition-case nil (= (current-column) (string-width KEY)) (error t)))
+#
+# --
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+(defun sboo-insert-${1:$(string-join (split-string (downcase yas-text)) "-")} ()
+  "`insert' ?${1:$(ignore-errors (format "%c" (gethash yas-text (ucs-names))))}, the \\"${1:$$(progn (require 'mule) (require 'subr-x) (let ((CHAR-NAME (yas-choose-value (hash-table-keys (ucs-names))))) CHAR-NAME))}\\" Unicode character."
+  (interactive)
+  (insert-char ?${1:$(ignore-errors (format "%c" (gethash yas-text (ucs-names))))}))
 
+$0
+
+;;----------------------------------------------;;
+(defun sboo-insert-{1:$$(progn (require 'mule) (require 'subr-x) (let ((CHAR-NAME (yas-choose-value (hash-table-keys (ucs-names))))) (string-join (split-string (downcase CHAR-NAME)) "-")))}
+  "`insert' ?${1:$(format "%c" (gethash yas-text (ucs-names)))}, the \\"${1:$(string-join (split-string (upcase yas-text) "[-]+" :omit-nulls) " ")}\\" Unicode character."
+  (interactive)
+  (insert-char ?${1:$(format "%c" (gethash yas-text (ucs-names)))}))
+
+$0
+;;----------------------------------------------;;
+(defun sboo-insert-${1:$$(progn (require 'mule) (require 'subr-x) (let ((CHAR-NAME (yas-choose-value (hash-table-keys (ucs-names))))) (string-join (split-string (downcase CHAR-NAME)) "-")))}
+  "`insert' ?${1:$(format "%c" (gethash yas-text (ucs-names) ?α))}, the \\"${1:$(string-join (split-string (upcase yas-text) "[-]+" :omit-nulls) " ")}\\" Unicode character."
+  (interactive)
+  (insert-char ?${1:$(format "%c" (gethash yas-text (ucs-names) ?α))}))
+
+$0
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

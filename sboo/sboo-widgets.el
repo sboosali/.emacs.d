@@ -6,33 +6,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ToolBar Settings
 
-(setq tool-bar-style 'both)
-
-;; ^ `tool-bar-style':
-;;
-;; - `text` means "show text only";
-;; - `both` means "show both image and text, with text below image"
-;; - `text-image-horiz` means "show both image and text, with any text to the left of the image";
-;;
-;; NOTE but only `both` does show both;
-;; the others (e.g. `text-image-horiz`, `both-horiz`, etc) show text-only for most buttons.
-;;
-
-(setq auto-resize-tool-bars t)
-;; ^ `auto-resize-tool-bars':
-;;
-;; If this variable is non-nil, the tool bar automatically resizes to show all defined tool bar items (but not larger than a quarter of the frame's height).
-
-(setq
- auto-raise-tool-bar-buttons t)
-;; ^ `auto-raise-tool-bar-buttons':
-;;
-;; If this variable is non-nil, tool bar items display in raised form when the mouse moves over them.
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ToolBar Items
-
-(tool-bar-add-item "play" 'compile 'play-button)
 
 ;; ^ `tool-bar-add-item':
 ;;
@@ -64,7 +39,7 @@
 ;;
 ;;     e.g. Since `describe-key` identified the "Open Directory" button as `"<tool-bar> <dired>"`, call:
 ;;     ---
-;;        M-: (global-unset-key [tool-bar dired])
+;;        M-: (global-unset-key [tool-bar kill-buffer])
 ;;     ---
 ;;     Or if you're reading this within Emacs, place the cursor at the closing parenthesis of the expression above,
 ;;     and type `C-x C-e` (a.k.a `eval-last-sexp`).

@@ -135,6 +135,12 @@
 (sboo-custom-set tool-bar-position left 
   "the Tool Bar is on the left.")
 
+(sboo-custom-set auto-resize-tool-bars t
+  "do grow the Tool Bar when enough Menu Items are added.")
+
+(sboo-custom-set auto-raise-tool-bar-buttons t
+  "visually raise a Tool Bar Item when the Mouse hovers over it.")
+
 ;;----------------------------------------------;;
 ;; Settings: Faces -----------------------------;;
 ;;----------------------------------------------;;
@@ -233,7 +239,8 @@
 
 ;;----------------------------------------------;;
 
-(sboo-custom-set linum-format 'dynamic)
+(sboo-custom-set linum-format dynamic
+  "")
 
 ;; (sboo-custom-set linum-format "%3d"
 ;;   "Three-Digit Line-Numbers (e.g. « 001 », not « 1 »).")
