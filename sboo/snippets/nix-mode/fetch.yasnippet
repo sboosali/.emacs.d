@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+#
+# key         : fetch
+# name        : a « fetch » call with « { name, sha256 } ».
+# type        : snippet
+# condition   : (let ((KEY "fetch")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+ #-----------------------------#
+
+ $1 = ${2:lib.fetchurl} {
+      name   = "$1";
+      sha256 = "18hb8brf7x92aidjfgczxangri6rkqq4x5d06lh41193f97rslm8";
+ };$0

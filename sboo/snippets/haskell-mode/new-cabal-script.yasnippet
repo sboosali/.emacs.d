@@ -1,0 +1,103 @@
+# -*- mode: snippet -*-
+#
+# key         : script
+# name        : a « cabal » script.
+# type        : snippet
+# condition   : (let ((KEY "script")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+#!/usr/bin/env cabal
+
+{- cabal:
+
+  build-depends: base   ^>= 4.12
+               , spiros ^>= 0.2
+
+-}
+
+--------------------------------------------------
+--- Extensions -----------------------------------
+--------------------------------------------------
+
+-- syntax extensions:
+
+{-# LANGUAGE PackageImports        #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE OverloadedLists       #-}
+{-# LANGUAGE NamedFieldPuns        #-}
+{-# LANGUAGE RecordWildCards       #-}
+{-# LANGUAGE BlockArguments        #-}
+{-# LANGUAGE ApplicativeDo         #-}
+{-# LANGUAGE DuplicateRecordFields #-}
+
+-- type extensions:
+
+{-# LANGUAGE FlexibleContexts #-}
+
+{-| 
+
+-}
+
+module Main where
+
+--------------------------------------------------
+--- Imports --------------------------------------
+--------------------------------------------------
+
+import qualified "base"   Prelude
+import           "spiros" Prelude.Spiros
+
+--------------------------------------------------
+
+import "split" Data.List.Split
+
+--------------------------------------------------
+
+import qualified "optparse-applicative" Options.Applicative      as P
+import qualified "optparse-applicative" Options.Applicative.Help as P hiding (fullDesc)
+
+--------------------------------------------------
+
+import qualified "text" Data.Text as Text
+
+--------------------------------------------------
+
+import qualified "base" System.IO    as IO
+import qualified "base" Data.Version as Version
+import           "base" System.Exit
+
+import           "base" Data.Maybe
+
+--------------------------------------------------
+--- Main -----------------------------------------
+--------------------------------------------------
+
+main :: IO ()
+main = do
+
+  $0
+
+  return ()
+
+--------------------------------------------------
+--- Types ----------------------------------------
+--------------------------------------------------
+
+--------------------------------------------------
+-- Functions -------------------------------------
+--------------------------------------------------
+
+--------------------------------------------------
+-- Utilities -------------------------------------
+--------------------------------------------------
+
+--------------------------------------------------
+-- Notes -----------------------------------------
+--------------------------------------------------
+{-
+
+
+
+-}
