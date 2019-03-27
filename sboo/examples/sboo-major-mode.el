@@ -1,5 +1,19 @@
 ;;==============================================;;
 
+(defalias 'MODE-mode-version #'pkg-info-package-version)
+
+(defun MODE-mode-help ()
+
+  "Open a Help Buffer for `MODE-mode'.
+
+  (interactive)
+
+)
+
+
+
+;;==============================================;;
+
 ;;;###autoload
 (defun describe-function (function)
   "Display the full documentation of FUNCTION (a symbol).
