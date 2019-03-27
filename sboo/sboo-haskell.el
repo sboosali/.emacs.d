@@ -6,6 +6,7 @@
 ;;
 ;; See:
 ;;
+;; * `sboo-haskell-compile-command'
 ;; * `sboo-haskell-eldoc'
 ;; * `sboo-dante-cabal-new-repl'
 ;; * `'

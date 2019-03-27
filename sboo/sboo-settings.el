@@ -95,6 +95,11 @@
 
 ;; ^ No region when nothing is highlighted.
 
+(delete-selection-mode +1)
+
+;; ^ Overwrite region when typing/pasting (manually),
+;;   but not `insert'ing (programmatically).
+
 (when (>= emacs-major-version 26)
   (global-linum-mode +1))
 
@@ -126,22 +131,6 @@
 ;;   (i.e. the single character "y", instead of typing out the phrase "yes".)
 
 ;;----------------------------------------------;;
-;; Settings: Toolbar ---------------------------;;
-;;----------------------------------------------;;
-
-(sboo-custom-set tool-bar-style both
-  "each Icon of the Tool Bar has both Image (above) and Label (below).")
-
-(sboo-custom-set tool-bar-position left 
-  "the Tool Bar is on the left.")
-
-(sboo-custom-set auto-resize-tool-bars t
-  "do grow the Tool Bar when enough Menu Items are added.")
-
-(sboo-custom-set auto-raise-tool-bar-buttons t
-  "visually raise a Tool Bar Item when the Mouse hovers over it.")
-
-;;----------------------------------------------;;
 ;; Settings: Faces -----------------------------;;
 ;;----------------------------------------------;;
 
@@ -164,7 +153,31 @@
 ;;(set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
 
 ;;----------------------------------------------;;
+;; Settings: Toolbar ---------------------------;;
+;;----------------------------------------------;;
+
+(sboo-custom-set tool-bar-style both
+  "each Icon of the Tool Bar has both Image (above) and Label (below).")
+
+(sboo-custom-set tool-bar-position left 
+  "the Tool Bar is on the left.")
+
+(sboo-custom-set auto-resize-tool-bars t
+  "do grow the Tool Bar when enough Menu Items are added.")
+
+(sboo-custom-set auto-raise-tool-bar-buttons t
+  "visually raise a Tool Bar Item when the Mouse hovers over it.")
+
+;;----------------------------------------------;;
 ;; Settings: Individual ------------------------;;
+;;----------------------------------------------;;
+
+;; (sboo-custom-set t
+;;   ".")
+
+;; (sboo-custom-set t
+;;   ".")
+
 ;;----------------------------------------------;;
 
 (sboo-custom-set undo-limit 20000000
@@ -313,6 +326,12 @@
 ;; ‘kbd-help’ is used.
 ;; 
 
+(sboo-custom-set echo-keystrokes 1
+  "Wait this many seconds, then echo the currently-pressed key sub-sequence.")
+
+(sboo-custom-set message-truncate-lines t
+  "don't resize Echo Area for long messages (instead, truncate the message).")
+
 ;;----------------------------------------------;;
 
 (sboo-custom-set x-underline-at-descent-line t
@@ -341,6 +360,19 @@
 
 (sboo-custom-set lisp-indent-function common-lisp-indent-function
   "format Property Lists correctly.")
+
+;;----------------------------------------------;;
+;; Buffer Display:
+
+(add-to-list 'display-buffer-alist
+             '("*Help*" display-buffer-same-window)
+             :do-append)
+
+;; (add-to-list 'display-buffer-alist
+;;              '(("\\*Completions\\*" display-buffer-pop-up-window)
+;;                ))
+
+;; (custom-set-variables ... t nil ".")
 
 ;;----------------------------------------------;;
 ;; Settings: non-Customizeable -----------------;;

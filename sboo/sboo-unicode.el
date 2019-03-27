@@ -546,7 +546,7 @@ Notes:
 
 (defun sboo-unicode-completion-namesake-divider-string ()
 
-  "Accessor for Variable `sboo-unicode-completion-namesake-divider'.
+  "Accessor for variable `sboo-unicode-completion-namesake-divider'.
 
 Output:
 

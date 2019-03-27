@@ -3,6 +3,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(auto-raise-tool-bar-buttons t t nil "visually raise a Tool Bar Item when the Mouse hovers over it.")
+ '(auto-resize-tool-bars t t nil "grow the Tool Bar.")
  '(comint-buffer-maximum-size 2000 nil nil "Increase.")
  '(cua-keep-region-after-copy t nil nil "standard Windows behavior.")
  '(default-input-method "TeX")
@@ -35,6 +37,7 @@
  '(scroll-preserve-screen-position 1 nil nil "")
  '(scroll-step 1 nil nil "")
  '(show-paren-delay 0 nil nil "no Delay.")
+ '(tool-bar-style (quote both))
  '(truncate-lines nil nil nil "enable Continuation Lines.")
  '(undo-limit 20000000 nil nil "maximize Undo History.")
  '(undo-strong-limit 40000000 nil nil "maximize Undo History.")

@@ -1,10 +1,14 @@
-;;; Commentary
-
-
 
 ;;==============================================;;
+;;; Commentary:
 
-;;; Code
+;; 
+;; 
+;; 
+;; 
+
+;;==============================================;;
+;;; Code:
 
 ;; `natlink-bnf', `natlink-bnf-mode', 
 
@@ -44,6 +48,20 @@ Override `python-mode'  for this compound-file-extension.")
     )
 
   "AssociationList of RegularExpressions for syntax-highlighting `natlink-bnf-mode'.")
+
+;;==============================================;;
+
+(defalias 'natlink-bnf-mode-version #'pkg-info-package-version)
+
+;;----------------------------------------------;;
+
+(defun natlink-bnf-mode-help ()
+
+  "Open a Help Buffer for `natlink-bnf-mode'."
+
+  (interactive)
+
+  )
 
 ;;==============================================;;
 

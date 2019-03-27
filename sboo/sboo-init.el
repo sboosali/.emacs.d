@@ -380,6 +380,12 @@ Related:
 ;; Packages (Builtins) -------------------------;;
 ;;----------------------------------------------;;
 
+(when (require 'sboo-toolbar nil :no-error)
+
+  (setq tool-bar-map sboo-tool-bar-map))
+
+;;----------------------------------------------;;
+
 (when (and (>= emacs-major-version 26)
            (require 'sboo-autosave nil :no-error)
            )
@@ -608,9 +614,17 @@ Related:
 
 ;;----------------------------------------------;;
 
-;; (when (require 'sboo-prog nil :no-error)
+;; (when (require 'sboo-prog-mode nil :no-error)
 ;;   (dolist (HOOK sboo-prog-mode-hooks)
 ;;     (add-hook 'prog-mode-hook HOOK)))
+
+;;----------------------------------------------;;
+
+(add-hook 'text-mode-hook #'sboo-set-TeX-input-method)
+
+;; (when (require 'sboo-text-mode nil :no-error)
+;;   (dolist (HOOK sboo-text-mode-hooks)
+;;     (add-hook 'text-mode-hook HOOK)))
 
 ;;----------------------------------------------;;
 
@@ -781,7 +795,7 @@ Related:
 ;; Internal Packages: Utilities ----------------;;
 ;;----------------------------------------------;;
 
-(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+;;(add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
 ;; ^ `flyspell-prog-mode' spell-checks comments.
 
@@ -1138,10 +1152,13 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
     :mode        (("\\.nix\\'" . nix-mode)
                   )
-    ;; :init
-    ;; (add-hook 'nix-mode-hook #')
 
-    )
+    :init
+
+    (dolist (HOOK sboo-nix-hooks-list)
+      (add-hook 'nix-mode-hook HOOK))
+
+    ())
 
   ;;------------------------;;
 
@@ -1506,9 +1523,6 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
     :hook (prog-mode text-mode)
 
     :config
-
-    (dolist (HOOK '(prog-mode-hook text-mode-hook))
-      (add-hook HOOK #'rainbow-mode))
 
     ())
 

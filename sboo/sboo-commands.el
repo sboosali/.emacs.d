@@ -672,8 +672,22 @@ file of a buffer in an external program."
 
 ;;TODO https://stackoverflow.com/questions/22434484/emacs-modes-highlighting-uses-of-variable-under-point
 
+;;----------------------------------------------;;
+
+(defun sboo-copy-buffer-contents ()
+
+  "Copy the whole buffer."
+
+  (interactive)
+
+  (kill-ring-save (point-min) (point-max)))
+
+;; `kill-ring-save'
+;; `buffer-substring-no-properties'
 
 ;;==============================================;;
+;; Comments ------------------------------------;;
+;;----------------------------------------------;;
 
 (defvar sboo-comment-character-default
 
@@ -1516,6 +1530,35 @@ Related:
 
 ;;----------------------------------------------;;
 
+(cl-defun sboo-insert-spdx-license (license &optional libre-only)
+
+  "Insert an SPDX License Identifier.
+
+Completion:
+
+• via `sboo-read-spdx-license'
+
+Links:
+
+• URL `https://spdx.org/licenses/'
+
+Related:
+
+• `sboo-spdx-license-alist'"
+
+  (interactive (let ((LIBRE-ONLY (if current-prefix-arg t nil)))
+                 (list
+                  (sboo-read-spdx-license LIBRE-ONLY)
+                  LIBRE-ONLY
+                  )))
+
+  (let* ((STRING (symbol-name license))
+         )
+
+    (insert STRING)))
+
+;;----------------------------------------------;;
+
 ;;TODO sboo-read-environment-variable read-envvar-name
 
 ;;TODO emacs copy a lisp expression to the clipboard
@@ -2090,6 +2133,16 @@ Related:
 ;; 
 ;;     (describe-variable 'auto-mode-alist)
 ;;
+
+;; `kill-ring-save':
+;; 
+;;   (kill-ring-save BEG END &optional REGION)
+;; 
+;; Save the region as if killed, but don’t kill it.
+;; In Transient Mark mode, deactivate the mark.
+;; If ‘interprogram-cut-function’ is non-nil, also save the text for a window
+;; system cut and paste.
+;; 
 
 ;; list-matching-lines
 ;;

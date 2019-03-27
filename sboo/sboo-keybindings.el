@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 
+;;==============================================;;
 ;;; Commentary:
 
 ;; Global Keybindings:
@@ -8,14 +9,44 @@
 ;;
 ;; 
 
-;;; Code:
-
-;;==============================================;;
-;;; Utilities & Commands =======================;;
-;;==============================================;;
-
+;; Sections:
 ;; the Commands — will be bound in a keybinding (below)
 ;; the Utilities — may be used to define the keybindings (below) 
+
+;;==============================================;;
+;;; Code:
+
+;; (defmacro sboo-key (keys-to-bind command-to-be-bound &optional keymap-to-bind-in)
+
+;;   (if (fboundp #'bind-key)
+
+;;       (bind-key keys-to-bind command-to-be-bound keymap-to-bind-in)
+
+;;     (if keymap-to-bind-in
+
+;;         `(define-key keymap-to-bind-in ,(kbd keys-to-bind) ,(function command-to-be-bound))
+
+;;       `(global-set-key ,(kbd keys-to-bind) ,(function command-to-be-bound)))
+
+;;     ;;(define-key (current-global-map)
+
+;;     (define-key keymap-to-bind-in (kbd keys-to-bind) (function command-to-be-bound))
+
+;;     (global-set-key (kbd keys-to-bind) (function command-to-be-bound))))
+
+;; M-: (sboo-key "<s>-c" sboo-insert-char)
+
+;;----------------------------------------------;;
+
+
+
+;;----------------------------------------------;;
+;; Utilities -----------------------------------;;
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+;; Commands ------------------------------------;;
+;;----------------------------------------------;;
 
 ;;==============================================;;
 
@@ -287,8 +318,11 @@ Wraps `forward-thing'."
 ;;; Meta Keybindings (`M-')...
 ;;==============================================;;
 
-(global-set-key (kbd "M-a") #'mark-whole-buffer-buffer)
-(global-set-key (kbd "M-r") #'query-replace-regexp)
+(global-set-key (kbd "M-a") #'mark-whole-buffer)
+
+(global-set-key (kbd "M-r")   #'query-replace-regexp) ; Find/Replace with Regex Queries.
+(global-set-key (kbd "M-S-r") #'query-replace)        ; Find/Replace with Fixed Strings.
+
 (global-set-key (kbd "M-g") #'goto-line)
 
 (global-set-key (kbd "M-`") #'sboo-switch-to-previous-buffer)
@@ -324,7 +358,7 @@ Wraps `forward-thing'."
 
 (global-set-key (kbd "<kp-begin>") #'sboo-find)
 
-;;(global-set-key (kbd "<kp-home>")   #')
+(global-set-key (kbd "<kp-home>")  #'set-mark-command)
 (global-set-key (kbd "<kp-end>")   #'delete-other-windows)
 
 (global-set-key (kbd "<kp-prior>")    #'flycheck-previous-error)
@@ -376,29 +410,29 @@ Wraps `forward-thing'."
 ;;==============================================;;
 ;; « s-<LETTER> »
 
-;;(global-set-key (kbd "s-a") #')
+(global-set-key (kbd "s-a") #'sboo-copy-buffer-contents) ; "copy All"
 ;;(global-set-key (kbd "s-b") #')
-(global-set-key (kbd "s-c") #'sboo-insert-char)
-(global-set-key (kbd "s-d") #'xref-find-definitions)
-(global-set-key (kbd "s-e") #'eval-last-sexp)
-(global-set-key (kbd "s-f") #'describe-function)
+(global-set-key (kbd "s-c") #'sboo-insert-char) ; "Character"
+(global-set-key (kbd "s-d") #'xref-find-definitions) ; "Definitions"
+(global-set-key (kbd "s-e") #'eval-last-sexp)        ; "Eval"
+(global-set-key (kbd "s-f") #'describe-function)     ; "Function"
 ;;(global-set-key (kbd "s-g") #')
-(global-set-key (kbd "s-h") #'helm-command-prefix)
+(global-set-key (kbd "s-h") #'helm-command-prefix) ; "Helm"
 (global-set-key (kbd "s-i") #'imenu)
 ;;(global-set-key (kbd "s-j") #')
-(global-set-key (kbd "s-k") #'describe-key)
+(global-set-key (kbd "s-k") #'describe-key) ; "Key"
 ;;(global-set-key (kbd "s-l") #')
 ;;(global-set-key (kbd "s-m") #')
 ;;(global-set-key (kbd "s-n") #')
 (global-set-key (kbd "s-o") #'find-file-at-point) ;MNEMONIC: "Open file". ;OLD: other-window.
-(global-set-key (kbd "s-p") #'compile)
+(global-set-key (kbd "s-p") #'compile)            ; "comPile"
 ;;(global-set-key (kbd "s-q") #')
-(global-set-key (kbd "s-r") #'xref-find-references)
-(global-set-key (kbd "s-s") #'sboo-launch-shell)
-(global-set-key (kbd "s-t") #'sboo-launch-term)
+(global-set-key (kbd "s-r") #'xref-find-references) ; "References"
+(global-set-key (kbd "s-s") #'sboo-launch-shell)    ; "Shell"
+(global-set-key (kbd "s-t") #'sboo-launch-term)     ; "Terminal"
 ;;(global-set-key (kbd "s-u") #')
-(global-set-key (kbd "s-v") #'describe-variable)
-(global-set-key (kbd "s-w") #'list-flycheck-errors)
+(global-set-key (kbd "s-v") #'describe-variable) ; "Variable"
+(global-set-key (kbd "s-w") #'list-flycheck-errors) ; "Warnings & errors"
 ;;(global-set-key (kbd "s-x") #')
 ;;(global-set-key (kbd "s-y") #')
 ;;(global-set-key (kbd "s-z") #')
