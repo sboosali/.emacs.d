@@ -1827,6 +1827,32 @@ $0
           (match-string G-COLUMN   STRING))))
 ;;----------------------------------------------;;
 
+
+(defun sboo-init-use-package ()
+
+  "Register and initialize `use-package'.
+
+Links:
+
+• URL `https://github.com/jwiegley/use-package'"
+
+  (let* ()
+
+    (progn
+
+      (sboo-register-submodule-packages! "use-package")
+
+      (progn
+     ;; (eval-when-compile (require 'use-package))
+
+        (eval-when-compile (add-to-list 'load-path (expand-file-name "~/.emacs.d/submodules/use-package/")))
+        (eval-when-compile (require 'use-package (expand-file-name "~/.emacs.d/submodules/use-package/use-package.el")))
+
+        (require 'diminish)
+        (require 'bind-key)
+
+        (setq use-package-verbose t)))))
+
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

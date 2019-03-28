@@ -117,20 +117,13 @@ Links:
 
 • URL `https://github.com/jwiegley/use-package'"
 
-  (let* ()
+  (progn
 
-    (progn
+    (sboo-register-submodule-packages! "use-package")
 
-      (sboo-register-submodule-packages! "use-package")
+    (require 'use-package)
 
-      (progn
-
-        (eval-when-compile (require 'use-package))
-
-        (require 'diminish)
-        (require 'bind-key)
-
-        (setq use-package-verbose t)))))
+    (setq use-package-verbose t)))
 
 ;;----------------------------------------------;;
 
@@ -277,7 +270,32 @@ Related:
 ;; Settings ------------------------------------;;
 ;;----------------------------------------------;;
 
-(sboo-init-use-package)
+(eval-when-compile
+
+  ;; this expression uses only Emacs Builtins.
+
+  (let* ((USE-PACKAGE-DYNAMIC (getenv "SBOO_EMACS_USEPACKAGE"))
+         (USE-PACKAGE-STATIC  "~/.emacs.d/submodules/use-package/")
+         (USE-PACKAGE         (file-name-directory
+                               (expand-file-name
+                                (if (not (null USE-PACKAGE-DYNAMIC))
+                                    USE-PACKAGE-DYNAMIC
+                                  USE-PACKAGE-STATIC))))
+         )
+
+  (add-to-list 'load-path USE-PACKAGE)
+  (require 'use-package (concat USE-PACKAGE "use-package.el"))
+  (setq use-package-verbose t)
+
+  ()))
+
+;;----------------------------------------------;;
+
+;;(sboo-init-use-package)
+
+;;----------------------------------------------;;
+
+(list (require 'diminish) (require 'bind-key))
 
 ;;==============================================;;
 
@@ -302,6 +320,10 @@ Related:
   (put 'dante-target       'safe-local-variable #'stringp)
   (put 'dante-project-root 'safe-local-variable #'stringp)
 
+  (put 'firestarter 'safe-local-variable #'symbolp)
+
+  ;; ^ `bnf-mode' has a File-Local Variable « firestarter: ert-run-tests-interactively ».
+
   ())
 
 ;; ^ Ensure `dante-*' variables are marked as "safe strings".
@@ -325,7 +347,8 @@ Related:
 
   "« sboo »'s customization."
 
-  :link '(url-link "https://github.com/sboosali/.emacs.d#readme"))
+  :link '(url-link "https://github.com/sboosali/.emacs.d#readme")
+  :group 'local)
 
 ;;----------------------------------------------;;
 ;; Settings ------------------------------------;;

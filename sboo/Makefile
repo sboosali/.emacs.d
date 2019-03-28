@@ -31,6 +31,13 @@ build:
 
 #------------------------------------------------#
 
+init:
+	emacs  --directory=./  -batch  --funcall=batch-byte-compile  sboo-init.el
+
+.PHONY: init
+
+#------------------------------------------------#
+
 color:
 	emacs  --directory=./  -batch  --funcall=batch-byte-compile  sboo-color.el
 
@@ -50,6 +57,14 @@ clean:
 	find ./  -maxdepth 1  -type f  \( -name '*.alist.el' -o -name '*.list.el' \) -delete
 
 .PHONY: clean
+
+#------------------------------------------------#
+
+clean-elisp:
+
+	find ./  -type f  -name '*.elc'  -delete
+
+.PHONY: clean-elisp
 
 ##################################################
 # Files ##########################################
