@@ -290,6 +290,8 @@ Wraps `forward-thing'."
 
 (global-set-key (kbd "<f1>")  #'dabbrev-completion)
 (global-set-key (kbd "<f2>")  #'helm-swoop)
+;; <f3> is 'kmacro-start-macro-or-insert-counter
+;; <f4> is 'kmacro-start-macro-or-insert-counter
 
 ;; ^ Alternatives:
 ;;
@@ -297,20 +299,17 @@ Wraps `forward-thing'."
 ;;   * #'sboo-search
 ;;   * #'helm-swoop
 
-;; <f3> is 'kmacro-start-macro-or-insert-counter
-;; <f4> is 'kmacro-start-macro-or-insert-counter
+;;----------------------------------------------;;
 
-(global-set-key (kbd "<f7>")  #'list-buffers)
-                                        ;TODO fix keyboard layout
-;; (global-set-key (kbd "<f5>")  #'list-buffers)
-;; (global-set-key (kbd "<f6>")  #'xah-prior-user-buffer)
-;; (global-set-key (kbd "<f7>")  #'xah-next-user-buffer) 
-;; (global-set-key (kbd "<f8>")  nil)
-(global-set-key (kbd "<f8>")  'compile)                     ;; 
+;;(global-set-key (kbd "<f5>") nil) ;; « xfce4 » sends « C-c » on « F5 », Copy / User-Keymap.
+;;(global-set-key (kbd "<f6>") nil) ;; « xfce4 » sends « C-x » on « F6 », Cut / Extra-Keymap.
+(global-set-key (kbd "<f7>") #'list-buffers)
+(global-set-key (kbd "<f8>") #'compile)
+
+;;----------------------------------------------;;
 
 (global-set-key (kbd "<f9>")  #'undo)
 (global-set-key (kbd "<f10>") #'keyboard-quit)
-
 (global-set-key (kbd "<f11>") #'pp-eval-expression) 
 (global-set-key (kbd "<f12>") #'execute-extended-command)
 
@@ -612,6 +611,18 @@ Wraps `forward-thing'."
 
 ;;==============================================;;
 
+(progn
+
+  (defun sboo-set-run-key-to-eval-buffer ()
+    (local-set-key (kbd "<f7>")  #'eval-buffer)
+    (local-set-key (kbd "<s>-p") #'eval-buffer)
+    ())
+
+  (add-hook 'emacs-lisp-mode-hook
+            #'sboo-set-run-key-to-eval-buffer))
+
+;;==============================================;;
+
 ;;; `compilation-minor-mode-map'
 
 (when (require 'compile nil t)
@@ -692,6 +703,12 @@ Wraps `forward-thing'."
 ;; `'
 ;; `'
 ;; `'
+
+;; <f*>
+;;
+;; (global-set-key (kbd "<f5>")  #'list-buffers)
+;; (global-set-key (kbd "<f6>")  #'xah-prior-user-buffer)
+;; (global-set-key (kbd "<f7>")  #'xah-next-user-buffer) 
 
 ;;; Links:
 ;;

@@ -253,5 +253,20 @@ Add some Icons/Commands to the standard Tool Bar.")
 ;; • `pop-global-mark' — 「C-x C-SPC」jumps back globally (across buffers).
 ;;
 
+;; TODO
+;;
+;; Undo
+;; ⤼
+;;
+;; Redo
+;; ⤽
+;;
+;; Back
+;; 🔙
+;;
+;; Top
+;; 🔝
+;;
+
 ;;==============================================;;
 (provide 'sboo-toolbar)

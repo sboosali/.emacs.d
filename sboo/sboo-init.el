@@ -1035,9 +1035,6 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
     :init
     (setq haskell-doc-current-info #'sboo-haskell-doc-current-info)
 
-    (dolist (HOOK sboo-haskell-hooks-list)
-      (add-hook 'haskell-mode-hook HOOK))
-
     ;; (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
     ;;
     ;; ^ `haskell-process' repeatedly spams errors for working projects,
@@ -1048,6 +1045,14 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
     ;; ^ See « https://wiki.haskell.org/Emacs/Inferior_Haskell_processes ».
 
     :config
+    
+    (dolist (HOOK sboo-haskell-hooks-list)
+      (add-hook 'haskell-mode-hook HOOK))
+
+    (dolist (QQ sboo-haskell-quasi-quote-alist)
+      (add-to-list 'haskell-font-lock-quasi-quote-modes QQ))
+
+    
     
     (when (require 'sboo-ghc nil :no-error)
 

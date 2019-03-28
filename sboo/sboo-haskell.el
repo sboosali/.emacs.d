@@ -98,15 +98,45 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
   "`prettify-symbols-alist' for Haskell.
 
 Prettify some Applicative methods 
-(á la Applicative Programming with Effects)."
+(á la Applicative Programming with Effects).
+
+Extends `haskell-font-lock-symbols-alist'.
+
+Links:
+
+• URL `http://xahlee.info/comp/unicode_arrows.html'"
 
   :type '(alist :key-type   (string    :tag "String to match")
                 :value-type (character :tag "Char to show")
                 )
 
   :safe t
-
   :group 'sboo-haskell)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-haskell-quasi-quote-alist
+
+  `(
+    ("bash" . shell-mode)
+    ("sh"   . shell-mode)
+    ("html" . html-mode)
+    ("css"  . css-mode)
+    ("js"   . javascript-mode)
+   )
+
+  "Mapping from QuasiQuoter to fontification mode.
+
+For example, given an association « '(\"html\" . html-mode) », 
+and given an expression « [html| <div>...</div> |] »,
+then « <div>...</div> » will be fontified by « `html-mode' ».
+
+Extends `haskell-font-lock-quasi-quote-modes'."
+
+  :group 'sboo-haskel
+
+  :safe t
+  :type '(repeat (cons string symbol)))
 
 ;;----------------------------------------------;;
 
