@@ -375,6 +375,57 @@
 ;; (custom-set-variables ... t nil ".")
 
 ;;----------------------------------------------;;
+;; Grep:
+
+(sboo-custom-set grep-find-template "find -L <D> <X> -type f <F> -exec grep <C> -nH -e <R> \\{\\} +"
+
+  "`find-grep' for `nix'. « -L » traverses symlinks (emacs packages installed via « nix » are symlinks).")
+
+;; Default: « "find <D> <X> -type f <F> -exec grep <C> -nH --null -e <R> \\{\\} +" »
+;; Example: « find . -type f -exec grep --color -nH --null -e _ \{\} + »
+
+;; See: URL `https://stackoverflow.com/questions/28915372/change-the-default-find-grep-command-in-emacs'
+
+;; « C-h f `grep-find-template' »: 
+;; 
+;; Placeholders (mandatory):
+;;
+;;  <D> - base directory for find
+;;  <X> - find options to restrict or expand the directory list
+;;  <F> - find options to limit the files matched
+;;  <C> - place to put the grep options like -i and --color
+;;  <R> - the regular expression searched for.
+;;
+
+;; « C-h f `grep-apply-setting' »: 
+;; 
+;; 
+;;
+
+;; M-: « (`grep-compute-defaults') »: 
+;; 
+;;     '((localhost (grep-command "grep --color -nH --null -e ")
+;;                  (grep-template "grep <X> <C> -nH --null -e <R> <F>")
+;;                  (grep-use-null-device nil)
+;;                  (grep-find-command ("find . -type f -exec grep --color -nH --null -e  \\{\\} +" . 49))
+;;                  (grep-find-template "find <D> <X> -type f <F> -exec grep <C> -nH --null -e <R> \\{\\} +")
+;;                  (grep-use-null-filename-separator t)
+;;                  (grep-find-use-xargs exec-plus)
+;;                  (grep-highlight-matches auto)
+;;                  )
+;;       (nil (grep-command nil)
+;;            (grep-template nil)
+;;            (grep-use-null-device auto-detect)
+;;            (grep-find-command nil)
+;;            (grep-find-template nil)
+;;            (grep-use-null-filename-separator auto-detect)
+;;            (grep-find-use-xargs nil)
+;;            (grep-highlight-matches auto-detect))
+;;       )
+;; 
+;; 
+
+;;----------------------------------------------;;
 ;; Settings: non-Customizeable -----------------;;
 ;;----------------------------------------------;;
 

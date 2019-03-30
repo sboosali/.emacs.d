@@ -632,17 +632,66 @@ Example:
 
 Inputs:
 
-• CHAR — a character (an `integerp').
+• CHAR — a `characterp' (preferred);
+  or a `stringp' or `symbolp' (accepted).
 
 Examples:
 
-    M-: (call-interactively #'sboo-unicode-get-char-name)
-    Character: c
-    ⇒ \"LATIN SMALL LETTER C\"
+    M-: (sboo-unicode-get-char-name ?γ)
+    ⇒ \"GREEK SMALL LETTER GAMMA\"
+
+    M-: (sboo-unicode-get-char-name 'γ)
+    ⇒ \"GREEK SMALL LETTER GAMMA\"
+
+    M-: (sboo-unicode-get-char-name \"γαμμα\")
+    ⇒ \"GREEK SMALL LETTER GAMMA\"
 
 Related:
 
 • `get-char-code-property'."
+
+  (let* ((CHAR (pcase char
+                 ((pred characterp) char)
+                 ((pred stringp)    (aref char 0))
+                 ((pred symbolp)    (aref (symbol-name char) 0))
+                 (_ (throw 'sboo-unicode-get-char-name
+                           (format-message "CHAR is « %S », of type « %S », not a `characterp' or `stringp'." char (type-of char))))))
+
+         (NAME (get-char-code-property CHAR 'name))
+         )
+
+    (progn
+      (when (called-interactively-p 'any)
+        (message NAME))
+
+      NAME)))
+
+;; TODO e.g. with `M-x set-input-method RET TeX RET`, typing `\xi` inputs `ξ`.
+
+;;----------------------------------------------;;
+;; Commands ------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-unicode-print-char (char)
+
+  "Get the Unicode Character Database « 'name » of CHAR.
+
+Inputs:
+
+• CHAR — a character (an `integerp').
+
+Examples:
+
+    M-: (call-interactively #'sboo-unicode-print-char)
+    Character: c
+    ⇒ \"LATIN SMALL LETTER C\"
+
+    M-: (sboo-unicode-print-char ?γ)
+    ⇒ \"GREEK SMALL LETTER GAMMA\"
+
+Related:
+
+• `sboo-unicode-get-char-name'."
 
   (interactive (list
                 (or (condition-case _
@@ -659,12 +708,7 @@ Related:
                       (error nil))
                     )))
 
-  (let* ((CHAR (pcase char
-                 ((pred characterp) char)
-                 ((pred stringp)    (aref char 0))
-                 (_ (error "sboo-unicode-get-char-name"))))
-
-         (NAME (get-char-code-property CHAR 'name))
+  (let* ((NAME (sboo-unicode-get-char-name CHAR))
          )
 
     (progn
@@ -673,10 +717,6 @@ Related:
 
       NAME)))
 
-;; TODO e.g. with `M-x set-input-method RET TeX RET`, typing `\xi` inputs `ξ`.
-
-;;----------------------------------------------;;
-;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 
 (defun sboo-read-character-name (&optional refresh annotate only-interesting)
@@ -1074,6 +1114,7 @@ Example:
           (puthash k v TABLE)))
 
       TABLE)))
+
 ;;----------------------------------------------;;
 
 (cl-defun sboo-unicode--move-sublist-to-front (sublist superlist &key (test #'equal))

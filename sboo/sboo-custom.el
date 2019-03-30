@@ -37,7 +37,6 @@
  '(scroll-preserve-screen-position 1 nil nil "")
  '(scroll-step 1 nil nil "")
  '(show-paren-delay 0 nil nil "no Delay.")
- '(tool-bar-style (quote both))
  '(truncate-lines nil nil nil "enable Continuation Lines.")
  '(undo-limit 20000000 nil nil "maximize Undo History.")
  '(undo-strong-limit 40000000 nil nil "maximize Undo History.")

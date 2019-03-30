@@ -37,8 +37,14 @@
 ;; M-: (sboo-key "<s>-c" sboo-insert-char)
 
 ;;----------------------------------------------;;
+;; Variables -----------------------------------;;
+;;----------------------------------------------;;
 
+(defvar sboo-key-compile
 
+  (kbd "<print>")
+
+  "Key to invoke `compile'.")
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
@@ -279,10 +285,12 @@ Wraps `forward-thing'."
 
 ;;==============================================;;
 
-(global-set-key (kbd "<print>")  #'kill-ring-save)
-(global-set-key (kbd "<insert>") #'yank)
+(global-set-key sboo-key-compile      #'compile)
+(global-set-key (kbd "<Scroll_Lock>") #'compile)
+(global-set-key (kbd "<pause>")       #'sboo-press-C-g)
 
-(global-set-key (kbd "<pause>")  #'sboo-press-C-g)
+(global-set-key (kbd "<insert>") #'yank)
+;;(global-set-key (kbd "<delete>") #'sboo-undefined)
 
 ;;==============================================;;
 ;;; Function-Key Keybindings (`<f_>')...
@@ -301,10 +309,10 @@ Wraps `forward-thing'."
 
 ;;----------------------------------------------;;
 
-;;(global-set-key (kbd "<f5>") nil) ;; « xfce4 » sends « C-c » on « F5 », Copy / User-Keymap.
-;;(global-set-key (kbd "<f6>") nil) ;; « xfce4 » sends « C-x » on « F6 », Cut / Extra-Keymap.
+;;(global-set-key (kbd "<f5>") nil)          ;; « xfce4 » sends « C-c » on « F5 », i.e. Copy / User-Keymap.
+;;(global-set-key (kbd "<f6>") nil)          ;; « xfce4 » sends « C-x » on « F6 », i.e. Cut / Extra-Keymap.
 (global-set-key (kbd "<f7>") #'list-buffers)
-(global-set-key (kbd "<f8>") #'compile)
+;;(global-set-key (kbd "<f8>") nil)          ;; « xfce4 » sends « C-v » on « F8 », i.e. Paste.
 
 ;;----------------------------------------------;;
 
@@ -409,29 +417,29 @@ Wraps `forward-thing'."
 ;;==============================================;;
 ;; « s-<LETTER> »
 
-(global-set-key (kbd "s-a") #'sboo-copy-buffer-contents) ; "copy All"
+(global-set-key (kbd "s-a") #'sboo-copy-buffer-contents)  ; "copy All"
 ;;(global-set-key (kbd "s-b") #')
-(global-set-key (kbd "s-c") #'sboo-insert-char) ; "Character"
-(global-set-key (kbd "s-d") #'xref-find-definitions) ; "Definitions"
-(global-set-key (kbd "s-e") #'eval-last-sexp)        ; "Eval"
-(global-set-key (kbd "s-f") #'describe-function)     ; "Function"
+(global-set-key (kbd "s-c") #'sboo-insert-char)           ; "Character"
+(global-set-key (kbd "s-d") #'xref-find-definitions)      ; "Definitions"
+(global-set-key (kbd "s-e") #'sboo-eval)                  ; "Eval"
+(global-set-key (kbd "s-f") #'describe-function)          ; "Function"
 ;;(global-set-key (kbd "s-g") #')
-(global-set-key (kbd "s-h") #'helm-command-prefix) ; "Helm"
+(global-set-key (kbd "s-h") #'helm-command-prefix)        ; "Helm"
 (global-set-key (kbd "s-i") #'imenu)
 ;;(global-set-key (kbd "s-j") #')
-(global-set-key (kbd "s-k") #'describe-key) ; "Key"
+(global-set-key (kbd "s-k") #'describe-key)               ; "Key"
 ;;(global-set-key (kbd "s-l") #')
 ;;(global-set-key (kbd "s-m") #')
 ;;(global-set-key (kbd "s-n") #')
-(global-set-key (kbd "s-o") #'find-file-at-point) ;MNEMONIC: "Open file". ;OLD: other-window.
-(global-set-key (kbd "s-p") #'compile)            ; "comPile"
+(global-set-key (kbd "s-o") #'find-file-at-point)         ;MNEMONIC: "Open file". ;OLD: other-window.
+(global-set-key (kbd "s-p") #'compile)                    ; "comPile"
 ;;(global-set-key (kbd "s-q") #')
-(global-set-key (kbd "s-r") #'xref-find-references) ; "References"
-(global-set-key (kbd "s-s") #'sboo-launch-shell)    ; "Shell"
-(global-set-key (kbd "s-t") #'sboo-launch-term)     ; "Terminal"
+(global-set-key (kbd "s-r") #'xref-find-references)       ; "References"
+(global-set-key (kbd "s-s") #'sboo-launch-shell)          ; "Shell"
+(global-set-key (kbd "s-t") #'sboo-launch-term)           ; "Terminal"
 ;;(global-set-key (kbd "s-u") #')
-(global-set-key (kbd "s-v") #'describe-variable) ; "Variable"
-(global-set-key (kbd "s-w") #'list-flycheck-errors) ; "Warnings & errors"
+(global-set-key (kbd "s-v") #'describe-variable)          ; "Variable"
+(global-set-key (kbd "s-w") #'list-flycheck-errors)       ; "Warnings & errors"
 ;;(global-set-key (kbd "s-x") #')
 ;;(global-set-key (kbd "s-y") #')
 ;;(global-set-key (kbd "s-z") #')
@@ -614,8 +622,8 @@ Wraps `forward-thing'."
 (progn
 
   (defun sboo-set-run-key-to-eval-buffer ()
-    (local-set-key (kbd "<f7>")  #'eval-buffer)
-    (local-set-key (kbd "<s>-p") #'eval-buffer)
+    (local-set-key sboo-key-compile #'eval-buffer)
+    (local-set-key (kbd "<s>-p")    #'eval-buffer)
     ())
 
   (add-hook 'emacs-lisp-mode-hook
@@ -709,6 +717,11 @@ Wraps `forward-thing'."
 ;; (global-set-key (kbd "<f5>")  #'list-buffers)
 ;; (global-set-key (kbd "<f6>")  #'xah-prior-user-buffer)
 ;; (global-set-key (kbd "<f7>")  #'xah-next-user-buffer) 
+;;
+
+;; <*>
+;;
+;; (global-set-key (kbd "<print>")  #'kill-ring-save)
 
 ;;; Links:
 ;;

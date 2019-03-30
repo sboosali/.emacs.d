@@ -34,16 +34,6 @@
 
 ;; TODO 
 
-(defun sboo-set-TeX-input-method ()
-
-  "Set the `input-method' to « TeX ».
-
-e.g. with `M-x set-input-method RET TeX RET`, typing `\xi` inputs `ξ`."
-
-  (interactive)
-
-  (set-input-method "TeX" t))
-
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
@@ -116,9 +106,10 @@ e.g. with `M-x set-input-method RET TeX RET`, typing `\xi` inputs `ξ`."
 
 ;;----------------------------------------------;;
 
+(defalias '/e    #'sboo-eval)
 (defalias '/eb   #'eval-buffer)
 (defalias '/er   #'eval-region)
-(defalias '/ed   #'eval-defun)
+(defalias '/ed   #'eval-defun)          ; `eval-defun' resets `defvar's (unlike `eval-buffer' or `eval-region')
 (defalias '/el   #'eval-last-sexp)
 
 (defalias '/rb!  #'revert-buffer)
@@ -145,7 +136,7 @@ e.g. with `M-x set-input-method RET TeX RET`, typing `\xi` inputs `ξ`."
 
 ;;----------------------------------------------;;
 
-(defalias '/tex #'sboo-set-TeX-input-method)
+(defalias '/tex #'sboo-set-input-method-TeX)
 
 ;;----------------------------------------------;;
 
@@ -165,6 +156,21 @@ e.g. with `M-x set-input-method RET TeX RET`, typing `\xi` inputs `ξ`."
 ;;----------------------------------------------;;
 
 ;; (defalias '/fb   #'flyspell-buffer)
+
+;;----------------------------------------------;;
+
+(defalias '/w/ir #'indent-region)
+(defalias '/w/sl #'sort-lines)
+(defalias '/w/fr #'fill-region)
+(defalias '/w/dtw #'delete-trailing-whitespace)
+;(defalias '/w/   #')
+
+;; ^ Naming:
+;;
+;; • "w" abbreviates "write"
+;;   (i.e. run non-read-only actions on the text/region/buffer).
+;; • « /w/ » namespaces these aliases
+;;
 
 ;;----------------------------------------------;;
 ;; Project -------------------------------------;;

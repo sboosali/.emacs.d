@@ -304,6 +304,137 @@ Output:
        (not (if (string-match-p (rx bos (1+ printing) eos) s) t nil))
   ))
 
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-case-capitalize (text &key (steganograph nil))
+
+  "Capitalize all words in TEXT.
+
+Inputs:
+
+• TEXT         — a `stringp'.
+• STEGANOGRAPH — a `booleanp'. 
+  (invisibly) `propertize' the output with the TEXT;
+  this upgrades `sboo-case-tokenize' into a lossless transformation) helps other casing functions
+  (e.g. `sboo-case-invert') preserve the original tokens (e.g. acronyms),
+  including lossy transformations
+
+Example:
+
+• M-: (sboo-case-capitalize \"\")
+    ⇒ \"\"
+
+Related:
+
+• `sboo-case-capitalize-string'
+• `sboo-case-preserve-acronyms' (customizeable)"
+
+  (let* ((WORDS              (sboo-case-tokenize text))
+         (WORDS-CAPITALIZED  (mapcar #'sboo-case-capitalize-string WORDS))
+         (STRING-CAPITALIZED (string-join WORDS-CAPITALIZED " "))
+         )
+
+    STRING-CAPITALIZED))
+
+;; M-: (sboo-case-capitalize " words and/or subwords ") ;TODO
+;;  ⇒ "Words And/or Subwords"
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-case-capitalize-string (s)
+
+  "Capitalize the first character in S."
+
+  (concat (upcase (substring s 0 1)) (downcase (substring s 1))))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-case-tokenize (text &key (steganograph nil))
+
+  "Split TEXT into tokens.
+
+Inputs:
+
+• TEXT         — a `stringp'.
+• STEGANOGRAPH — a `booleanp'. 
+  (invisibly) `propertize' the output with the TEXT;
+  this upgrades `sboo-case-tokenize' into a lossless transformation) helps other casing functions
+  (e.g. `sboo-case-invert') preserve the original tokens (e.g. acronyms),
+  including lossy transformations
+
+Output:
+
+• a `listp' of `stringp's.
+
+Example:
+
+• M-: (sboo-case-tokenize \"\")
+    ⇒ '()
+
+• M-: (sboo-case-tokenize \" two  words \" :steganograph nil)
+    ⇒ '(\"two\" \"words\")
+
+• M-: (sboo-case-tokenize \"two-words and/or sub_words\")
+   ⇒ '(\"two\" \"-\" \"words\" \"and\" \"/\" \"or\" \"sub\" \"_\" \"words\")
+
+Notes:
+
+• By default, the tokens are words.
+
+Related:
+
+• `sboo-case-preserve-acronyms' (customizeable)"
+
+  (declare (side-effect-free t))
+
+  (let ((*separator-regex* "[_-/ \f\t\n\r\v]+")
+        (*omit-nulls*      t)
+        (*trim-regex*      "[ \f\t\n\r\v]+")
+        )
+
+    (let* ((WORDS (split-string text *separator-regex* *omit-nulls* *trim-regex*))
+           )
+
+      WORDS)))
+
+;; M-: (sboo-case-tokenize " two  words " :steganograph nil)
+;;  ⇒ '("two" "words")
+
+;; M-: (sboo-case-tokenize "two-words and/or sub_words")
+;;  ⇒ '("two" "-" "words" "and" "/" "or" "sub" "_" "words")
+
+;; M-: (split-string "two-words and/or sub_words")
+;;  ⇒ '("two-words" "and/or" "sub_words")
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-case-tokenize-word (word &key (steganograph nil))
+
+  "Split WORD into subwords."
+
+
+  (declare (side-effect-free t))
+
+  (let ((*separator-regex* "[-/_]+")
+        (*omit-nulls*      t)
+        (*trim-regex*      "[ \f\t\n\r\v]+")
+        )
+
+    (let* ((SUBWORDS (split-string word *separator-regex* *omit-nulls* *trim-regex*))
+           )
+
+      SUBWORDS)))
+
+;; M-: (sboo-case-tokenize-word "two-words")
+;;  ⇒ '("two" "-" "words")
+
+;; M-: (sboo-case-tokenize-word "and/or")
+;;  ⇒ '("and" "/" "or")
+
+;; M-: (sboo-case-tokenize-word "sub_words")
+;;  ⇒ '("sub" "_" "words")
+
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;

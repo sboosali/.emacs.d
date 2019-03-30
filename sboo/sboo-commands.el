@@ -88,6 +88,24 @@
 ;; 
 
 ;;----------------------------------------------;;
+;; Eval ----------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-eval ()
+
+  "Run `eval-region' (if anything's highlighted) or `eval-last-sexp'."
+
+  (interactive)
+
+  (if (use-region-p)
+      (call-interactively 'eval-region)
+    (call-interactively 'eval-last-sexp)))
+
+;; `use-region-p':
+;;
+;; Return `t' if ① the region is active and ② it is appropriate to act on it.
+
+;;----------------------------------------------;;
 ;; Thing at point ------------------------------;;
 ;;----------------------------------------------;;
 
@@ -651,6 +669,8 @@ Version 2015-04-09"
 
 ;;           (read-shell-command "Open current file with: "))
 
+;;----------------------------------------------;;
+
 (defun sboo-open-with (&optional FILENAME)
 
   "Simple function that allows us to open the underlying
@@ -668,6 +688,26 @@ file of a buffer in an external program."
                       _FILENAME_)))))
 
 
+;;----------------------------------------------;;
+
+(defun sboo-kill-whitespace ()
+
+  "Kill all whitespace between two (non-whitespace) characters.
+
+Related:
+
+• `sboo-kill-whitespace'"
+
+  (interactive "*")
+
+  (save-excursion
+    (save-restriction
+      (save-match-data
+        (progn
+          (re-search-backward "[^ \t\r\n]" nil t)
+          (re-search-forward "[ \t\r\n]+" nil t)
+          (replace-match "" nil nil))))))
+
 ;;==============================================;;
 
 ;;TODO https://stackoverflow.com/questions/22434484/emacs-modes-highlighting-uses-of-variable-under-point
@@ -684,6 +724,34 @@ file of a buffer in an external program."
 
 ;; `kill-ring-save'
 ;; `buffer-substring-no-properties'
+
+;;==============================================;;
+
+(defun sboo-set-input-method-TeX ()
+
+  "Set the `input-method' to « TeX ».
+
+e.g. with `M-x set-input-method RET TeX RET`, typing `\xi` inputs `ξ`."
+
+  (interactive)
+
+  (set-input-method "TeX" t))
+
+;;----------------------------------------------;;
+
+(defun sboo-reset-input-method ()
+
+  "Reset the `input-method' (to the default).
+
+Note:
+
+• `current-input-method' is nil (originally).
+• `default-input-method' is \"TeX\".
+"
+
+  (interactive)
+
+  (set-input-method nil t))
 
 ;;==============================================;;
 ;; Comments ------------------------------------;;
@@ -733,7 +801,7 @@ file of a buffer in an external program."
 
   "##################################################"
 
-  "The default comment dividor.")
+  "The default comment divider.")
 
 ;;----------------------------------------------;;
 
@@ -741,7 +809,7 @@ file of a buffer in an external program."
 
   "#------------------------------------------------#"
 
-  "The default comment dividor.")
+  "The default comment divider.")
 
 ;;----------------------------------------------;;
 
@@ -751,13 +819,18 @@ file of a buffer in an external program."
 
     (haskell-mode    . ?\-)
     (emacs-lisp-mode . ?\;)
+    (scheme-mode     . ?\;)
     (nix-mode        . ?\#)
     (bash-mode       . ?\#)
     (python-mode     . ?\#)
+    (css-mode        . ?*)
+    (html-mode       . ?-)
 
     )
 
-  "Comment characters per `major-mode'.")
+  "Comment characters per `major-mode'.
+
+Defaults to `sboo-comment-character-default'.")
 
 ;;----------------------------------------------;;
 
@@ -766,7 +839,9 @@ file of a buffer in an external program."
   '(
     )
 
-  "Comment length per `major-mode'.")
+  "Comment length per `major-mode'.
+
+Defaults to `sboo-comment-length-default'.")
 
 ;;----------------------------------------------;;
 
@@ -779,10 +854,14 @@ file of a buffer in an external program."
     (nix-mode        . ?\-)
     (bash-mode       . ?\-)
     (python-mode     . ?\-)
+    (css-mode        . ?\-)
+    (html-mode       . ?\-)
 
     )
 
-  "Comment characters per `major-mode'.")
+  "Comment characters per `major-mode'.
+
+Defaults to `sboo-comment-infix-character-default'.")
 
 ;;----------------------------------------------;;
 
@@ -795,10 +874,14 @@ file of a buffer in an external program."
     (nix-mode        . "#")
     (bash-mode       . "#")
     (python-mode     . "#")
+    (css-mode        . "/*")
+    (html-mode       . "<!--")
 
     )
 
-  "Comment characters per `major-mode'.")
+  "Comment characters per `major-mode'.
+
+Defaults to `sboo-comment-prefix-string-default'.")
 
 ;;----------------------------------------------;;
 
@@ -806,15 +889,19 @@ file of a buffer in an external program."
 
   '(
 
-    (haskell-mode    . " --")
+    (haskell-mode    . "--")
     (emacs-lisp-mode . ";;")
     (nix-mode        . "#")
     (bash-mode       . "#")
     (python-mode     . "#")
+    (css-mode        . "*/")
+    (html-mode       . "-->")
 
     )
 
-  "Comment characters per `major-mode'.")
+  "Comment characters per `major-mode'.
+
+Defaults to `sboo-comment-suffix-string-default'.")
 
 ;;----------------------------------------------;;
 
@@ -822,15 +909,28 @@ file of a buffer in an external program."
 
   '(
 
-    (haskell-mode    . "-- ============================================ --")
-    (emacs-lisp-mode . ";;==============================================;;")
-    (nix-mode        . "##################################################")
-    (bash-mode       . "##################################################")
-    (python-mode     . "##################################################")
+    (haskell-mode          . "-- ============================================ --")
+    (lisp-mode             . ";;==============================================;;")
+    (emacs-lisp-mode       . ";;==============================================;;")
+    (scheme-mode           . ";;==============================================;;")
+    (lisp-interaction-mode . ";;==============================================;;")
+    (nix-mode              . "##################################################")
+    (bash-mode             . "##################################################")
+    (python-mode           . "##################################################")
+    (css-mode              . "/************************************************/")
+    (html-mode             . "<!-- ========================================= -->")
+    (mhtml-mode            . "<!-- ========================================= -->")
 
     )
 
-  "Comment dividors per `major-mode'.")
+  "Comment dividors per `major-mode'.
+
+Defaults to `sboo-comment-h1-default'.")
+
+;; TODO either Implement aliases for modes, or use inheritance for derived modes. e.g.:
+;;
+;; '(lisp-mode . (emacs-lisp-mode scheme-mode lisp-interaction-mode))
+;; '(html-mode . (mhtml-mode))
 
 ;;----------------------------------------------;;
 
@@ -838,15 +938,23 @@ file of a buffer in an external program."
 
   '(
 
-    (haskell-mode    . "--------------------------------------------------")
-    (emacs-lisp-mode . ";;----------------------------------------------;;")
-    (nix-mode        . "#------------------------------------------------#")
-    (bash-mode       . "#------------------------------------------------#")
-    (python-mode     . "#------------------------------------------------#")
+    (haskell-mode          . "--------------------------------------------------")
+    (lisp-mode             . ";;----------------------------------------------;;")
+    (emacs-lisp-mode       . ";;----------------------------------------------;;")
+    (scheme-mode           . ";;----------------------------------------------;;")
+    (lisp-interaction-mode . ";;----------------------------------------------;;")
+    (nix-mode              . "#------------------------------------------------#")
+    (bash-mode             . "#------------------------------------------------#")
+    (python-mode           . "#------------------------------------------------#")
+    (css-mode              . "/* -------------------------------------------- */")
+    (html-mode             . "<!----------------------------------------------->")
+    (mhtml-mode            . "<!----------------------------------------------->")
 
     )
 
-  "Comment dividors per `major-mode'.")
+  "Comment dividors per `major-mode'.
+
+Defaults to `sboo-comment-h2-default'.")
 
 ;;----------------------------------------------;;
 
@@ -934,9 +1042,14 @@ Related:
          (SUFFIX         (sboo-comment-suffix-string))
          (PADDING-CHAR   (sboo-comment-infix-character))
 
-         (TEXT          (if (fboundp #'s-capitalize) ;TODO; customizeable sboo-capitalize-string
-                            (s-capitalize text)
-                          text))
+         ;; buffer-based capitalization
+         (TEXT          (with-temp-buffer
+                          ;;TODO `subword-mode'
+                          (insert text)
+                          (goto-char (point-min))
+                          (while (< (point) (point-max))
+                              (capitalize-word +1))
+                          (buffer-substring-no-properties (point-min) (point-max))))
          (TEXT-PREFIX   (concat PREFIX " " TEXT " "))
          (LINE          (concat (truncate-string-to-width TEXT-PREFIX
                                                           (- LENGTH (length SUFFIX))
@@ -1017,7 +1130,7 @@ Related:
 
     (insert "\n")))
 
-;;----------------------------------------------;;
+;;==============================================;;
 
 (defcustom sboo-spdx-license-alist
 
