@@ -1,14 +1,24 @@
 ;;; -*- lexical-binding: t -*-
 
+;;==============================================;;
 ;;; Commentary:
 
-;;----------------------------------------------;;
-;; Configuration for the `desktop' (builtin) package.
+;; Configuration for `desktop-mode'.
+;;
+;; Resources (files):
+;;
+;; • « "${XDG_DATA_HOME}/emacs/desktop/.emacs.desktop" »
+;;
+;; Resources (environment variables):
+;;
+;; • « $SBOO_EMACS_DESKTOP_ENABLE »
+;; • « $SBOO_EMACS_DESKTOP_RESTORE_EAGER »
+;;
+;; 
 ;;
 ;; TODO: (Multiple) Desktop "Sessions"
-;;
-;;----------------------------------------------;;
 
+;;==============================================;;
 ;;; Code:
 
 ;;----------------------------------------------;;
@@ -29,8 +39,6 @@
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
-
-;;==============================================;;
 
 (defvar sboo-star-buffer-regex "\\`\\*.*\\*\\'"
 
@@ -67,7 +75,62 @@ URL `http://emacs.stackexchange.com/a/20036/115'."
 ;;
 ;; 
 
-;;==============================================;;
+;;----------------------------------------------;;
+
+(defun sboo-desktop-enable-p ()
+
+  "Whether `desktop-mode' restores on startup.
+
+Output:
+
+• an `booleanp'.
+
+Resources:
+
+• the « $SBOO_EMACS_DESKTOP_ENABLE » environment variable."
+
+  (let* ((VALUE-DYNAMIC (condition-case nil
+                            (sboo-getenv-boolean "SBOO_EMACS_DESKTOP_ENABLE")
+                          (error nil)))
+         (VALUE-STATIC  t)
+         )
+
+    (or (if VALUE-DYNAMIC t nil)
+        VALUE-STATIC)))
+
+;;----------------------------------------------;;
+
+(defun sboo-desktop-restore-eager ()
+
+  "How many buffers should `desktop' restore on startup.
+
+Output:
+
+• an `integerp'.
+
+Notes:
+
+• « 0 » is fastest but least convenient.
+• « ∞ » is slowest but most convenient.
+
+Resources:
+
+• the « $SBOO_EMACS_DESKTOP_RESTORE_EAGER » environment variable.
+
+Related:
+
+• `desktop-restore-eager'"
+
+  (let* ((VALUE-DYNAMIC (condition-case nil
+                            (sboo-getenv-number "SBOO_EMACS_DESKTOP_RESTORE_EAGER")
+                          (error nil)))
+         (VALUE-STATIC  500)
+         )
+
+    (or (and (integerp VALUE-DYNAMIC) (<= 0 VALUE-DYNAMIC) VALUE-DYNAMIC)
+        VALUE-STATIC)))
+
+;; M-: (progn (setenv "SBOO_EMACS_DESKTOP_RESTORE_EAGER" "10") (sboo-desktop-restore-eager))
 
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
@@ -114,27 +177,28 @@ saved desktop at startup:
 
 (defcustom sboo-desktop-globals-to-save
 
-  '((comint-input-ring . 50)
+  '(
+    (comint-input-ring        . 50)
     desktop-missing-file-warning
-    (dired-regexp-history . 20)
+    (dired-regexp-history     . 20)
     (extended-command-history . 30)
-    (face-name-history . 20)
-    (file-name-history . 100)
-    (ido-buffer-history . 100)
-    (ido-last-directory-list . 100)
-    (ido-work-directory-list . 100)
-    (ido-work-file-list . 100)
-    (magit-read-rev-history . 50)
-    (minibuffer-history . 50)
-    (org-refile-history . 50)
-    (org-tags-history . 50)
-    (query-replace-history . 60)
-    (read-expression-history . 60)
-    (regexp-history . 60)
-    (regexp-search-ring . 20)
+    (face-name-history        . 20)
+    (file-name-history        . 100)
+    (ido-buffer-history       . 100)
+    (ido-last-directory-list  . 100)
+    (ido-work-directory-list  . 100)
+    (ido-work-file-list       . 100)
+    (magit-read-rev-history   . 50)
+    (minibuffer-history       . 50)
+    (org-refile-history       . 50)
+    (org-tags-history         . 50)
+    (query-replace-history    . 60)
+    (read-expression-history  . 60)
+    (regexp-history           . 60)
+    (regexp-search-ring       . 20)
     register-alist
-    (search-ring . 20)
-    (shell-command-history . 50)
+    (search-ring              . 20)
+    (shell-command-history    . 50)
     ;; tags-file-name
     ;; tags-table-list
     )
@@ -191,7 +255,6 @@ See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c
 ;;----------------------------------------------;;
 ;;; `:init'      (sboo-xdg-data "" :subdir "emacs/desktop")
 
-
 (defun sboo-desktop-init! ()
 
   "Initialize `desktop-mode' variables."
@@ -201,7 +264,7 @@ See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c
 
   ;; ^
 
-  (setq desktop-restore-eager 500) ;TODO prioritize a few core buffers like home.nix and emacs.md
+  (setq desktop-restore-eager (sboo-desktop-restore-eager)) ;TODO prioritize a few core buffers like home.nix and emacs.md
 
   ;; ^ The maximum number of buffers to restore immediately;
   ;; the remaining buffers are restored lazily (when Emacs is idle).

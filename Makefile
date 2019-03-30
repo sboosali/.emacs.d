@@ -10,22 +10,15 @@ EmacsBuild ?=emacs  -batch  --funcall=batch-byte-compile
 
 Cask?=cask
 
-EmacsOptions ?=--debug-init --no-desktop --maximized --no-splash --name=SBoo
+EmacsOptions ?=--debug-init --no-desktop --maximized --no-splash --name=Emacs/SBoo
 
 EmacsDirectory ?=$(CURDIR)
 
 Timestamp ?=$(shell date +%d-%m-%Y+%H:%M)
 
-##################################################
-# Default / Miscellaneous ########################
-##################################################
-
-default: build
-.PHONY: default
-
-##################################################
-# Build ##########################################
-##################################################
+#------------------------------------------------#
+# Emacs -----------------------------------------#
+#------------------------------------------------#
 
 build:
 
@@ -33,20 +26,72 @@ build:
 
 .PHONY: build
 
-##################################################
-# Configure ######################################
-##################################################
+#------------------------------------------------#
 
-# Install Dependencies:
+rebuild: clean
+
+	$(EmacsBuild)  $(EmacsDirectory)/sboo/*.el
+
+.PHONY: rebuild
+
+#================================================#
+
+start: build
+
+	exec $(Emacs) $(EmacsOptions) &disown
+
+.PHONY: start
+
+#------------------------------------------------#
+
+emacs-run:
+
+	exec $(Emacs) $(EmacsOptions) &disown
+
+.PHONY: emacs-run
+
+#------------------------------------------------#
+
+emacs-try:
+
+	SBOO_EMACS_DESKTOP_RESTORE_EAGER=10 $(Emacs) $(EmacsOptions) --debug-init
+
+.PHONY: emacs-try
+
+#------------------------------------------------#
+
+emacs-debug:
+
+	SBOO_EMACS_DESKTOP_ENABLE=0 $(Emacs) $(EmacsOptions) --debug-init "--find-file=$(EmacsDirectory)/sboo/sboo-init.el"
+
+.PHONY: emacs-debug
+
+#================================================#
+
+emacs-build: build
+.PHONY: emacs-build
+
+#------------------------------------------------#
+
+# emacs-test: build
+
+# 	SBOO_EMACS_DESKTOP_RESTORE_EAGER=10 $(Emacs) $(EmacsOptions) --debug-init
+
+# .PHONY: emacs-test
+
+#------------------------------------------------#
+# Nix -------------------------------------------#
+#------------------------------------------------#
 
 configure:
+
 	@exec nix-build
 
 .PHONY: configure
 
-##################################################
-# Cask ###########################################
-##################################################
+#------------------------------------------------#
+# Cask ------------------------------------------#
+#------------------------------------------------#
 
 cask-build:
 	$(Cask) build
@@ -72,7 +117,7 @@ test: configure
 ##################################################
 
 exec:
-	~/.nix-profile/bin/emacs --name=SBoo/Nixpkgs/$(Timestamp) --maximized --no-splash &disown
+	~/.nix-profile/bin/emacs --name=Emacs/SBoo/Nixpkgs/$(Timestamp) --maximized --no-splash &disown
 
 .PHONY: exec
 

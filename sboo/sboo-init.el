@@ -74,6 +74,12 @@
      (message "Enable `debug-on-error'."))))
 
 ;;----------------------------------------------;;
+;; Settings (early) ----------------------------;;
+;;----------------------------------------------;;
+
+(setq tool-bar-style 'both)
+
+;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 
@@ -239,8 +245,7 @@ Output:
 Examples:
 
 • M-: (sboo-getenv-number \"EUID\")
-    ⇒ 1001
-"
+    ⇒ 1001"
 
   (let ((VALUE (getenv environment-variable))
         )
@@ -257,7 +262,7 @@ Examples:
 (defvar sboo-desktop-enable
 
   (condition-case nil
-      (sboo-getenv-boolean "SBOO_EMACS_DESKTOP" :default t)
+      (sboo-getenv-boolean "SBOO_EMACS_DESKTOP_ENABLE" :default t)
     (error t))
 
   "Whether to `desktop-read'.
@@ -404,8 +409,8 @@ Related:
 ;;----------------------------------------------;;
 
 (when (require 'sboo-toolbar nil :no-error)
-
-  (setq tool-bar-map sboo-tool-bar-map))
+;;(setq tool-bar-map sboo-tool-bar-map)
+  ())
 
 ;;----------------------------------------------;;
 
@@ -429,6 +434,9 @@ Related:
 
   (sboo-add-auto-mode-basename ".gitignore"     #'conf-mode)
   (sboo-add-auto-mode-basename ".gitattributes" #'conf-mode)
+
+  (sboo-add-auto-mode-basename ".xbindkeysrc"    #'conf-mode)
+;;(sboo-add-auto-mode-basename "xbindkeysrc.scm" #'xbindkeys-scheme-mode)
 
   ;;------------------------;;
 
@@ -643,7 +651,7 @@ Related:
 
 ;;----------------------------------------------;;
 
-(add-hook 'text-mode-hook #'sboo-set-TeX-input-method)
+(add-hook 'text-mode-hook #'sboo-set-input-method-TeX)
 
 ;; (when (require 'sboo-text-mode nil :no-error)
 ;;   (dolist (HOOK sboo-text-mode-hooks)
@@ -962,7 +970,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   (customize-set-variable 'edit-indirect-guess-mode-function
                           #'sboo-edit-indirect-guess-mode
-                          "`edit-indirect-guess-mode-function' is `edit-indirect-default-guess-mode' by default.")
+                          "Override `edit-indirect-default-guess-mode'.")
 
   ())
 
@@ -1119,7 +1127,8 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
   (use-package dante
     :after    haskell
 
-    :load-path "~/.emacs.d/submodules/dante" ;TODO 
+    :load-path "/home/sboo/.emacs.d/submodules/dante"
+ ;;TODO  :load-path "~/.emacs.d/submodules/dante"
 
     :commands (dante-mode dante-restart)
 
@@ -1140,7 +1149,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
       (setq dante-methods-alist
             (assq-delete-all KEY dante-methods-alist)))
 
-    (when sboo-dante-methods
+    (when (bound-and-true-p sboo-dante-methods)
       (setq dante-methods sboo-dante-methods))
 
     (setq dante-tap-type-time 2)
@@ -1191,6 +1200,45 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
   ;;------------------------;;
 
   (use-package nix-repl)
+
+  ;;------------------------;;
+
+  ())
+
+;;----------------------------------------------;;
+
+(when (require 'sboo-scheme nil :no-error)
+
+  ;;------------------------;;
+
+  (use-package quack
+
+    :commands ()
+
+    :interpreter (("guile"     . scheme-mode)
+                  )
+
+    :mode        (("\\.scm\\'" . scheme-mode)
+                  )
+
+    ;;:hook (scheme-mode-hook . scheme-mode-quack-fontify)
+
+    :init
+
+    (setq scheme-program-name "guile")
+
+    ;; ^ interpreter (binary).
+    ;;
+    ;;   e.g.: guile, racket, ...
+
+    (dolist (HOOK sboo-scheme-hooks-list)
+      (add-hook 'scheme-mode-hook HOOK))
+
+;; (defun scheme-mode-quack-fontify ()
+;;   (require 'quack)
+;;   (setq quack-fontify-style 'emacs))
+
+    ())
 
   ;;------------------------;;
 
@@ -1470,6 +1518,11 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
   ;; Mnemonic: "w" for "write-mode" (from "read-only-mode").
 
   ())
+
+;;----------------------------------------------;;
+;;; `rg': "Rust Grep".
+
+(use-package rg)
 
 ;;----------------------------------------------;;
 ;; External Packages: Formats ------------------;;
