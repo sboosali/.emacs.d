@@ -1855,13 +1855,112 @@ Links:
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+(defun yaml-mode-version ()
+  "Display version of `yaml-mode'."
+  (interactive)
+  (message "yaml-mode %s" yaml-mode-version)
+  yaml-mode-version)
+
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.\\(e?ya?\\|ra\\)ml\\'" . yaml-mode))
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+    
+    (split-string text *separators* *omit-nulls* *separators*)))
 
 ;;----------------------------------------------;;
+
+  (declare (side-effect-free t))
+
+  (let ((*separators* "[ -/]+")
+        (*omit-nulls* t)
+        )
+
+    (let* ((WORDS (split-string text split-string-default-separators t split-string-default-separators))
+           )
+
+      WORDS)))
+
+;;----------------------------------------------;;
+(cl-defun sboo-case-tokenize (text &key (steganograph nil))
+
+  "Split TEXT into tokens.
+
+Inputs:
+
+• TEXT         — a `stringp'.
+• STEGANOGRAPH — a `booleanp'. 
+  (invisibly) `propertize' the output with the TEXT;
+  this upgrades `sboo-case-tokenize' into a lossless transformation) helps other casing functions
+  (e.g. `sboo-case-invert') preserve the original tokens (e.g. acronyms),
+  including lossy transformations
+
+Output:
+
+• a `listp' of `stringp's.
+
+Example:
+
+• M-: (sboo-case-tokenize \"\")
+    ⇒ '()
+
+• M-: (sboo-case-tokenize \" two  words \" :steganograph nil)
+    ⇒ '(\"two\" \"words\")
+
+• M-: (sboo-case-tokenize \"two-words and/or sub_words\")
+   ⇒ '(\"two\" \"-\" \"words\" \"and\" \"/\" \"or\" \"sub\" \"_\" \"words\")
+
+Notes:
+
+• By default, the tokens are words.
+
+Related:
+
+• `sboo-case-preserve-acronyms' (customizeable)"
+
+  (declare (side-effect-free t))
+
+  (let ((*separator-regex* "[_-/ \f\t\n\r\v]+")
+        (*omit-nulls*      t)
+        (*trim-regex*      "[ \f\t\n\r\v]+")
+        )
+
+    (let* ((WORDS (split-string text *separator-regex* *omit-nulls* *trim-regex*))
+           )
+
+      WORDS)))
+
+;; M-: (sboo-case-tokenize " two  words " :steganograph nil)
+;;  ⇒ '("two" "words")
+
+;; M-: (sboo-case-tokenize "two-words and/or sub_words")
+;;  ⇒ '("two" "-" "words" "and" "/" "or" "sub" "_" "words")
+
+;; M-: (split-string "two-words and/or sub_words")
+;;  ⇒ '("two-words" "and/or" "sub_words")
+
+;;----------------------------------------------;;
+
+(defun s-split (separator s &optional omit-nulls)
+  "Split S into substrings bounded by matches for regexp SEPARATOR.
+If OMIT-NULLS is non-nil, zero-length substrings are omitted.
+
+This is a simple wrapper around the built-in `split-string'."
+  (declare (side-effect-free t))
+  (save-match-data
+    (split-string s separator omit-nulls)))
+
+(defun s-split-words (s)
+  "Split S into list of words."
+  (declare (side-effect-free t))
+  (s-split
+   "[^[:word:]0-9]+"
+   (let ((case-fold-search nil))
+     (replace-regexp-in-string
+      "\\([[:lower:]]\\)\\([[:upper:]]\\)" "\\1 \\2"
+      (replace-regexp-in-string "\\([[:upper:]]\\)\\([[:upper:]][0-9[:lower:]]\\)" "\\1 \\2" s)))
+   t))
 
 ;;----------------------------------------------;;
 

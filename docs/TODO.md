@@ -31,7 +31,9 @@
 	    "\\)")))
 ```
 
-## 
+## theme
+
+https://github.com/kunalb/poet/blob/master/poet-theme.el#L245
 
 ```
 

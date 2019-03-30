@@ -1,0 +1,23 @@
+# -*- mode: snippet -*-
+#
+# key         : defun-
+# name        : a concise « defun » declaration.
+# condition   : (let ((KEY "defun-")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(defun sboo-${1:name} (${2:str})
+
+  "$3.
+
+Example:
+
+• M-: (sboo-$1 )
+    ⇒ "
+
+  (let* ()
+
+    `yas-selected-text`$0))

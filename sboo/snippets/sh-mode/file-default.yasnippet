@@ -1,0 +1,45 @@
+# -*- mode: snippet -*-
+#
+# key         : file
+# name        : a « bash » script.
+# type        : snippet
+# condition   : (let ((KEY "file")) (= (current-column) (string-width KEY)))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+#!/bin/bash
+
+set -e
+set -u
+
+##################################################
+
+HELP="««« $(basename \$0) INPUT »»»"
+
+##################################################
+
+INPUT="${1:?$HELP}"
+
+##################################################
+
+OUTPUT="${INPUT}"
+
+##################################################
+
+echo ========================================
+echo
+
+echo "${INPUT}"
+echo "${OUTPUT}"
+
+echo
+echo ========================================
+echo
+
+$0
+
+echo
+echo ========================================
+
+##################################################
