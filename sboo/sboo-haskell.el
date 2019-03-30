@@ -162,7 +162,7 @@ Zero-or-more function-symbols."
 
 (defcustom sboo-dante-methods
 
-  '( new-impure-nix
+  '( ;;new-impure-nix
      new-build
      stack
      )

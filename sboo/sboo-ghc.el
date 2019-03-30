@@ -1,8 +1,10 @@
 ;;; -*- lexical-binding: t -*-
 
+;; Keywords: Haskell
+
 ;;; Commentary:
 
-;; Configuration for the `ghc' package.
+;; Configuration for the `ghc' compiler.
 ;;
 ;; See:
 ;;
