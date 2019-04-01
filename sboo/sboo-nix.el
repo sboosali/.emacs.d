@@ -33,6 +33,39 @@
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
+;; Constants -----------------------------------;;
+;;----------------------------------------------;;
+
+(defconst sboo-nix-compilation-warning-type 0
+  "Alias `compilation-error-regexp-alist-alist' « WARNING » level.")
+
+(defconst sboo-nix-compilation-info-type    1
+  "Alias `compilation-error-regexp-alist-alist' « INFO » level.")
+
+(defconst sboo-nix-compilation-error-type   2
+  "Alias `compilation-error-regexp-alist-alist' « ERROR » level.")
+
+;;----------------------------------------------;;
+
+(defconst sboo-nix-compilation-group-file 10
+  "Alias for a `group-n' in `sboo-nix-compilation-rx'.")
+
+(defconst sboo-nix-compilation-group-line 20
+  "Alias for a `group-n' in `sboo-nix-compilation-rx'.")
+
+(defconst sboo-nix-compilation-group-column 30
+  "Alias for a `group-n' in `sboo-nix-compilation-rx'.")
+
+;; ^ NOTE these numbers are arbitrary naturals.
+
+;;----------------------------------------------;;
+
+(defconst sboo-nix-compilation-hyperlink-only-match nil
+  "Whether to the whole line (t), or just the match (nil), becomes a hyperlink.
+  
+a `booleanp'.")
+
+;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
@@ -99,10 +132,49 @@ Zero-or-more function-symbols."
   :safe t
   :group 'sboo-nix)
 
-;;; sub word mode lets you navigate (e.g. M-b) between "sub words" of a camelcased word
+;; ^ with `subword-mode', you can navigate (e.g. « M-b » )
+;;   between "sub words" of a camelcased word.
+
 ;;----------------------------------------------;;
 
-(defcustom sboo-nix-build-file-regexp
+(defcustom sboo-nix-build-compilation-error-rx
+
+  (rx line-start
+      "error: "
+      (1+ (not (any ?\n)))
+      (group-n 1 (1+ (any "./~" "a-f" "A-F" "0-9")) ".nix")
+      (? ":" (group-n 2 (1+ digit))
+         (? ":" (group-n 3 (1+ digit))))
+      line-end)
+
+  "Regular expression for « nix-build » errors.
+
+Matches an « error: ... FILE:COLUMN:LINE ... »
+line in « nix-build »'s stdout."
+
+  :type 'regexp
+
+  :safe t
+  :group 'sboo)
+
+;; e.g.
+;; 
+;;   $ nix-build --show-trace ./x11/lib/keycodes.nix
+;;
+;;   error: attribute 'XF86Tools' at ./x11/lib/keycodes.nix:175:2 already defined at ./x11/lib/keycodes.nix:166:2
+;;
+
+;; TODO
+
+(let* ((REGEX sboo-nix-build-compilation-error-rx)
+       (LINE  "error: attribute 'XF86Tools' at ./x11/lib/keycodes.nix:175:2 already defined at ./x11/lib/keycodes.nix:166:2")
+       )
+
+  ( REGEX LINE))
+
+;;----------------------------------------------;;
+
+(defcustom sboo-nix-compilation-location-rx
 
   (rx bos
       " at " (group-n 1 (1+ (any "./~" "a-f" "A-F" "0-9")) ".nix")
@@ -112,7 +184,8 @@ Zero-or-more function-symbols."
 
   "Regular expression for « nix-build ».
 
-Matches « error: ... at FILE:COLUMN:LINE » from « nix-build »'s stdout."
+Matches « ... at FILE:COLUMN:LINE ... »,
+anywhere in « nix-build »'s stdout."
 
   :type 'regexp
 
@@ -121,7 +194,7 @@ Matches « error: ... at FILE:COLUMN:LINE » from « nix-build »'s stdout."
 
 ;;(rx "at" FILE ":" COLUMN ":" LINE)
 
-;; M-: (string-match-p sboo-nix-build-file-regexp "error: undefined variable 'fetchurl' at /home/sboo/configuration/nix/bin/default.nix:73:21")
+;; M-: (string-match-p sboo-nix-compilation-location-rx "error: undefined variable 'fetchurl' at /home/sboo/configuration/nix/bin/default.nix:73:21")
 
 ;; M-: (string-match-p (rx bos (zero-or-more anything) " at " (group-n 1 (one-or-more (any "./~" "a-f" "A-F" "0-9"))) ".nix" ":"  (group-n 2 (one-or-more digit)) ":"  (group-n 3 (one-or-more digit)) (zero-or-more anything) eos) "error: undefined variable 'fetchurl' at /home/sboo/configuration/nix/bin/default.nix:73:21")
 
@@ -168,26 +241,72 @@ Matches « error: ... at FILE:COLUMN:LINE » from « nix-build »'s stdout."
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
-
 (defun sboo-nix-set-compile-command ()
 
-  "Set `compile-command' to `sboo-nix-compile-command'.
-
-Files:
-
-• the file-buffer's « .dir-locals.el » file.
-• the dominating « .project » file.
-• the dominating « .cabal » file."
-
-  ;TODO get component from .dir-locals.el, like « sboo-cabal-target ».
-  ;TODO get project-root from locate-dominating-file cabal.project.
-  ;TODO get default-directory from subdirectory of project-root
+  "Set `compile-command' to `sboo-nix-compile-command'."
 
   (let* ((STRING (format-message "%s"
                                  (sboo-nix-compile-command)))
          )
 
     (setq-local compile-command STRING)))
+
+;;----------------------------------------------;;
+
+(defun sboo-nix-compilation ()
+
+  "Hook for `compilation-mode' via `nix-mode'."
+
+  (interactive)
+
+  (let* ()
+
+    (setq-local next-error-highlight                 t)
+    (setq-local compilation-auto-jump-to-first-error t)
+
+    (next-error-follow-minor-mode +1)))
+
+;; `next-error-follow-minor-mode':
+;;
+;; • (setq `next-error-follow-minor-mode' t)
+;;
+
+;;----------------------------------------------;;
+
+(defun sboo-nix-build-compilation-register ()
+
+  "Register regexps for « nix-build » with `compilation-mode'.
+
+Extends `compilation-error-regexp-alist' with:
+
+• `sboo-nix-build-compilation-error-rx'
+• `sboo-nix-build-compilation-warning-rx'"
+
+  (add-to-list 'compilation-error-regexp-alist
+               'sboo-nix-build-compilation-error)
+
+  (add-to-list 'compilation-error-regexp-alist-alist
+               `(sboo-nix-build-compilation-error
+                 ,sboo-nix-build-compilation-error-rx
+                 ,sboo-nix-compilation-group-file
+                 ,sboo-nix-compilation-group-line
+                 ,sboo-nix-compilation-group-column
+                 ,sboo-nix-compilation-error-type
+                 ,sboo-nix-compilation-hyperlink-only-match))
+
+  ;; (add-to-list 'compilation-warning-regexp-alist
+  ;;              'sboo-nix-build-compilation-warning)
+
+  ;; (add-to-list 'compilation-warning-regexp-alist-alist
+  ;;              `(sboo-nix-build-compilation-warning
+  ;;                ,sboo-nix-build-compilation-warning-rx
+  ;;                ,sboo-nix-compilation-group-file
+  ;;                ,sboo-nix-compilation-group-line
+  ;;                ,sboo-nix-compilation-group-column
+  ;;                ,sboo-nix-compilation-warning-type
+  ;;                ,sboo-nix-compilation-hyperlink-only-match))
+
+  ())
 
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
@@ -224,8 +343,13 @@ Output:
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
+
+;; e.g.
 ;; 
-;; 
-;; 
+;;   $ nix-build --show-trace ./x11/lib/keycodes.nix
+;;
+;;   error: attribute 'XF86Tools' at ./x11/lib/keycodes.nix:175:2 already defined at ./x11/lib/keycodes.nix:166:2
+;;
+
 ;;==============================================;;
 (provide 'sboo-nix)

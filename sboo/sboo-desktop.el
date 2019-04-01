@@ -13,7 +13,9 @@
 ;;
 ;; • « $SBOO_EMACS_DESKTOP_ENABLE »
 ;; • « $SBOO_EMACS_DESKTOP_RESTORE_EAGER »
-;;
+;; • « $SBOO_EMACS_DESKTOP_WRITE »
+;; • « $SBOO_EMACS_DESKTOP_READ »
+;; 
 ;; 
 ;;
 ;; TODO: (Multiple) Desktop "Sessions"
@@ -35,6 +37,14 @@
 ;; sboo packages:
 
 (require 'sboo-xdg nil :noerror)
+
+;;----------------------------------------------;;
+;; Constants -----------------------------------;;
+;;----------------------------------------------;;
+
+(defconst sboo-desktop-enable-default t "`booleanp'. See `sboo-desktop-enable-p'.")
+(defconst sboo-desktop-write-default  t "`booleanp'. See `sboo-desktop-write-p'." )
+(defconst sboo-desktop-read-default   t "`booleanp'. See `sboo-desktop-read-p'."  )
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
@@ -92,7 +102,53 @@ Resources:
   (let* ((VALUE-DYNAMIC (condition-case nil
                             (sboo-getenv-boolean "SBOO_EMACS_DESKTOP_ENABLE")
                           (error nil)))
-         (VALUE-STATIC  t)
+         (VALUE-STATIC  sboo-desktop-enable-default)
+         )
+
+    (or (if VALUE-DYNAMIC t nil)
+        VALUE-STATIC)))
+
+;;----------------------------------------------;;
+
+(defun sboo-desktop-write-p ()
+
+  "Whether `desktop-mode' restores on startup.
+
+Output:
+
+• an `booleanp'.
+
+Resources:
+
+• the « $SBOO_EMACS_DESKTOP_WRITE » environment variable."
+
+  (let* ((VALUE-DYNAMIC (condition-case nil
+                            (sboo-getenv-boolean "SBOO_EMACS_DESKTOP_WRITE")
+                          (error nil)))
+         (VALUE-STATIC  sboo-desktop-write-default)
+         )
+
+    (or (if VALUE-DYNAMIC t nil)
+        VALUE-STATIC)))
+
+;;----------------------------------------------;;
+
+(defun sboo-desktop-read-p ()
+
+  "Whether `desktop-mode' restores on startup.
+
+Output:
+
+• an `booleanp'.
+
+Resources:
+
+• the « $SBOO_EMACS_DESKTOP_READ » environment variable."
+
+  (let* ((VALUE-DYNAMIC (condition-case nil
+                            (sboo-getenv-boolean "SBOO_EMACS_DESKTOP_READ")
+                          (error nil)))
+         (VALUE-STATIC  sboo-desktop-read-default)
          )
 
     (or (if VALUE-DYNAMIC t nil)
@@ -310,9 +366,15 @@ See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c
   (add-hook 'desktop-after-read-hook #'sboo-bury-all-star-buffers)
   ;(add-hook 'desktop-delay-hook      #'sboo-bury-all-star-buffers)
 
-  (when (and sboo-desktop-enable (null sboo-no-desktop-read-at-startup))
-    (desktop-read)
-    (desktop-save-mode +1))
+  (when (sboo-desktop-enable-p)
+
+    (when (sboo-desktop-read-p)
+      (desktop-read))
+
+    (when (sboo-desktop-write-p)
+      (desktop-save-mode +1))
+
+    ())
 
   ;; ^ Enable globally.
 

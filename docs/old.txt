@@ -1964,22 +1964,101 @@ This is a simple wrapper around the built-in `split-string'."
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+emacs-try:
+
+	SBOO_EMACS_DESKTOP_RESTORE_EAGER=10 SBOO_EMACS_DESKTOP_FILE=/tmp/.emacs.desktop $(Emacs) $(EmacsOptions) --debug-init
+
+.PHONY: emacs-try
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+emacs-try:
+
+	$(shell SBOO_EMACS_DESKTOP_RESTORE_EAGER=10 SBOO_EMACS_DESKTOP_WRITE=0 $(Emacs) $(EmacsOptions) --debug-init)
+
+.PHONY: emacs-try
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+emacs-try: SBOO_EMACS_DESKTOP_RESTORE_EAGER = 10 SBOO_EMACS_DESKTOP_WRITE = 0
+
+	$(Emacs) $(EmacsOptions) --debug-init
+
+.PHONY: emacs-try
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+  (when (and sboo-desktop-enable (null sboo-no-desktop-read-at-startup))
+    (desktop-read)
+    (desktop-save-mode +1))
 
 ;;----------------------------------------------;;
 
+(defvar xmodmap-map nil
+  "Local keymap for xmodmap buffers.")
+
+(if xmodmap-map
+  nil
+  (let ((map (make-keymap)))
+    (define-key map "\^c\^c" 'xmodmap-read-current-file)
+    (define-key map "\^c\^h" 'xmodmap-man)
+    (define-key map "\^c\^s" 'xmodmap-shell-command)
+    (easy-menu-define
+      xmodmap-easy-menu map
+      "Menu for Xmodmap mode."
+      '("Xmodmap"
+	 ["Read current file" xmodmap-read-current-file t]
+	 ["Start xmodmap command" xmodmap-shell-command t]
+	 ["-" nil t]
+	 ["Xmodmap manual page" xmodmap-man t]))
+    (setq xmodmap-map map)))
+
+;;----------------------------------------------;;
+
+setxkbmap -option "ctrl:nocaps" || true
+
+# ^ « ctrl:nocaps »: Use Caps Lock as Control key.
+
+;;----------------------------------------------;;
+if [ -x "$(command -v ${xbindkeys})" ] #TODO and if x11 is active
+then
+
+if   ! pgrep -x "xbindkeys" > /dev/null
+then "${xbindkeys}" --poll-rc -f "${xbindkeysrc}" || true
+fi
+
+# ^ Start the « xbindkeys » daemon in the background.
+
+# ^ « --poll-rc » means: reload the config whenever it changes.
+
+# ^ « -f _ » means: load the given config ("rc") file.
+# By default, the config is at « ~/.xbindkeysrc », 
+# which we've overriden to be under (one of) « $XDG_CONFIG_DIRS ».
+
+fi
+;;----------------------------------------------;;
+
+xmodmap   = ''${pkgs.xorg.xmodmap}/bin/xmodmap'';
+
+#setxkbmap = ''${pkgs.xorg.xmodmap}/bin/setxkbmap'';
+
+#xbindkeys = ''${pkgs.xbindkeys}/bin/xbindkeys'';
+
+;;----------------------------------------------;;
+
+(progn
+
+  (add-to-list 'compilation-error-regexp-alist       
+               'sboo-nix-build-compilation-error)
+  
+  (add-to-list 'compilation-error-regexp-alist-alist
+               (list 'sboo-nix-build-compilation-error
+                     sboo-nix-build-compilation-error-rx
+                     sboo-nix-rx-filename
+                     sboo-nix-rx-line
+                     sboo-nix-rx-column
+                     compilation-error-type
+                     sboo-nix-hyperlink)))
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

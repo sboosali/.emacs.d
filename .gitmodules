@@ -25,3 +25,6 @@
 [submodule "use-package"]
 	path = submodules/use-package
 	url = https://github.com/jwiegley/use-package
+[submodule "expand-region"]
+	path = submodules/expand-region
+	url = https://github.com/magnars/expand-region.el

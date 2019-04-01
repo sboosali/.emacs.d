@@ -821,7 +821,34 @@ Related:
 
   (define-key special-event-map [sigusr1] #'sboo-handle-sigusr1))
 
-;;----------------------------------------------;;
+;;==============================================;;
+
+(defun sboo-percentage (n)
+
+  "Format the percentage N.
+
+Inputs:
+
+• N — a `numberp' between 0 and 100.
+
+Output:
+
+• a `stringp' of `length' 3 or 4.
+
+Validates N, rounds N."
+
+  (interactive (list (read-number "Percentage: ")))
+
+  (when-let* ((NUMBER (if (numberp n)
+                          (round (max 0 (min 100 n)))
+                        nil))
+              (STRING (format "%02d%%" NUMBER))
+              )
+
+    (when (called-interactively-p 'interactive)
+      (message "%s" STRING))
+
+    STRING))
 
 ;;----------------------------------------------;;
 ;;; Notes: -------------------------------------;;

@@ -1,20 +1,46 @@
 ##################################################
+# Settings #######################################
+##################################################
+
+SHELL=bash
+
+.EXPORT_ALL_VARIABLES:
+
+##################################################
 # Variables ######################################
 ##################################################
 
+EmacsDirectory ?=$(CURDIR)
+
+# ^ e.g. « ~/emacs.d/ ».
+
+#------------------------------------------------#
+
+Timestamp ?=$(shell date +%d-%m-%Y+%H:%M)
+
+#------------------------------------------------#
+
 Emacs      ?=emacs
 EmacsBuild ?=emacs  -batch  --funcall=batch-byte-compile
+EmacsStart ?=emacs "--name=Emacs - SBoo/$(Timestamp)" --maximized --no-splash --no-desktop
 
 #Emacs ?=emacs
 #Emacs ?=./result/bin/emacs
 
+#------------------------------------------------#
+
+EmacsOptions ?= "--name=SBoo/$(Timestamp)" --maximized --no-splash --no-desktop
+
+# ^ « emacs » (case-insensitive) must be in « --name »,
+#   for « wmctrl -a emacs » to work.
+
+#------------------------------------------------#
+
 Cask?=cask
 
-EmacsOptions ?=--debug-init --no-desktop --maximized --no-splash --name=Emacs/SBoo
-
-EmacsDirectory ?=$(CURDIR)
-
-Timestamp ?=$(shell date +%d-%m-%Y+%H:%M)
+##################################################
+# Targets ########################################
+##################################################
 
 #------------------------------------------------#
 # Emacs -----------------------------------------#
@@ -38,7 +64,7 @@ rebuild: clean
 
 start: build
 
-	exec $(Emacs) $(EmacsOptions) &disown
+	exec $(EmacsStart) &disown
 
 .PHONY: start
 
@@ -46,7 +72,7 @@ start: build
 
 emacs-run:
 
-	exec $(Emacs) $(EmacsOptions) &disown
+	exec $(EmacsStart) &disown
 
 .PHONY: emacs-run
 
@@ -54,7 +80,7 @@ emacs-run:
 
 emacs-try:
 
-	SBOO_EMACS_DESKTOP_RESTORE_EAGER=10 $(Emacs) $(EmacsOptions) --debug-init
+	SBOO_EMACS_DESKTOP_RESTORE_EAGER=10 SBOO_EMACS_DESKTOP_WRITE=0 $(Emacs) $(EmacsOptions) --debug-init
 
 .PHONY: emacs-try
 

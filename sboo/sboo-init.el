@@ -303,10 +303,7 @@ Related:
 (list (require 'diminish) (require 'bind-key))
 
 ;;==============================================;;
-
-(setq custom-file sboo-custom-file)
-
-;;----------------------------------------------;;
+;; Variable Safety:
 
 (dolist (BINDING '( (lexical-binding . t)
                     ))
@@ -333,6 +330,53 @@ Related:
 
 ;; ^ Ensure `dante-*' variables are marked as "safe strings".
 ;; (NOTE `dante' does this, but haskell files may be opened before(?) `dante' is loaded.)
+
+;; ^ e.g the `safe-local-variable' properly of the `compile-command' symbol:
+;;
+;;   M-: (get 'compile-command 'safe-local-variable)
+;;     ⇒ '(lambda (a) (and (stringp a) (or (not (boundp 'compilation-read-command)) compilation-read-command)))
+;;
+;;     ⇒ '(lambda (x) (and (stringp x) (or t compilation-read-command)))
+;;     ⇒ '(lambda (x) (and (stringp x) compilation-read-command))
+;;     ⇒ '(lambda (x) (and (stringp x) t))
+;;     ⇒ '(lambda (x) (stringp x))
+;;     ⇒ 'stringp
+;;
+
+;;----------------------------------------------;;
+;; `eval' Safety
+
+;;TODO add all « pure » (and/or « side-effect-free ») builtins as `safe-local-variable' predicates...
+
+;;(add-to-list 'safe-local-eval-forms '())
+;;(add-to-list 'safe-local-variable '())
+
+;; ^ e.g the `side-effect-free' properly of the `+' symbol:
+;;
+;;   M-: (get '+ 'side-effect-free)
+;;     ⇒ t
+;;   M-: (get '+ 'pure)
+;;     ⇒ nil
+;;
+
+;; See:
+;;
+;; • Info node `(elisp) Standard Properties'
+;; • URL `'
+;;
+;; • property `safe-function'
+;; • property `safe-local-eval-function'
+;; • property `safe-local-variable'
+;;
+;; • property `pure'
+;; • property `side-effect-free'
+;;
+;; • property `variable-documentation'
+;;
+
+;;==============================================;;
+
+(setq custom-file sboo-custom-file)
 
 ;;----------------------------------------------;;
 ;; Register ------------------------------------;;
@@ -1594,6 +1638,22 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;   ())
 
 ;;----------------------------------------------;;
+
+(use-package xmodmap-mode
+
+  :mode        "\\.xmodmap\\'"
+  :interpreter "xmodmap"
+
+  :init
+  ()
+
+  :config
+
+  (add-hook 'xmodmap-mode-hook #'sboo-set-font-to-iosevka)
+  
+  ())
+
+;;----------------------------------------------;;
 ;; External Packages: Miscellaneous ------------;;
 ;;----------------------------------------------;;
 
@@ -1636,6 +1696,39 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;   (which-key-mode t))
 ;; ;; ^ After 1 second of an unfinished key-press,
 ;; ;; show the documentation of the sub-keys available in the key sequence.
+
+;;----------------------------------------------;;
+
+(use-package desktop-environment
+
+  :commands (desktop-environment-toggle-mute
+             desktop-environment-toggle-microphone-mute
+             desktop-environment-screenshot-part
+             desktop-environment-volume-decrement
+             desktop-environment-volume-increment
+             )
+
+  :init
+
+  ;; See « desktop-environment.el »
+
+  ())
+
+;; e.g. this feature provides `desktop-environment-keyboard-backlight-set':
+;;
+;;       (defun desktop-environment-keyboard-backlight-set (value)
+;; "Set keyboard backlight to VALUE."
+;; (dbus-call-method :system
+;;                   "org.freedesktop.UPower"
+;;                   "/org/freedesktop/UPower/KbdBacklight"
+;;                   "org.freedesktop.UPower.KbdBacklight"
+;;                   "SetBrightness"
+;;                   :int32 value)
+;; (message "New keyboard value: %s%%" (desktop-environment-keyboard-backlight-percent)))
+
+;; `dbus-call-method':
+;;
+;; 
 
 ;;----------------------------------------------;;
 

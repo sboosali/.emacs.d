@@ -128,7 +128,7 @@ Links:
   
   (keyboard-translate ?\( ?\[)
   (keyboard-translate ?\[ ?\()
-  
+
   (keyboard-translate ?\) ?\])
   (keyboard-translate ?\] ?\)))
 
@@ -262,9 +262,15 @@ Wraps `forward-thing'."
 ;;; Key Translations ===========================;;
 ;;==============================================;;
 
-(sboo-swap-parentheses-and-square-brackets)
-(sboo-swap-semicolon-and-colon)
-(sboo-swap-double-quote-with-single-quote)
+(unless t
+
+  ;; ^ whether these keyboard translations have already been configured globally
+  ;;   (e.g. via « xmodmap »)
+
+  (sboo-swap-parentheses-and-square-brackets)
+  (sboo-swap-semicolon-and-colon)
+  (sboo-swap-double-quote-with-single-quote)
+  ())
 
 ;;==============================================;;
 ;;; Unset ======================================;;

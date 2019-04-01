@@ -375,6 +375,12 @@
 ;; (custom-set-variables ... t nil ".")
 
 ;;----------------------------------------------;;
+;; Compilation:
+
+;; (sboo-custom-set compilation-auto-jump-to-first-error t
+;;   "Start at the first error (i.e. link).")
+
+;;----------------------------------------------;;
 ;; Grep:
 
 (sboo-custom-set grep-find-template "find -L <D> <X> -type f <F> -exec grep <C> -nH -e <R> \\{\\} +"

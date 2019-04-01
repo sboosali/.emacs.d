@@ -817,14 +817,17 @@ Note:
 
   '(
 
-    (haskell-mode    . ?\-)
-    (emacs-lisp-mode . ?\;)
-    (scheme-mode     . ?\;)
-    (nix-mode        . ?\#)
-    (bash-mode       . ?\#)
-    (python-mode     . ?\#)
-    (css-mode        . ?*)
-    (html-mode       . ?-)
+    (haskell-mode       . ?\-)
+    (haskell-cabal-mode . ?\-)
+    (cabal-mode         . ?\-)
+    (cabal-project-mode . ?\-)
+    (emacs-lisp-mode    . ?\;)
+    (scheme-mode        . ?\;)
+    (nix-mode           . ?\#)
+    (bash-mode          . ?\#)
+    (python-mode        . ?\#)
+    (css-mode           . ?*)
+    (html-mode          . ?-)
 
     )
 
@@ -849,13 +852,16 @@ Defaults to `sboo-comment-length-default'.")
 
   '(
 
-    (haskell-mode    . ?\-)
-    (emacs-lisp-mode . ?\-)
-    (nix-mode        . ?\-)
-    (bash-mode       . ?\-)
-    (python-mode     . ?\-)
-    (css-mode        . ?\-)
-    (html-mode       . ?\-)
+    (haskell-mode       . ?\-)
+    (haskell-cabal-mode . ?\-)
+    (cabal-mode         . ?\-)
+    (cabal-project-mode . ?\-)
+    (emacs-lisp-mode    . ?\-)
+    (nix-mode           . ?\-)
+    (bash-mode          . ?\-)
+    (python-mode        . ?\-)
+    (css-mode           . ?\-)
+    (html-mode          . ?\-)
 
     )
 
@@ -869,13 +875,17 @@ Defaults to `sboo-comment-infix-character-default'.")
 
   '(
 
-    (haskell-mode    . "-- ")
-    (emacs-lisp-mode . ";;")
-    (nix-mode        . "#")
-    (bash-mode       . "#")
-    (python-mode     . "#")
-    (css-mode        . "/*")
-    (html-mode       . "<!--")
+    (haskell-mode       . "--")
+    (haskell-cabal-mode . "--")
+    (cabal-mode         . "--")
+    (cabal-project-mode . "--")
+    (emacs-lisp-mode    . ";;")
+    (nix-mode           . "#")
+    (bash-mode          . "#")
+    (python-mode        . "#")
+    (css-mode           . "/*")
+    (html-mode          . "<!--")
+    (xmodmap-mode       . "!")
 
     )
 
@@ -889,13 +899,17 @@ Defaults to `sboo-comment-prefix-string-default'.")
 
   '(
 
-    (haskell-mode    . "--")
-    (emacs-lisp-mode . ";;")
-    (nix-mode        . "#")
-    (bash-mode       . "#")
-    (python-mode     . "#")
-    (css-mode        . "*/")
-    (html-mode       . "-->")
+    (haskell-mode       . "--")
+    (haskell-cabal-mode . "--")
+    (cabal-mode         . "--")
+    (cabal-project-mode . "--")
+    (emacs-lisp-mode    . ";;")
+    (nix-mode           . "#")
+    (bash-mode          . "#")
+    (python-mode        . "#")
+    (css-mode           . "*/")
+    (html-mode          . "-->")
+    (xmodmap-mode       . "!")
 
     )
 
@@ -910,6 +924,9 @@ Defaults to `sboo-comment-suffix-string-default'.")
   '(
 
     (haskell-mode          . "-- ============================================ --")
+    (haskell-cabal-mode    . "-- ============================================ --")
+    (cabal-mode            . "-- ============================================ --")
+    (cabal-project-mode    . "-- ============================================ --")
     (lisp-mode             . ";;==============================================;;")
     (emacs-lisp-mode       . ";;==============================================;;")
     (scheme-mode           . ";;==============================================;;")
@@ -920,6 +937,7 @@ Defaults to `sboo-comment-suffix-string-default'.")
     (css-mode              . "/************************************************/")
     (html-mode             . "<!-- ========================================= -->")
     (mhtml-mode            . "<!-- ========================================= -->")
+    (xmodmap-mode          . "! ============================================== !")
 
     )
 
@@ -939,6 +957,9 @@ Defaults to `sboo-comment-h1-default'.")
   '(
 
     (haskell-mode          . "--------------------------------------------------")
+    (haskell-cabal-mode    . "--------------------------------------------------")
+    (cabal-mode            . "--------------------------------------------------")
+    (cabal-project-mode    . "--------------------------------------------------")
     (lisp-mode             . ";;----------------------------------------------;;")
     (emacs-lisp-mode       . ";;----------------------------------------------;;")
     (scheme-mode           . ";;----------------------------------------------;;")
@@ -949,6 +970,7 @@ Defaults to `sboo-comment-h1-default'.")
     (css-mode              . "/* -------------------------------------------- */")
     (html-mode             . "<!----------------------------------------------->")
     (mhtml-mode            . "<!----------------------------------------------->")
+    (xmodmap-mode          . "! ---------------------------------------------- !")
 
     )
 

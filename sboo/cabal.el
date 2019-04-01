@@ -104,7 +104,7 @@
 ;;;###autoload
 (defgroup cabal nil
 
-  "Major mode for editing Cabal files."
+  "Cabal-related customization."
 
   ;;:link (url-link "")
 
@@ -113,7 +113,237 @@
   ;; :group 'languages
   :group 'haskell)
 
+;;==============================================;;
+
+(defcustom cabal-haskell-compilers
+
+  '(ghc
+    ghcjs
+    eta
+    (nhc . "nhc98")
+    jhc
+    lhc
+    uhc
+    yhc
+    hbc
+    hugs
+    helium
+    )
+
+  "Haskell compilers, known to « cabal ».
+
+Links:
+
+• URL `https://github.com/haskell/cabal/blob/2.4/Cabal/Distribution/Compiler.hs'."
+
+  :type '(repeated (choice (string :tag "Executable")
+                           (cons (symbol :tag "Compiler")
+                                 (string :tag "Executable"))))
+
+  :safe #'listp
+  :group 'cabal)
+
 ;;----------------------------------------------;;
+
+(defcustom cabal-operating-systems
+
+  '(
+    Linux   ; tier 1 desktop OSs:
+    Windows
+    OSX
+
+    FreeBSD ; other free Unix OSs:
+    OpenBSD
+    NetBSD
+    DragonFly
+
+    Solaris ; ageing Unix OSs:
+    AIX
+    HPUX
+    IRIX
+
+    HaLVM   ; bare metal / VMs / hypervisors:
+
+    Hurd    ; GNU's microkernel:
+
+    IOS     ; mobile OSs:
+    Android
+
+    Ghcjs
+    )
+
+  "Operating systems, known to « cabal ».
+
+Links:
+
+• URL `https://github.com/haskell/cabal/blob/2.4/Cabal/Distribution/System.hs'."
+
+  :type '(repeated (symbol :tag "OS"))
+
+  :safe #'listp
+  :group 'cabal)
+
+;;==============================================;;
+;; Programs
+
+(defcustom cabal-cabal-executable (executable-find "cabal")
+
+  "Location of « cabal » executable."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;----------------------------------------------;;
+
+(defcustom cabal-cabal2nix-executable (executable-find "cabal2nix")
+
+  "Location of « cabal2nix » executable."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;==============================================;;
+;; Programs (Haskell Compilers)
+
+(defcustom cabal-ghc-executable (executable-find "ghc")
+
+  "Location of « ghc » executable."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;----------------------------------------------;;
+
+(defcustom cabal-ghc-pkg-executable (executable-find "ghc-pkg")
+
+  "Location of « ghc-pkg » executable."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;----------------------------------------------;;
+
+(defcustom cabal-ghcjs-executable (executable-find "ghcjs")
+
+  "Location of « ghcjs » executable.
+
+GHCJS compiles Haskell to JavaScript."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;----------------------------------------------;;
+
+(defcustom cabal-eta-executable (executable-find "eta")
+
+  "Location of « eta » executable.
+
+ETA compiles Haskell onto JVM."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;----------------------------------------------;;
+
+(defcustom cabal-nhc-executable (executable-find "nhc98")
+
+  "Location of « nhc98 » executable."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;----------------------------------------------;;
+
+(defcustom cabal-jhc-executable (executable-find "jhc")
+
+  "Location of « jhc » executable."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;----------------------------------------------;;
+
+(defcustom cabal-lhc-executable (executable-find "lhc")
+
+  "Location of « lhc » executable."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;----------------------------------------------;;
+
+(defcustom cabal-uhc-executable (executable-find "uhc")
+
+  "Location of « uhc » executable."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;----------------------------------------------;;
+
+(defcustom cabal-yhc-executable (executable-find "yhc")
+
+  "Location of « yhc » executable."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;----------------------------------------------;;
+
+(defcustom cabal-hbc-executable (executable-find "hbc")
+
+  "Location of « hbc » executable."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;----------------------------------------------;;
+
+(defcustom cabal-hugs-executable (executable-find "hugs")
+
+  "Location of « hugs » executable."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;----------------------------------------------;;
+
+(defcustom cabal-helium-executable (executable-find "helium")
+
+  "Location of « helium » executable."
+
+  :type 'string
+
+  :safe #'stringp
+  :group 'cabal)
+
+;;==============================================;;
 
 (defcustom cabal-fields-alist
                                         ;TODO; make internal variable « hashtable ». updated via « :modified ».
@@ -475,698 +705,427 @@ Comes from « $ cabal new-build --list-options »."
 
   '(
 
+    "Data"
+    "Web"
+    "Network"
+    "Text"
+    "Control"
+    "System"
+    "Development"
+    "Language"
+    "Math"
+    "Graphics"
+    "Database"
+    "Cloud"
+    "Unclassified"
+    "Testing"
+    "Game"
+    "Data Structures"
+    "Concurrency"
+    "Distributed Computing"
+    "Parsing"
+    "Sound"
+    "Google"
+    "AWS"
+    "Codec"
+    "Compilers/Interpreters"
+    "Cryptography"
+    "Distribution"
+    "FFI"
+    "Bioinformatics"
+    "Algorithms"
+    "XML"
+    "Generics"
+    "Yesod"
+    "Natural Language Processing"
+    "Monads"
+    "Music"
+    "Utils"
+    "Console"
+    "JSON"
+    "Foreign"
+    "FRP"
+    "User Interfaces"
+    "Prelude"
+    "GUI"
+    "AI"
+    "Conduit"
+    "Numerical"
+    "Machine Learning"
+    "Finance"
+    "Hardware"
+    "Compiler"
+    "Numeric"
+    "Statistics"
+    "ACME"
+    "Pipes"
+    "Theorem Provers"
+    "Algebra"
+    "Utility"
+    "Time"
+    "Logging"
+    "Debug"
+    "Bindings"
+    "Parallelism"
+    "Tools"
+    "Template Haskell"
+    "Servant"
+    "Type System"
+    "Graphs"
+    "Dependent Types"
+    "Snap"
+    "Security"
+    "Logic"
+    "Lenses"
+    "Streaming"
+    "Enumerator"
+    "Configuration"
+    "Reactivity"
+    "Physics"
+    "Library"
+    "Formal Methods"
+    "Game Engine"
+    "API"
+    "Test"
+    "Education"
+    "Embedded"
+    "Application"
+    "Records"
+    "Other"
+    "Failure"
+    "Crypto"
+    "Code Generation"
+    "Serialization"
+    "GHC"
+    "Error Handling"
+    "Documentation"
+    "CLI"
+    "Parser"
+    "Aviation"
+    "Monad"
+    "JavaScript"
+    "Editor"
+    "IO-Streams"
+    "Data Mining"
+    "CSV"
+    "Yi"
+    "Nix"
+    "Desktop"
+    "Simulation"
+    "Profiling"
+    "Manatee"
+    "Happstack"
+    "Filesystem"
+    "Constraints"
+    "Combinators"
+    "Random"
+    "Network APIs"
+    "JVM"
+    "Image"
+    "Effect"
+    "Comonads"
+    "Benchmarking"
+    "Protocol"
+    "Pretty Printer"
+    "IDE"
+    "PostgreSQL"
+    "Java"
+    "Geography"
+    "Bitcoin"
+    "Trace"
+    "Tensors"
+    "Services"
+    "Science"
+    "Optimization"
+    "Networking"
+    "HTML"
+    "Compression"
+    "Audio"
+    "Search"
+    "SMT"
+    "Project"
+    "Optimisation"
+    "Number Theory"
+    "Monadic Regions"
+    "IRC"
+    "Geometry"
+    "Eventsourcing"
+    "Utilities"
+    "Concurrent"
+    "Clckwrks"
+    "UI"
+    "Symbolic Computation"
+    "Reflection"
+    "Media"
+    "Mathematics"
+    "List"
+    "Haskell"
+    "Git"
+    "Fay"
+    "Extension"
+    "Email"
+    "Composition"
+    "Bit Vectors"
+    "Authentication"
+    "Validity"
+    "PDF"
+    "Monitoring"
+    "Lens"
+    "Hasql"
+    "Formal Languages"
+    "FFI Tools"
+    ".NET"
+    "Tonatona"
+    "Terminal"
+    "Template"
+    "Source-tools"
+    "Recursion"
+    "Pugs"
+    "Performance"
+    "Interfaces"
+    "Functors"
+    "Compiler Plugin"
+    "Compatibility"
+    "Command Line"
+    "Codecs"
+    "Categories"
+    "Business"
+    "ATS"
+    "Zift"
+    "Vector"
+    "Teaching"
+    "Static Analysis"
+    "Shake"
+    "Robotics"
+    "Options"
+    "Metrics"
+    "Exceptions"
+    "Demo"
+    "Clustering"
+    "Chemistry"
+    "Browser"
+    "Typography"
+    "Syntax"
+    "Swagger"
+    "String"
+    "Simple"
+    "Scripting"
+    "Regex"
+    "NLP"
+    "Money"
+    "LaTeX"
+    "Hash"
+    "Foreign Binding"
+    "File"
+    "Ethereum"
+    "Distributed Systems"
+    "DSL"
+    "Containers"
+    "Compilers"
+    "Client"
+    "CLR"
+    "Build"
+    "Bit"
+    "Animation"
+    "XMonad"
+    "Util"
+    "TODO"
+    "Spam"
+    "Refactoring"
+    "QuasiQuotes"
+    "Pup-Events"
+    "Phantom Types"
+    "Password"
+    "Parsers"
+    "Mobile"
+    "Message-Oriented Middleware"
+    "Linguistics"
+    "HTTP"
+    "Generic"
+    "Games"
+    "Functions"
+    "Debian"
+    "Data Science"
+    "Conversion"
+    "Command Line Tools"
+    "Cloud Haskell"
+    "Bsd3"
+    "Bio"
+    "Arrows"
+    "Value"
+    "UserInterface"
+    "Uniform"
+    "Types"
+    "Tree"
+    "Succinct Data Structures"
+    "Stratux"
+    "Stomp"
+    "Software"
+    "Schema"
+    "STM32"
+    "Reactive"
+    "Polymorphism"
+    "Operating System"
+    "N2O"
+    "Microcontroller"
+    "Maths"
+    "Mail"
+    "Languages"
+    "IO"
+    "Graph"
+    "GitHub"
+    "Desktop Environment"
+    "Data Structure"
+    "Command Line Tool"
+    "Classification"
+    "Charts"
+    "C"
+    "Avers"
+    "Argumentation"
+    "Algorithm"
+    "ADSB"
+    "User-interface"
+    "Unknown"
+    "Unicode"
+    "Transformation"
+    "TOML"
+    "Svg"
+    "Shell"
+    "Service"
+    "Semantic Web"
+    "Scheduling"
+    "Safe"
+    "Reverse Engineering"
+    "Raspberrypi"
+    "RSS"
+    "QuickCheck"
+    "Quantum"
+    "Preprocessor"
+    "Potoki"
+    "Neovim"
+    "Mutable State"
+    "Multimedia"
+    "Model"
+    "Middleware"
+    "Machine Vision"
+    "Logic Programming"
+    "Image Viewer"
+    "Haskell2010"
+    "General"
+    "Framework"
+    "Font"
+    "File Manager"
+    "Fedora"
+    "Eden"
+    "Disassembler"
+    "Dhall"
+    "Debugging"
+    "Datamining"
+    "Databases"
+    "Database Testing Web"
+    "CLI Tool"
+    "ByteString"
+    "Array"
+    "Apple"
+    "Accessibility"
+    "Zippers"
+    "Workflow"
+    "WebDriver"
+    "Wai"
+    "Vulkan"
+    "Visualization"
+    "Visual Programming"
+    "Video"
+    "Ur/Web"
+    "Unsafe"
+    "Unification"
+    "URI"
+    "Templating"
+    "TH"
+    "System Tools"
+    "Statistical Modeling"
+    "Source Code Analysis"
+    "Software Defined Radio"
+    "Scientific Simulation"
+    "Sample Code"
+    "STM"
+    "SIMD"
+    "Qux"
+    "Project Management"
+    "Program Transformation"
+    "Politic"
+    "Persistent"
+    "Pattern Classification"
+    "Pattern"
+    "ParserCombinators"
+    "Oracle"
+    "Opengl"
+    "Numerics"
+    "Noise"
+    "Net"
+    "Natural-language-processing"
+    "Multimedia Player"
+    "Minecraft"
+    "Medical"
+    "Machines"
+    "Machine-learning"
+    "Linux"
+    "Linear Algebra"
+    "Lib"
+    "Lexer"
+    "LambdaCalculus"
+    "Interaction"
+    "Image Processing"
+    "IRC Client"
+    "I2C"
+    "Heuristics"
+    "Help"
+    "Haskell98"
+    "GiveYouAHead"
+    "Geo"
+    "Genealogy"
+    "GPU"
+    "Foundation"
+    "Financial"
+    "Factual"
+    "Experimental"
+    "Executable"
+    "Exception"
+    "Educational"
+    "Download Manager"
+    "Digest"
+    "Deep Learning"
+    "Date"
+    "Data Flow"
+    "Criu"
+    "Config"
+    "Commercial"
+    "Category"
+    "Cache"
+    "Building"
+    "Build Tool"
+    "Blockchain"
+    "Big Data"
+    "Benchmark"
+    "Backup"
+    "Automation"
+    "Attoparsec"
+    "Aspect Oriented Programming"
+    "Artificial Intelligence"
+    "Application Server"
+    "AOP"
+
     )
 
-  "Known options of the « cabal new-build » subcommand.
+  "Known categories of the « category: ... » cabal field.
 
-Comes from « $ cabal new-build --list-options »."
+Comes from downlading URL `http://hackage.haskell.org/packages/',
+keeping any string that has been used at least twice."
 
   :type '(repeated (string :tag "Category"))
 
   :safe t
   :group 'cabal)
-
-(1) ASP
-(1) AST
-(1) Accelerate
-(1) Adjunctions
-(1) Algorithm Visualization
-(1) Algorithmic Music Composition
-(1) Anatomy
-(1) Applicative
-(1) Arxiv
-(1) Atom
-(1) Attribute Grammars
-(1) Automatic Music Generation
-(1) BSD
-(1) Base
-(1) Binary
-(1) Bits
-(1) Bsparse
-(1) Builders
-(1) Bundle
-(1) ByteStrings
-(1) Bytes
-(1) CAPTCHA
-(1) CGI
-(1) CI
-(1) CPP
-(1) Cabal
-(1) Caching
-(1) Cast
-(1) Chaos Music
-(1) Chat
-(1) Code Competitions
-(1) Coerce
-(1) Combinatorics
-(1) CommandLine
-(1) Commerce
-(1) Common-Parts
-(1) Compilation
-(1) Computer Algebra
-(1) Constraint
-(1) Contract
-(1) Contracts
-(1) Control.Monad
-(1) Control.Parallel.Eden
-(1) Convenience
-(1) CouchDB
-(1) Crosswords
-(1) Cryptocurrency
-(1) CsSyd
-(1) Culinary
-(1) Cursor
-(1) DFINITY
-(1) DNS
-(1) Data Conduit
-(1) Data Network
-(1) Data-structures
-(1) Database Design
-(1) Decompiler
-(1) Dependency Injection
-(1) Derive-monoid
-(1) DevOps
-(1) Diagnostics
-(1) Diagram
-(1) EBNF
-(1) ETL
-(1) Editing
-(1) Elm
-(1) Emacs
-(1) Envars
-(1) Environment
-(1) Eternity
-(1) Eval.so
-(1) Event-sourcing
-(1) Eventloop
-(1) Example
-(1) Experiment
-(1) Fake
-(1) FakeData
-(1) Feed
-(1) FilePath
-(1) Finance Network Bitcoin
-(1) Fitness
-(1) Flight
-(1) Folding
-(1) Fractals
-(1) Futures
-(1) GIS Programs
-(1) GRPC
-(1) Generative Music Grammars
-(1) Gentoo
-(1) Geospatial
-(1) Gps
-(1) Groundhog
-(1) HAM
-(1) HNum
-(1) Hakyll
-(1) Ham-radio
-(1) Haskell2020
-(1) Hxt
-(1) Hydraulics
-(1) Hydrology
-(1) IRI
-(1) Identification
-(1) Indexed
-(1) Interpolation
-(1) Interpreter
-(1) Interpreters
-(1) IoT
-(1) Iteratee
-(1) JSX
-(1) Japanese Natural Language Processing
-(1) KML
-(1) Kerf
-(1) Ketchup
-(1) Keyword Extractor
-(1) LUA
-(1) Lalr
-(1) Lambda Cube
-(1) Language Tools
-(1) Lazy
-(1) Learning Environments
-(1) Learning Haskell
-(1) Lexers
-(1) LinearAlgebra
-(1) Linux Desktop
-(1) Lisp
-(1) Little Game
-(1) Local Search
-(1) Logstash
-(1) Macros
-(1) Map
-(1) MapReduce
-(1) Matrix
-(1) Memoization
-(1) Memory
-(1) Message-Oriented
-(1) Meta
-(1) Metalanguage
-(1) Miscellaneous
-(1) Miso
-(1) MonadIO
-(1) Mumeric.Statistics
-(1) Murmur
-(1) MusicBrainz
-(1) NA
-(1) Naqsha
-(1) Natural Language
-(1) Network Control
-(1) NetworkAPI
-(1) NetworkAPIs
-(1) NonEmpty
-(1) None
-(1) Ntrol
-(1) OAuth
-(1) OCaml
-(1) ODPI-C
-(1) OOP
-(1) Object Storage
-(1) Ocilib
-(1) Office
-(1) OpenLayers
-(1) Operations
-(1) OverloadeLabels
-(1) PDF Viewer
-(1) PL/SQL Tools
-(1) Package Management
-(1) Packaging
-(1) PagerDuty
-(1) Parry
-(1) Pattern Recognition
-(1) PersonalGrowth
-(1) Phishing
-(1) Picture
-(1) Planning
-(1) Plotting
-(1) Plugin
-(1) Poker
-(1) Pretty-printing
-(1) Primitive
-(1) Process Manager
-(1) Program
-(1) Prompt
-(1) Proto
-(1) Protocols
-(1) Proxies
-(1) Ptr
-(1) PureScript
-(1) QR
-(1) RAKE
-(1) RDF
-(1) REPL
-(1) RFC
-(1) RSS/Atom Reader
-(1) Raaz
-(1) Radio
-(1) Raw
-(1) Redis
-(1) Relational Algebra
-(1) Relaxng
-(1) Resources
-(1) Rpc
-(1) SCRIPT
-(1) SDR
-(1) SQL
-(1) SQLite
-(1) SVD
-(1) Saas
-(1) Scene
-(1) Scientific
-(1) Screencast
-(1) Screensaver
-(1) Selenium
-(1) Semigroups
-(1) Set Theory
-(1) Si5351
-(1) Silk
-(1) Silly Tool
-(1) Snaplet-fay
-(1) Socket
-(1) Sorting
-(1) Source Tools
-(1) Spreadsheet
-(1) Steganography
-(1) Stemming
-(1) Stochastic Control
-(1) Structures
-(1) Subversion
-(1) Support Vector Machine
-(1) SyntComp
-(1) Syslog
-(1) Systems
-(1) Tasty
-(1) Tasty-kat
-(1) TemplateHaskell
-(1) Testing-hackage
-(1) Text Editor
-(1) Text Recognition
-(1) Text.PrettyPrint
-(1) Theorem Proving
-(1) Time-frequency Distributions
-(1) Timeout
-(1) Tool
-(1) Topology
-(1) TouchDesigner
-(1) Training
-(1) Trans
-(1) Translation
-(1) Transpiler
-(1) Tutorials
-(1) Type Inference
-(1) Type Theory
-(1) Typechecking
-(1) Typesystems
-(1) URL
-(1) Unikernel
-(1) Unity3D
-(1) User Interface
-(1) Uzbl
-(1) Validation
-(1) Water
-(1) Web Server
-(1) Web Yesod
-(1) Webframework
-(1) Welcome
-(1) Wiki
-(1) Wsjtx
-(1) X11
-(1) XFCE
-(1) YAML
-(1) Yampa
-(1) ZLib
-(1) Zeromq
-(1) Zip
-(10) Authentication
-(10) Bit Vectors
-(10) Composition
-(10) Email
-(10) Extension
-(10) Fay
-(10) Git
-(10) Haskell
-(10) List
-(10) Mathematics
-(10) Media
-(10) Reflection
-(10) Symbolic Computation
-(10) UI
-(103) XML
-(1084) Network
-(11) Clckwrks
-(11) Concurrent
-(11) Utilities
-(117) Algorithms
-(118) Bioinformatics
-(12) Eventsourcing
-(12) Geometry
-(12) IRC
-(12) Monadic Regions
-(12) Number Theory
-(12) Optimisation
-(12) Project
-(12) SMT
-(12) Search
-(122) FFI
-(129) Distribution
-(13) Audio
-(13) Compression
-(13) HTML
-(13) Networking
-(13) Optimization
-(13) Science
-(13) Services
-(13) Tensors
-(13) Trace
-(134) Cryptography
-(138) Compilers/Interpreters
-(14) Bitcoin
-(14) Geography
-(14) Java
-(14) PostgreSQL
-(144) Codec
-(15) IDE
-(15) Pretty Printer
-(15) Protocol
-(16) Benchmarking
-(16) Comonads
-(16) Effect
-(16) Image
-(16) JVM
-(16) Network APIs
-(16) Random
-(1636) Web
-(17) Combinators
-(17) Constraints
-(17) Filesystem
-(17) Happstack
-(17) Manatee
-(17) Profiling
-(17) Simulation
-(175) AWS
-(176) Google
-(18) Desktop
-(18) Nix
-(18) Yi
-(184) Sound
-(186) Parsing
-(1863) Data
-(19) CSV
-(194) Distributed Computing
-(2) AOP
-(2) Application Server
-(2) Artificial Intelligence
-(2) Aspect Oriented Programming
-(2) Attoparsec
-(2) Automation
-(2) Backup
-(2) Benchmark
-(2) Big Data
-(2) Blockchain
-(2) Build Tool
-(2) Building
-(2) Cache
-(2) Category
-(2) Commercial
-(2) Config
-(2) Criu
-(2) Data Flow
-(2) Date
-(2) Deep Learning
-(2) Digest
-(2) Download Manager
-(2) Educational
-(2) Exception
-(2) Executable
-(2) Experimental
-(2) Factual
-(2) Financial
-(2) Foundation
-(2) GPU
-(2) Genealogy
-(2) Geo
-(2) GiveYouAHead
-(2) Haskell98
-(2) Help
-(2) Heuristics
-(2) I2C
-(2) IRC Client
-(2) Image Processing
-(2) Interaction
-(2) LambdaCalculus
-(2) Lexer
-(2) Lib
-(2) Linear Algebra
-(2) Linux
-(2) Machine-learning
-(2) Machines
-(2) Medical
-(2) Minecraft
-(2) Multimedia Player
-(2) Natural-language-processing
-(2) Net
-(2) Noise
-(2) Numerics
-(2) Opengl
-(2) Oracle
-(2) ParserCombinators
-(2) Pattern
-(2) Pattern Classification
-(2) Persistent
-(2) Politic
-(2) Program Transformation
-(2) Project Management
-(2) Qux
-(2) SIMD
-(2) STM
-(2) Sample Code
-(2) Scientific Simulation
-(2) Software Defined Radio
-(2) Source Code Analysis
-(2) Statistical Modeling
-(2) System Tools
-(2) TH
-(2) Templating
-(2) URI
-(2) Unification
-(2) Unsafe
-(2) Ur/Web
-(2) Video
-(2) Visual Programming
-(2) Visualization
-(2) Vulkan
-(2) Wai
-(2) WebDriver
-(2) Workflow
-(2) Zippers
-(20) Data Mining
-(20) IO-Streams
-(21) Editor
-(21) JavaScript
-(21) Monad
-(212) Concurrency
-(22) Aviation
-(22) Parser
-(23) CLI
-(23) Documentation
-(23) Error Handling
-(23) GHC
-(23) Serialization
-(245) Data Structures
-(25) Code Generation
-(25) Crypto
-(25) Failure
-(25) Other
-(25) Records
-(251) Game
-(26) Application
-(26) Embedded
-(28) Education
-(29) Test
-(3) Accessibility
-(3) Apple
-(3) Array
-(3) ByteString
-(3) CLI Tool
-(3) Database Testing Web
-(3) Databases
-(3) Datamining
-(3) Debugging
-(3) Dhall
-(3) Disassembler
-(3) Eden
-(3) Fedora
-(3) File Manager
-(3) Font
-(3) Framework
-(3) General
-(3) Haskell2010
-(3) Image Viewer
-(3) Logic Programming
-(3) Machine Vision
-(3) Middleware
-(3) Model
-(3) Multimedia
-(3) Mutable State
-(3) Neovim
-(3) Potoki
-(3) Preprocessor
-(3) Quantum
-(3) QuickCheck
-(3) RSS
-(3) Raspberrypi
-(3) Reverse Engineering
-(3) Safe
-(3) Scheduling
-(3) Semantic Web
-(3) Service
-(3) Shell
-(3) Svg
-(3) TOML
-(3) Transformation
-(3) Unicode
-(3) Unknown
-(3) User-interface
-(30) API
-(30) Game Engine
-(308) Testing
-(31) Formal Methods
-(311) Unclassified
-(32) Library
-(32) Physics
-(32) Reactivity
-(33) Configuration
-(33) Enumerator
-(33) Streaming
-(34) Lenses
-(34) Logic
-(34) Security
-(34) Snap
-(344) Cloud
-(36) Dependent Types
-(36) Graphs
-(36) Type System
-(37) Servant
-(38) Template Haskell
-(38) Tools
-(4) ADSB
-(4) Algorithm
-(4) Argumentation
-(4) Avers
-(4) C
-(4) Charts
-(4) Classification
-(4) Command Line Tool
-(4) Data Structure
-(4) Desktop Environment
-(4) GitHub
-(4) Graph
-(4) IO
-(4) Languages
-(4) Mail
-(4) Maths
-(4) Microcontroller
-(4) N2O
-(4) Operating System
-(4) Polymorphism
-(4) Reactive
-(4) STM32
-(4) Schema
-(4) Software
-(4) Stomp
-(4) Stratux
-(4) Succinct Data Structures
-(4) Tree
-(4) Types
-(4) Uniform
-(4) UserInterface
-(4) Value
-(40) Parallelism
-(42) Bindings
-(42) Debug
-(42) Logging
-(42) Time
-(42) Utility
-(425) Database
-(43) Algebra
-(44) Theorem Provers
-(47) Pipes
-(5) Arrows
-(5) Bio
-(5) Bsd3
-(5) Cloud Haskell
-(5) Command Line Tools
-(5) Conversion
-(5) Data Science
-(5) Debian
-(5) Functions
-(5) Games
-(5) Generic
-(5) HTTP
-(5) Linguistics
-(5) Message-Oriented Middleware
-(5) Mobile
-(5) Parsers
-(5) Password
-(5) Phantom Types
-(5) Pup-Events
-(5) QuasiQuotes
-(5) Refactoring
-(5) Spam
-(5) TODO
-(5) Util
-(5) XMonad
-(51) ACME
-(51) Statistics
-(52) Numeric
-(53) Compiler
-(54) Hardware
-(553) Graphics
-(560) Math
-(57) Finance
-(57) Machine Learning
-(590) Language
-(6) Animation
-(6) Bit
-(6) Build
-(6) CLR
-(6) Client
-(6) Compilers
-(6) Containers
-(6) DSL
-(6) Distributed Systems
-(6) Ethereum
-(6) File
-(6) Foreign Binding
-(6) Hash
-(6) LaTeX
-(6) Money
-(6) NLP
-(6) Regex
-(6) Scripting
-(6) Simple
-(6) String
-(6) Swagger
-(6) Syntax
-(6) Typography
-(62) Numerical
-(66) Conduit
-(67) AI
-(68) GUI
-(680) Development
-(687) System
-(7) Browser
-(7) Chemistry
-(7) Clustering
-(7) Demo
-(7) Exceptions
-(7) Metrics
-(7) Options
-(7) Robotics
-(7) Shake
-(7) Static Analysis
-(7) Teaching
-(7) Vector
-(7) Zift
-(705) Control
-(74) Prelude
-(74) User Interfaces
-(76) FRP
-(79) Foreign
-(79) JSON
-(8) ATS
-(8) Business
-(8) Categories
-(8) Codecs
-(8) Command Line
-(8) Compatibility
-(8) Compiler Plugin
-(8) Functors
-(8) Interfaces
-(8) Performance
-(8) Pugs
-(8) Recursion
-(8) Source-tools
-(8) Template
-(8) Terminal
-(8) Tonatona
-(83) Console
-(855) Text
-(86) Utils
-(88) Music
-(89) Monads
-(89) Natural Language Processing
-(9) .NET
-(9) FFI Tools
-(9) Formal Languages
-(9) Hasql
-(9) Lens
-(9) Monitoring
-(9) PDF
-(9) Validity
-(98) Yesod
-(99) Generics
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
@@ -1210,6 +1169,55 @@ Example:
           (puthash k v TABLE)))
 
       TABLE)))
+
+;;----------------------------------------------;;
+
+(cl-defun cabal-read-string (&key prompt)
+
+  "Read a haskell string.
+
+Escapes:
+
+• double-quotes (i.e. « \" »).
+
+Related:
+
+• `'."
+
+  (interactive)
+
+  (let ((PROMPT (or prompt "String"))
+        (escape (if (require 'json nil :no-error)
+                    #'json-encode-string
+                  #'prin1-to-string))
+        )
+
+    (funcall escape
+     (read-string (format "%s: " PROMPT)))))
+
+
+;;----------------------------------------------;;
+;; Commands ------------------------------------;;
+;;----------------------------------------------;;
+
+(defun cabal-insert-field-category (categories)
+
+  "Insert one-or-more strings, for the « category » field.
+
+Inputs:
+
+• CATEGORIES — a `listp' of `stringp'.
+
+Completion:
+
+• `cabal-read-field-category'."
+
+  (interactive (list (cabal-read-field-category)))
+
+  (let ((STRING (string-trim (string-join categories ", ")))
+        )
+
+    (insert STRING)))
 
 ;;----------------------------------------------;;
 ;; Variables: "Private" ------------------------;;
@@ -1283,35 +1291,71 @@ Related:
   (interactive)
 
   (let ((prompt     "")
-        (candidates )
+        (candidates ())
         )
 
     (completing-read (format "%s: " prompt) candidates)))
 
 ;;----------------------------------------------;;
 
-(cl-defun cabal-read-string (&key prompt)
+(defun cabal-read-field-category ()
 
-  "Read a haskell string.
+  "Read one-or-more strings, for the « category » field.
 
-Escapes:
+Output:
 
-• double-quotes (i.e. « \" »).
+• a `listp' of `stringp'.
 
-Related:
+Completion:
 
-• `'."
+• `cabal-field-categories'."
 
   (interactive)
 
-  (let ((PROMPT (or prompt "String"))
-        (escape (if (require 'json nil :no-error)
-                    #'json-encode-string
-                  #'prin1-to-string))
+  (let ((prompt     "Category")
+        (candidates cabal-field-categories)
         )
 
-    (funcall escape
-     (read-string (format "%s: " PROMPT)))))
+    (completing-read (format "%s: " prompt) candidates)))
+
+;; `read-
+
+;;----------------------------------------------;;
+
+(defun cabal-read-field-optimization ()
+
+  "Read one-or-more strings, for the « category » field.
+
+Output:
+
+• an `integerp'.
+
+Completion:
+
+• `cabal-field-categories'."
+
+  (interactive)
+
+  (let ((PROMPT  "Optimization level:")
+        (CHOICES '((?0 "0")
+                   (?1 "1")
+                   (?2 "2")
+                   ))
+        )
+
+    (let* ((CHOSEN (read-multiple-choice PROMPT CHOICES))
+           (LEVEL  (string-to-number (nth 1 CHOSEN)))
+           )
+
+      LEVEL)))
+
+;; `read-multiple-choice':
+;; 
+;; (read-multiple-choice "Continue connecting?"
+;;                       '((?a "always")
+;;                         (?s "session only")
+;;                         (?n "no")))
+;;
 
 ;;----------------------------------------------;;
 
@@ -1335,6 +1379,39 @@ Related:
   (require 'pkg-info)
 
   (pkg-info-version-info 'cabal))
+
+;;----------------------------------------------;;
+;; Keymaps -------------------------------------;;
+;;----------------------------------------------;;
+
+;; Keyboard:
+
+;;----------------------------------------------;;
+
+;; Menubar:
+
+;; (defvar cabal-map nil
+;;   "Local keymap for cabal buffers.")
+;;
+;; (if cabal-map
+;;   nil
+;;   (let ((map (make-keymap)))
+;;     (define-key map "\^c\^c" 'cabal-read-current-file)
+;;     (define-key map "\^c\^h" 'cabal-man)
+;;     (define-key map "\^c\^s" 'cabal-shell-command)
+;;     (easy-menu-define
+;;       cabal-easy-menu map
+;;       "Menu for Cabal mode."
+;;       '("Cabal"
+;; 	 ["Read current file" cabal-read-current-file t]
+;; 	 ["Start cabal command" cabal-shell-command t]
+;; 	 ["-" nil t]
+;; 	 ["Cabal manual page" cabal-man t]))
+;;     (setq cabal-map map)))
+
+;;----------------------------------------------;;
+
+;; Toolbar:
 
 ;;----------------------------------------------;;
 ;; Mode ----------------------------------------;;
@@ -1499,6 +1576,8 @@ Related:
 ;; =======================
 ;; `cabal.project' fields
 ;; =======================
+
+;;----------------------------------------------;;
 
 ;; See:
 ;;
