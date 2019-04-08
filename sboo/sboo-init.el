@@ -1696,8 +1696,8 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
      ))
 
-  (dolist ()
-    (wrap-region-add-wrapper LEFT RIGHT KEY '(html-mode mhtml-mode)))
+  (when (bound-and-true-p sboo-html-wrap-region-table)
+    (wrap-region-add-wrappers (sboo-html-wrap-region-table)))
 
   (wrap-region-mode +1))
 

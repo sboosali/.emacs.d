@@ -356,7 +356,7 @@ Related:
          (ATTRIBUTES-STRING (sboo-html-attributes-format ATTRIBUTES-PLIST))
          )
 
-    (if ATTRIBUTES-STRING
+    (if (and ATTRIBUTES-STRING (not (equal "" ATTRIBUTES-STRING)))
         (format "<%s %s>" element ATTRIBUTES-STRING)
       (format "<%s>" element))))
 
@@ -508,6 +508,9 @@ Example:
 
     TABLE))
 
+;; M-: (sboo-html-wrap-region-table)
+;;
+
 ;;----------------------------------------------;;
 
 (cl-defun sboo-html-wrap-region-entry (element &key alias)
@@ -523,7 +526,7 @@ Example:
     (list LEFT RIGHT KEY MODES)))
 
 ;; M-: (sboo-html-wrap-region-entry "code" :alias "c")
-;;   ⇒ '
+;;   ⇒ '("<code>" "</code>" "c" (html-mode mhtml-mode markdown-mode gfm-mode))
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
