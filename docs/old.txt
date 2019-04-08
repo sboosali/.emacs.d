@@ -2060,8 +2060,15 @@ xmodmap   = ''${pkgs.xorg.xmodmap}/bin/xmodmap'';
                      compilation-error-type
                      sboo-nix-hyperlink)))
 ;;----------------------------------------------;;
+         (ALIST   (pcase (type-of 'alist)
 
+                    ('symbol (symbol-value alist))
+                    ('cons   alist)
+
+                    (_ :this-keyword-represents-nil-but-isnt-a-listp)))
 ;;----------------------------------------------;;
+  (run-with-idle-timer 5 nil #'sboo-unicode-init)
+  
 
 ;;----------------------------------------------;;
 

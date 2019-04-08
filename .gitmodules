@@ -28,3 +28,9 @@
 [submodule "expand-region"]
 	path = submodules/expand-region
 	url = https://github.com/magnars/expand-region.el
+[submodule "haskell-snippets"]
+	path = submodules/haskell-snippets
+	url = https://github.com/haskell/haskell-snippets
+[submodule "unicode-fonts"]
+	path = submodules/unicode-fonts
+	url = https://github.com/rolandwalker/unicode-fonts

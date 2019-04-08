@@ -16,7 +16,7 @@ EmacsDirectory ?=$(CURDIR)
 
 #------------------------------------------------#
 
-Timestamp ?=$(shell date +%d-%m-%Y+%H:%M)
+Timestamp:=$(shell date +%d-%m-%Y+%H:%M)
 
 #------------------------------------------------#
 
