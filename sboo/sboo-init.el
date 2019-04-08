@@ -1662,6 +1662,91 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
   ())
 
 ;;----------------------------------------------;;
+;; External Packages: Editing ------------------;;
+;;----------------------------------------------;;
+
+(use-package wrap-region
+
+  :config
+
+  (add-to-list 'wrap-region-except-modes 'magit-status-mode)
+
+  (require 'sboo-html nil :no-error)
+
+  (wrap-region-add-wrappers
+
+   '(
+     ("{-" "-}"    ";" (haskell-mode))
+
+     ("/* " " */"  ";" (nix-mode javascript-mode css-mode java-mode))
+
+     ("<!--" "-->" ";" ,(or (bound-and-true-p sboo-html-modes-list) html-mode))
+
+     ;; ^ « ; » (i.e. the semicolon character) is our universal trigger-key for commenting a region.
+     ;;
+     ;;   c.f. « M-; » runs `comment-dwim' across langauges.
+
+     ("`" "`" nil (markdown-mode gfm-mode))
+
+     ;; ^ « <code> » syntax.
+
+     ("%" "%" nil (bat-mode))
+
+     ;; ^ Environment Variable syntax.
+
+     ))
+
+  (dolist ()
+    (wrap-region-add-wrapper LEFT RIGHT KEY '(html-mode mhtml-mode)))
+
+  (wrap-region-mode +1))
+
+;; ^ `wrap-region-add-wrappers':
+;;
+;; e.g.:
+;;
+;;   (wrap-region-add-wrappers
+;;    '(("$" "$")
+;;      ("{-" "-}" "#")
+;;      ("/" "/" nil ruby-mode)
+;;      ("/* " " */" "#" (java-mode javascript-mode css-mode))
+;;      ("`" "`" nil (markdown-mode ruby-mode))))
+;;
+;; `wrap-region-add-wrappers' extends `wrap-region-table'.
+;;
+;; `wrap-region-add-wrappers' calls `wrap-region-add-wrapper'.
+;;
+;; 
+
+;; ^ `wrap-region-table'
+;;
+;; Default `wrap-region-table':
+;;
+;;      '(("\"" "\"")
+;;       ("'"  "'")
+;;       ("("  ")")
+;;       ("{"  "}")
+;;       ("["  "]")
+;;       ("<"  ">"))
+;;
+;; 
+
+;; ^ `wrap-region-add-wrapper':
+;;
+;;   (wrap-region-add-wrapper LEFT RIGHT &optional KEY MODE-OR-MODES)
+;;
+;; >Add new LEFT and RIGHT wrapper.
+;; >
+;; >Optional KEY is the trigger key and MODE-OR-MODES is a single
+;; mode or multiple modes that the wrapper should trigger in.
+;;
+;; 
+
+;;----------------------------------------------;;
+
+
+
+;;----------------------------------------------;;
 ;; External Packages: Miscellaneous ------------;;
 ;;----------------------------------------------;;
 
