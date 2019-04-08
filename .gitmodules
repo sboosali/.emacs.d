@@ -34,3 +34,6 @@
 [submodule "unicode-fonts"]
 	path = submodules/unicode-fonts
 	url = https://github.com/rolandwalker/unicode-fonts
+[submodule "Elsa"]
+	path = submodules/Elsa
+	url = https://github.com/emacs-elsa/Elsa

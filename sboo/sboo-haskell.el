@@ -138,11 +138,27 @@ Associates regexps with faces. See `font-lock-add-keywords'
 (defcustom sboo-haskell-quasi-quote-alist
 
   `(
-    ("bash" . shell-mode)
-    ("sh"   . shell-mode)
+
+    ("sql"  . sql-mode)
+
     ("html" . html-mode)
     ("css"  . css-mode)
     ("js"   . javascript-mode)
+    ("json" . json-mode)
+
+    ("bash" . shell-mode)
+    ("sh"   . shell-mode)
+
+    ;; ("hsx" . xml-mode)
+    ;; ("xmlQQ" . xml-mode)
+    ;; ("xml" . xml-mode)
+    ;; ("cmd" . shell-mode)
+    ;; ("sh_" . shell-mode)
+    ;; ("jmacro" . javascript-mode)
+    ;; ("jmacroE" . javascript-mode)
+    ;; ("r" . ess-mode)
+    ;; ("rChan" . ess-mode)
+    ;; ("aesonQQ" . json-mode)
    )
 
   "Mapping from QuasiQuoter to fontification mode.

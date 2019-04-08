@@ -165,6 +165,7 @@ Defaults to `sboo-comment-length-default'.")
     (bash-mode          . ?\-)
     (python-mode        . ?\-)
     (css-mode           . ?\-)
+    (sql-mode           . ?\-)
 
     )
 
@@ -198,6 +199,7 @@ Defaults to `sboo-comment-infix-character-default'.")
     (python-mode        . "#")
     (css-mode           . "/*")
     (xmodmap-mode       . "!")
+    (sql-mode           . "--")
 
     )
 
@@ -231,6 +233,7 @@ Defaults to `sboo-comment-prefix-string-default'.")
     (python-mode        . "#")
     (css-mode           . "*/")
     (xmodmap-mode       . "!")
+    (sql-mode           . "--")
 
     )
 
@@ -301,8 +304,8 @@ Defaults to `sboo-comment-h1-default'.")
     (bash-mode             . "#------------------------------------------------#")
     (python-mode           . "#------------------------------------------------#")
     (css-mode              . "/* -------------------------------------------- */")
-
     (xmodmap-mode          . "! ---------------------------------------------- !")
+    (sql-mode              . "--------------------------------------------------")
 
     )
 
