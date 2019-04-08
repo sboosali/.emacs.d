@@ -1,0 +1,128 @@
+# -*- mode: snippet -*-
+#
+# key         : file-cli
+# name        : [sboo] a « main » file with « optparse-applicative »
+# condition   : (= (length "file-cli") (current-column))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis
+#
+# --
+--------------------------------------------------
+
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedLists   #-}
+
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE PackageImports    #-}
+
+{-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE RecordWildCards       #-}
+{-# LANGUAGE NamedFieldPuns        #-}
+{-# LANGUAGE BlockArguments        #-}
+{-# LANGUAGE ApplicativeDo         #-}
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+$0
+
+-}
+
+module Main where
+
+--------------------------------------------------
+-- Imports ---------------------------------------
+--------------------------------------------------
+
+import qualified "optparse-applicative" Options.Applicative      as P
+import qualified "optparse-applicative" Options.Applicative.Help as P hiding (fullDesc)
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+import qualified "base" Control.Exception   as E
+import qualified "base" System.Environment  as IO
+
+import           "base" System.Exit
+
+--------------------------------------------------
+
+import           "base" Data.Foldable
+import           "base" Data.Monoid
+
+--------------------------------------------------
+
+import "base" Prelude
+
+--------------------------------------------------
+-- Main ------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+main :: IO ()
+main = do
+
+  IO.getArgs >>= mainWith
+
+--------------------------------------------------
+
+{-| 
+
+-}
+
+mainWith :: [String] -> IO ()
+mainWith arguments = do
+
+  putStrLn "\n----------------------------------------\n"
+
+  putStrLn \`traverse_\` arguments
+
+  putStrLn "\n----------------------------------------\n"
+
+  $0
+
+  return ()
+
+--------------------------------------------------
+-- Types -----------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+--------------------------------------------------
+-- CLI -------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+--------------------------------------------------
+-- Functions -------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+--------------------------------------------------
+-- Utilities -------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+--------------------------------------------------
+-- EOF -------------------------------------------
+--------------------------------------------------

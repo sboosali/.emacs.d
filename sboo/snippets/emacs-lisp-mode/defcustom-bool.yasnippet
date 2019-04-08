@@ -13,10 +13,13 @@
 
   ${2:nil}
 
-  "$0 (a `booleanp')."
+  "$0
 
-  :type '(boolean :tag "$3")
+a `booleanp'."
 
-  :safe  t
+  :type '(choice (const :tag "${3:Off}" nil)
+                 (const :tag "${4:On }" t))
+
+  :safe #'booleanp
   :group 'sboo)
 

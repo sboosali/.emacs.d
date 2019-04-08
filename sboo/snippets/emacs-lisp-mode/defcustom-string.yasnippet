@@ -13,10 +13,12 @@
 
   ${2:""}
 
-  "$0 (a `stringp')."
+  "$0
+
+a `stringp'."
 
   :type '(string :tag "$3")
 
-  :safe  t
+  :safe #'stringp
   :group 'sboo)
 

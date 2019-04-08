@@ -1,21 +1,15 @@
 # -*- mode: snippet -*-
 #
-# key         : script
-# name        : a « cabal » script.
+# key         : file-stack-script
+# name        : [sboo] a « stack » script.
 # type        : snippet
-# condition   : (let ((KEY "script")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# condition   : (let ((KEY "file-stack-script")) (= (current-column) (string-width KEY)))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
-#!/usr/bin/env cabal
+#!/usr/bin/env stack
 
-{- cabal:
-
-  build-depends: base   ^>= 4.12
-               , spiros ^>= 0.2
-
--}
 
 --------------------------------------------------
 --- Extensions -----------------------------------
