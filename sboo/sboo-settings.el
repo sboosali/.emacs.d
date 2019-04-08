@@ -449,20 +449,6 @@
 ;; 
 ;; 
 
-(dolist (CONS '(("hs" . "*.hs")
-                ("md" . "*.md")
-                ))
-  (add-to-list 'grep-files-aliases CONS))
-
-;; `grep-files-aliases':
-;;
-;;     (("all" . "* .[!.]* ..?*")
-;;      ("el" . "*.el")
-;;      ("ch" . "*.[ch]")
-;;      ...)
-;;
-;; 
-
 ;; `grep-history':
 ;;
 ;; grep-history

@@ -376,8 +376,6 @@ Related:
 
 ;;==============================================;;
 
-(setq custom-file sboo-custom-file)
-
 ;;----------------------------------------------;;
 ;; Register ------------------------------------;;
 ;;----------------------------------------------;;
@@ -404,22 +402,23 @@ Related:
 ;;----------------------------------------------;;
 
 (ignore-errors
+  (setq custom-file sboo-custom-file))
 
-  (sboo-load-file! "sboo-settings.el")
-  (sboo-load-file! "sboo-keybindings.el")
-  (sboo-load-file! "sboo-aliases.el")
-  (sboo-load-file! "sboo-commands.el")
+;;----------------------------------------------;;
 
-  ;; ^ NOTE `load' these files (rather than `require' them)
-  ;;        because they execute statements (rather than `provide' definitions).
-  ;;
-  ;;        Later configuration (i.e. `sboo-*' features) musn't depend on them
-  ;;        (whether explicitly via `require' or implicitly via reference).
-  ;;        Instead, « sboo-utilities.el » has any general-purpose dependencies.
-  ;;        Hence, we `ignore-errors' (rather than aborting the configuration).
-  ;;
+(ignore-errors (sboo-load-file! "sboo-settings.el"))
+(ignore-errors (sboo-load-file! "sboo-keybindings.el"))
+(ignore-errors (sboo-load-file! "sboo-aliases.el"))
+(ignore-errors (sboo-load-file! "sboo-commands.el"))
 
-  ())
+;; ^ NOTE `load' these files (rather than `require' them)
+;;        because they execute statements (rather than `provide' definitions).
+;;
+;;        Later configuration (i.e. `sboo-*' features) musn't depend on them
+;;        (whether explicitly via `require' or implicitly via reference).
+;;        Instead, « sboo-utilities.el » has any general-purpose dependencies.
+;;        Hence, we `ignore-errors' (rather than aborting the configuration).
+;;
 
 ;;----------------------------------------------;;
 ;; Themes --------------------------------------;;
@@ -612,6 +611,28 @@ Related:
   (add-startup-hook! #'sboo-compilation-config!))
 
 ;;==============================================;;
+
+(use-package grep
+
+  :config
+
+  (dolist (CONS '(("hs" . "*.hs")
+                  ("md" . "*.md")
+                  ))
+    (add-to-list 'grep-files-aliases CONS))
+
+  ())
+
+;; `grep-files-aliases':
+;;
+;;     (("all" . "* .[!.]* ..?*")
+;;      ("el" . "*.el")
+;;      ("ch" . "*.[ch]")
+;;      ...)
+;;
+;;
+
+;;----------------------------------------------;;
 
 (use-package ansi-color
 

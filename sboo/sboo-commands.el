@@ -1802,7 +1802,7 @@ an `integerp'."
   :type '(integer :tag "Size")
 
   :safe #'integerp
-  :group sboo)
+  :group 'sboo)
 
 ;;----------------------------------------------;;
 
@@ -1815,7 +1815,7 @@ a `stringp'."
   :type '(string :tag "Name")
 
   :safe #'stringp
-  :group sboo)
+  :group 'sboo)
 
 ;;----------------------------------------------;;
 
