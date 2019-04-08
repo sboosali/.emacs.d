@@ -870,12 +870,22 @@ Related:
 
 ;;----------------------------------------------;;
 
-;; no multiframe ediff please
+;; no multiframe ediff
 (use-package ediff
   :defer t
   :config (setq ediff-window-setup-function 'ediff-setup-windows-plain))
 
 ;;----------------------------------------------;;
+
+(use-package sql
+  :defer t
+
+  :config
+
+  (when (require 'sboo-sql nil :no-error)
+    ())
+
+  ())
 
 ;;----------------------------------------------;;
 ;; Internal Packages: Settings -----------------;;
@@ -1156,8 +1166,6 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
     (dolist (QQ sboo-haskell-quasi-quote-alist)
       (add-to-list 'haskell-font-lock-quasi-quote-modes QQ))
 
-    
-    
     (when (require 'sboo-ghc nil :no-error)
 
       (dolist (EXTENSION sboo-ghc-language-extensions)

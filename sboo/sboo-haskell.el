@@ -109,6 +109,32 @@ Links:
 
 ;;----------------------------------------------;;
 
+(defcustom sboo-haskell-font-lock-alist
+
+  '(
+    (,(rx word-start (group-n 1 "TODO") word-end) 1 font-lock-warning-face t)
+    ;; ("" . font-lock-)
+    ;; ("" . font-lock-)
+    ;; ("" . font-lock-)
+   )
+
+  "Extra keywords (to fontify) for Haskell files.
+
+Associates regexps with faces. See `font-lock-add-keywords' 
+
+(This only affects display, not navigation.)"
+
+  :type '(alist :key-type   (regexp)
+                :value-type (string :tag "Face"))
+
+  :safe #'listp
+  :group 'sboo-haskell)
+
+;; M-: (rx word-start (group-n 1 "TODO") word-end)
+;;   ⇒ "\\<\\(?1:TODO\\)\\>"
+
+;;----------------------------------------------;;
+
 (defcustom sboo-haskell-quasi-quote-alist
 
   `(
@@ -138,6 +164,7 @@ Extends `haskell-font-lock-quasi-quote-modes'."
 
   (list #'sboo-haskell-prettify-symbols
         #'sboo-haskell-set-compile-command
+ ;;TODO #'sboo-haskell-font-lock-add-keywords
         )
 
   "Hooks for `haskell-mode'.
@@ -214,7 +241,29 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
 ;; e.g. a `dante' buffer: « *dante:spiros:lib:spiros:~/haskell/spiros/* »
 
 ;;----------------------------------------------;;
-;; Functions -----------------------------------;;
+;; Functions: `font-lock' ----------------------;;
+;;----------------------------------------------;;
+
+(cl-defun sboo-haskell-font-lock-add-keywords (&key (mode nil))
+
+  "Call `font-lock-add-keywords'.
+
+Examples:
+
+• M-: (sboo-haskell-font-lock-add-keywords :mode 'haskell-mode)
+• M-: (sboo-haskell-font-lock-add-keywords :mode nil)
+"
+
+  (let* ((KEYWORD-ALIST sboo-haskell-font-lock-alist)
+         (KEYWORD-LIST  KEYWORD-ALIST)
+         )
+
+    (font-lock-add-keywords mode KEYWORD-LIST)))
+
+;; e.g. '("\\<\\(FIXME\\):" 1 font-lock-warning-face t)
+
+;;----------------------------------------------;;
+;; Functions: `compile' ------------------------;;
 ;;----------------------------------------------;;
 
 (cl-defun sboo-haskell-set-compile-command (&key buffer)
@@ -351,7 +400,7 @@ Output:
                     FILE)))
 
 ;;----------------------------------------------;;
-;; ElDoc ---------------------------------------;;
+;; Functions: `eldoc' --------------------------;;
 ;;----------------------------------------------;;
 
 (defun sboo-haskell-doc-current-info ()
@@ -387,18 +436,7 @@ Output:
 ;; TODO (make-local-variable 'eldoc-documentation-function) (setq eldoc-documentation-function 'scheme-get-current-symbol-info)
 
 ;;----------------------------------------------;;
-;; Hacks ---------------------------------------;;
-;;----------------------------------------------;;
-
-;;TODO rm (defun haskell-mode-after-save-handler () (progn))
-
- ;; ^ HACK fixes this pseudo-error:
- ;;
- ;;     Error running timer ‘real-auto-save-buffers’: (void-function haskell-mode-after-save-handler)
- ;; 
-
-;;----------------------------------------------;;
-;; Dante ---------------------------------------;;
+;; Functions: `dante' --------------------------;;
 ;;----------------------------------------------;;
 
 (defun sboo-dante-cabal-new-repl (root)
@@ -421,7 +459,7 @@ Output:
 
   "Override `dante-repl-command-line-methods-alist'.")
 
-;;==============================================;;
+;;----------------------------------------------;;
 
 (defun sboo-dante-mode ()
   
@@ -438,8 +476,12 @@ Output:
    (dante-mode 1)))
 
 ;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
 
 (defun sboo-haskell-prettify-symbols ()
+
+  "Extend `prettify-symbols-alist' with `sboo-haskell-prettify-symbols-alist'."
 
   (interactive)
 
@@ -450,7 +492,7 @@ Output:
     (progn
       (setq-local prettify-symbols-alist sboo-haskell-prettify-symbols-alist)
 
-      (prettify-symbols-mode 1))))
+      (prettify-symbols-mode +1))))
 
 ;;----------------------------------------------;;
 
@@ -496,6 +538,17 @@ Related:
 ;; `help-echo' — a String or a Function. when the character is hovered over, emacs shows a Tooltip with the `help-echo` String (a Tooltip is either displayed in the Echo Area, or in a popup Tooltip Window). the Function has type `{window, object, position} -> String`.
 ;; (insert (sboo-add-help-echo :echo "help-echo" :string "xyz"))
 ;; (insert (propertize "xyz" 'help-echo "help-echo"))
+
+;;----------------------------------------------;;
+;; Hacks ---------------------------------------;;
+;;----------------------------------------------;;
+
+;;TODO rm (defun haskell-mode-after-save-handler () (progn))
+
+ ;; ^ HACK fixes this pseudo-error:
+ ;;
+ ;;     Error running timer ‘real-auto-save-buffers’: (void-function haskell-mode-after-save-handler)
+ ;; 
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

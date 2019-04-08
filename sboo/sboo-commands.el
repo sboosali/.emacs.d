@@ -1843,6 +1843,38 @@ Examples:
     (set-frame-font (format "%s %d" FONT-NAME FONT-SIZE) nil t)))
 
 ;;==============================================;;
+;; SQL...
+
+(defun sboo-sql-postgres-mtg ()
+
+  "Connect to the « M:TG-SQL » (PostgreSQL) database (via a `psql' shell).
+
+Links:
+
+• URL `'
+
+Related:
+
+• `sql-postgres'"
+
+  (interactive)
+
+  (let* ((sql-user     "sboo")
+         (sql-database "mtgsql")        ; "postgresql:///mtgsql"
+         (sql-server   "")
+
+         (sql-postgres-options '())
+        )
+
+    (call-interactively #'sql-postgres)))
+
+;; ^ `sql-postgres':
+;;
+;; Interpreter used comes from variable ‘sql-postgres-program’.  Login uses
+;; the variables ‘sql-database’ and ‘sql-server’ as default, if set.
+;; Additional command line parameters can be stored in the list
+;; ‘sql-postgres-options’.
+;;
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
