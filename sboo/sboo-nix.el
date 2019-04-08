@@ -166,11 +166,25 @@ line in « nix-build »'s stdout."
 
 ;; TODO
 
-(let* ((REGEX sboo-nix-build-compilation-error-rx)
-       (LINE  "error: attribute 'XF86Tools' at ./x11/lib/keycodes.nix:175:2 already defined at ./x11/lib/keycodes.nix:166:2")
-       )
+;; (let* ((G-FILENAME 1)
+;;        (G-LINE     2)
+;;        (G-COLUMN   3)
+;;        (REGEX      (rx bos
+;;                        " at "
+;;                        (group-n 1 (1+ (any "./~" "a-f" "A-F" "0-9")) ".nix")
+;;                        (? ":" (group-n 2 (1+ digit))
+;;                           (? ":" (group-n 3 (1+ digit))))
+;;                        eos))
+;;        )
 
-  ( REGEX LINE))
+;;   (let* ((LINE "error: attribute 'XF86Tools' at ./x11/lib/keycodes.nix:175:2 already defined at ./x11/lib/keycodes.nix:166:2")
+;;          )
+
+;;     (string-match REGEX LINE)
+
+;;     `(:file   ,(expand-file-name (match-string G-FILENAME LINE))
+;;       :line   ,(string-to-number (match-string G-LINE     LINE))
+;;       :column ,(string-to-number (match-string G-COLUMN   LINE)))))
 
 ;;----------------------------------------------;;
 

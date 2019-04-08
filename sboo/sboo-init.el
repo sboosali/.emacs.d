@@ -880,13 +880,21 @@ Related:
 
 ;;----------------------------------------------;;
 
-(when (require 'sboo-unicode nil :no-error)
+(ignore-errors
 
-  ())
+  (when (require 'sboo-unicode nil :no-error)
+
+    ;;(add-startup-hook! #'sboo-unicode-init)
+
+    (sboo-unicode-init)))
 
 ;;----------------------------------------------;;
 
+(ignore-errors
 
+  (when (require 'sboo-comment nil :no-error)
+
+    ()))
 
 ;;----------------------------------------------;;
 ;; External Packages: Installation -------------;;

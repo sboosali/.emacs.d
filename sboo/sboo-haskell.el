@@ -48,19 +48,19 @@
 
 ;;==============================================;;
 
-(defcustom sboo-haskell-eldoc nil
+(defcustom sboo-haskell-compile-command-default
 
-  "Which type-provider `sboo-haskell-doc-current-info' will call.
+  (format-message "%s"
+                  "cabal new-build all")
 
-Each symbol represents a particular type (/ info / docs / etc) provider."
+  "Default `compile-command' for `haskell-mode' buffers.
 
-  :type '(choice (const nil)
-                 (const dante
-                        :tag "`dante-type-at'"))
+a `stringp'."
 
-  :safe t
+  :type '(string :tag "Command-Line")
 
-  :group 'sboo-haskell)
+  :safe #'stringp
+  :group 'sboo)
 
 ;;----------------------------------------------;;
 
@@ -144,7 +144,6 @@ Extends `haskell-font-lock-quasi-quote-modes'."
 
   (list #'sboo-haskell-prettify-symbols
         #'sboo-haskell-set-compile-command
-        #'subword-mode
         )
 
   "Hooks for `haskell-mode'.
@@ -190,6 +189,22 @@ How `dante' will launch GHCi."
   :safe  t
   :group 'sboo-haskell)
 
+;;----------------------------------------------;;
+
+(defcustom sboo-haskell-eldoc nil
+
+  "Which type-provider `sboo-haskell-doc-current-info' will call.
+
+Each symbol represents a particular type (/ info / docs / etc) provider."
+
+  :type '(choice (const nil)
+                 (const dante
+                        :tag "`dante-type-at'"))
+
+  :safe t
+
+  :group 'sboo-haskell)
+
 ;;==============================================;;
 
 (defvar sboo-dante-display-buffer
@@ -206,23 +221,138 @@ How `dante' will launch GHCi."
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
-(defun sboo-haskell-set-compile-command ()
+(cl-defun sboo-haskell-set-compile-command (&key buffer)
 
-  "Set `compile-command' from « .dir-locals.el » and « .project ».
+  "Set `compile-command' to to `sboo-haskell-get-compile-command'.
 
-Files:
+See:
 
+• `sboo-haskell-set-compile-command'"
+
+  (let* ((COMPILE-COMMAND (sboo-haskell-get-compile-command :buffer buffer))
+         )
+
+    (setq-local compile-command COMPILE-COMMAND)))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-haskell-get-compile-command (&key buffer)
+
+  "Guess a `compile-command' for a Haskell file.
+
+Uses:
+
+• the « #!/bin/env cabal » “shebang”.
 • the file-buffer's « .dir-locals.el » file.
 • the dominating « .project » file.
-• the dominating « .cabal » file."
+• the dominating « .cabal » file.
+
+Links:
+
+• `interpreter-mode-alist'"
 
   ;TODO get component from .dir-locals.el, like « sboo-cabal-target ».
   ;TODO get project-root from locate-dominating-file cabal.project.
   ;TODO get default-directory from subdirectory of project-root
 
-  (setq-local compile-command
-              (format-message "%s"
-                              "cabal new-build all")))
+  (let* ((FILE (if buffer (buffer-file-name) nil))
+
+         (COMPILE-COMMAND
+
+          (pcase (sboo-haskell-guess-compile-command :buffer buffer)
+
+            ('cabal (sboo-haskell-compile-command-cabal-script :file FILE))
+            ('stack (sboo-haskell-compile-command-stack-script :file FILE))
+
+            (_      sboo-haskell-compile-command-default)))
+         )
+
+    COMPILE-COMMAND))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-haskell-guess-compile-command (&key buffer)
+
+  "Guess which kind of compiler should compile the Haskell BUFFER.
+
+Inputs:
+
+• BUFFER — a `bufferp'.
+  Defaults to `current-buffer'.
+
+Output:
+
+• a `symbolp' or
+  One of:
+
+    • `nil'
+    • `cabal'
+    • `stack'
+    • `ghc' (TODO)
+    • `ghcjs' (TODO)"
+
+  (let* ((BUFFER (or buffer (current-buffer)))
+         )
+
+    (with-current-buffer BUFFER
+
+      (let* ((STRING
+
+              ;; (copy-pasted from `set-auto-mode'):
+
+              (save-excursion
+		(goto-char (point-min))
+		(if (looking-at auto-mode-interpreter-regexp)
+		    (match-string 2))))
+
+             (SYMBOL (intern STRING))
+             )
+
+        SYMBOL))))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-haskell-compile-command-cabal-script (&key file)
+
+  "A `compile-command' that `cabal-run's FILE.
+
+Inputs:
+
+• FILENAME — a `stringp'.
+  Defaults to `buffer-file-name'.
+
+Output:
+
+• a `stringp'."
+
+  (let* ((FILE (or file buffer-file-name (read-file-name "Haskell File: ")))
+         )
+
+    (format-message "%s %s"
+                    "cabal new-run"
+                    FILE)))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-haskell-compile-command-stack-script (&key file)
+
+  "A `compile-command' that runs FILE via `stack-script'.
+
+Inputs:
+
+• FILENAME — a `stringp'.
+  Defaults to `buffer-file-name'.
+
+Output:
+
+• a `stringp'."
+
+  (let* ((FILE (or file buffer-file-name (read-file-name "Haskell File: ")))
+         )
+
+    (format-message "%s %s"
+                    "stack script"
+                    FILE)))
 
 ;;----------------------------------------------;;
 ;; ElDoc ---------------------------------------;;

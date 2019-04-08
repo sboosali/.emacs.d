@@ -159,16 +159,27 @@ e.g. `lisp-mode', `haskell-mode', `nix-mode', etc).
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
-;; See 
-;;     - https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-font-check.el
-;;     - https://emacs.stackexchange.com/questions/3038/using-a-different-font-for-each-major-mode
-;;     - https://www.emacswiki.org/emacs/FacesPerBuffer
+;; Noto (Noto Sans Symbols)
+;;
+;; TODO use Noto, a typeface with one of the largest coverages of Unicode, for the minibuffer font.
+;;
 ;; 
 ;;
 
-;; [Font Test] char and monospace:
+; [Font Test] char and monospace:
 ;; 0123456789abcdefghijklmnopqrstuvwxyz [] () :;,. !@#$^&*
 ;; 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ {} <> "'`  ~-_/|\?
+
+;; Links:
+;;
+;; • URL `https://github.com/rolandwalker/unicode-fonts'
+;; • URL `http://ergoemacs.org/emacs/emacs_minibuffer_font_size.html'
+;; • URL `https://stackoverflow.com/questions/7869429/altering-the-font-size-for-the-emacs-minibuffer-separately-from-default-emacs'
+;;
+;; • URL `https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-font-check.el'
+;; • URL `https://emacs.stackexchange.com/questions/3038/using-a-different-font-for-each-major-mode'
+;; • URL `https://www.emacswiki.org/emacs/FacesPerBuffer'
+;;
 
 ;;==============================================;;
 (provide 'sboo-fonts)

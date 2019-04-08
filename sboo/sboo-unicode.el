@@ -669,6 +669,19 @@ Related:
 ;; TODO e.g. with `M-x set-input-method RET TeX RET`, typing `\xi` inputs `ξ`.
 
 ;;----------------------------------------------;;
+
+(defun sboo-unicode-init ()
+
+  "Initialize `sboo-ucs-names-table' and `sboo-ucs-names-list'.
+
+Guards the computations via `run-with-idle-timer' (they may take several seconds.)"
+
+  (run-with-idle-timer 5 nil #'sboo-ucs-names-table :only-interesting t)
+  (run-with-idle-timer 6 nil #'sboo-ucs-names-list  :only-interesting t :annotate t)
+
+  ())
+
+;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 
@@ -1170,6 +1183,15 @@ Related:
     (cl-stable-sort SUPERLIST-COPY COMPARE)))
 
 ;;----------------------------------------------;;
+;; TODO ----------------------------------------;;
+;;----------------------------------------------;;
+
+;; (defun sboo-unicode-insert-char-minibuffer-setup ()
+;;        (set (make-local-variable 'face-remapping-alist)
+;;           '((default :height 1.5))))
+;; (add-hook 'minibuffer-setup-hook #'sboo-unicode-insert-char-minibuffer-setup)
+
+;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
@@ -1300,6 +1322,19 @@ Related:
 ;; 
 ;; M-: (cl-position "y" '("x" "y" "z" "y") :test #'equal)
 ;;     1
+;;
+
+;; `run-with-idle-timer':
+;; 
+;;   (run-with-idle-timer SECS REPEAT FUNCTION &rest ARGS)
+;; 
+;; M-: (run-with-idle-timer 5 nil #'+ 1 2)
+;; M-: (run-with-idle-timer 5 nil #'message "emacs has been idle for (at least) 5 seconds")
+;;
+;; >Perform an action the next time Emacs is idle for SECS seconds.
+;; >The action is to call FUNCTION with arguments ARGS.
+;; >SECS may be an integer or a floating point number.
+;;
 ;; 
 
 ;;; See:

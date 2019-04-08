@@ -133,7 +133,38 @@ Related:
 ;;----------------------------------------------;;
 ;; Filesystem
 ;;----------------------------------------------;;
-;;
+
+
+(defun sboo-read-file (path)
+
+      "Read PATH.
+
+Inputs:
+
+• PATH — a `stringp'. the filepath should:
+
+    • exists, as a file (`file-exists-p').
+    • is readable (`file-readable-p').
+
+Output:
+
+• a `stringp'. 
+
+Links:
+
+• URL `http://ergoemacs.org/emacs/elisp_read_file_content.html'"
+
+  (if (and (file-exists-p path) (file-readable-p path))
+
+    (with-temp-buffer
+      (insert-file-contents path)
+      (buffer-string))
+
+  (progn
+    (message "« sboo-read-file %S »: PATH doesn't exile or isn't readable." path)
+    nil)))
+
+;;----------------------------------------------;;
 
 (defun sboo-find-user-init-file ()
   (interactive)
@@ -849,6 +880,127 @@ Validates N, rounds N."
       (message "%s" STRING))
 
     STRING))
+
+;;==============================================;;
+
+(defun sboo-string-all-uppercase-p (string)
+
+  "Return non-nil iff STRING is all capital (ASCII) letters."
+
+  (save-match-data
+    (let ((case-fold-search nil)
+          )
+      (string-match "\\`[A-Z]+\\'" string))))
+
+;; ^ “Wrap the `string-match' call in a `save-match-data' (so any existing regex match data doesn't get overwritten)”.
+
+;;==============================================;;
+
+(defun explog-desaturate-color (color-hex)
+
+  "Converts a color string to its desaturated equivalent hex string.
+
+URL `https://explog.in/notes/poet.html'."
+
+  (require 'color)
+
+  (apply
+   'color-rgb-to-hex
+   (append (apply
+            'color-hsl-to-rgb
+            (apply
+             'color-desaturate-hsl
+             `(,@(apply 'color-rgb-to-hsl (color-name-to-rgb color-hex)) 100)))
+           '(2))))
+
+;;----------------------------------------------;;.
+
+(defun explog-transform-theme-colors (fn)
+
+  "Apply FN to the colors on every active face.
+
+FN should accept the face symbol and the current color,
+and return the new color to be applied.
+
+URL `https://explog.in/notes/poet.html'."
+
+  (interactive)
+
+  (mapc
+   (lambda (face)
+     (mapc
+      (lambda (attr)
+        (let ((current (face-attribute face attr)))
+          (unless (or (not current)
+                      (listp current)
+                      (string= current "unspecified")
+                      (string= current "t"))
+            (set-face-attribute face nil attr (funcall fn face current)))))
+      '(:foreground :background :underline :overline :box :strike-through
+                    :distant-foreground))
+     (mapc
+      (lambda (complex-attr)
+        (let* ((full (copy-tree (face-attribute face complex-attr)))
+               (current (if (listp full) (member :color full))))
+          (unless (or (not current)
+                      (not (listp full)))
+            (setcar (cdr current) (funcall fn face (cadr current)))
+            (set-face-attribute face nil complex-attr full))))
+      '(:underline :overline :box)))
+   (face-list)))
+
+;;----------------------------------------------;;
+
+(defun explog-desaturate-theme ()
+
+  "As title: desaturate all currently active face colors.
+
+URL `https://explog.in/notes/poet.html'."
+
+  (interactive)
+
+  (explog-transform-theme-colors
+   (lambda (face color)
+     (explog-desaturate-color color))))
+
+;;----------------------------------------------;;
+
+(defun explog-invert-theme ()
+
+  "Take the complement of all currently active colors.
+
+URL `https://explog.in/notes/poet.html'."
+
+  (interactive)
+
+  (require 'color)
+
+  (explog-transform-theme-colors
+   (lambda (face color)
+     (apply
+      'color-rgb-to-hex
+      (color-complement color))))
+  (let ((current-ns-appearance (assoc 'ns-appearance default-frame-alist)))
+    (cond ((eq (cdr current-ns-appearance) 'light)
+           (setf (cdr current-ns-appearance) 'dark))
+          ((eq (cdr current-ns-appearance) 'dark)
+           (setf (cdr current-ns-appearance) 'light)))))
+
+;;==============================================;;
+
+(defun sboo-flyspell-disable-globally ()
+
+  "Globally disable `flyspell-mode'."
+
+(dolist (BUFFER (buffer-list))
+  (with-current-buffer BUFFER
+    (flyspell-mode-off))))
+
+;;==============================================;;
+
+
+
+;;==============================================;;
 
 ;;----------------------------------------------;;
 ;;; Notes: -------------------------------------;;

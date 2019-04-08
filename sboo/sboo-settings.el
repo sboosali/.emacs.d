@@ -266,7 +266,9 @@
 
 ;; (setq switch-to-buffer-preserve-window-point t)
 
-;; (setq select-enable-clipboard t)
+(sboo-custom-set select-enable-clipboard t
+  "Non-nil means: cutting and pasting uses the clipboard.")
+
 ;; (setq select-enable-primary   t)
 
 ;;----------------------------------------------;;
@@ -383,6 +385,20 @@
 ;;----------------------------------------------;;
 ;; Grep:
 
+(sboo-custom-set grep-scroll-output t
+  "Jump to result (`point' at end of output window).")
+
+;; jump to the first result
+
+(sboo-custom-set grep-save-buffers t
+  "Don't ask (just save all buffers).")
+
+(sboo-custom-set grep-highlight-matches always
+  "grep ‘--color=’ (`auto' or `always')")
+
+(sboo-custom-set grep-first-column 1
+  "One-based columns (≡ 1) or Zero-based columns (≡ 0).")
+
 (sboo-custom-set grep-find-template "find -L <D> <X> -type f <F> -exec grep <C> -nH -e <R> \\{\\} +"
 
   "`find-grep' for `nix'. « -L » traverses symlinks (emacs packages installed via « nix » are symlinks).")
@@ -401,6 +417,8 @@
 ;;  <F> - find options to limit the files matched
 ;;  <C> - place to put the grep options like -i and --color
 ;;  <R> - the regular expression searched for.
+;;
+;; For custom placeholders, extend `grep-expand-keywords'.
 ;;
 
 ;; « C-h f `grep-apply-setting' »: 
@@ -430,6 +448,34 @@
 ;;       )
 ;; 
 ;; 
+
+(dolist (CONS '(("hs" . "*.hs")
+                ("md" . "*.md")
+                ))
+  (add-to-list 'grep-files-aliases CONS))
+
+;; `grep-files-aliases':
+;;
+;;     (("all" . "* .[!.]* ..?*")
+;;      ("el" . "*.el")
+;;      ("ch" . "*.[ch]")
+;;      ...)
+;;
+;; 
+
+;; `grep-history':
+;;
+;; grep-history
+;; grep-find-history
+;; grep-files-history
+
+;;----------------------------------------------;;
+;; EShell:
+
+(sboo-custom-set eshell-destroy-buffer-when-process-dies t
+  "“To get rid of those lingering buffers.”")
+
+;;TODO;; (add-hook 'eshell-mode-hook 'sboo-eshell-load-bashrc-aliases)
 
 ;;----------------------------------------------;;
 ;; Settings: non-Customizeable -----------------;;

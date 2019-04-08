@@ -754,405 +754,6 @@ Note:
   (set-input-method nil t))
 
 ;;==============================================;;
-;; Comments ------------------------------------;;
-;;----------------------------------------------;;
-
-(defvar sboo-comment-character-default
-
-  ?#
-
-  "The default comment character.")
-
-;;----------------------------------------------;;
-
-(defvar sboo-comment-infix-character-default
-
-  ?-
-
-  "The default comment character.")
-
-;;----------------------------------------------;;
-
-(defvar sboo-comment-prefix-string-default
-
-  "#"
-
-  "The default comment character(s) at the start of a comment.")
-
-;;----------------------------------------------;;
-
-(defvar sboo-comment-suffix-string-default
-
-  "#"
-
-  "The default comment character(s) at the end of a comment.")
-
-;;----------------------------------------------;;
-
-(defvar sboo-comment-length-default
-
-  50
-
-  "How long comments should be.")
-
-;;----------------------------------------------;;
-
-(defvar sboo-comment-h1-default
-
-  "##################################################"
-
-  "The default comment divider.")
-
-;;----------------------------------------------;;
-
-(defvar sboo-comment-h2-default
-
-  "#------------------------------------------------#"
-
-  "The default comment divider.")
-
-;;----------------------------------------------;;
-
-(defvar sboo-comment-character-alist
-
-  '(
-
-    (haskell-mode       . ?\-)
-    (haskell-cabal-mode . ?\-)
-    (cabal-mode         . ?\-)
-    (cabal-project-mode . ?\-)
-    (emacs-lisp-mode    . ?\;)
-    (scheme-mode        . ?\;)
-    (nix-mode           . ?\#)
-    (bash-mode          . ?\#)
-    (python-mode        . ?\#)
-    (css-mode           . ?*)
-    (html-mode          . ?-)
-
-    )
-
-  "Comment characters per `major-mode'.
-
-Defaults to `sboo-comment-character-default'.")
-
-;;----------------------------------------------;;
-
-(defvar sboo-comment-length-alist
-
-  '(
-    )
-
-  "Comment length per `major-mode'.
-
-Defaults to `sboo-comment-length-default'.")
-
-;;----------------------------------------------;;
-
-(defvar sboo-comment-infix-character-alist
-
-  '(
-
-    (haskell-mode       . ?\-)
-    (haskell-cabal-mode . ?\-)
-    (cabal-mode         . ?\-)
-    (cabal-project-mode . ?\-)
-    (emacs-lisp-mode    . ?\-)
-    (nix-mode           . ?\-)
-    (bash-mode          . ?\-)
-    (python-mode        . ?\-)
-    (css-mode           . ?\-)
-    (html-mode          . ?\-)
-
-    )
-
-  "Comment characters per `major-mode'.
-
-Defaults to `sboo-comment-infix-character-default'.")
-
-;;----------------------------------------------;;
-
-(defvar sboo-comment-prefix-string-alist
-
-  '(
-
-    (haskell-mode       . "--")
-    (haskell-cabal-mode . "--")
-    (cabal-mode         . "--")
-    (cabal-project-mode . "--")
-    (emacs-lisp-mode    . ";;")
-    (nix-mode           . "#")
-    (bash-mode          . "#")
-    (python-mode        . "#")
-    (css-mode           . "/*")
-    (html-mode          . "<!--")
-    (xmodmap-mode       . "!")
-
-    )
-
-  "Comment characters per `major-mode'.
-
-Defaults to `sboo-comment-prefix-string-default'.")
-
-;;----------------------------------------------;;
-
-(defvar sboo-comment-suffix-string-alist
-
-  '(
-
-    (haskell-mode       . "--")
-    (haskell-cabal-mode . "--")
-    (cabal-mode         . "--")
-    (cabal-project-mode . "--")
-    (emacs-lisp-mode    . ";;")
-    (nix-mode           . "#")
-    (bash-mode          . "#")
-    (python-mode        . "#")
-    (css-mode           . "*/")
-    (html-mode          . "-->")
-    (xmodmap-mode       . "!")
-
-    )
-
-  "Comment characters per `major-mode'.
-
-Defaults to `sboo-comment-suffix-string-default'.")
-
-;;----------------------------------------------;;
-
-(defvar sboo-comment-h1-alist
-
-  '(
-
-    (haskell-mode          . "-- ============================================ --")
-    (haskell-cabal-mode    . "-- ============================================ --")
-    (cabal-mode            . "-- ============================================ --")
-    (cabal-project-mode    . "-- ============================================ --")
-    (lisp-mode             . ";;==============================================;;")
-    (emacs-lisp-mode       . ";;==============================================;;")
-    (scheme-mode           . ";;==============================================;;")
-    (lisp-interaction-mode . ";;==============================================;;")
-    (nix-mode              . "##################################################")
-    (bash-mode             . "##################################################")
-    (python-mode           . "##################################################")
-    (css-mode              . "/************************************************/")
-    (html-mode             . "<!-- ========================================= -->")
-    (mhtml-mode            . "<!-- ========================================= -->")
-    (xmodmap-mode          . "! ============================================== !")
-
-    )
-
-  "Comment dividors per `major-mode'.
-
-Defaults to `sboo-comment-h1-default'.")
-
-;; TODO either Implement aliases for modes, or use inheritance for derived modes. e.g.:
-;;
-;; '(lisp-mode . (emacs-lisp-mode scheme-mode lisp-interaction-mode))
-;; '(html-mode . (mhtml-mode))
-
-;;----------------------------------------------;;
-
-(defvar sboo-comment-h2-alist
-
-  '(
-
-    (haskell-mode          . "--------------------------------------------------")
-    (haskell-cabal-mode    . "--------------------------------------------------")
-    (cabal-mode            . "--------------------------------------------------")
-    (cabal-project-mode    . "--------------------------------------------------")
-    (lisp-mode             . ";;----------------------------------------------;;")
-    (emacs-lisp-mode       . ";;----------------------------------------------;;")
-    (scheme-mode           . ";;----------------------------------------------;;")
-    (lisp-interaction-mode . ";;----------------------------------------------;;")
-    (nix-mode              . "#------------------------------------------------#")
-    (bash-mode             . "#------------------------------------------------#")
-    (python-mode           . "#------------------------------------------------#")
-    (css-mode              . "/* -------------------------------------------- */")
-    (html-mode             . "<!----------------------------------------------->")
-    (mhtml-mode            . "<!----------------------------------------------->")
-    (xmodmap-mode          . "! ---------------------------------------------- !")
-
-    )
-
-  "Comment dividors per `major-mode'.
-
-Defaults to `sboo-comment-h2-default'.")
-
-;;----------------------------------------------;;
-
-(defun sboo-comment-length ()
-
-  "Lookup `sboo-comment-length-alist', defaulting to `sboo-comment-length-default'."
-
-  (interactive)
-
-  (let* ((MODAL-LENGTH (alist-get major-mode sboo-comment-length-alist))
-         (LENGTH       (if MODAL-LENGTH
-                           MODAL-LENGTH
-                         sboo-comment-length-default))
-         )
-    LENGTH))
-
-;;----------------------------------------------;;
-
-(defun sboo-comment-infix-character ()
-
-  "Lookup `sboo-comment-infix-character-alist', defaulting to `sboo-comment-infix-character-default'."
-
-  (interactive)
-
-  (let* ((MODAL-CHAR (alist-get major-mode sboo-comment-infix-character-alist))
-         (CHAR       (if MODAL-CHAR
-                         MODAL-CHAR
-                       sboo-comment-infix-character-default))
-         )
-    CHAR))
-
-;;----------------------------------------------;;
-
-(defun sboo-comment-prefix-string ()
-
-  "Lookup `sboo-comment-prefix-string-alist', defaulting to `sboo-comment-prefix-string-default'."
-
-  (interactive)
-
-  (let* ((MODAL-STRING (alist-get major-mode sboo-comment-prefix-string-alist))
-         (STRING       (if MODAL-STRING
-                         MODAL-STRING
-                       sboo-comment-prefix-string-default))
-         )
-    STRING))
-
-;;----------------------------------------------;;
-
-(defun sboo-comment-suffix-string ()
-
-  "Lookup `sboo-comment-suffix-string-alist', defaulting to `sboo-comment-suffix-string-default'."
-
-  (interactive)
-
-  (let* ((MODAL-STRING (alist-get major-mode sboo-comment-suffix-string-alist))
-         (STRING       (if MODAL-STRING
-                         MODAL-STRING
-                       sboo-comment-suffix-string-default))
-         )
-    STRING))
-
-;;----------------------------------------------;;
-
-(defun sboo-insert-comment-header (text)
-
-  "Insert a comment section header labeled TEXT.
-
-TEXT gets padded to `sboo-comment-length-default'.
-
-Related:
-
-• `sboo-insert-comment-h2'"
-
-  (interactive (list
-                (read-string "Text: ")
-                ))
-
-  (let* ((MODAL-COMMENT (alist-get major-mode sboo-comment-h2-alist))
-         (COMMENT       (if MODAL-COMMENT
-                            MODAL-COMMENT
-                          sboo-comment-h2-default))
-
-         (LENGTH         (sboo-comment-length))
-         (PREFIX         (sboo-comment-prefix-string))
-         (SUFFIX         (sboo-comment-suffix-string))
-         (PADDING-CHAR   (sboo-comment-infix-character))
-
-         ;; buffer-based capitalization
-         (TEXT          (with-temp-buffer
-                          ;;TODO `subword-mode'
-                          (insert text)
-                          (goto-char (point-min))
-                          (while (< (point) (point-max))
-                              (capitalize-word +1))
-                          (buffer-substring-no-properties (point-min) (point-max))))
-         (TEXT-PREFIX   (concat PREFIX " " TEXT " "))
-         (LINE          (concat (truncate-string-to-width TEXT-PREFIX
-                                                          (- LENGTH (length SUFFIX))
-                                                          nil
-                                                          PADDING-CHAR
-                                                          (char-to-string PADDING-CHAR))
-                                SUFFIX))
-         )
-
-    (progn
-      (insert COMMENT "\n")
-      (insert LINE    "\n")
-      (insert COMMENT "\n")
-      ())))
-
-;; ^ NOTES:
-;;
-;; (truncate-string-to-width STR END-COLUMN &optional START-COLUMN PADDING ELLIPSIS)
-;;
-;; e.g.:
-;;
-;; M-: (truncate-string-to-width "-- Example " (- 24 1) nil ?- "---")
-;;   ⇒ "-- Example ------------"
-;;
-;; M-: (string-width "\n")
-;;   ⇒ 0
-;;
-;; M-: (string-bytes "\x100")
-;;   ⇒ 2
-;;
-;; M-: (length "\n")
-;;   ⇒ 1
-;;
-;; 
-;;
-
-;;----------------------------------------------;;
-
-(defun sboo-insert-comment-h1 ()
-
-  "Insert a (« <h1> »-style) comment dividor.
-
-Related:
-
-• `sboo-comment-h1-alist'
-• `sboo-comment-h1-default'"
-
-  (interactive)
-
-  (let* ((COMMENT (alist-get major-mode sboo-comment-h1-alist))
-        )
-
-    (if COMMENT
-        (insert COMMENT)
-      (insert sboo-comment-h1-default))
-
-    (insert "\n")))
-
-;;----------------------------------------------;;
-
-(defun sboo-insert-comment-h2 ()
-
-  "Insert a (« <h2> »-style) comment dividor.
-
-Related:
-
-• `sboo-comment-h2-alist'
-• `sboo-comment-h2-default'"
-
-  (interactive)
-
-  (let* ((COMMENT (alist-get major-mode sboo-comment-h2-alist))
-        )
-
-    (if COMMENT
-        (insert COMMENT)
-      (insert sboo-comment-h2-default))
-
-    (insert "\n")))
-
-;;==============================================;;
 
 (defcustom sboo-spdx-license-alist
 
@@ -2189,6 +1790,59 @@ Related:
         (funcall FORWARD-OP count)
 
       (error "(sboo-forward '%s) — %s is not a thing (for `forward-thing')" thing thing))))
+
+;;==============================================;;
+
+(defcustom sboo-font-size-default 12
+
+  "The default font size, for `sboo-set-font-size'.
+
+an `integerp'."
+
+  :type '(integer :tag "Size")
+
+  :safe #'integerp
+  :group sboo)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-font-name-default ""    ;TODO
+
+  "The default font name, for `sboo-set-font-size'.
+
+a `stringp'."
+
+  :type '(string :tag "Name")
+
+  :safe #'stringp
+  :group sboo)
+
+;;----------------------------------------------;;
+
+(defun sboo-set-font-size (&optional font-size font-name)
+
+  "Sets font size to FONT-SIZE (for all frames). 
+
+Inputs:
+
+• FONT-SIZE — an `integerp'. Defaults to `font-size-default'.
+• FONT-NAME — an `stringp'. Defaults to `font-name-default'.
+
+Examples:
+• M-x sboo-set-font-size <RET> <RET>"
+  
+  (interactive (list
+                (read-number "number: " font-size)
+                nil                     ;TODO
+                ))
+
+  (let ((FONT-SIZE (or font-size font-size-default))
+        (FONT-NAME (or           font-name-default))
+        )
+
+    (set-frame-font (format "%s %d" FONT-NAME FONT-SIZE) nil t)))
+
+;;==============================================;;
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
