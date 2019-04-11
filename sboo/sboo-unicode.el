@@ -1,9 +1,10 @@
+;;; sboo-unicode.el --- Annotated completion for Unicode
 ;;; -*- lexical-binding: t -*-
 
 ;;==============================================;;
 ;;; Commentary:
 
-;; Completion for Unicode Character Names.
+;; Completion for Unicode Character Names, with annotations in the completion buffer.
 ;;
 ;; • `sboo-ucs-names-table' — the primary Unicode data structure.
 ;; • `sboo-read-character-name' — the primary completion function.
@@ -19,8 +20,9 @@
 
 ;; Builtins:
 
-(require 'cl-lib)     ;; "CommonLisp Library"
-(require 'subr-x) ;; "SUBRoutine-eXtRAS"
+(require 'cl-lib) ;; "CommonLisp Library"
+(require 'seq)    ;; "SEQuence"
+(require 'subr-x) ;; "SUBRoutine-eXtras"
 (require 'mule)   ;; "MUltiLingual Environment"
 
 ;;----------------------------------------------;;
@@ -169,7 +171,7 @@
     ?🅐
     ?☭
     ?©
-    ?🄯 
+    ?🄯
     ?♻
     ?㎰
     ?㎱
@@ -404,7 +406,20 @@ For example, `sboo-unicode-completion-annotate' toggles whether `sboo-read-chara
   :group 'sboo)
 
 ;;----------------------------------------------;;
+
+(defvar sboo-unicode-history-list
+
+  nil
+
+  "History for the `sboo-unicode-read-string' command.")
+
+;;----------------------------------------------;;
 ;; Functions: Accessors ------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-ucs-names-table-refresh ()
+   (sboo-ucs-names-table :refresh t))
+
 ;;----------------------------------------------;;
 
 (cl-defun sboo-ucs-names-table (&key (refresh nil) (only-interesting t))
@@ -433,6 +448,10 @@ Examples:
 Related:
 
 • `ucs-names'
+
+TODO:
+
+• Threads?
 
 Notes:
 
@@ -469,6 +488,12 @@ Notes:
     sboo-ucs-names-table))
 
 ;; M-: (sboo-ucs-names-table :refresh t :only-interesting t)
+
+;; `make-thread':
+;;
+;;   (make-thread #'sboo-ucs-names-table-refresh "sboo-ucs-names-table") ;; thread shouldn't mutate anything; it computes its own data, then we swap when we `thread-join'.
+;;
+;; 
 
 ;;----------------------------------------------;;
 
@@ -747,6 +772,13 @@ Type (Haskell):
 
 • « :: IO String ».
 
+Implementation:
+
+• Uses `sboo-unicode-history-list' (for history).
+
+• Calls `completing-read' (for completion).
+  NOTE When `completing-read' is “advised” to be redirected to `helm', the history list is below the « *Completions* » buffer, in its own « *History* » buffer; you can switch to the history list via `helm-next-source' (« C-o », the mnemonic being `other-window').
+
 Related:
 
 • `ucs-names'."
@@ -760,7 +792,7 @@ Related:
           (PROMPT        (format "%s: " "Unicode Character name"))
           (REQUIRE-MATCH t)
           (PREDICATE     nil)
-          (HISTORY       nil)
+          (HISTORY       'sboo-unicode-history-list)
           (CANDIDATES    (sboo-ucs-names-list :annotate ANNOTATE :only-interesting only-interesting :refresh refresh))
           )
 
@@ -849,7 +881,7 @@ Related:
 
 Inputs:
 
-• NAME — a `stringp'. 
+• NAME — a `stringp'.
          The name of a Unicode Character.
 
 Type (Haskell):
@@ -884,10 +916,40 @@ Related:
 
       (_ (error (format "(sboo-insert-char ?%c)" CHAR))))))
 
-;; M-x (call-interactively #'sboo-insert-char) 
+;; M-x (call-interactively #'sboo-insert-char)
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
+;;----------------------------------------------;;
+
+(cl-defun sboo-unicode--read-string (&key prompt initial history)
+
+  "Feature-specific `read-string'.
+
+Inputs:
+
+• PROMPT — a `stringp'.
+  Without a trailing space-plus-colon (i.e. “ :”).
+• INITIAL — a `stringp'.
+• HISTORY — a `symbolp'.
+  Defaults to `sboo-unicode-history-list'.
+  Its `symbol-value' is: a `listp' of `stringp's.
+
+Output:
+
+• a `stringp'."
+
+  (let* ((PROMPT  (format "%s: "
+                          (or prompt "Text")))
+
+         (INITIAL (or initial
+                      nil))
+
+         (HISTORY (or history 'sboo-unicode-history-list))
+         )
+
+    (read-string PROMPT INITIAL HISTORY)))
+
 ;;----------------------------------------------;;
 
 (cl-defun sboo-unicode--prefix-namesake-character (name)
@@ -900,7 +962,7 @@ Inputs:
 
 Output:
 
-• a `stringp'. 
+• a `stringp'.
   the output `length' will always be exactly two more than the input's.
 
 Some characters aren't displayed, including:
@@ -963,7 +1025,7 @@ Inputs:
 
 Output:
 
-• a `booleanp'. 
+• a `booleanp'.
 
 Some characters can't be displayed (or shouldn't be annotated), including:
 
@@ -1042,7 +1104,7 @@ Inputs:
 
 Output:
 
-• a `stringp'. 
+• a `stringp'.
 
 Examples:
 
@@ -1095,7 +1157,7 @@ Output:
 
 Inputs:
 
-• ALIST — an association `listp'. 
+• ALIST — an association `listp'.
 • TEST  — a `symbolp' (naming a `functionp'). See `make-hash-table'.
 • SIZE  — an `integerp'. See `make-hash-table'.
 
@@ -1223,10 +1285,10 @@ Related:
 ;;
 ;; > M-: (get-char-code-property ?• 'name)
 ;; > "BULLET"
-;; > 
+;; >
 ;; > M-: (type-of (get-char-code-property ?• 'name))
 ;; > 'string
-;; > 
+;; >
 ;; > M-: (type-of char-code-property-table)
 ;; > 'char-table
 ;;
@@ -1238,7 +1300,7 @@ Related:
 ;;     M-: (char-table-range char-code-property-table ?•)
 ;;     nil
 ;; 
-;;     M-: 
+;;     M-:
 ;;     
 ;;
 ;;
@@ -1280,13 +1342,13 @@ Related:
 ;; >  - As a hexadecimal code point, e.g. 263A.  Note that code points in
 ;; >    Emacs are equivalent to Unicode up to 10FFFF (which is the limit of
 ;; >    the Unicode code space).
-;; > 
+;; >
 ;; >  - As a code point with a radix specified with #, e.g. #o21430
 ;; >    (octal), #x2318 (hex), or #10r8984 (decimal).
 ;; >
 ;; > If called interactively, COUNT is given by the prefix argument.  If
 ;; > omitted or nil, it defaults to 1.
-;; > 
+;; >
 
 ;; NOTE `completion-extra-properties':
 ;;
@@ -1339,8 +1401,10 @@ Related:
 
 ;;; See:
 ;;
-;; ./share/emacs/26.1/lisp/international/uni-name.el 
+;; ./share/emacs/26.1/lisp/international/uni-name.el
 ;; 
 
 ;;==============================================;;
 (provide 'sboo-unicode)
+
+;;; sboo-unicode.el ends here

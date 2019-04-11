@@ -314,6 +314,14 @@ Defaults to `sboo-comment-h1-default'.")
 Defaults to `sboo-comment-h2-default'.")
 
 ;;----------------------------------------------;;
+
+(defvar sboo-comment-history-list
+
+  nil
+
+  "History for the `sboo-comment-read-string' command.")
+
+;;----------------------------------------------;;
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
@@ -424,6 +432,30 @@ Example:
 ;;
 
 ;;----------------------------------------------;;
+
+(cl-defun sboo-comment-read-string (&key (prompt "Text") (initial nil) (history 'sboo-comment-history-list))
+
+  "Feature-specific `read-string'.
+
+Inputs:
+
+• PROMPT — a `stringp'.
+  Without a trailing space-plus-colon (i.e. “ :”).
+• INITIAL — a `stringp'.
+• HISTORY — a `symbolp'.
+  Defaults to `sboo-comment-history-list'.
+  Its `symbol-value' is: a `listp' of `stringp's.
+
+Output:
+
+• a `stringp'."
+
+  (let* ((PROMPT (format "%s: " prompt))
+         )
+
+    (read-string PROMPT initial history)))
+
+;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 
@@ -482,7 +514,7 @@ Related:
 • `sboo-comment-insert-h2'"
 
   (interactive (list
-                (read-string "Text: ")
+                (sboo-comment-read-string :prompt "Text")
                 ))
 
   (let* ((COMMENT (sboo-comment-alist-get sboo-comment-h2-alist :mode major-mode :default sboo-comment-h2-default))
@@ -587,8 +619,11 @@ Behavior:
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
-;; 
-;; 
-;; 
+
+;; `read-string':
+;;
+;; (read-string PROMPT &optional INITIAL-INPUT HISTORY DEFAULT-VALUE INHERIT-INPUT-METHOD)
+;;
+
 ;;==============================================;;
 (provide 'sboo-comment)
