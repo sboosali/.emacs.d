@@ -89,6 +89,107 @@
 
 ;;----------------------------------------------;;
 
+(defcustom mboo-mtg-color-list
+
+  '(white blue black red green)
+
+  "All MTG colors."
+
+  :type '(repeated (symbol :tag "Color"))
+
+  :safe #'listp
+  :group 'mtg)
+;;----------------------------------------------;;
+
+(defcustom sboo-mtg-color-abbreviations-alist
+
+  '(
+    ( ?w . white)
+    ( ?u . blue)
+    ( ?b . black)
+    ( ?r . red)
+    ( ?g . green)
+   )
+
+  "Color abbreviations.
+
+Associates characters with the colors they abbreviate."
+
+  :type '(alist :key-type   (string :tag "Abbreviation")
+                :value-type (string :tag "Color"))
+
+  :safe #'listp
+  :group 'sboo)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-mtg-guild-list 
+
+  '(azorius dimir rakdos gruul selesnya orzhov izzet golgari boros simic)
+
+   "All MTG guilds i.e. (color pairs)."
+
+  :type '(repeated (symbol :tag "Color"))
+
+  :safe #'listp
+  :group 'mtg)
+
+ ;; White + Blue = Azorius
+ ;; Blue + Black = Dimir
+ ;; Black + Red = Rakdos
+ ;; Red + Green = Gruul
+ ;; Green + White = Selesnya
+ ;; White + Black = Orzhov
+ ;; Blue + Red = Izzet
+ ;; Black + Green = Golgari
+ ;; Red + White = Boros
+ ;; Green + Blue = Simic
+
+;;----------------------------------------------;;
+
+each. The less commonly used are the wedges, which involve two enemy color combinations: they're derived from the dragons of Planar Chaos, the volver cycle from Apocalypse, or more recently the five clans from Khans of Tarkir. Having only one allied color pair (the two enemies of a single color will be allied) limits deck cohesion, making their use infrequent.
+
+More typically, enemy three color decks are not fully fleshed out in the colors. You're more likely to have an "Izzet splashed with green" deck than a "Ceta" deck.
+
+ Red + green + black = Jund
+ White + green + blue = Bant
+ Black + red + blue = Grixis
+ Green + white + red = Naya
+ Blue + white + black = Esper
+ Blue + red + white = Jeskai (clan on Tarkir), Numot (dragon from Apocalypse) or Raka (from Rakavolver)
+ Red + white + black = Mardu (clan on Tarkir), Oros (dragon from Apocalypse) or Dega (from Degavolver)
+ Black + green + blue = Sultai (clan on Tarkir), Vorosh (dragon from Apocalypse) or Ana (from Anavolver)
+ Green + blue + red = Temur (clan on Tarkir), Intet (dragon from Apocalypse) or Ceta (from Cetavolver)
+ White + black + green = Abzan (clan on Tarkir) Teneb (dragon from Apocalypse) Necra (from Necravolver), Junk citation, or Doran citation
+Informal usages:
+
+Red + white + black = Borzhov
+Red + white + blue = USA/American/Patriot
+(although note that Team America is actually black + blue + green)
+Red + green + blue = Grizzet
+(although it's usually Simic splashing red)
+In addition, it's especially common for red + blue + green and black + blue + green to be called by their abbreviations — "RUG" and "BUG" — because these are names that are easy to remember and pronounce.
+
+;;----------------------------------------------;;
+
+Four colors
+Most decks do not have four full colors. As with three color enemies, if they reach this many colors, it's a shard with a splash of another color. So you're more likely to see something like "American splash black" instead of "Yore".
+
+Names for four-color identities come from one of two sources:
+
+The names of the Nephilims from Guildpact.
+The names of the four-colour “guild identities” defined during Commander 2016's design.
+Reference the one color the four-color combination is missing, thus Non-(color).
+So the four colour identities' names are:
+
+ Blue + black + red + green = Glint-Eye, or Chaos, or Non-white
+ Black + red + green + white = Dune (or Dune-Brood), or Aggression, or Non-blue
+ Red + green + white + blue = Ink-Treader, or Altruism, or Non-black
+ Green + white + blue + black = Witch (or Witch-Maw), or Growth, or Non-red
+White + blue + black + red = Yore (or Yore-Tiller), or Artifice, or Non-green
+
+;;----------------------------------------------;;
+
 (defcustom mtg-known-card-types-list
 
   '(
@@ -154,7 +255,31 @@ Used for vertically-aligning annotations (among other uses).
   :safe #'integerp
   :group 'mtg)
 
+;;----------------------------------------------;;
 
+(defcustom sboo-mtg-preferred-formats-set
+
+  '(
+    vintage
+   )
+
+  "Set of formats. 
+
+(Customize via checklist widget)."
+
+  :type '(set (const nil)
+              (const vintage)
+              (const legacy)
+              (const modern)
+              )
+
+  :safe #'listp
+  :group 'sboo)
+
+
+
+
+;;==============================================;;
 
 blackBorder :: Border
 blackBorder = "black"
@@ -1924,6 +2049,55 @@ Related:
   (interactive (list (mtg-read-card-name)))
 
   (insert card))                        ;TODO different styles, versions (old, new), name-only or full-text or image, surround with backticks, etc. 
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-mtg-read-color (&key prompt)
+
+  "Read a color via `sboo-mtg-colors-list'."
+
+  (interactive)
+
+  (let ((PROMPT        (or prompt "Color: "))
+        (COLLECTION    sboo-mtg-colors-list)
+        (REQUIRE-MATCH t)
+        )
+
+    (read PROMPT CHOLLECTION nil REQUIRE-MATCH)))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-mtg-read-color-char (&key prompt)
+
+  "Read a color via `sboo-mtg-color-abbreviations-alist'."
+
+  (interactive)
+
+  (let ((PROMPT  (or prompt "Color: "))
+        (CHOICES (mapcar (lambda (KV)
+                           (let* ((K (car KV))
+                                  (V (cdr KV))
+                                  )
+                             (list K (symbol-name V))))
+                         sboo-mtg-color-abbreviations-alist))
+        )
+
+    (read-multiple-choice PROMPT CHOICES)))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-mtg-read-guild (&key prompt)
+
+  ""
+
+  (interactive)
+
+  (let ((PROMPT        (or prompt "Guild: "))
+        (COLLECTION    sboo-mtg-guild-list)
+        (REQUIRE-MATCH t)
+        )
+
+    (completing-read PROMPT COLLECTION nil REQUIRE-MATCH)))
 
 ;;----------------------------------------------;;
 

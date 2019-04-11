@@ -295,7 +295,9 @@ See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c
                                ".el.gz"
                                ;;
                                "TAGS")
-                           line-end))))))
+                           line-end)
+                      (and line-start
+                           (or "*dante:")))))))
 
   "Extra `desktop-files-not-to-save'.
 

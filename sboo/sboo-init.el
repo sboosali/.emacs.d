@@ -478,8 +478,12 @@ Related:
   (sboo-add-auto-mode-basename ".gitignore"     #'conf-mode)
   (sboo-add-auto-mode-basename ".gitattributes" #'conf-mode)
 
-  (sboo-add-auto-mode-basename ".xbindkeysrc"    #'conf-mode)
+  (sboo-add-auto-mode-basename "terminalrc" #'conf-mode)
+  ;; ^ for the « xfce4-terminal » program.
+
+  (sboo-add-auto-mode-basename ".xbindkeysrc" #'conf-mode)
 ;;(sboo-add-auto-mode-basename "xbindkeysrc.scm" #'xbindkeys-scheme-mode)
+  ;; ^ for the « xbindkeys » program.
 
   ;;------------------------;;
 

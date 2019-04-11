@@ -447,7 +447,7 @@ Wraps `forward-thing'."
 (global-set-key (kbd "s-v") #'describe-variable)          ; "Variable"
 (global-set-key (kbd "s-w") #'list-flycheck-errors)       ; "Warnings & errors"
 ;;(global-set-key (kbd "s-x") #')
-;;(global-set-key (kbd "s-y") #')
+(global-set-key (kbd "s-y") #'helm-show-kill-ring)        ; super "Yank"
 ;;(global-set-key (kbd "s-z") #')
 
 ;;----------------------------------------------;;

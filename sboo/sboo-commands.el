@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;----------------------------------------------;;
 ;; Custom `interactive' commands.
 ;;
@@ -709,14 +711,107 @@ Related:
           (replace-match "" nil nil))))))
 
 ;;==============================================;;
+;; Copying...
 
 ;;TODO https://stackoverflow.com/questions/22434484/emacs-modes-highlighting-uses-of-variable-under-point
 
 ;;----------------------------------------------;;
 
+(cl-defun sboo-copy-object (object &key format-specifier)
+
+  "Copy OBJECT (to the clipboard), after formatting via FORMAT.
+
+Inputs:
+
+• OBJECT           — any printable object (in particular, `stringp', `integerp', `consp', `vectorp', `hash-table-p', etc).
+• FORMAT-SPECIFIER — a `stringp'. a Format-Specifier.
+
+Output:
+
+• a `stringp'. The 
+
+Example:
+
+• M-: (sboo-copy-object )
+    ⇒ "
+
+  (interactive)
+
+  (when-let* ((FORMAT (or format-specifier
+                          "%s"))
+              (OBJECT (if t object nil))
+              (TEXT   (format FORMAT OBJECT))
+              )
+
+    (sboo-copy-string TEXT)
+    (message TEXT)
+    TEXT))
+
+;; e.g.
+;;
+;; M-: (sboo-copy-object "xyz" :format-specifier "%s")
+;;   ; xyz
+;;   ⇒ "xyz"
+;;
+;; M-: (sboo-copy-object "xyz" :format-specifier "%S")
+;;   ; "xyz"
+;;   ⇒ "\"xyz\""
+;;
+;; M-: (sboo-copy-object ?a :format-specifier "%d")
+;;   ; 97
+;;   ⇒ "97"
+;;
+;; M-: (sboo-copy-object ?a :format-specifier "%c")
+;;   ; a
+;;   ⇒ "a"
+;;
+ 
+;; ^ `when-let*':
+;;
+;;   (when-let SPEC &rest BODY)
+;;
+;; >Bind variables according to SPEC and conditionally eval BODY.
+;; >Each binding is evaluated in turn, and evaluation stops if a
+;; >binding value is nil.  If all are non-nil, the value of the last
+;; >form in BODY is returned.
+;;
+;;
+
+;;----------------------------------------------;;
+
+(defun sboo-copy-string (text)
+
+  "Copy TEXT (to the clipboard).
+
+Inputs:
+
+• TEXT — a `stringp' or `characterp'."
+
+  (interactive)
+
+  (let* ((TEXT (pcase text
+
+                 ((pred stringp)    text)
+                 ((pred characterp) (string text))
+
+                 (_ nil)))
+         )
+
+    (when (and (stringp text) (not (string-empty-p text)))
+      
+      (with-temp-buffer
+
+        (insert TEXT)
+        (sboo-copy-buffer-contents)
+        TEXT))))
+
+;; `kill-ring-save'
+
+;;----------------------------------------------;;
+
 (defun sboo-copy-buffer-contents ()
 
-  "Copy the whole buffer."
+  "Copy the whole buffer (to the clipboard)."
 
   (interactive)
 
