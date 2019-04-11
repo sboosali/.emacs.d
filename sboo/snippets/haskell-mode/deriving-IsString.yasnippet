@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+#
+# key         : deriving-string
+# name        : « deriving newtype » for « IsString » (and related instances).
+# type        : snippet
+# condition   : (let ((KEY "deriving-string")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 4) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+
+  deriving stock    (Show,Read,Generic)
+  deriving newtype  (Eq,Ord,Semigroup,Monoid)
+  deriving newtype  (IsString)
+  deriving newtype  (NFData,Hashable)

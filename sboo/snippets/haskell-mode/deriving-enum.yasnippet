@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 #
-# key         : der-enum
-# name        : [sboo] `deriving` an `Enum` type.
-# condition   : (= (length "der-enum") (current-column))
+# key         : deriving-enum
+# name        : [sboo] « deriving » an « Enum » (and related instances).
+# condition   : (= (length "deriving-enum") (current-column))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis
 #
@@ -10,5 +10,6 @@
 
   deriving stock    (Enum,Bounded,Ix)
   deriving anyclass (GEnum)
+
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
   deriving anyclass (NFData,Hashable)

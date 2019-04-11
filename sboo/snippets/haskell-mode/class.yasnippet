@@ -1,0 +1,21 @@
+# -*- mode: snippet -*-
+#
+# key         : class
+# name        : [sboo] a « class » declaration.
+# type        : snippet
+# condition   : (let ((KEY "class")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+
+--------------------------------------------------
+
+{-| 
+
+-}
+
+class ${1:C} where
+
+  ${2:f} :: $0
+

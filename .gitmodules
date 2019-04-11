@@ -37,3 +37,6 @@
 [submodule "Elsa"]
 	path = submodules/Elsa
 	url = https://github.com/emacs-elsa/Elsa
+[submodule "sed-mode"]
+	path = submodules/sed-mode
+	url = https://github.com/emacsfodder/sed-mode

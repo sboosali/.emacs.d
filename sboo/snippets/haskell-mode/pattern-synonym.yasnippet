@@ -1,16 +1,17 @@
 # -*- mode: snippet -*-
 #
-# key         : =pattern=
-# name        : [sboo] define a Pattern Synonym (i.e. « pattern ... »).
-# condition   : (= (length "=pattern=") (current-column))
+# key         : pattern-nullary
+# name        : [sboo] Define a (nullary) « pattern ... » (c.f. « -XPatternSynonym »).
+# condition   : (= (length "pattern-nullary") (current-column))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-# contributor : Spiros Boosalis
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
 --------------------------------------------------
 
--- | 
+-- | @≡ $2@
 
-pattern $1 :: _
-pattern $1 $0= $2
+pattern ${1:P} :: ${3:_}
+pattern $1 = ${2:A}
 
+$0

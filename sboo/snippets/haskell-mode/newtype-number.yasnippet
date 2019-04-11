@@ -1,25 +1,29 @@
 # -*- mode: snippet -*-
 #
-# key         : =newnumber
-# name        : [sboo] a `Num`-newtype.
-# condition   : (= (length "=newnumber") (current-column))
+# key         : newnum
+# name        : [sboo] Define a « Num »erical « newtype ».
+# condition   : (= (length "newnum") (current-column))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-# contributor : Spiros Boosalis
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
 # --
 --------------------------------------------------
 
-{-|
-
+{-| 
+$0
 -}
 
-newtype $1 = $1
+newtype ${1:N} = $1
 
-  Int$0
+  ${2:Natural}
 
-  deriving stock    (Show,Read,Lift,Generic)
+  deriving stock    (Show,Read)
+  deriving stock    (Lift,Generic)
   deriving newtype  (Num)
   deriving newtype  (Eq,Ord)
   deriving newtype  (NFData,Hashable)
 
+--------------------------------------------------
+
 -- instance Semigroup $1 where (<>)   = coerce (+)
 -- instance Monoid    $1 where mempty = coerce 0
+
