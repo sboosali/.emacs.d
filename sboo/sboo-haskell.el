@@ -485,11 +485,23 @@ Output:
 
   (interactive)
 
-  (if (bound-and-true-p 'dante-mode)
+  (if (bound-and-true-p dante-mode)
 
-    (dante-restart)
+      (progn
+        (message "%s" "[sboo] Restarting `dante'...")
 
-   (dante-mode 1)))
+        (dante-restart))
+
+    (progn
+      (message "%s" "[sboo] Importing `dante' and `flycheck'...")
+
+      (when (require 'flycheck nil :no-error)
+        (flycheck-mode 1))
+
+      (when (require 'dante nil :no-error)
+        (dante-mode 1))
+
+      ())))
 
 ;;----------------------------------------------;;
 ;; Functions -----------------------------------;;

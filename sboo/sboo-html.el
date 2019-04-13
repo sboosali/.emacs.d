@@ -111,6 +111,25 @@ A `listp' of `symbolp's."
 
 ;;----------------------------------------------;;
 
+(defcustom sboo-markdown-modes-list
+
+  '(
+    markdown-mode
+    gfm-mode
+   )
+
+  "Major modes that are children of (or similar to) `markdown-mode'.
+
+A `listp' of `symbolp's."
+
+  :type '(repeated (choice (const nil)
+                           (symbol :tag "Major Mode")))
+
+  :safe #'sboo-symbol-listp
+  :group 'sboo-html)
+
+;;----------------------------------------------;;
+
 (defcustom sboo-html-element-list
 
   '(
@@ -263,6 +282,39 @@ Links:
                            (string :tag "HTML Attribute")))
 
   :safe #'sboo-string-listp
+  :group 'sboo-html)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-markdown-wrappers-alist
+
+  '( "*"
+   )
+
+  "`wrap-region' “wrappers”.
+
+Examples (each is equivalent):
+
+• « ?* »
+• « \"*\" »
+• « '(\"*\") »
+• « '(\"*\" \"*\") »
+• « '(\"*\" \"*\" \"*\") »
+
+Associates right-wrappers with 
+a(n optionally distinct) left-wrapper and 
+a(n optionally distinct) trigger-keys."
+
+  :type '(repeated (choice (character :tag "Left=Right=Key")
+                           (string    :tag "Left=Right=Key")
+                           (list      (string :tag "Left=Key")
+                                      (string :tag "Right"))
+                           (list      (string :tag "Left")
+                                      (string :tag "Right")
+                                      (string :tag "Key"))
+                           ))
+
+  :safe #'listp
   :group 'sboo-html)
 
 ;;----------------------------------------------;;
@@ -527,6 +579,35 @@ Example:
 
 ;; M-: (sboo-html-wrap-region-entry "code" :alias "c")
 ;;   ⇒ '("<code>" "</code>" "c" (html-mode mhtml-mode markdown-mode gfm-mode))
+
+;;----------------------------------------------;;
+
+(defun sboo-markdown-wrap-region-table ()
+
+  "Creates an argument for `wrap-region-add-wrappers'."
+
+  (let* ((BINDINGS sboo-markdown-wrappers-alist)
+         (TABLE    (mapcar #'sboo-markdown-wrap-region-entry BINDINGS))
+         )
+
+    TABLE))
+
+;; M-: (sboo-markdown-wrap-region-table)
+;;
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-markdown-wrap-region-entry (left &key right key)
+
+  "Creates an “arglist” for `wrap-region-add-wrapper'."
+
+  (let* ((KEY   (or key left))
+         (LEFT  left)
+         (RIGHT (or right left))
+         (MODES sboo-markdown-modes-list)
+         )
+
+    (list LEFT RIGHT KEY MODES)))
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;

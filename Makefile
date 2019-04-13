@@ -27,6 +27,7 @@ EmacsStart ?=emacs "--name=Emacs - SBoo/$(Timestamp)" --maximized --no-splash --
 #Emacs ?=emacs
 #Emacs ?=./result/bin/emacs
 
+
 #------------------------------------------------#
 
 EmacsOptions ?= "--name=SBoo/$(Timestamp)" --maximized --no-splash --no-desktop
@@ -83,6 +84,14 @@ emacs-try:
 	SBOO_EMACS_DESKTOP_RESTORE_EAGER=10 SBOO_EMACS_DESKTOP_WRITE=0 $(Emacs) $(EmacsOptions) --debug-init
 
 .PHONY: emacs-try
+
+#------------------------------------------------#
+
+emacs-terminal:
+
+	SBOO_EMACS_DESKTOP_RESTORE_EAGER=10 SBOO_EMACS_DESKTOP_WRITE=0 $(Emacs) $(EmacsOptions) --no-window-system --debug-init
+
+.PHONY: emacs-terminal
 
 #------------------------------------------------#
 

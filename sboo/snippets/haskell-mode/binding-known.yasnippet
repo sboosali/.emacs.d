@@ -1,0 +1,21 @@
+# -*- mode: snippet -*-
+#
+# key         : known
+# name        : a « known* » binding.
+# type        : snippet
+# condition   : (let ((KEY "known")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+--------------------------------------------------
+
+{-|  -}
+
+known$1s :: [${1:T}]
+known$1s =
+
+  [ $0
+  , 
+  ]
+

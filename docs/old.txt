@@ -2072,8 +2072,45 @@ xmodmap   = ''${pkgs.xorg.xmodmap}/bin/xmodmap'';
 
 ;;----------------------------------------------;;
 
+(defcustom sboo-markdown-wrappers-alist
+
+  '( "*"
+   )
+
+  "`wrap-region' “wrappers”.
+
+Examples (each is equivalent):
+
+• « ?* »
+• « \"*\" »
+• « '(\"*\") »
+• « '(\"*\" \"*\") »
+• « '(\"*\" \"*\" \"*\") »
+
+Associates right-wrappers with 
+a(n optionally distinct) left-wrapper and 
+a(n optionally distinct) trigger-keys."
+
+  :type '(alist :key-type   (string :tag "")
+                :value-type (choice (const nil)
+                                    (string :tag "value")))
+
+  :safe #'listp
+  :group 'sboo-html)
+
 ;;----------------------------------------------;;
 
+(cl-defun sboo-markdown-wrap-region-entry (left &key right key)
+
+  "Creates an “arglist” for `wrap-region-add-wrapper'."
+
+  (let* ((KEY   (or key left))
+         (LEFT  left)
+         (RIGHT (or right left))
+         (MODES sboo-markdown-modes-list)
+         )
+
+    (list LEFT RIGHT KEY MODES)))
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

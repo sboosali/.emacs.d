@@ -777,7 +777,7 @@ Implementation:
 • Uses `sboo-unicode-history-list' (for history).
 
 • Calls `completing-read' (for completion).
-  NOTE When `completing-read' is “advised” to be redirected to `helm', the history list is below the « *Completions* » buffer, in its own « *History* » buffer; you can switch to the history list via `helm-next-source' (« C-o », the mnemonic being `other-window').
+  NOTE When `completing-read' is “advised” to be redirected to `helm', the history list is below the « *Completions* » buffer, in its own « *History* » buffer; you can switch to the history list via `helm-next-source', whose keybindings include « <right> » (the mnemonic being a different dimensions from each individual completion) or « C-o » (the mnemonic being `other-window').
 
 Related:
 

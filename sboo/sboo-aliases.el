@@ -201,7 +201,8 @@
 
 ;;----------------------------------------------;;
 
-(defalias '/hr #'dante-restart) ; mnemonic: "h" for "Haskell".
+(defalias '/hs #'sboo-dante-mode) ; mnemonic: "h" for "Haskell".
+(defalias '/hr #'dante-restart)   ; mnemonic: "h" for "Haskell".
 
 ;;----------------------------------------------;;
 

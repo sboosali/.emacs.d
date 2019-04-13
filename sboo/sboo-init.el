@@ -487,7 +487,8 @@ Related:
 
   ;;------------------------;;
 
-  (sboo-add-auto-mode-file-extension "service" #'conf-mode)
+  (sboo-add-auto-mode-file-extension "service"    #'conf-mode) ; e.g. « /etc/services »
+  (sboo-add-auto-mode-file-extension "interfaces" #'conf-mode) ; e.g. « /etc/network/interfaces »
 
   (sboo-add-auto-mode-file-extension "rc" #'conf-mode)
 
@@ -1223,10 +1224,9 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;;  :hook ((haskell-mode . flycheck-mode)
 ;;;         (haskell-mode . dante-mode))
 
-    :init
-
-    (add-hook 'haskell-mode-hook #'flycheck-mode)
-    (add-hook 'haskell-mode-hook #'dante-mode)
+     ;; :init
+     ;; (add-hook 'haskell-mode-hook #'flycheck-mode)
+     ;; (add-hook 'haskell-mode-hook #'dante-mode)
 
     :config
 
@@ -1731,6 +1731,10 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   (when (bound-and-true-p sboo-html-wrap-region-table)
     (wrap-region-add-wrappers (sboo-html-wrap-region-table)))
+
+  ;;TODO...
+  ;; (when (bound-and-true-p sboo-markdown-wrap-region-table)
+  ;;   (wrap-region-add-wrappers (sboo-markdown-wrap-region-table)))
 
   (wrap-region-mode +1))
 
