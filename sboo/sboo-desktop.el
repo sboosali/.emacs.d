@@ -50,17 +50,39 @@
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 
-(defvar sboo-star-buffer-regex "\\`\\*.*\\*\\'"
+(defvar sboo-star-buffer-regex
 
-  "Regex which matches a Star Buffer.
+  (rx bos (or (and "*" (1+ any) "*")
+              (and "magit" (? "-" (1+ alphanumeric)) ": " (1+ any))
+              )
+      (? "<" (1+ digit) ">")
+      eos)
 
-Star Buffers are Emacs' naming convention for Internal Buffers.")
+  "Regex which matches a “Star Buffer”.
+
+“Star Buffers” are Emacs' naming convention for Internal Buffers.
+
+Examples (of matching buffers):
+
+• « *emacs* »
+• « *emacs*<2> »
+• « *dante: ... »
+• « magit: ... »
+• « magit-diff: ... »
+
+Related:
+
+• `sboo-bury-all-star-buffers'")
+
+;; M-: (rx bos "*" (1+ any) "*" eos)
+;;  ⇒ "\\`\\*.+\\*\\'"
 
 ;;----------------------------------------------;;
 
 (defun sboo-bury-buffer-if-star-buffer (buffer)
 
   (when (string-match-p sboo-star-buffer-regex (buffer-name buffer))
+
     (bury-buffer buffer)))
 
 ;;----------------------------------------------;;
@@ -69,7 +91,14 @@ Star Buffers are Emacs' naming convention for Internal Buffers.")
 
   "Bury all star buffers.
 
-URL `http://emacs.stackexchange.com/a/20036/115'."
+Related:
+
+• `sboo-star-buffer-regex'
+• `sboo-bury-buffer-if-star-buffer'
+
+Links:
+
+• URL `http://emacs.stackexchange.com/a/20036/115'."
 
   (interactive)
 
@@ -386,6 +415,8 @@ See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c
 (defun sboo-desktop-mode ()
 
   "Run `desktop-read' and start `desktop-save-mode'."
+
+  (interactive)
 
   (when (sboo-desktop-enable-p)
 

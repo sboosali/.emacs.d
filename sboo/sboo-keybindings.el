@@ -54,6 +54,30 @@
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 
+(defun sboo-dired ()
+
+  "Wraps `dired'."
+
+  (interactive)
+
+  (let* ((DIRECTORY default-directory)  ; or (file-name-directory (buffer-file-name))
+         )
+
+    (dired DIRECTORY)))
+
+;;----------------------------------------------;;
+
+(defun sboo-find-file ()
+
+  "Wraps `find-file-at-point'."
+
+  (interactive)
+
+  (let* (
+         )
+
+    (find-file-at-point)))
+
 ;;==============================================;;
 
 (defun sboo-jump ()
@@ -381,9 +405,11 @@ Wraps `forward-thing'."
 ;;(global-set-key (kbd "<kp-delete>")   #')
 ;;(global-set-key (kbd "<kp-enter>")    #')
 ;;(global-set-key (kbd "<kp-add")       #')
-;;(global-set-key (kbd "<kp-subtract>") #')
-;;(global-set-key (kbd "<kp-multiply>") #')
+
 ;;(global-set-key (kbd "<kp-divide>")   #')
+(global-set-key (kbd "<kp-multiply>") #'sboo-dired)
+(global-set-key (kbd "<kp-subtract>") #'sboo-find-file)
+
 ;;(global-set-key (kbd "<kp-")   #')
 
 ;;==============================================;;

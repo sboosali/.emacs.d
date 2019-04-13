@@ -1897,18 +1897,32 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; Appearence ----------------------------------;;
 ;;----------------------------------------------;;
 
-(use-package all-the-icons-dired
+(use-package all-the-icons
 
-  :hook (dired-mode)
-;;:hook (dired-mode . all-the-icons-dired-mode)
+  :load-path "~/.emacs.d/submodules/all-the-icons.el"
 
   )
 
+;; Installation:
+;;
+;; M-: (all-the-icons-install-fonts)
+
+;; Usage:
+;;
+;; M-: (insert (all-the-icons-icon-for-file "foo.hs"))
+;; M-: (all-the-icons-insert-icons-for 'faicon 10 0.5)   ; height=10px, delay=500ms.
+
+;; Notes:
+;;
+;; e.g. fontsets: 'faicon 'octicon 'alltheicon
+
 ;;----------------------------------------------;;
 
-(use-package all-the-icons
+(use-package all-the-icons-dired
 
-  
+  :load-path "~/.emacs.d/submodules/all-the-icons-dired"
+
+  :hook (dired-mode . all-the-icons-dired-mode)
 
   )
 
