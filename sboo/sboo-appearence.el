@@ -52,6 +52,13 @@
 ;; > 
 ;; > Interactively, or when display is non-nil, the return value is also displayed in the echo area.
 ;; > 
+;;
+
+;; `use-package':
+;;
+;;   :custom-face
+;;   (eruby-standard-face ((t (:slant italic)))))
+;;
 
 ;;==============================================;;
 (provide 'sboo-appearence)

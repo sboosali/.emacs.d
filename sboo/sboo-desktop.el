@@ -368,18 +368,6 @@ See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c
   (add-hook 'desktop-after-read-hook #'sboo-bury-all-star-buffers)
   ;(add-hook 'desktop-delay-hook      #'sboo-bury-all-star-buffers)
 
-  (when (sboo-desktop-enable-p)
-
-    (when (sboo-desktop-read-p)
-      (desktop-read))
-
-    (when (sboo-desktop-write-p)
-      (desktop-save-mode +1))
-
-    ())
-
-  ;; ^ Enable globally.
-
   ())
 
 ;TODO `desktop-save' on emacs exit (i.e. `C-x C-c`).
@@ -392,6 +380,24 @@ See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c
 ;;
 
 ;TODO desktop-save-in-desktop-dir
+
+;;----------------------------------------------;;
+
+(defun sboo-desktop-mode ()
+
+  "Run `desktop-read' and start `desktop-save-mode'."
+
+  (when (sboo-desktop-enable-p)
+
+    (when (sboo-desktop-read-p)
+      (desktop-read))
+
+    (when (sboo-desktop-write-p)
+      (desktop-save-mode +1))
+
+    ;; ^ Enable globally.
+
+    sboo-desktop-enable-p))
 
 ;;----------------------------------------------;;
 

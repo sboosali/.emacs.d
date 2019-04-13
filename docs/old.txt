@@ -2111,6 +2111,17 @@ a(n optionally distinct) trigger-keys."
          )
 
     (list LEFT RIGHT KEY MODES)))
+
+;;----------------------------------------------;;
+
+(defun sboo-haskell-hide-dante-buffers ()
+
+  "Hide `dante-mode' popup (via `display-buffer-alist')."
+
+  (interactive)
+
+  (let ((display-buffer-alist sboo-dante-display-buffer #'display-buffer-no-window nil))))
+
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

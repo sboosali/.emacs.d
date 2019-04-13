@@ -249,10 +249,10 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
 (defvar sboo-dante-display-buffer
 
   `( ,(rx bos "*dante:")
-     (display-buffer-reuse-window display-buffer-in-side-window)
+     (display-buffer-no-window)
    )
 
-  "TODO This display rule tells Emacs to never bring-to-front the internal dante buffer.")
+  "Display Rule which tells Emacs to never bring-to-front the internal dante buffer.")
 
 ;; e.g. a `dante' buffer: « *dante:spiros:lib:spiros:~/haskell/spiros/* »
 

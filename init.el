@@ -9,8 +9,9 @@
 
 ;;(setq debug-on-error t);;TODO environment-variable
 
-(when (boundp 'user-init-file) (find-file user-init-file))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;(when (boundp 'user-init-file) (find-file user-init-file))
 ;; ^ for Debugging
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26,6 +27,7 @@
 
   (progn
     (setq custom-file SbooCustom)       ; redirect custom file early.
+    (ignore-errors (find-file SbooFile))
     (load SbooFile nil nil t t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

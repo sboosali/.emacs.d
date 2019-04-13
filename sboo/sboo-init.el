@@ -537,7 +537,11 @@ Related:
   ;;     (setq bookmark-default-file (sboo-xdg-cache "desktop.el"))
   ;;   (setq bookmark-default-file "desktop.el"))
 
-  (add-startup-hook! #'sboo-desktop-config!))
+  (add-startup-hook! #'sboo-desktop-config!)
+
+;;(sboo-desktop-mode)
+
+  ())
 
 ;; ^ `desktop-mode'.
 
@@ -853,7 +857,25 @@ Related:
 ;; (set-face-attribute 'Man-underline nil :inherit font-lock-keyword-face :underline t)
 
 ;;----------------------------------------------;;
-;; `package--builtins': ------------------------;;
+
+;; Non-Package features must be configured more because,
+;; with `with-eval-after-load', `define-key', etc.
+
+(with-eval-after-load 'comint
+
+  (bind-key "<up>"   'comint-previous-matching-input-from-input comint-mode-map)
+  (bind-key "<down>" 'comint-next-matching-input-from-input     comint-mode-map)
+
+  (setq comint-scroll-to-bottom-on-output 'others)
+  (setq comint-scroll-to-bottom-on-input  'this)
+
+  (sboo-custom-set comint-buffer-maximum-size
+      2000
+    "Increase.")
+
+  ())
+;;----------------------------------------------;;
+;; `package-builtins': -------------------------;;
 ;;----------------------------------------------;;
 
 ;; these features (below) can be configured with `use-package',
@@ -1224,9 +1246,10 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;;  :hook ((haskell-mode . flycheck-mode)
 ;;;         (haskell-mode . dante-mode))
 
-     ;; :init
-     ;; (add-hook 'haskell-mode-hook #'flycheck-mode)
-     ;; (add-hook 'haskell-mode-hook #'dante-mode)
+    :init
+
+    (add-hook 'haskell-mode-hook #'flycheck-mode)
+    (add-hook 'haskell-mode-hook #'dante-mode)
 
     :config
 
@@ -1241,7 +1264,9 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
     (setq sboo-haskell-eldoc 'dante)
 
-    ;(add-to-list 'display-buffer-alist sboo-dante-display-buffer)
+    (add-to-list 'display-buffer-alist sboo-dante-display-buffer)
+
+    ;; ^ Hide `dante-mode' popup (via `display-buffer-alist').
 
     ())
 
@@ -1869,30 +1894,31 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
     )
 
 ;;----------------------------------------------;;
-;; Builtin Features: ---------------------------;;
+;; Appearence ----------------------------------;;
 ;;----------------------------------------------;;
 
-;; Non-Package features must be configured more because,
-;; with `with-eval-after-load', `define-key', etc.
+(use-package all-the-icons-dired
 
-(with-eval-after-load 'comint
+  :hook (dired-mode)
+;;:hook (dired-mode . all-the-icons-dired-mode)
 
-  (bind-key "<up>"   'comint-previous-matching-input-from-input comint-mode-map)
-  (bind-key "<down>" 'comint-next-matching-input-from-input     comint-mode-map)
-
-  (setq comint-scroll-to-bottom-on-output 'others)
-  (setq comint-scroll-to-bottom-on-input  'this)
-
-  (sboo-custom-set comint-buffer-maximum-size
-      2000
-    "Increase.")
-
-  ())
+  )
 
 ;;----------------------------------------------;;
 
-  ;; :custom-face
-  ;; (eruby-standard-face ((t (:slant italic)))))
+(use-package all-the-icons
+
+  
+
+  )
+
+;;----------------------------------------------;;
+
+(use-package doom-modeline
+
+  :hook (after-init . doom-modeline-mode)
+
+  )
 
 ;;----------------------------------------------;;
 ;; Finalization --------------------------------;;

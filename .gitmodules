@@ -40,3 +40,6 @@
 [submodule "sed-mode"]
 	path = submodules/sed-mode
 	url = https://github.com/emacsfodder/sed-mode
+[submodule "icons-in-terminal"]
+	path = submodules/icons-in-terminal
+	url = https://github.com/sebastiencs/icons-in-terminal
