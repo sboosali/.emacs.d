@@ -4,9 +4,10 @@
 # name        : [sboo] a String « newtype ».
 # condition   : (= (length "newstring") (current-column))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-# contributor : Spiros Boosalis
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
+--------------------------------------------------
 --------------------------------------------------
 
 {-|
@@ -17,9 +18,12 @@ newtype $1 = $1
 
   String$0
 
-  deriving stock    (Show,Read,Lift,Generic)
-  deriving newtype  (Eq,Ord,Semigroup,Monoid)
+  deriving stock    (Show,Read)
+  deriving stock    (Lift,Data,Generic)
+  deriving newtype  (Eq,Ord)
   deriving newtype  (NFData,Hashable)
+
+--------------------------------------------------
 
 instance IsString $1 where
   fromString = coerce

@@ -9,7 +9,7 @@
 # --
 
   deriving stock    (Enum,Bounded,Ix)
+  deriving stock    (Show,Read,Eq,Ord)
+  deriving stock    (Lift,Data,Generic)
   deriving anyclass (GEnum)
-
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
   deriving anyclass (NFData,Hashable)

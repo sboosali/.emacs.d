@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+#
+# key         : specialize
+# name        : [sboo] a « SPECIALIZE » pragma.
+# type        : snippet
+# condition   : (let ((KEY "specialize")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+
+{-# SPECIALIZE `
+(if (fboundp 'sboo-ghc-get-name-of-prior-definition)
+    (read-string "Haskell Type: " (format "%s :: " (sboo-ghc-get-name-of-prior-definition)))
+  (read-string "Haskell Signature: "))
+` #-}
+$0

@@ -1,11 +1,13 @@
 # -*- mode: snippet -*-
 #
-# key         : der-standard
-# name        : [sboo] `deriving` "standard" typeclasses (for most types).
-# condition   : (= (length "der-standard") (current-column))
+# key         : deriving
+# name        : [sboo] « deriving » "standard" classes (for most types).
+# condition   : (= (length "deriving") (current-column))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis
 #
 # --
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass ($0NFData,Hashable)
+
+  deriving stock    (Show,Read,Eq,Ord)
+  deriving stock    (Lift,Data,Generic)
+  deriving anyclass (NFData,Hashable)
