@@ -1,12 +1,15 @@
 # -*- mode: snippet -*-
 #
-# key         : =fg
-# name        : [sboo] a (unary, global) function declaration.
+# key         : fun
+# name        : [sboo] Declare a (unary, global) function.
+# type        : snippet
+# condition   : (let ((KEY "fun")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-# contributor : Spiros Boosalis
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
 --------------------------------------------------
+
 {- | 
 
 -}
@@ -15,5 +18,5 @@ ${1:fff} :: ${2:AAA} -> ${3:BBB}
 $1 (${2:$(downcase yas-text)}) = ${3:$(downcase yas-text)}
   where
 
-  ${3:$(downcase yas-text)} = _${0}
+  ${3:$(downcase yas-text)} = _$0
 

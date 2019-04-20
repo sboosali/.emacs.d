@@ -16,6 +16,10 @@
   (setq helm-echo-input-in-header-line        t)   ; 
   (setq helm-full-frame                       t)   ; 
 
+  (custom-set-variables
+   '(helm-register-max-offset 10000 t nil "Increase the Maximum Clipboard Size.")
+   )
+
   (when (executable-find "curl")
     (setq helm-google-suggest-use-curl-p t))
 
