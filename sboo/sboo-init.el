@@ -625,10 +625,23 @@ Related:
 
   :config
 
+  (defun sboo-grep-config ()
+    "Hook for `grep-mode'."
+    (toggle-truncate-lines 1))
+
+  (add-hook 'grep-mode #'sboo-grep-config)
+
   (dolist (CONS '(("hs" . "*.hs")
                   ("md" . "*.md")
                   ))
     (add-to-list 'grep-files-aliases CONS))
+
+  (dolist (DIRECTORY '("tmp" "old" "stdout"
+                       "dist" "dist-newstyle" "dist-dante" ".stack-work"
+                       "elpa" ".cask"
+                       "node_modules" ".bundle"
+                       ))
+    (add-to-list 'grep-find-ignored-directories DIRECTORY))
 
   ())
 
@@ -1897,11 +1910,42 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; Appearence ----------------------------------;;
 ;;----------------------------------------------;;
 
+(progn
+
+  ;;--------------------------;;
+  
+  (use-package spaceline
+
+    :config
+
+    (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main))))
+
+    ())
+
+  ;;--------------------------;;
+  
+  (use-package spaceline-config
+
+    :config
+
+    (spaceline-helm-mode +1)
+    (spaceline-emacs-theme)
+
+    ())
+
+  ;;--------------------------;;
+  
+  ())
+
+;; `http://amitp.blogspot.com/2017/01/emacs-spaceline-mode-line.html'
+
+;;----------------------------------------------;;
+
 (use-package all-the-icons
 
   :load-path "~/.emacs.d/submodules/all-the-icons.el"
 
-  )
+  :disabled)
 
 ;; Installation:
 ;;
@@ -1924,7 +1968,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   :hook (dired-mode . all-the-icons-dired-mode)
 
-  )
+  :disabled)
 
 ;;----------------------------------------------;;
 
@@ -1932,7 +1976,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   :hook (after-init . doom-modeline-mode)
 
-  )
+  :disabled)
 
 ;;----------------------------------------------;;
 ;; Finalization --------------------------------;;

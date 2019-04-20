@@ -406,6 +406,8 @@
 ;; Default: « "find <D> <X> -type f <F> -exec grep <C> -nH --null -e <R> \\{\\} +" »
 ;; Example: « find . -type f -exec grep --color -nH --null -e _ \{\} + »
 
+;;----------------------------;;
+
 ;; See: URL `https://stackoverflow.com/questions/28915372/change-the-default-find-grep-command-in-emacs'
 
 ;; « C-h f `grep-find-template' »: 

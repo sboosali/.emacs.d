@@ -316,7 +316,7 @@ Links:
   ;TODO get project-root from locate-dominating-file cabal.project.
   ;TODO get default-directory from subdirectory of project-root
 
-  (let* ((FILE (if buffer (buffer-file-name) nil))
+  (let* ((FILE (if buffer (buffer-file-name buffer) nil))
 
          (COMPILE-COMMAND
 
@@ -366,7 +366,7 @@ Output:
 		(if (looking-at auto-mode-interpreter-regexp)
 		    (match-string 2))))
 
-             (SYMBOL (intern STRING))
+             (SYMBOL (intern-soft STRING))
              )
 
         SYMBOL))))
