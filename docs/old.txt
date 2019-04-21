@@ -2158,17 +2158,103 @@ a(n optionally distinct) trigger-keys."
   )
 ;;----------------------------------------------;;
 
+         (dolist (THING things)
+
+           (let* ((TEXT   (thing-at-point THING))
+                  (TEXT-P (and TEXT (funcall predicate TEXT)))
+                  )
+
+             (if TEXT-P
+                 TEXT
+               nil)))
 ;;----------------------------------------------;;
 
+;; M-: (let ((choices '(white blue black red green))) (sboo-dwim-get :predicate (lambda (s) (let ((choice (intern s))) (memq choice choices))) :things '(char word line) :prompt nil :reader (completing-read "Color: " choices))) ; blue
 ;;----------------------------------------------;;
 
+(cl-defun sboo-dwim-get-number ()
+
+  "Do-What-I-Mean — get a number.
+
+Output:
+
+• a `numberp' or nil.
+
+Related:
+
+• Wraps `sboo-dwim-get'."
+
+  (sboo-dwim-get :predicate (lambda (s) (let ((n (string-to-number s))) (and (numberp n) (/= n 0))))
+                 :things    '(word char)
+                 :prompt    "Number: "
+                 :reader #'read-number
+                 ))
+                 
 ;;----------------------------------------------;;
 
+(cl-defun sboo-dwim-get-enum-symbol (xs &key prompt predicate things reader)
+
+  "Do-What-I-Mean — get a character.
+
+Input:
+
+• XS     — a `listp' of `symbolp's.
+• PROMPT — an optional `stringp'.
+
+Output:
+
+• a `symbolp' or `nil'.
+  a `member' of XS.
+
+Related:
+
+• Wraps `sboo-dwim-get'."
+
+  (let* ((PROMPT    (or prompt
+                        nil))
+
+         (THINGS    (or things
+                        '(char word line)))
+
+         (READER    (or reader
+                        (lambda (*PROMPT*)
+                          (intern
+                           (completing-read *PROMPT* choices)))))
+
+         (MEMBER?   (lambda (s)
+                      (let ((x (intern s)))
+                        (memq x xs))))
+         (PREDICATE (or (if (functionp predicate) predicate nil)
+                        MEMBER?))
+         )
+
+  (sboo-dwim-get :predicate PREDICATE
+                 :things    THINGS
+                 :reader    READER
+                 :prompt    PROMPT
+                 )))
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+
+                 (let* ((TEXT   (thing-at-point THING :no-text-properties))
+                        (TEXT-P (and TEXT
+                                     (funcall predicate TEXT)))
+                        )
+                   (if TEXT-P
+                       TEXT
+                     nil)))
 
 ;;----------------------------------------------;;
+(cl-loop for THING in '(url email number filename symbol word)
+         
+         (cl-let ((TEXT (thing-at-point THING :no-text-properties)))
+
+           (when TEXT
+             (return (cons THING TEXT)))))
+
+;; ^ the **first** thing at point. 
+;;----------------------------------------------;;
+
 
 ;;----------------------------------------------;;
 

@@ -707,6 +707,35 @@ Guards the computations via `run-with-idle-timer' (they may take several seconds
   ())
 
 ;;----------------------------------------------;;
+
+(defun sboo-unicode-char-dwim ()
+
+  "Guess a currently-relevant unicode character (“Do-What-I-Mean”).
+
+Examples:
+
+• M-: (sboo-unicode-char-dwim)
+      PRINT Character (press a key): 
+      INPUT c
+    ⇒ ?c
+
+"
+
+  (or (condition-case _
+          (sboo-unicode--interesting-character-p (thing-at-point 'char))
+        (error nil))
+      (condition-case _
+          (let ((CLIPBOARD-CONTENTS (car kill-ring)))
+            (if (and CLIPBOARD-CONTENTS (= 1 (length CLIPBOARD-CONTENTS)))
+                (substring CLIPBOARD-CONTENTS 0 1)))
+        (error nil))
+      (condition-case _
+          (read-char-exclusive "Character (press a key): ")
+                                        ;TODO read 1-length string.
+        (error nil))
+      ))
+
+;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 
@@ -746,7 +775,8 @@ Related:
                       (error nil))
                     )))
 
-  (let* ((NAME (sboo-unicode-get-char-name CHAR))
+  (let* ((CHAR char)
+         (NAME (sboo-unicode-get-char-name CHAR))
          )
 
     (progn

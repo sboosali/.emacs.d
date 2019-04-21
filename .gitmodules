@@ -49,3 +49,6 @@
 [submodule "all-the-icons-dired"]
 	path = submodules/all-the-icons-dired
 	url = https://github.com/jtbm37/all-the-icons-dired
+[submodule "simpleclip"]
+	path = submodules/simpleclip
+	url = https://github.com/rolandwalker/simpleclip

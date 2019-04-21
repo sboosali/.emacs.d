@@ -17,11 +17,21 @@
 ;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
-;; builtins:
+;;; requirements:
 
 (require 'cl-lib)
 (require 'pcase)
 (require 'seq)
+
+;;; autoloads:
+
+(autoload 'term-send-raw-string "term")
+
+;;; declarations:
+
+(eval-when-compile
+  (defvar x-select-enable-clipboard)
+  (defvar select-enable-clipboard))
 
 ;;----------------------------------------------;;
 ;; Types ---------------------------------------;;
@@ -31,55 +41,160 @@
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
+(defgroup sboo-clipboard
+
+  nil
+
+  "."
+
+  ;;:link (url-link "")
+
+  :prefix "sboo-clipboard-"
+  :group 'lisp)
+
+;;==============================================;;
+
+(defcustom sboo-clipboard-custom-content-provider
+
+  nil
+
+  "Custom program to provide clipboard content.
+
+If nil, use default logic to get clipboard content according to OS.
+
+If non-nil, use the output of executing the provider program as clipboard content."
+
+   :type 'string
+   :group 'sboo-clipboard)
+
+;;----------------------------------------------;;
+
+(defvar sboo-clipboard-commands
+
+  '(sboo-clipboard-paste
+    sboo-clipboard-copy
+    sboo-clipboard-cut
+    )
+
+  "Interactive commands `provide'd by `sboo-clipboard'.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-clipboard-saved-icf
+
+  nil
+
+  "Saved value of `interprogram-cut-function'.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-clipboard-saved-ipf
+
+  nil
+
+  "Saved value of `interprogram-paste-function'.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-clipboard-saved-xsec
+
+  nil
+
+  "Saved value of `x-select-enable-clipboard' or `select-enable-clipboard'.")
+
+;;----------------------------------------------;;
+
+;; MS Windows workaround:
+;;
+;; w32-get-clipboard-data returns nil
+;; when Emacs was the originator of the clipboard data.
+;;
+
+(defvar sboo-clipboard-contents
+
+  nil
+
+  "Value of most-recent cut or paste.")
+
 ;;----------------------------------------------;;
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
 ;;;###autoload
 (defun sboo-clipboard-get-contents ()
-  "Return the contents of the system clipboard as a string."
+
+  "Return the contents of the system clipboard as a string.
+
+Output:
+
+• a `stringp'.
+
+Examples:
+
+• M-: (sboo-clipboard-get-contents)
+   ⇒ #(\"EXAMPLE CLIPBOARD CONTENTS\" 0 5 (foreign-selection UTF8_STRING))
+"
+
   (condition-case nil
+
       (cond
+
        (sboo-clipboard-custom-content-provider
         (shell-command-to-string sboo-clipboard-custom-content-provider))
+
        ((fboundp 'ns-get-pasteboard)
         (ns-get-pasteboard))
+
        ((fboundp 'w32-get-clipboard-data)
         (or (w32-get-clipboard-data)
             sboo-clipboard-contents))
+
        ((and (featurep 'mac)
              (fboundp 'gui-get-selection))
         (gui-get-selection 'CLIPBOARD 'NSStringPboardType))
+
        ((and (featurep 'mac)
              (fboundp 'x-get-selection))
         (x-get-selection 'CLIPBOARD 'NSStringPboardType))
        ;; todo, this should try more than one request type, as in gui--selection-value-internal
+
        ((fboundp 'gui-get-selection)
         (gui-get-selection 'CLIPBOARD (or x-select-request-type 'UTF8_STRING)))
        ;; todo, this should try more than one request type, as in gui--selection-value-internal
+
        ((fboundp 'x-get-selection)
         (x-get-selection 'CLIPBOARD (or x-select-request-type 'UTF8_STRING)))
+
        (t
         (error "Clipboard support not available")))
+
     (error
+
      (condition-case nil
+
          (cond
+
           ((eq system-type 'darwin)
            (with-output-to-string
              (with-current-buffer standard-output
                (call-process "/usr/bin/pbpaste" nil t nil "-Prefer" "txt"))))
+
           ((eq system-type 'cygwin)
            (with-output-to-string
              (with-current-buffer standard-output
                (call-process "getclip" nil t nil))))
+
           ((memq system-type '(gnu gnu/linux gnu/kfreebsd))
            (with-output-to-string
              (with-current-buffer standard-output
                (call-process "xsel" nil t nil "--clipboard" "--output"))))
+
           (t
            (error "Clipboard support not available")))
+
        (error
-        (error "Clipboard support not available"))))))
+        (error "Clipboard support not available")))))
+  )
 
 ;;----------------------------------------------;;
 
@@ -194,7 +309,7 @@ Links:
 
           ;; ^ Try the clipboard.
 
-          (error nil))
+          (error nil)))))
 
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
@@ -208,7 +323,40 @@ Links:
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 ;; 
-;; 
+;;
+;;----------------------------------------------;;
+;;
+;; (when simpleclip-edit-menu
+;;   (let ((map (copy-keymap (lookup-key global-map [menu-bar edit]))))
+;;     (define-key map [cut]   '(menu-item
+;;                               "Cut"
+;;                               simpleclip-cut
+;;                               :enable
+;;                               (and use-region-p (not buffer-read-only))
+;;                               :help
+;;                               "Cut (to clipboard) text in region between mark and current position"))
+;;     (define-key map [copy]  '(menu-item
+;;                               "Copy"
+;;                               simpleclip-copy
+;;                               :enable
+;;                               use-region-p
+;;                               :help
+;;                               "Copy (to clipboard) text in region between mark and current position"))
+;;     (define-key map [paste] '(menu-item
+;;                               "Paste"
+;;                               simpleclip-paste
+;;                               :enable
+;;                               (and (or (and (fboundp 'gui-backend-selection-exists-p)
+;;                                             (gui-backend-selection-exists-p 'CLIPBOARD))
+;;                                        (and (fboundp 'x-selection-exists-p)
+;;                                             (x-selection-exists-p 'CLIPBOARD)))
+;;                                    (not buffer-read-only))
+;;                               :help
+;;                               "Paste (from clipboard) text most recently cut/copied"))
+;;     (define-key simpleclip-mode-map [menu-bar edit] map)))
+;;
+;;----------------------------------------------;;
+;;
 ;; 
 ;;==============================================;;
 (provide 'sboo-clipboard)

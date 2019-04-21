@@ -621,6 +621,34 @@ Related:
 
 ;;==============================================;;
 
+(defun magnars/rgrep-fullscreen (regexp &optional files dir confirm)
+
+  "Open grep in full screen, saving windows."
+
+  (interactive
+   (progn
+     (grep-compute-defaults)
+     (cond
+      ((and grep-find-command (equal current-prefix-arg '(16)))
+       (list (read-from-minibuffer "Run: " grep-find-command
+                                   nil nil 'grep-find-history)))
+      ((not grep-find-template)
+       (error "grep.el: No `grep-find-template' available"))
+      (t (let* ((regexp (grep-read-regexp))
+                (files (grep-read-files regexp))
+                (dir (ido-read-directory-name "Base directory: "
+                                              nil default-directory t))
+                (confirm (equal current-prefix-arg '(4))))
+           (list regexp files dir confirm))))))
+
+  (window-configuration-to-register ?$)
+  (rgrep regexp files dir confirm)
+  (switch-to-buffer "*grep*")
+  (delete-other-windows)
+  (beginning-of-buffer))
+
+;;----------------------------;;
+
 (use-package grep
 
   :config
@@ -1653,18 +1681,26 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 (use-package markdown-mode
 
+  :commands (markdown-mode gfm-mode)
+  
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'"       . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
+         ("\\.markdown\\'" . markdown-mode)
+         )
 
   :bind (:map markdown-mode-map
               ("TAB" . dabbrev-expand)
          :map gfm-mode-map
-              ("TAB" . dabbrev-expand))
+              ("TAB" . dabbrev-expand)
+         )
 
-  :init (setq markdown-command "multimarkdown")
+  :init
 
-  :commands (markdown-mode gfm-mode))
+  (setq markdown-command "multimarkdown")
+
+  :config
+
+  ())
 
 ;; ^ 
 ;;
@@ -1681,12 +1717,14 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
   :mode (("\\.json\\'" . json-mode)
          )
 
-  :hook ((json-mode . flycheck-mode))
+  :config
+
+  (add-hook 'json-mode-hook #'flycheck-mode)
+  (add-hook 'json-mode-hook #'sboo-set-font-to-iosevka)
 
   ;; ^ FlyCheck builds-in a « jsonlint » checker
   ;; ^ « jsonlint » is a JSON Linter.
-
-  )
+  ())
 
 ;;----------------------------------------------;;
 
@@ -1696,7 +1734,12 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
          ("\\.yml\\'"  . yaml-mode)
          )
 
-  )
+  :config
+
+  (add-hook 'yaml-mode-hook #'flycheck-mode)
+  (add-hook 'yaml-mode-hook #'sboo-set-font-to-iosevka)
+
+  ())
 
 ;;----------------------------------------------;;
 

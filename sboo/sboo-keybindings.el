@@ -460,7 +460,7 @@ Wraps `forward-thing'."
 (global-set-key (kbd "s-i") #'imenu)
 ;;(global-set-key (kbd "s-j") #')
 (global-set-key (kbd "s-k") #'describe-key)               ; "Key"
-;;(global-set-key (kbd "s-l") #')
+(global-set-key (kbd "s-l") #'align-regexp)               ; a"L"ign
 ;;(global-set-key (kbd "s-m") #')
 ;;(global-set-key (kbd "s-n") #')
 (global-set-key (kbd "s-o") #'find-file-at-point)         ;MNEMONIC: "Open file". ;OLD: other-window.
