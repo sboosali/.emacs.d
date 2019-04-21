@@ -2124,8 +2124,38 @@ a(n optionally distinct) trigger-keys."
 
 ;;----------------------------------------------;;
 
+  :hook ((json-mode . (flycheck-mode
+                       sboo-set-font-to-iosevka
+                       )))
+
 ;;----------------------------------------------;;
 
+(use-package json-mode
+
+  ;; :disabled
+
+  :mode (("\\.json\\'" . json-mode)
+         )
+
+  :hook ((json-mode . flycheck-mode)
+         (json-mode . sboo-set-font-to-iosevka)
+         )
+
+  ;; ^ FlyCheck builds-in a « jsonlint » checker
+  ;; ^ « jsonlint » is a JSON Linter.
+  )
+
+;;----------------------------------------------;;
+
+(use-package yaml-mode
+
+  :mode (("\\.yaml\\'" . yaml-mode)
+         ("\\.yml\\'"  . yaml-mode)
+         )
+
+  :hook ((yaml-mode . sboo-set-font-to-iosevka)
+         )
+  )
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

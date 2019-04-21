@@ -1,4 +1,4 @@
-# sboosali's `~/.emacs.d` and `init.el`
+# sboosali's `~/.emacs.d`
 
 ## Description
 
@@ -7,25 +7,38 @@
 ## Installation
 
 ```sh
-$ git clone https://github.com/sboosali/.emacs.d && cd .emacs.d 
+$ cd ~ && git clone https://github.com/sboosali/.emacs.d && cd .emacs.d 
 ...
 
 $ git submodule update --init --recursive
-Submodule 'dante' (https://github.com/jyp/dante) registered for path 'submodules/dante'
-Submodule 'helm' (https://github.com/emacs-helm/helm) registered for path 'submodules/helm'
-Submodule 'real-auto-save' (https://github.com/ChillarAnand/real-auto-save) registered for path 'submodules/real-auto-save'
-Submodule 'use-package' (https://github.com/jwiegley/use-package) registered for path 'submodules/use-package'
 ...
-```
 
+
+```
 
 ## Dependencies
 
-### Vendored Dependencies
+### Elisp
+
+Features (vendored):
+
+* `use-package`-
+* `helm`-
+* `dante`-
+
+Libraries (vendored):
 
 * `dash`-2.14.1
 * `s`-1.12.0
 * `f`-v0.20.0
 
+### Fonts
+
+* `Iosevka` — 
+
+## Related
+
+- `magnars`'s  — <https://github.com/magnars/.emacs.d#readme>
+- `jwiegley`'s — <https://github.com/jwiegley/dot-emacs#readme>
 
 ## 

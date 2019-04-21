@@ -40,4 +40,4 @@ NOTE `use-package` is used (by `init.el`) like so:
 * /never/ configures internal (/builtin) packages (for robustness).
 
 
-##
+## 
