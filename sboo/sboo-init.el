@@ -766,7 +766,7 @@ Related:
 
 ;;----------------------------------------------;;
 
-(add-hook 'text-mode-hook #'sboo-set-input-method-TeX)
+;;(add-hook 'text-mode-hook #'sboo-set-input-method-TeX)
 
 ;; (when (require 'sboo-text-mode nil :no-error)
 ;;   (dolist (HOOK sboo-text-mode-hooks)

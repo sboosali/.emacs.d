@@ -300,7 +300,45 @@ Wraps `forward-thing'."
 ;;; Unset ======================================;;
 ;;==============================================;;
 
-(global-unset-key (kbd "C-x c"))
+(progn
+
+  (global-unset-key (kbd "C-x c"))
+
+  ())
+
+;;==============================================;;
+
+(progn
+
+  (global-unset-key (kbd "C-0"))
+  (global-unset-key (kbd "C-1"))
+  (global-unset-key (kbd "C-2"))
+  (global-unset-key (kbd "C-3"))
+  (global-unset-key (kbd "C-4"))
+  (global-unset-key (kbd "C-5"))
+  (global-unset-key (kbd "C-6"))
+  (global-unset-key (kbd "C-7"))
+  (global-unset-key (kbd "C-8"))
+  (global-unset-key (kbd "C-9"))
+
+  ())
+
+;;----------------------------------------------;;
+
+(progn
+
+  (global-unset-key (kbd "M-0"))
+  (global-unset-key (kbd "M-1"))
+  (global-unset-key (kbd "M-2"))
+  (global-unset-key (kbd "M-3"))
+  (global-unset-key (kbd "M-4"))
+  (global-unset-key (kbd "M-5"))
+  (global-unset-key (kbd "M-6"))
+  (global-unset-key (kbd "M-7"))
+  (global-unset-key (kbd "M-8"))
+  (global-unset-key (kbd "M-9"))
+
+  ())
 
 ;;==============================================;;
 ;;; Single-Character Keybindings...
@@ -449,6 +487,33 @@ Wraps `forward-thing'."
 ;;==============================================;;
 ;; « s-<LETTER> »
 
+;; `sboo-*-keymap's
+;;
+;; URL `http://pragmaticemacs.com/emacs/use-your-digits-and-a-personal-key-map-for-super-shortcuts/'
+;; URL `https://bendersteed.gitlab.io/post/rediscovering-vanilla-emacs-text-editing/'
+;;
+;;
+
+;;----------------------------------------------;;
+
+(progn
+  (define-prefix-command 'sboo-mark-keymap)
+
+  (define-key sboo-mark-keymap (kbd "a") #'mark-beginning-of-buffer)
+  (define-key sboo-mark-keymap (kbd "b") #'mark-whole-buffer)
+  (define-key sboo-mark-keymap (kbd "e") #'mark-end-of-buffer)
+
+  (define-key sboo-mark-keymap (kbd "w") #'mark-word)
+  (define-key sboo-mark-keymap (kbd "p") #'mark-paragraph)
+
+  (define-key sboo-mark-keymap (kbd "x") #'mark-sexp)
+  (define-key sboo-mark-keymap (kbd "d") #'mark-defun)
+
+;;(define-key sboo-mark-keymap (kbd "") #'mark-)
+  ())
+
+;;----------------------------------------------;;
+
 (global-set-key (kbd "s-a") #'sboo-copy-buffer-contents)  ; "copy All"
 ;;(global-set-key (kbd "s-b") #')
 (global-set-key (kbd "s-c") #'sboo-insert-char)           ; "Character"
@@ -461,7 +526,7 @@ Wraps `forward-thing'."
 ;;(global-set-key (kbd "s-j") #')
 (global-set-key (kbd "s-k") #'describe-key)               ; "Key"
 (global-set-key (kbd "s-l") #'align-regexp)               ; a"L"ign
-;;(global-set-key (kbd "s-m") #')
+(global-set-key (kbd "s-m") #'sboo-mark-keymap)           ; « "m"ark-* »
 ;;(global-set-key (kbd "s-n") #')
 (global-set-key (kbd "s-o") #'find-file-at-point)         ;MNEMONIC: "Open file". ;OLD: other-window.
 (global-set-key (kbd "s-p") #'compile)                    ; "comPile"

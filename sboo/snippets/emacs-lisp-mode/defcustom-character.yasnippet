@@ -1,0 +1,24 @@
+# -*- mode: snippet -*-
+#
+# key         : defchar
+# name        : a « defcustom » declaration for « (:character ...) » types.
+# condition   : (let ((KEY "defchar")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(defcustom sboo-${1:name}-char
+
+  ${2:nil}
+
+  "$0.
+
+a `characterp'."
+
+  :type '(character :tag "Character")
+
+  :safe #'characterp
+  :group 'sboo)
+

@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+#
+# key         : code
+# name        : [sboo] the « <code> ... » element.
+# type        : snippet
+# condition   : (let ((KEY "code")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+<code>`yas-selected-text`</code>$0

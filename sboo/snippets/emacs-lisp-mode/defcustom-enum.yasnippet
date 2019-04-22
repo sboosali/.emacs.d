@@ -9,18 +9,18 @@
 # --
 ;;----------------------------------------------;;
 
-(defcustom sboo-${1:name}
+(defcustom $2-${1:name}
 
-  ${2:nil}
+  $3
 
   "$0.
 
-(An Enum.)"
+a \`symbolp'."
 
-  :type '(radio (const $2)
-                 (const $3)
-                (const $4))
+  :type '(radio (const ${3:nil} :tag "Disable")
+                (const ${4:t} :tag "Enable")
+                (const $5 :tag ""))
 
-  :safe t
-  :group 'sboo)
+  :safe #'symbolp
+  :group '${2:sboo})
 

@@ -2262,23 +2262,100 @@ $0
 import qualified "${1:egg}" ${1:$(ignore-errors (require 'subr-x) (with-temp-buffer (insert yas-text) (goto-char (point-min)) (while (< (point) (point-max)) (capitalize-word +1)) (string-trim (buffer-substring-no-properties (point-min) (point-max)))))} as ${1:$(ignore-errors (require 'subr-x) (with-temp-buffer (insert yas-text) (goto-char (point-min)) (while (< (point) (point-max)) (capitalize-word +1)) (string-trim (buffer-substring-no-properties (point-min) (point-max)))))}
 $0
 ;;----------------------------------------------;;
+pMTG :: ( MTGParsing p ) => Text -> p a -> JSON.Object -> JSON.Parser a
+pMTG fieldName parser o = _
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+pMTG :: ( Parse a, Default a ) => Text -> JSON.Object -> JSON.Parser a
+pMTG fieldName o = JSON. fieldName parse def o
 
 ;;----------------------------------------------;;
 
+pMTG :: ( Parse a, Default a ) => Text -> JSON.Object -> JSON.Parser a
+pMTG fieldName o =
+
+  (JSON.explicitParseFieldMaybe p o fieldName) .!= def
+
+  where
+
+  p = toParseJSON parse
 ;;----------------------------------------------;;
+
+{- | Instantiate a @TokenParsing@ parser (from @parsers@) as a @Parser@ parser (from @attoparsec@),
+for @aeson@. -}
+
+toParseJSON :: ( MTG.MTGParsing p ) => p a -> AttoparsecParser a
+toParseJSON = _
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+(defcustom sboo-${1:name}-char
+
+  ${2:nil}
+
+  "$0.
+
+a `characterp'."
+
+  :type '(choice (const nil :tag "Default")
+                 (character :tag "Character"))
+
+  :safe #'characterp
+  :group 'sboo)
+
 
 ;;----------------------------------------------;;
 
+(defcustom sboo-comment-default-infix-char
+
+  ?-
+
+  "The default comment character.
+
+a `characterp'."
+
+  :type '(character :tag "Character")
+
+  :safe #'characterp
+  :group 'sboo-comment)
+
 ;;----------------------------------------------;;
 
+sboo-comment-default-char ⇒ sboo-comment-default-prefix-char
+sboo-comment-default-infix-char ⇒ sboo-comment-default-h1-infix-char
+sboo-comment-default-infix-char ⇒ sboo-comment-default-h2-infix-char
+ 
+;;----------------------------------------------;;
+
+ (FILENAME (file-name-nondirectory (buffer-file-name)))
+ (FEATURE  (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))
+ (MODE     (string-remove-suffix "-mode" (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))))
+
+;;----------------------------------------------;;
+
+(defun $1-version (&optional show-version)
+
+  "Display string describing the version of BNF Mode.
+
+If called interactively or if SHOW-VERSION is non-nil, show the
+version in the Echo Area and the Messages Buffer.
+
+The returned string includes both, the version from package.el
+and the library version, if both are present and different.
+
+If the version number could not be determined, signal an error
+if called interactively or if SHOW-VERSION is non-nil, otherwise
+just return nil."
+
+  (interactive (list t))
+
+  (let ((VERSION (pkg-info-version-info '$1))
+        )
+
+    (when show-version
+      (message "Version of $1 (currently-\`load'ed): %s" VERSION))
+    VERSION))
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

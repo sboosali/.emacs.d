@@ -205,17 +205,25 @@ Links:
 
                (cl-loop for THING in things
 
-                 (let* ((TEXT   (thing-at-point THING :no-text-properties))
-                        (TEXT-P (and TEXT
-                                     (funcall predicate TEXT)))
-                        )
-                   (when TEXT-P
-                       (return TEXT))))
+                        (let* ((TEXT   (thing-at-point THING :no-text-properties))
+                               (TEXT-P (and TEXT
+                                            (funcall predicate TEXT)))
+                               )
+                          (when TEXT-P
+                            (return TEXT))))
 
-             ;; “thing”s include ‘symbol’, ‘list’, ‘sexp’, ‘defun’, ‘filename’, ‘url’, ‘email’, ‘word’, ‘sentence’, ‘whitespace’, ‘line’, ‘number’, ‘page’.
+             ;; “thing”s include: ‘symbol’, ‘list’, ‘sexp’, ‘defun’, ‘filename’, ‘url’, ‘email’, ‘word’, ‘sentence’, ‘whitespace’, ‘line’, ‘number’, ‘page’.
 
              (error
               (message "%S" e)))  ;TODO (ERROR-SYMBOL . SIGNAL-DATA)
+
+   (cl-loop for x below 10
+            if (cl-oddp x)
+              collect x into odds
+            else
+              collect x into evens
+            finally return `(:odd ,odds :even ,evens))
+
 
            ;;-----------------------------------------;;
            ;; Try the current contents of the (emacs) clipboard:
@@ -444,7 +452,16 @@ Related:
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 ;; 
+
+;; `cl-loop':
 ;; 
-;; 
+;;    (cl-loop for x below 10
+;;             if (cl-oddp x)
+;;               collect x into odds
+;;             else
+;;               collect x into evens
+;;             finally return `(:odd ,odds :even ,evens))
+;;
+
 ;;==============================================;;
 (provide 'sboo-dwim)

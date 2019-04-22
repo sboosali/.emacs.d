@@ -130,6 +130,26 @@ A `listp' of `symbolp's."
 
 ;;----------------------------------------------;;
 
+(defcustom sboo-html-supermodes-alist
+
+  '(
+    (mhtml-mode    html-mode)
+    (markdown-mode html-mode mhtml-mode)
+    (gfm-mode      html-mode mhtml-mode markdown-mode)
+   )
+
+  "The (explicitly-transitive) parents `major-mode's for each `major-mode'.
+
+Associates `keywordp's with `listp's of `symbolp's."
+
+  :type '(alist :key-type   (symbol :tag "Major Mode")
+                :value-type (repeated (symbol :tag "Parents (Major Modes)")))
+
+  :safe #'listp
+  :group 'sboo-html)
+
+;;----------------------------------------------;;
+
 (defcustom sboo-html-element-list
 
   '(
