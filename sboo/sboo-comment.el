@@ -23,6 +23,10 @@
 ;; • `sboo-comment-suffix-string-alist'
 ;; • `sboo-comment-'
 ;;
+;; Related variables include:
+;;
+;; • `comment-start'
+;;
 
 ;;==============================================;;
 ;;; Code:
@@ -44,19 +48,53 @@
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
-(defvar sboo-comment-character-default
+(defgroup sboo-comment
+
+  nil
+
+  "Insertion of (padded, aligned) comment headers."
+
+  :prefix "comment-"
+  :group 'fill)
+
+;;==============================================;;
+
+(defcustom sboo-comment-default-prefix-char
 
   ?#
 
-  "The default comment character.")
+  "The default comment `characterp'."
+
+  :type '(character :tag "Character")
+
+  :safe #'characterp
+  :group 'sboo-comment)
 
 ;;----------------------------------------------;;
 
-(defvar sboo-comment-infix-character-default
+(defcustom sboo-comment-default-h1-infix-char
+
+  ?=
+
+  "The default `characterp' in “h1” comments."
+
+  :type '(character :tag "Character")
+
+  :safe #'characterp
+  :group 'sboo-comment)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-comment-default-h2-infix-char
 
   ?-
 
-  "The default comment character.")
+  "The default `characterp' in “h2” comments."
+
+  :type '(character :tag "Character")
+
+  :safe #'characterp
+  :group 'sboo-comment)
 
 ;;----------------------------------------------;;
 
@@ -102,7 +140,7 @@
 
 (defvar sboo-comment-character-alist
 
-  '(
+  `(
 
     (lisp-mode             . ?\;)
     (emacs-lisp-mode       . lisp-mode)
@@ -127,7 +165,7 @@
 
   "Comment characters per `major-mode'.
 
-Defaults to `sboo-comment-character-default'.")
+Defaults to `sboo-comment-default-prefix-char'.")
 
 ;;----------------------------------------------;;
 
@@ -171,7 +209,7 @@ Defaults to `sboo-comment-length-default'.")
 
   "Comment characters per `major-mode'.
 
-Defaults to `sboo-comment-infix-character-default'.")
+Defaults to `sboo-comment-default-h1-infix-char'.")
 
 ;;----------------------------------------------;;
 
@@ -337,13 +375,25 @@ Defaults to `sboo-comment-h2-default'.")
 
 ;;----------------------------------------------;;
 
-(defun sboo-comment-infix-character ()
+(defun sboo-comment-h1-infix-char ()
 
-  "Lookup `sboo-comment-infix-character-alist', defaulting to `sboo-comment-infix-character-default'."
+  "Lookup `sboo-comment-infix-character-alist', defaulting to `sboo-comment-default-h1-infix-char'."
 
   (interactive)
 
-  (let* ((CHAR (sboo-comment-alist-get sboo-comment-infix-character-alist :mode major-mode :default sboo-comment-infix-character-default))
+  (let* ((CHAR (sboo-comment-alist-get sboo-comment-infix-character-alist :mode major-mode :default sboo-comment-default-h1-infix-char))
+         )
+    CHAR))
+
+;;----------------------------------------------;;
+
+(defun sboo-comment-h2-infix-char ()
+
+  "Lookup `sboo-comment-infix-character-alist', defaulting to `sboo-comment-default-h2-infix-char'."
+
+  (interactive)
+
+  (let* ((CHAR (sboo-comment-alist-get sboo-comment-infix-character-alist :mode major-mode :default sboo-comment-default-h2-infix-char))
          )
     CHAR))
 
@@ -522,7 +572,7 @@ Related:
          (LENGTH         (sboo-comment-length))
          (PREFIX         (sboo-comment-prefix-string))
          (SUFFIX         (sboo-comment-suffix-string))
-         (PADDING-CHAR   (sboo-comment-infix-character))
+         (PADDING-CHAR   (sboo-comment-h1-infix-char))
 
          (TEXT          (sboo-comment--capitalize text))
          (TEXT-PREFIX   (concat PREFIX " " TEXT " "))
