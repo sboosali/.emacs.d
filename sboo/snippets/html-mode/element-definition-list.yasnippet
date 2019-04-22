@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+#
+# key         : dl
+# name        : [sboo] Definition List element, i.e. « <dl> <dt></dt> <dd></dd> </dl> ».
+# type        : snippet
+# condition   : (let ((KEY "dl")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+<dl>
+  <dt>${1:Haskell}</dt>
+  <dd>${2:a programming language}.</dd>
+
+  $0
+</dl>

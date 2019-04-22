@@ -1,1 +1,1 @@
-prog-mode html-mode mhtml-mode markdown-mode
+text-mode sgml-mode html-mode mhtml-mode markdown-mode
