@@ -2255,9 +2255,12 @@ Related:
 ;; ^ the **first** thing at point. 
 ;;----------------------------------------------;;
 
+import qualified "${1:egg}" ${2:$(progn (require 'subr-x) (with-temp-buffer (insert (yas-field-value 1)) (goto-char (point-min)) (while (< (point) (point-max)) (capitalize-word +1)) (string-trim (buffer-substring-no-properties (point-min) (point-max)))))} as ${3:$(progn (require 'subr-x) (with-temp-buffer (insert (yas-field-value 1)) (goto-char (point-min)) (while (< (point) (point-max)) (capitalize-word +1)) (string-trim (buffer-substring-no-properties (point-min) (point-max)))))}
+$0
 
 ;;----------------------------------------------;;
-
+import qualified "${1:egg}" ${1:$(ignore-errors (require 'subr-x) (with-temp-buffer (insert yas-text) (goto-char (point-min)) (while (< (point) (point-max)) (capitalize-word +1)) (string-trim (buffer-substring-no-properties (point-min) (point-max)))))} as ${1:$(ignore-errors (require 'subr-x) (with-temp-buffer (insert yas-text) (goto-char (point-min)) (while (< (point) (point-max)) (capitalize-word +1)) (string-trim (buffer-substring-no-properties (point-min) (point-max)))))}
+$0
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

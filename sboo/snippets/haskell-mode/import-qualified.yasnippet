@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+#
+# key         : iq
+# name        : [sboo] an « import qualified » statement.
+# type        : snippet
+# condition   : (let ((KEY "iq")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+import qualified "${1:egg}" ${1:$(ignore-errors (require 'subr-x) (with-temp-buffer (insert yas-text) (goto-char (point-min)) (while (< (point) (point-max)) (capitalize-word +1)) (string-trim (buffer-substring-no-properties (point-min) (point-max)))))} as ${1:$(ignore-errors (require 'subr-x) (with-temp-buffer (insert yas-text) (goto-char (point-min)) (while (< (point) (point-max)) (capitalize-word +1)) (string-trim (buffer-substring-no-properties (point-min) (point-max)))))}
+$0
