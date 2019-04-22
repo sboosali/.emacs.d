@@ -2357,7 +2357,7 @@ just return nil."
       (message "Version of $1 (currently-\`load'ed): %s" VERSION))
     VERSION))
 ;;----------------------------------------------;;
-
+(ignore-errors (with-temp-buffer (insert "Example Header") (downcase-region (point-min) (point-max)) (let* ((replace-char-fold t)) (replace-string " " "-" (point-min) (point-max)) (buffer-substring-no-properties (point-min) (point-max))))
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

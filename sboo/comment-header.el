@@ -147,6 +147,16 @@ just return nil."
       (message "`comment-header''s version = %s" VERSION))
     VERSION))
 
+;;----------------------------------------------;;
+;; Notes: --------------------------------------;;
+;;----------------------------------------------;;
+
+;; `upcase-initials':
+;;
+;; M-: (upcase-initials "The CAT in the hAt")
+;;                    ⇒ "The CAT In The HAt"
+;;
+
 ;;==============================================;;
 (provide 'comment-header)
 
@@ -154,6 +164,25 @@ just return nil."
 ;; End:
 
 ;;; comment-header.el ends here
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

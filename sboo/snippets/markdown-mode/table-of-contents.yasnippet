@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+#
+# key         : toc
+# name        : a Table Of Contents, « ».
+# type        : snippet
+# condition   : (let ((KEY "toc")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+## *Table of Contents*
+[${1:Examples}](#${1:$(ignore-errors (with-temp-buffer (insert yas-text) (downcase-region (point-min) (point-max)) (let* ((replace-char-fold t)) (replace-string " " "-" nil (point-min) (point-max)) (buffer-substring-no-properties (point-min) (point-max)))))})
+
+$0<a name="${1:$(ignore-errors (with-temp-buffer (insert yas-text) (downcase-region (point-min) (point-max)) (let* ((replace-char-fold t)) (replace-string " " "-" nil (point-min) (point-max)) (buffer-substring-no-properties (point-min) (point-max)))))}"/>
