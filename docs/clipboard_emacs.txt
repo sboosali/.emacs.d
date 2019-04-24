@@ -1,0 +1,4740 @@
+
+
+
+
+
+
+
+
+MARKDOWN
+
+https://leanpub.com/markdown-mode/read
+
+Action	Keybinding
+Headings	 
+Insert heading depending on context	C-c C-s h
+Insert heading, prefer setext	C-c C-s H
+Insert atx heading of level # = 1, 2, … 6	C-c C-s #
+Insert setext heading of level 1	C-c C-s !
+Insert setext heading of level 2	C-c C-s @
+Inline Elements	 
+Bold	C-c C-s b
+Italics	C-c C-s i
+Inline code	C-c C-s c
+kbd tag	C-c C-s k
+Wiki link	C-c C-s w
+Block Elements	 
+Preformatted/code block	C-c C-s p
+Preformatted/code block (region)	C-c C-s P
+Blockquote	C-c C-s q
+Blockquote (region)	C-c C-s Q
+GFM code block	C-c C-s C
+Edit code block in indirect buffer	C-c '
+Links and Images	 
+Insert or edit link (inline, reference, or URL)	C-c C-l
+Insert or edit image (inline or reference)	C-c C-i
+Follow link at point	C-c C-o
+Jump between reference link and definition	C-c C-d
+Move to next link	M-n
+Move to previous link	M-p
+Footnotes	 
+Insert footnote	C-c C-s f
+Jump between footnote and definition	C-c C-d
+List Items & List Editing	 
+Insert new list item (same level)	M-RET
+Insert new list item (same level)	C-c C-j
+Insert new list item (parent level)	C-u C-c C-j
+Insert new list item (child level)	C-u C-u C-c C-j
+Move list item up	C-c <up>
+Move list item down	C-c <down>
+Outdent/promote list item	C-c <left>
+Indent/demote list item	C-c <right>
+Toggle GFM checkbox	C-c C-x C-x
+Horizontal Rules	 
+Insert default horizontal rule string	C-c C-s -
+Killing and Yanking	 
+Kill element and keep text in kill ring	C-c C-k
+Yank text back into buffer	C-y
+Movement by Paragraph	 
+Backward paragraph	M-{
+Forward paragraph	M-}
+Mark paragraph	M-h
+Movement by Block	 
+Backward block	C-M-{
+Forward block	C-M-}
+Mark block	C-c M-h
+Narrow to block	C-x n b
+Widen	C-x n w
+Movement by Section (Defun)	 
+Beginning of section	C-M-a
+End of section	C-M-e
+Mark section	C-M-h
+Mark subtree	C-c C-M-h
+Narrow to section	C-x n d
+Narrow to subtree	C-x n s
+Widen	C-x n w
+Outline & List Movement	 
+Next heading or list item	C-c C-n
+Previous heading or list item	C-c C-p
+Next heading or list item (same level)	C-c C-f
+Previous heading or list item (same level)	C-c C-b
+Move up to parent heading or list item	C-c C-u
+Outline Visibility Cycling	 
+Cycle visibility globally	S-TAB
+Cycle visibility of heading at point	TAB
+Outline Subtree Editing	 
+Move subtree up	C-c <up>
+Move subtree down	C-c <down>
+Promote subtree	C-c <left>
+Demote subtree	C-c <right>
+Region Editing	 
+Indent region	C-c >
+Exdent region	C-c <
+Promotion and Demotion	 
+Promote element at point	C-c -
+Demote element at point	C-c =
+Markup Completion	 
+Complete markup at point or in region	C-c C-]
+Complete markup in buffer	C-c C-c ]
+Markdown & Utility Commands	 
+Run Markdown, output to temporary buffer	C-c C-c m
+Run Markdown, export to file	C-c C-c e
+Run Markdown, preview in browser	C-c C-c p
+Run Markdown, export, and preview	C-c C-c v
+Run Markdown, save to kill ring	C-c C-c w
+Toggle live preview mode	C-c C-c l
+Open external previewer	C-c C-c o
+Check references in buffer	C-c C-c c
+Renumber ordered lists in buffer	C-c C-c n
+Toggles and Settings	 
+Toggle markup hiding	C-c C-x C-m
+Toggle URL hiding	C-c C-x C-l
+Toggle native code block font lock	C-c C-x C-f
+Toggle inline images	C-c C-x C-i
+Toggle LaTeX math support	C-c C-x C-e
+Toggle GFM checkbox	C-c C-x C-x
+
+
+XYZ
+
+(benchmark 1 '(mapc 'customize-group (my-customization-groups)))
+
+
+
+
+
+
+
+
+(widget-create 'editable-list
+                   :entry-format "%i %d %v"
+                   :value '("")
+                   '(editable-field
+                     :valid-regexp "\\(?:ftp://\\|http\\(?:s?://\\)\\|magnet:\\)"
+                     :error "Url does not match supported type."
+                     :value ""))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Cheatsheet: Editing
+
+
+Transposition keybindings:
+
+
+C-t	Chars
+M-t	Words
+C-M-t	Sexps
+C-x C-t	Lines
+
+
+Casing keybindings:
+
+M-c	Capitalize word
+M-u	Convert word to uppercase
+M-l	Convert word to lowercase
+
+## Cheatsheet: Macros
+
+
+Macro keybindings:
+
+* C-x ( <f3> — Start macro.
+* C-x ) <f4> — End macro.
+* C-x e  — End macro and call.
+* C-x C-k r — Apply macro to region or line.
+* C-u 0 .... — To loop a macro until error or end of buffer, call it with 0 as a numeric argument.
+
+## Cheatsheet: Registers
+
+
+Register keybindings:
+
+C-x r n	Store number
+C-x r s	Store region
+C-x r SPC	Store point
+C-x r +	Increment number in register
+C-x r j	Jump to register
+C-x r i	Insert contents of register
+C-x r f	Store frameset
+C-x r w	Store window configuration
+
+## 
+
+
+
+
+
+
+
+(use-package visible-mark
+
+  : config
+  (global-visible-mark-mode +1))
+
+;; Links:
+;;
+;; URL `https://www.emacswiki.org/emacs/VisibleMark'
+;; URL `https://gitlab.com/iankelling/visible-mark'
+
+
+
+
+
+
+
+
+
+e.g. Buffer Status:
+
+* bold-orange double-asterix — for `buffer-modified-p`.
+* purple capitalized-`RO` — for `read-only-p`.
+
+(use-package spaceline-config :ensure spaceline
+
+
+  :config
+
+  (spaceline-helm-mode 1)
+
+
+  (spaceline-install
+
+
+   ;; (Name:)
+
+   'main
+
+   ;; Left
+
+   '((buffer-modified)
+     ((remote-host buffer-id) :face highlight-face)
+     (process :when active))
+
+   ;; Right:
+
+   '((selection-info :face 'region :when mark-active)
+     ((flycheck-error flycheck-warning flycheck-info) :when active)
+     (which-function)
+     (version-control :when active)
+     (line-column)
+     (global :when active)
+     (major-mode))))
+
+(setq-default
+ powerline-height 24
+ powerline-default-separator 'wave
+ spaceline-flycheck-bullet "❖ %s"
+ spaceline-separator-dir-left '(right . right)
+ spaceline-separator-dir-right '(left . left))
+
+
+
+
+
+
+
+
+
+
+
+(spaceline-compile
+
+  ; left side
+
+  '(((persp-name
+      workspace-number
+      window-number)
+     :fallback evil-state
+     :face highlight-face
+     :priority 100)
+    (anzu :priority 95)
+    auto-compile
+    ((buffer-modified buffer-size buffer-id remote-host)
+     :priority 98)
+    (major-mode :priority 79)
+    (process :when active)
+    ((flycheck-error flycheck-warning flycheck-info)
+     :when active
+     :priority 89)
+    (minor-modes :when active
+                 :priority 9)
+    (mu4e-alert-segment :when active)
+    (erc-track :when active)
+    (version-control :when active
+                     :priority 78)
+    (org-pomodoro :when active)
+    (org-clock :when active)
+    nyan-cat)
+
+
+  ; right side
+
+  '(which-function
+    (python-pyvenv :fallback python-pyenv)
+    (purpose :priority 94)
+    (battery :when active)
+    (selection-info :priority 95)
+    input-method
+    ((buffer-encoding-abbrev
+      point-position
+      line-column)
+     :separator " | "
+     :priority 96)
+    (global :when active)
+    (buffer-position :priority 99)
+    (hud :priority 99)))
+
+
+
+
+
+(use-package comint
+  :custom
+  (comint-buffer-maximum-size 20000 "Increase comint buffer size.")
+  (comint-prompt-read-only t "Make the prompt read only."))
+
+
+
+
+
+
+  :custom
+  (spaceline-window-numbers-unicode t "e.g. «  » (not « 1 »).")
+
+
+
+line-column
+
+
+major-mode
+minor-modes
+
+buffer-id
+buffer-modified
+buffer-size
+buffer-position ; percentage
+buffer-encoding-abbrev ; (unix, dos or mac)
+input-method
+process
+
+version-control
+projectile-root
+
+flycheck-error
+flycheck-warning
+;; flycheck-info
+
+selection-info
+;; which-function
+
+
+
+
+
+
+
+ (let
+      ((display-buffer-alist
+        (list
+         (cons
+          "\\*Async Shell Command\\*.*"
+          (cons #'display-buffer-no-window nil)))))
+    (async-shell-command
+     command)))
+
+
+
+
+
+
+TODO snippet for expression
+
+expression_re-search-forward.yasnippet
+
+(let* ((case-fold-search nil)
+      (LIMIT (max-point))
+      (NOERROR t)
+      (COUNT nil)
+      (REGEXP (rx $0))
+      )
+
+    (save-excursion 
+      (re-search-forward LIMIT NOERROR COUNT)))
+
+
+
+OLD
+(let* ((case-fold-search nil)
+      (LIMIT (max-point))
+      (NOERROR t)
+      (COUNT nil)
+      (REGEXP (rx $0))
+
+      (MATCH (re-search-forward LIMIT NOERROR COUNT))
+      )
+
+  MATCH)
+
+
+
+
+
+TODO
+
+(defun sboo-markdown-forward-header (n)
+
+  "Move to the next « hN » header (e.g. h1 ⟨# ⟩, h2 ⟨## ⟩, h3 ⟨###  ⟩, etc).
+
+  (save-excursion
+    (end-of-line)
+    (re-search-forward "[^ \t]" (line-end-position) t)))
+
+
+
+
+(defun sboo-markdown-forward-header (n)
+
+  "Move to the next H1 header.
+
+(i.e. a single #at the start of a line followed by a space, e.g. « # ... »)."
+
+  (save-excursion
+    (end-of-line)
+    (re-search-forward (rx bol ?# space) (line-end-position) t)))
+
+
+
+(put 'h1 'forward-op #'sboo-markdown-forward-h1)
+
+;; ^ Register `h1' for `forward-thing'.
+
+
+
+
+
+
+TODO add to all defcom snippets
+
+Bound to \\[$1].
+
+
+
+
+
+
+
+e.g. Flycheck:
+
+              (`finished           "✔ No Issues")
+              (`running     "⟲ Running")
+              (`no-checker  "⚠ No Checker")
+              (`not-checked "✖ Disabled")
+              (`errored     "⚠ Error")
+              (`interrupted "⛔ Interrupted")
+
+
+
+
+
+
+
+https://idiocy.org/emacs-fonts-and-fontsets.html
+
+
+
+
+
+
+SPDX 
+
+FLTK-exception!
+
+Syntax:
+
+-- | SPDX License Expression.
+--
+-- @
+-- idstring              = 1*(ALPHA \/ DIGIT \/ "-" \/ "." )
+-- license id            = \<short form license identifier inAppendix I.1>
+-- license exception id  = \<short form license exception identifier inAppendix I.2>
+-- license ref           = [\"DocumentRef-"1*(idstring)":"]\"LicenseRef-"1*(idstring)
+--
+-- simple expression     = license id \/ license id"+" \/ license ref
+--
+-- compound expression   = 1*1(simple expression \/
+--                         simple expression \"WITH" license exception id \/
+--                         compound expression \"AND" compound expression \/
+--                         compound expression \"OR" compound expression ) \/
+--                         "(" compound expression ")" )
+--
+-- license expression    = 1*1(simple expression / compound expression)
+-- @
+
+Exceptions:
+
+
+-- | SPDX License identifier
+data LicenseExceptionId
+    = DS389_exception -- ^ @389-exception@, 389 Directory Server Exception
+    | Autoconf_exception_2_0 -- ^ @Autoconf-exception-2.0@, Autoconf exception 2.0
+    | Autoconf_exception_3_0 -- ^ @Autoconf-exception-3.0@, Autoconf exception 3.0
+    | Bison_exception_2_2 -- ^ @Bison-exception-2.2@, Bison exception 2.2
+    | Bootloader_exception -- ^ @Bootloader-exception@, Bootloader Distribution Exception
+    | Classpath_exception_2_0 -- ^ @Classpath-exception-2.0@, Classpath exception 2.0
+    | CLISP_exception_2_0 -- ^ @CLISP-exception-2.0@, CLISP exception 2.0
+    | DigiRule_FOSS_exception -- ^ @DigiRule-FOSS-exception@, DigiRule FOSS License Exception
+    | ECos_exception_2_0 -- ^ @eCos-exception-2.0@, eCos exception 2.0
+    | Fawkes_Runtime_exception -- ^ @Fawkes-Runtime-exception@, Fawkes Runtime Exception
+    | FLTK_exception -- ^ @FLTK-exception@, FLTK exception
+    | Font_exception_2_0 -- ^ @Font-exception-2.0@, Font exception 2.0
+    | Freertos_exception_2_0 -- ^ @freertos-exception-2.0@, FreeRTOS Exception 2.0
+    | GCC_exception_2_0 -- ^ @GCC-exception-2.0@, GCC Runtime Library exception 2.0
+    | GCC_exception_3_1 -- ^ @GCC-exception-3.1@, GCC Runtime Library exception 3.1
+    | Gnu_javamail_exception -- ^ @gnu-javamail-exception@, GNU JavaMail exception
+    | GPL_CC_1_0 -- ^ @GPL-CC-1.0@, GPL Cooperation Commitment 1.0, SPDX License List 3.5
+    | I2p_gpl_java_exception -- ^ @i2p-gpl-java-exception@, i2p GPL+Java Exception
+    | Libtool_exception -- ^ @Libtool-exception@, Libtool Exception
+    | Linux_syscall_note -- ^ @Linux-syscall-note@, Linux Syscall Note
+    | LLVM_exception -- ^ @LLVM-exception@, LLVM Exception, SPDX License List 3.2, SPDX License List 3.5
+    | LZMA_exception -- ^ @LZMA-exception@, LZMA exception
+    | Mif_exception -- ^ @mif-exception@, Macros and Inline Functions Exception
+    | Nokia_Qt_exception_1_1 -- ^ @Nokia-Qt-exception-1.1@, Nokia Qt LGPL exception 1.1, SPDX License List 3.0, SPDX License List 3.2
+    | OCaml_LGPL_linking_exception -- ^ @OCaml-LGPL-linking-exception@, OCaml LGPL Linking Exception, SPDX License List 3.5
+    | OCCT_exception_1_0 -- ^ @OCCT-exception-1.0@, Open CASCADE Exception 1.0
+    | OpenJDK_assembly_exception_1_0 -- ^ @OpenJDK-assembly-exception-1.0@, OpenJDK Assembly exception 1.0, SPDX License List 3.2, SPDX License List 3.5
+    | Openvpn_openssl_exception -- ^ @openvpn-openssl-exception@, OpenVPN OpenSSL Exception
+    | PS_or_PDF_font_exception_20170817 -- ^ @PS-or-PDF-font-exception-20170817@, PS/PDF font exception (2017-08-17), SPDX License List 3.2, SPDX License List 3.5
+    | Qt_GPL_exception_1_0 -- ^ @Qt-GPL-exception-1.0@, Qt GPL exception 1.0, SPDX License List 3.2, SPDX License List 3.5
+    | Qt_LGPL_exception_1_1 -- ^ @Qt-LGPL-exception-1.1@, Qt LGPL exception 1.1, SPDX License List 3.2, SPDX License List 3.5
+    | Qwt_exception_1_0 -- ^ @Qwt-exception-1.0@, Qwt exception 1.0
+    | U_boot_exception_2_0 -- ^ @u-boot-exception-2.0@, U-Boot exception 2.0
+    | WxWindows_exception_3_1 -- ^ @WxWindows-exception-3.1@, WxWindows Library Exception 3.1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://explog.in/notes/poet.html
+
+(defun transform-theme-colors (fn)
+  "Apply FN to the colors on every active face.
+
+   FN should accept the face symbol and the current color,
+   and return the new color to be applied."
+  (interactive)
+  (mapc
+   (lambda (face)
+     (mapc
+      (lambda (attr)
+        (let ((current (face-attribute face attr)))
+          (unless (or (not current)
+                      (listp current)
+                      (string= current "unspecified")
+                      (string= current "t"))
+            (set-face-attribute face nil attr (funcall fn face current)))))
+      '(:foreground :background :underline :overline :box :strike-through
+                    :distant-foreground))
+     (mapc
+      (lambda (complex-attr)
+        (let* ((full (copy-tree (face-attribute face complex-attr)))
+               (current (if (listp full) (member :color full))))
+          (unless (or (not current)
+                      (not (listp full)))
+            (setcar (cdr current) (funcall fn face (cadr current)))
+            (set-face-attribute face nil complex-attr full))))
+      '(:underline :overline :box)))
+   (face-list)))
+
+(defun invert-theme ()
+  "Take the complement of all currently active colors."
+  (interactive)
+  (require 'color)
+  (transform-theme-colors
+   (lambda (face color)
+     (apply
+      'color-rgb-to-hex
+      (color-complement color))))
+  (let ((current-ns-appearance (assoc 'ns-appearance default-frame-alist)))
+    (cond ((eq (cdr current-ns-appearance) 'light)
+           (setf (cdr current-ns-appearance) 'dark))
+          ((eq (cdr current-ns-appearance) 'dark)
+           (setf (cdr current-ns-appearance) 'light)))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(defun sboo-fontify-as-mode (text mode)
+
+
+  "Fontify TEXT as MODE, returning the fontified text."
+
+  (with-temp-buffer
+
+    (funcall mode)
+    (insert text)
+  
+  (if (fboundp 'font-lock-ensure)
+        (font-lock-ensure)
+      (with-no-warnings (font-lock-fontify-buffer)))
+
+    (buffer-substring (point-min) (point-max))))
+
+
+
+
+
+
+
+(defun haskell-font-lock-fontify-block (lang-mode start end)
+  "Fontify a block as LANG-MODE."
+  (let ((string (buffer-substring-no-properties start end))
+        (modified (buffer-modified-p))
+        (org-buffer (current-buffer)) pos next)
+    (remove-text-properties start end '(face nil))
+    (with-current-buffer
+        (get-buffer-create
+         (concat " haskell-font-lock-fontify-block:" (symbol-name lang-mode)))
+      (delete-region (point-min) (point-max))
+      (insert string " ") ;; so there's a final property change
+      (cl-letf (((symbol-function 'message)
+                 (lambda (_fmt &rest _args))))
+        ;; silence messages
+        (unless (eq major-mode lang-mode) (funcall lang-mode))
+        (font-lock-ensure))
+      (setq pos (point-min))
+      (while (setq next (next-single-property-change pos 'face))
+        (put-text-property
+         (+ start (1- pos)) (1- (+ start next)) 'face
+         (or (get-text-property pos 'face) 'default) org-buffer)
+        (setq pos next))
+      (unless (equal pos (point-max))
+        (put-text-property
+         (+ start (1- pos)) (1- (+ start (point-max))) 'face
+         'default org-buffer)))
+    (add-text-properties
+     start end
+     '(font-lock-fontified t fontified t font-lock-multiline t))
+    (set-buffer-modified-p modified)))
+
+
+
+
+
+
+
+
+
+Flags in Unicode: 🏴 🏳 🏳️‍🌈
+mtg 🇺🇸🇨🇳🇫🇷🇩🇪🇮🇹🇯🇵🇰🇷🇧🇷🇷🇺 🇲🇽🇪🇸
+
+
+
+
+
+
+
+
+(defvar ml-selected-window nil)
+
+(defun ml-record-selected-window ()
+  (setq ml-selected-window (selected-window)))
+
+(defun ml-update-all ()
+  (force-mode-line-update t))
+
+(add-hook 'post-command-hook 'ml-record-selected-window)
+
+(add-hook 'buffer-list-update-hook 'ml-update-all)
+
+(setq-default mode-line-format
+  '(:eval
+
+()
+)
+
+;; ^ emacs check which modifiers keys are currently
+
+)
+
+
+
+
+https://stackoverflow.com/questions/26468722/emacs-how-to-determine-if-the-control-key-is-down
+
+There's no facility to check the current state of a modifier key, but you can check whether the last key used to run the command was used with "control" or not:
+
+    (memq 'control (event-modifiers last-command-event))
+
+Note that TAB and RET are actually the same as C-i and C-m, so they are considered as having a "control" modifier
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://gitlab.com/ambrevar/emacs-webfeeder.git
+
+
+
+
+Trying to get emacs to buttonize paths like so
+/nfs/path/to/file /nfs/path/to/file_with_line_number:40
+but not paths with a trailing colon /nfs/path/to/file:
+This doesn't work
+(defun buttonize-buffer-nfs-with-line () "Turn all file paths with line numbers into buttons." (interactive) (save-excursion (goto-char (point-min)) (while (re-search-forward "\(/nfs[^ \>\<\(\)\t\n,\'\";:]+?\)\|\(/nfs[^ \>\<\(\)\t\n,\'\";]+:[0-9]+?\)" nil t) (make-button (match-beginning 0) (match-end 0) :type 'find-file-button)))) (add-hook 'find-file-hook 'buttonize-buffer-nfs-with-line)
+
+
+
+
+
+
+https://emacs.stackexchange.com/questions/26222/show-something-in-active-mode-line-instead-of-all-mode-lines
+
+(defvar ml-selected-window nil)
+
+(defun ml-record-selected-window ()
+  (setq ml-selected-window (selected-window)))
+
+(defun ml-update-all ()
+  (force-mode-line-update t))
+
+(add-hook 'post-command-hook 'ml-record-selected-window)
+
+(add-hook 'buffer-list-update-hook 'ml-update-all)
+
+(setq-default mode-line-format
+  '(:eval
+      (if (eq ml-selected-window (selected-window))
+        "ACTIVE"
+        "INACTIVE")))
+
+
+
+
+
+
+
+https://www.gnu.org/software/emacs/manual/html_node/elisp/Echo-Area-Customization.html
+
+
+
+(1) shrink back large empty echo areas
+
+Variable: echo-area-clear-hook
+This normal hook is run whenever the echo area is cleared—either by (message nil) or for any other reason.
+
+(2) 1
+
+— User Option: echo-keystrokes
+This variable determines how much time should elapse before command characters echo. Its value must be a number, and specifies the number of seconds to wait before echoing. If the user types a prefix key (such as C-x) and then delays this many seconds before continuing, the prefix key is echoed in the echo area. (Once echoing begins in a key sequence, all subsequent characters in the same key sequence are echoed immediately.)
+
+If the value is zero, then command input is not echoed.
+
+
+
+Variable: message-truncate-lines
+Normally, displaying a long message resizes the echo area to display the entire message. But if the variable message-truncate-lines is non-nil, the echo area does not resize, and the message is truncated to fit it.
+
+The variable max-mini-window-height, which specifies the maximum height for resizing minibuffer windows, also applies to the echo area (which is really a special use of the minibuffer window; see Minibuffer Windows).
+
+
+
+
+
+
+
+
+
+
+https://www.emacswiki.org/emacs/GrabAndDrag
+
+
+
+
+
+the region face. For example:
+(set-face-attribute 'region nil :background "#666")
+You could also then change the font color to make it more readable. E.g. to white
+(set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
+
+
+
+
+
+Touchscreens and Long Press Right Clicking... impossible?
+Nailed it! This is embarrasingly simple and it worked well for me however the sensitivity can be a pita off and on. Go into Universal Access > Pointing & Clicking and enable "Simulated Secondary Click" and just set the Acceptance delay to whatever is tolerable for you.
+La
+
+
+
+
+
+
+
+(let* ((INHERIT-INPUT-METHOD t)
+ (input-method )
+     )
+(read-char "Character (): " INHERIT-INPUT-METHOD))
+
+
+
+
+input-method-highlight-flag t input-method-verbose-flag t
+
+The variables input-method-highlight-flag and input-method-verbose-flag control how input methods explain what is happening. If input-method-highlight-flag is non-nil, the partial sequence is highlighted in the buffer (for most input methods—some disable this feature). If input-method-verbose-flag is non-nil, the list of possible characters to type next is displayed in the echo area (but not when you are in the minibuffer).
+
+
+
+
+
+
+Better Register (`better-registers.el`)
+
+Jump to another buffer, position or file (stored with ‘C-r b’, ‘C-r SPC’, or ‘C-r p’ respectively)
+Restore a window or frame configuration (saved with ‘C-r w’ or ‘C-r f’)
+Insert a saved string or rectangle (saved with: ‘C-r s’ or ‘C-r r’)
+Insert a number (saved with: ‘C-u’ number ‘C-r n’)
+Play back a keyboard macro (first record it with `<S-f1>'…do stuff…, `<S-f1>'. Then store it in register with ‘C-r m’
+
+;; URL `https://www.emacswiki.org/emacs/BetterRegisters'
+;; URL  `https://www.emacswiki.org/emacs/better-registers.el'
+
+
+Registers that behave like Clipboards (i.e. cut/copy/paste)
+
+;; F12/C-F12/C-S-F12 — register-based paste/copy/cut functions (respectively):
+
+
+
+register-copy
+
+register-paste
+
+register-cut
+
+    (global-set-key  (kbd "<f12>") (lambda (char)
+                                       (interactive "cCopy to Register:")
+                                       (copy-to-register char (region-beginning) (region-end))
+                                       (cua-cancel)))
+
+    (global-set-key (kbd "M-<f12>") (lambda (char)
+                                     (interactive "cInsert Register:")
+                                     (insert-register char 't)))
+
+    (global-set-key (kbd "C-<f12>")  (lambda (char)
+                                          (interactive "cCut to Register:")
+                                          (copy-to-register char (region-beginning) (region-end))
+                                          (cua-delete-region)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+defcom sboo-snippet-new (&key mode key file
+
+(list all major modes defaulting to current)
+(ask for key first, then file name defaults to key name, no file extension necessary)
+
+
+
+
+
+
+
+Snippets:
+
+
+
+def0 (a nullary function, i.e. a constant binding)
+def1 (a unary function)
+def2 (a binary function)
+
+defwrap (a wrapper function. inline its definition in a codeblock in the docstring, the wrapped function is hyperlinked. it takes no "syntactic" arguments. it has an INLINEABLE pragma.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+hs-snippets-type-variable-name-table
+
+"" ""
+
+"a" "x"
+"b" "y"
+"c" "z"
+
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+"" ""
+
+"FilePath" "fp"
+
+'("m" nil) "m"
+'("io" nil) "action"
+'("IO" nil) "action"
+
+
+
+
+a default variable name (the key) for types which match the given regex (the value). a list of regexes means: match each token, where tokens are separated by spaces, ignoring parentheses; a nil item is equivalent to a wildcard regexp (i.e. means corresponding toke  can be anything); an omitted item means the type can't be any longer (i.e. is is not equivalent to a nil); 
+
+defaults are ("x" "y" "z")
+
+
+
+
+hs-snippets-uniquify-value-parameters
+
+for multiple parameters of the same type, how to distinguish the variables. default uniquify functions include: add apostrophe suffixes, add index suffixes (zero-based or one-based).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+e.g. 
+
+
+def0 define-nullary
+def1 define-unary
+def2 define-binary
+def3 define-ternary
+
+
+
+
+
+
+
+
+
+
+
+
+
+hs-
+
+(defalias 'forward-haskell-XYZ #'hs-forward-XYZ)
+
+hs-forward-type
+hs-forward-signature
+hs-forward-type-argument (skip to just after , i.e. before the next arrow or the namesake definition. track a stack of parentheses to distinguish functions-as-arguments.) 
+
+hs-forward-symbol
+hs-forward-expression
+hs-forward-pragma
+
+hs-forward-quasiquote
+hs-forward-splice
+
+hs-forward-comment
+hs-forward-haddock
+
+hs-forward-
+hs-forward-
+hs-forward-
+hs-forward-
+
+
+
+
+
+
+
+
+
+
+emacs image crop mode
+
+
+
+
+
+
+
+
+(require 'mtg)
+
+(provide 'magic-set-editor)
+
+
+
+
+
+
+
+
+
+sboo-get-dwim ()
+
+region or point or clipboard or input
+
+alist
+list
+
+
+
+
+
+
+
+
+
+sboo-find-file (FILE COLUMN LINE)
+
+
+sboo-find-file-dwim
+
+region or point or clipboard or input
+
+sboo-find-file-at-point
+
+
+
+
+
+
+
+json
+
+
+
+
+
+
+defset
+
+
+
+
+read-set-via-checklist
+;;TODO popup buffer, use:
+;; widget from (defcustom :type '(set ...))
+;; Face Customization's ‘[Show All Attributes]’ link
+
+(1) a filled checkbox, ‘[X]’; an empty checkbox, ‘[ ]’.
+
+or
+
+(2) a checkmark ‘✔️’; a cross, ‘❌’.
+
+
+
+
+
+
+
+read-enum-via-radio-group
+;;TODO popup buffer, use:
+;; widget from (defcustom :type '(set ...))
+
+(1) a filled button, ‘[O]’; empty buttons, ‘[ ]’.
+
+or
+
+(2) a filled circle ‘⬤’; an unfilled circle, ‘○’.
+
+
+
+
+
+
+
+
+
+
+
+
+sboo-load-theme
+
+These are equivalent:
+
+• M-: (sboo-load-theme "xyz-theme.el")
+• M-: (sboo-load-theme 'xyz)
+
+Notes...
+
+Run « M-x customize-themes » to switch to a buffer named « *Custom Themes* », which lists all themes that Emacs knows about. By default, Emacs searches for theme files in two places: 
+
+• any string in the list `custom-theme-load-path'.
+• the string `custom-theme-directory'.
+• the « etc/themes » subdirectory of `data-directory'.
+
+
+
+
+theme file's SHA-256 hash to the variable custom-safe-themes
+
+
+
+
+
+
+https://www.gnu.org/software/emacs/manual/html_node/emacs/Custom-Themes.html
+
+Enabling a theme (invoked by `load-them' plus `enable-theme') enables all its settings:
+
+• faces     — provided by `custom-theme-'.
+• variables — provided by `custom-theme-'.
+
+for the (rest of the current) Emacs session.
+
+## Notes
+
+>Because loading a Custom theme can execute arbitrary Lisp code, you should only say yes if you know that the theme is safe; in that case, Emacs offers to remember in the future that the theme is safe (this is done by saving the theme file's SHA-256 hash to the variable custom-safe-themes; if you want to treat all themes as safe, change its value to t). Themes that come with Emacs (in the etc/
+
+>In the customization buffer, if a setting has been changed from its default by a Custom theme, its ‘State’ display shows ‘THEMED’ instead of ‘STANDARD’.
+
+
+
+
+
+
+
+
+
+ANATHEMA 
+
+include sha256 hash with distribution, and configuration instructions that mention adding said hash to the custom-faces alist
+
+
+ANSI Color = 3bit Color = 8 colors 
+
+8bit Color = 256 colors
+
+RGB Color = 24bit Color (8 red, 8 green, 8 blue) = 16,777,216 colors 
+
+(defvar min-colors-rgb '(min-colors 16777216))
+
+(defvar min-colors-ansi-008  '(min-colors 8))
+(defvar min-colors-ansi-016  '(min-colors 16))
+(defvar min-colors-ansi-088  '(min-colors 88))
+(defvar min-colors-ansi-256 '(min-colors 256))
+
+(defvar min-colors- '(min-colors ))
+
+(defvar colors-rgb `((class color) ,min-colors-rgb))
+
+(defvar colors-rainbow`((class color) ,min-colors-rainbow))
+(defvar colors-ansi `((class color) ,min-colors-ansi))
+(defvar colors- `((class color) ,min-colors-))
+(defvar colors- '(min-colors ))
+
+>These colors are red, orange, yellow, green, blue, purple, gray, black, white, and combinations of black, white, and/or yellow.
+
+>Terminals may support any number of colors. Commonly: 2, 8, 16, 88 and 256.
+
+
+
+
+<https://www.lukeshu.com/blog/term-colors.html>
+
+<https://www.reddit.com/r/commandline/comments/1aotaj/solarized_is_a_sixteen_color_palette_designed_for/>
+
+8 colors: (actually 9) First we had 8 colors (9 with “default”, which doesn’t have to be one of the 8). These are always roughly the same color: black, red, green, yellow/orange, blue, purple, cyan, and white, which are colors 0–7 respectively. Color 9 is default.
+
+16 colors: (actually 18) Later, someone wanted to add more colors, so they added a “bright” attribute. So when bright is on, you get “bright red” instead of “red”. Hence 8*2=16 (plus two more for “default” and “bright default”).
+
+256 colors: (actually 274) You may have noticed, colors 0–7 and 9 are used, but 8 isn’t. So, someone decided that color 8 should put the terminal into 256 color mode. In this mode, it reads another byte, which is an 8-bit RGB value (2 bits for red, 2 for green, 2 for blue). The bright property has no effect on these colors. However, a terminal can display 256-color-mode colors and 16-color-mode colors at the same time, so you actually get 256+18 colors.
+
+
+
+
+
+   ((((class color) ,min-colors-rgb) (:foreground "#fff" :background "#120F14"))
+    (((class color) ,min-colors-)       (:foreground "#fff" :background "#000"))
+    (((class color) ,min-colors-ansi)       (:foreground "#fff" :background "#000"))
+    (((class color) ,min-colors-rainbow)        (:foreground "#fff" :background "#000"))))
+
+
+
+
+
+
+
+    (((class grayscale) (background light))
+     :foreground "DimGray" :weight bold :slant italic)
+
+
+    (((class grayscale) (background dark))
+     :foreground "LightGray" :weight bold :slant italic)
+
+
+    (((class color) (min-colors 88) (background light))
+     :foreground "Firebrick")
+
+
+    (((class color) (min-colors 88) (background dark))
+     :foreground "chocolate1")
+
+
+
+
+
+
+e.g. the default `font-lock-comment-face`:
+
+```elisp
+
+(defface font-lock-comment-face
+
+  '(
+
+    (((class grayscale) (background light))
+     :foreground "DimGray" :weight bold :slant italic)
+
+
+    (((class grayscale) (background dark))
+     :foreground "LightGray" :weight bold :slant italic)
+
+
+    (((class color) (min-colors 88) (background light))
+     :foreground "Firebrick")
+
+
+    (((class color) (min-colors 88) (background dark))
+     :foreground "chocolate1")
+
+
+    (((class color) (min-colors 16) (background light))
+     :foreground "red")
+
+
+    (((class color) (min-colors 16) (background dark))
+     :foreground "red1")
+
+
+    (((class color) (min-colors 8) (background light))
+     :foreground "red")
+
+
+    (((class color) (min-colors 8) (background dark))
+     :foreground "yellow")
+
+
+    (t :weight bold :slant italic))
+
+```
+
+
+
+
+ANSI Term faces (from `term.el`):
+
+```elisp
+(defvar ansi-term-color-vector
+      [term
+       term-color-black
+       term-color-red
+       term-color-green
+       term-color-yellow
+       term-color-blue
+       term-color-magenta
+       term-color-cyan
+       term-color-white])
+
+(defface term-color-red
+
+
+      '((t :foreground "red3" :background "red3"))
+
+
+      "Face used to render red color code."
+      :group 'term)
+```
+
+
+
+https://www.reddit.com/r/commandline/comments/1aotaj/solarized_is_a_sixteen_color_palette_designed_for/
+
+
+
+default `font-lock` faces:
+
+```elisp
+(defface font-lock-comment-face
+
+  '((((class grayscale) (background light))
+     :foreground "DimGray" :weight bold :slant italic)
+    (((class grayscale) (background dark))
+     :foreground "LightGray" :weight bold :slant italic)
+    (((class color) (min-colors 88) (background light))
+     :foreground "Firebrick")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "chocolate1")
+    (((class color) (min-colors 16) (background light))
+     :foreground "red")
+    (((class color) (min-colors 16) (background dark))
+     :foreground "red1")
+    (((class color) (min-colors 8) (background light))
+     :foreground "red")
+    (((class color) (min-colors 8) (background dark))
+     :foreground "yellow")
+    (t :weight bold :slant italic))
+
+  "Font Lock mode face used to highlight comments."
+  :group 'font-lock-faces)
+
+(defface font-lock-comment-delimiter-face
+  '((default :inherit font-lock-comment-face))
+  "Font Lock mode face used to highlight comment delimiters."
+  :group 'font-lock-faces)
+
+(defface font-lock-string-face
+  '((((class grayscale) (background light)) :foreground "DimGray" :slant italic)
+    (((class grayscale) (background dark))  :foreground "LightGray" :slant italic)
+    (((class color) (min-colors 88) (background light)) :foreground "VioletRed4")
+    (((class color) (min-colors 88) (background dark))  :foreground "LightSalmon")
+    (((class color) (min-colors 16) (background light)) :foreground "RosyBrown")
+    (((class color) (min-colors 16) (background dark))  :foreground "LightSalmon")
+    (((class color) (min-colors 8)) :foreground "green")
+    (t :slant italic))
+  "Font Lock mode face used to highlight strings."
+  :group 'font-lock-faces)
+
+(defface font-lock-doc-face
+  '((t :inherit font-lock-string-face))
+  "Font Lock mode face used to highlight documentation."
+  :group 'font-lock-faces)
+
+(defface font-lock-keyword-face
+  '((((class grayscale) (background light)) :foreground "LightGray" :weight bold)
+    (((class grayscale) (background dark))  :foreground "DimGray" :weight bold)
+    (((class color) (min-colors 88) (background light)) :foreground "Purple")
+    (((class color) (min-colors 88) (background dark))  :foreground "Cyan1")
+    (((class color) (min-colors 16) (background light)) :foreground "Purple")
+    (((class color) (min-colors 16) (background dark))  :foreground "Cyan")
+    (((class color) (min-colors 8)) :foreground "cyan" :weight bold)
+    (t :weight bold))
+  "Font Lock mode face used to highlight keywords."
+  :group 'font-lock-faces)
+
+(defface font-lock-builtin-face
+  '((((class grayscale) (background light)) :foreground "LightGray" :weight bold)
+    (((class grayscale) (background dark))  :foreground "DimGray" :weight bold)
+    (((class color) (min-colors 88) (background light)) :foreground "dark slate blue")
+    (((class color) (min-colors 88) (background dark))  :foreground "LightSteelBlue")
+    (((class color) (min-colors 16) (background light)) :foreground "Orchid")
+    (((class color) (min-colors 16) (background dark)) :foreground "LightSteelBlue")
+    (((class color) (min-colors 8)) :foreground "blue" :weight bold)
+    (t :weight bold))
+  "Font Lock mode face used to highlight builtins."
+  :group 'font-lock-faces)
+
+(defface font-lock-function-name-face
+  '((((class color) (min-colors 88) (background light)) :foreground "Blue1")
+    (((class color) (min-colors 88) (background dark))  :foreground "LightSkyBlue")
+    (((class color) (min-colors 16) (background light)) :foreground "Blue")
+    (((class color) (min-colors 16) (background dark))  :foreground "LightSkyBlue")
+    (((class color) (min-colors 8)) :foreground "blue" :weight bold)
+    (t :inverse-video t :weight bold))
+  "Font Lock mode face used to highlight function names."
+  :group 'font-lock-faces)
+
+(defface font-lock-variable-name-face
+  '((((class grayscale) (background light))
+     :foreground "Gray90" :weight bold :slant italic)
+    (((class grayscale) (background dark))
+     :foreground "DimGray" :weight bold :slant italic)
+    (((class color) (min-colors 88) (background light)) :foreground "sienna")
+    (((class color) (min-colors 88) (background dark))  :foreground "LightGoldenrod")
+    (((class color) (min-colors 16) (background light)) :foreground "DarkGoldenrod")
+    (((class color) (min-colors 16) (background dark))  :foreground "LightGoldenrod")
+    (((class color) (min-colors 8)) :foreground "yellow" :weight light)
+    (t :weight bold :slant italic))
+  "Font Lock mode face used to highlight variable names."
+  :group 'font-lock-faces)
+
+(defface font-lock-type-face
+  '((((class grayscale) (background light)) :foreground "Gray90" :weight bold)
+    (((class grayscale) (background dark))  :foreground "DimGray" :weight bold)
+    (((class color) (min-colors 88) (background light)) :foreground "ForestGreen")
+    (((class color) (min-colors 88) (background dark))  :foreground "PaleGreen")
+    (((class color) (min-colors 16) (background light)) :foreground "ForestGreen")
+    (((class color) (min-colors 16) (background dark))  :foreground "PaleGreen")
+    (((class color) (min-colors 8)) :foreground "green")
+    (t :weight bold :underline t))
+  "Font Lock mode face used to highlight type and classes."
+  :group 'font-lock-faces)
+
+(defface font-lock-constant-face
+  '((((class grayscale) (background light))
+     :foreground "LightGray" :weight bold :underline t)
+    (((class grayscale) (background dark))
+     :foreground "Gray50" :weight bold :underline t)
+    (((class color) (min-colors 88) (background light)) :foreground "dark cyan")
+    (((class color) (min-colors 88) (background dark))  :foreground "Aquamarine")
+    (((class color) (min-colors 16) (background light)) :foreground "CadetBlue")
+    (((class color) (min-colors 16) (background dark))  :foreground "Aquamarine")
+    (((class color) (min-colors 8)) :foreground "magenta")
+    (t :weight bold :underline t))
+  "Font Lock mode face used to highlight constants and labels."
+  :group 'font-lock-faces)
+```
+
+
+
+
+
+
+(custom-theme-set-variables
+ 'purple-haze
+ '(fringe-mode 6 nil (fringe))
+ '(linum-format " %7d ")
+ )
+
+(custom-theme-set-faces
+ 'purple-haze
+
+ '(default
+   ((((class color) (min-colors 16777216)) (:foreground "#fff" :background "#120F14"))
+    (((class color) (min-colors 88))       (:foreground "#fff" :background "#000"))
+    (((class color) (min-colors 16))       (:foreground "#fff" :background "#000"))
+    (((class color) (min-colors 8))        (:foreground "#fff" :background "#000"))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+If collection is a hash table, then the keys that are strings or symbols are the possible completions. Other keys are ignored.
+
+
+
+
+
+
+/ic
+display the character itself (unless ascii?) to the left of the character name. then strip the first few "display" chars (e.g. two, the char and a space) in the completed string.
+
+/mtg
+
+I Instant
+S Sorcery 
+L Land 
+C Creature 
+A Artifact 
+E Enchantment
+
+W White
+U Blue 
+B Black 
+R Red 
+G Green
+C Colorless
+
+ Instant
+ Sorcery 
+ Land 
+ Creature 
+ Artifact 
+ Enchantment
+
+⚡ Instant
+✨ Sorcery 
+🏞️ Land 
+🐖 Creature 
+🏺 Artifact 
+🌈 Enchantment
+
+☀️ White
+💧 Blue 
+💀 Black 
+🔥 Red 
+🌳 Green
+♢ Colorless
+
+
+
+
+
+
+
+
+(propertize "foo"
+ 'face 'italic 'mouse-face 'bold-italic)
+
+
+
+
+
+
+
+((let ((OVERLAY (make-overlay (region-beginning) (region-end) (current-buffer)) t t)))
+
+  (overlay-put OVERLAY 'evaporate t))
+
+
+
+
+
+
+
+M-x yas-tryout-snippet, key binding: C-c C-t
+
+When editing a snippet, this opens a new empty buffer, sets it to the appropriate major mode and inserts the snippet there, so you can see what it looks like.
+
+M-x yas-visit-snippet-file, key binding: C-c & C-v
+
+Prompts you for possible snippet expansions like yas-insert-snippet, but instead of expanding it, takes you directly to the snippet definition's file, if it exists.
+
+
+
+
+`buffer-file-name' — the absolute file name of the file that buffer is visiting. If buffer is not visiting any file, buffer-file-name returns nil.
+
+
+
+
+(require 'subr-x)
+
+expand-env: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; bnf-mode.el --- Major mode for editing BNF grammars -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2019 Serghei Iakovlev
+
+;; Author: Spiros Boosalis <>, Serghei Iakovlev
+;; Author: Serghei Iakovlev (concat "sadhooklay" "@" "gmail" ".com")
+;; Maintainer: Serghei Iakovlev
+;; Version: 0.1.0
+;; URL: https://github.com/sergeyklay/bnf-mode
+;; Keywords: languages
+;; Package-Requires: ((cl-lib "0.5") (pkg-info "0.4") (emacs "24.3"))
+
+;; This file is not part of GNU Emacs.
+
+;;; License
+
+;; This file is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License
+;; as published by the Free Software Foundation; either version 3
+;; of the License, or (at your option) any later version.
+
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this file; if not, write to the Free Software
+;; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+;; 02110-1301, USA.
+
+;;; Commentary:
+
+;;   GNU Emacs major mode for editing BNF grammars.  Currently this mode
+;; provides basic syntax and font-locking for "*.bnf" files.
+;;
+;; Usage: Put this file in your Emacs Lisp path (eg. site-lisp) and add to
+;; your .emacs file:
+;;
+;;   (require 'bnf-mode)
+;;
+;; Bugs: https://github.com/sergeyklay/bnf-mode/issues
+;;
+;; History: https://github.com/sergeyklay/bnf-mode/blob/master/CHANGELOG.org
+
+
+
+;;; Code:
+
+;;; Compatibility
+
+;; Work around emacs bug#18845, cc-mode expects cl to be loaded
+;; while bnf-mode only uses cl-lib (without compatibility aliases)
+
+
+(eval-and-compile
+  (if (and (= emacs-major-version 24) (>= emacs-minor-version 4))
+      (require 'cl)))
+
+
+;;; Requirements
+
+;; Tell the byte compiler about autoloaded functions from packages
+(declare-function pkg-info-version-info "pkg-info" (package))
+
+(eval-when-compile
+  (require 'rx))
+
+(require 'cl-lib)
+(require 'pkg-info)
+
+
+;;; Customization
+
+;;;###autoload
+(defgroup bnf nil
+  "Major mode for editing BNF grammars."
+  :tag "BNF"
+  :prefix "bnf-"
+  :group 'languages
+  :link '(url-link :tag "GitHub Page" "https://github.com/sergeyklay/bnf-mode")
+  :link '(emacs-commentary-link :tag "Commentary" "bnf-mode"))
+
+(defcustom bnf-mode-hook nil
+  "List of functions to call when entering BNF Mode."
+  :tag "Hook"
+  :type 'hook
+  :group 'bnf)
+
+
+
+
+
+
+
+
+
+
+
+
+emacs invert video
+
+
+
+(display-graphic-p)
+
+
+
+https://github.com/sergeyklay/bnf-mode/blob/master/README.org
+
+
+
+
+
+(cl-defmacro sboo-url-link-github (&key user repo
+  `(url-link :tag "GitHub" (concat "https://github.com/" user "/" repo)))
+
+
+
+  :link '(url-link :tag "GitHub" "https://github.com/")
+  :link '(emacs-commentary-link :tag "Commentary" ""))
+
+
+
+
+
+
+
+
+
+
+## `font-spec`
+
+Return a new font spec using the specifications in arguments, which should come in property-value pairs. The possible specifications are as follows:
+
+* `:name`
+
+
+the font name (a string).
+
+Naming Fonts:
+
+* XLFD Font format — e.g. `""`.
+* Fontconfig format — e.g. `""`.
+* GTK+ Font format — e.g. `""`.
+
+:family
+:foundry
+:weight
+:slant
+:width
+These have the same meanings as the face attributes of the same name. See Face Attributes. 
+
+
+* `:size`
+
+The font size—either a non-negative integer that specifies the pixel size, or a floating-point number that specifies the point size. 
+
+Pixel Size vs Point Size: .
+
+:adstyle
+Additional typographic style information for the font, such as ‘sans’. The value should be a string or a symbol.
+
+
+:registry
+The charset registry and encoding of the font, such as ‘iso8859-1’. The value should be a string or a symbol. 
+:script
+The script that the font must support (a symbol).
+:lang
+The language that the font should support. The value should be a symbol whose name is a two-letter ISO-639 language name. On X, the value is matched against the “Additional Style” field of the XLFD name of a font, if it is non-empty. On MS-Windows, fonts matching the spec are required to support codepages needed for the language. Currently, only a small set of CJK languages is supported with this property: ‘ja’, ‘ko’, and ‘zh’. 
+:otf
+The font must be an OpenType font that supports these OpenType features, provided Emacs is compiled with a library, such as ‘libotf’ on GNU/Linux, that supports complex text layout for scripts which need that. The value must be a list of the form
+               (script-tag langsys-tag gsub gpos)
+where script-tag is the OpenType script tag symbol; langsys-tag is the OpenType language system tag symbol, or nil to use the default language system; gsub is a list of OpenType GSUB feature tag symbols, or nil if none is required; and gpos is a list of OpenType GPOS feature tag symbols, or nil if none is required. If gsub or gpos is a list, a nil element in that list means that the font must not match any of the remaining tag symbols. The gpos element may be omitted.
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+(cl-defun sboo-completing-read-obarray (candidates &key prompt predicate require-match confirm-non-match history default)
+
+(intern-soft COMPLETION))
+
+TODO unless require-match, may be absent
+
+(cl-defun sboo-completing-read-hashtable (candidates &key prompt predicate require-match confirm-non-match history default ignore-case)
+
+(gethash COMPLETION collection))
+
+(cl-defun sboo-completing-read-alist (candidates &key prompt predicate require-match confirm-non-match history default ignore-case)
+
+(alist-get COMPLETION collection nil nil #'equal))
+
+(cl-defun sboo-completing-read-plist (candidates &key prompt predicate require-match confirm-non-match history default ignore-case)
+
+(lax-plist-get collection COMPLETION))
+
+(cl-defun sboo-completing-read-list (candidates &key prompt predicate require-match confirm-non-match history default ignore-case)
+
+(cl-defun sboo-completing-read-array (candidates &key prompt predicate require-match confirm-non-match history default ignore-case)
+
+(cl-defun sboo-completing-read-vector (candidates &key prompt predicate require-match confirm-non-match history default ignore-case)
+
+(cl-defun sboo-completing-read-buffer (candidates &key prompt predicate require-match confirm-non-match history default ignore-case)
+
+(cl-defun sboo-completing-read-window (candidates &key prompt predicate require-match confirm-non-match history default ignore-case)
+
+(cl-defun sboo-completing-read-process (candidates &key prompt predicate require-match confirm-non-match history default ignore-case)
+
+(cl-defun sboo-completing-read-keymap (candidates &key prompt predicate require-match confirm-non-match history default ignore-case)
+
+(cl-defun sboo-completing-read-font (candidates &key prompt predicate require-match confirm-non-match history default ignore-case)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(let* ((PROMPT (cond
+ (prompt prompt)
+ (prompt' prompt')
+(t (error "`sboo-completing-read' requires PROMPT"))))
+
+(COLLECTION (cond
+
+(t (error "`sboo-completing-read' requires COLLECTION"))))
+
+(REQUIRE-MATCH (cond
+(confirm-non-match 'confirm)
+(require-match t)
+(require-match' require-match')
+(t nil)))
+
+(DEFAULT (cond
+(default default)
+(default' default')
+(t nil)))
+
+(PREDICATE )
+
+ (HISTORY )
+
+(completion-ignore-case (if ignore-case then t else completion-ignore-case))
+
+(COMPLETION (completing-read PROMPT COLLECTION PREDICATE REQUIRE-MATCH nil HISTORY DEFAULT inherit-input-method'))
+
+      )
+
+
+
+
+completing-read
+
+TODO use (or ...)
+
+(cl-defun sboo-completing-read
+ (&optional prompt' collection' predicate' require-match' initial' history' default' inherit-input-method'
+  &key prompt collection obarray hashtable list alist plist predicate require-match confirm-non-match history default ignore-case)
+
+(let* ((PROMPT (cond
+ (prompt prompt)
+ (prompt' prompt')
+(t (error "`sboo-completing-read' requires PROMPT"))))
+
+(COLLECTION (cond
+
+(t (error "`sboo-completing-read' requires COLLECTION"))))
+
+(REQUIRE-MATCH (cond
+(confirm-non-match 'confirm)
+(require-match t)
+(require-match' require-match')
+(t nil)))
+
+(DEFAULT (cond
+(default default)
+(default' default')
+(t nil)))
+
+(PREDICATE )
+
+ (HISTORY )
+
+(completion-ignore-case (if ignore-case then t else completion-ignore-case))
+
+(COMPLETION (completing-read PROMPT COLLECTION PREDICATE REQUIRE-MATCH nil HISTORY DEFAULT inherit-input-method'))
+
+      )
+
+(pcase (type-of collection)
+
+  ('hashtable (gethash COMPLETION collection))
+  ('obarray (intern-soft COMPLETION))
+
+  (_ COMPLETION))))
+
+
+
+If collection is a list, the permissible completions are specified by the elements of the list, each of which should be either a string, or a cons cell whose car is either a string or a symbol (a symbol is converted to a string using symbol-name). If the list contains elements of any other type, those are ignored.
+
+If collection is an obarray (see Creating Symbols), the names of all symbols in the obarray form the set of permissible completions.
+
+If collection is a hash table, then the keys that are strings or symbols are the possible completions. Other keys are ignored.
+
+
+
+
+
+
+
+
+
+
+
+# XREF
+
+## Links
+
+* <https://www.gnu.org/software/emacs/manual/html_node/emacs/Looking-Up-Identifiers.html>
+
+## 
+
+`xref` (built-in) package;
+
+* `xref-find-definitions` function
+
+## 
+
+>As of emacs-25.1, there's a new generic function xref-find-definitions. The xref built-in package provides a generic framework for navigating definitions in code. Probably, it'd take some time for every mode to adjust custom functions for this framework, but, at the very least, emacs-lisp-mode
+
+## `xref` API
+
+M-,
+Go back to where you previously invoked M-. and friends (xref-pop-marker-stack). 
+
+
+M-x xref-etags-mode
+Switch xref to use the etags backend.
+
+
+M-. (xref-find-definitions) shows the definitions of the identifier at point. With a prefix argument, or if there's no identifier at point, it prompts for the identifier. (If you want it to always prompt, customize xref-prompt-for-identifier to t.)
+
+## 
+
+
+
+
+
+
+
+
+
+# GNU GLOBAL
+
+GNU GLOBAL source code tagging system.
+
+GNU GLOBAL has the following features:
+
+supports 6 languages by built-in parser. (definition and reference)
+C, C++, Yacc, Java, PHP4 and assembly.
+supports 25 languages by Pygments + Universal Ctags plug-in parser. (definition and reference) 
+Awk, Dos batch, COBOL, C, C++, C#, Erlang, Fortran, Java, JavaScript, Lisp, Lua, Pascal, Perl, PHP, Python, Ruby, Matlab, OCaml, Scheme, Tcl, TeX, Verilog, Vhdl and Vim. 
+To use the parser, please see the file 'plugin-factory/PLUGIN_HOWTO.pygments' in the package.
+works the same way across diverse environments like follows:
+Shell command line
+Bash shell
+Vi editor (Nvi, Elvis, vim)
+Less viewer
+Emacs editor (Emacs, Mule, Xemacs)
+Web browser (See UNIX kernel source tour!.)
+Doxygen documentation system
+finds locations of specified symbol quickly.
+locate not only definitions but also references.
+allows duplicate tags.
+locate paths which matches to the specified pattern.
+hierarchical searches by default.
+searches not only in a source project but also in library projects.
+generates completion list for completing input method.
+supports various output formats.
+allows customizing of the set of candidate files to be tagged.
+understands POSIX 1003.2 regular expression.
+supports idutils as an external search engine.
+tag files are independent of machine architecture.
+supports incremental updating of tag files.
+plug-in parser is available to treat new language.
+supports customizing with gtags.conf.
+generates a hypertext of source code.
+compact format to save disk space.
+supports client/server environment (TRAMP ready).
+ignores binary files, dot files and specified files.
+includes cscope-compatible program (gtags-cscope).
+includes grep-like command (-g command).
+deals with loop of symbolic links well.
+Please also see 'Comparison with Similar Tools' in the OpenGrok project site for comparison with other tools.
+If you have a plan to make a yet another editor with tag facility, you can use GLOBAL for it.
+
+
+
+
+
+
+
+# ETAGS
+
+>A tags file is an (unindexed) text file listing usages. It is an index of your code, but to find an identifier in it you need to traverse the file to that point.
+> An indexing tool that uses a real database with an index (into the tags themselves) will be faster.
+
+use GNU Global instead of etags.
+
+
+
+
+
+
+
+
+
+
+
+
+
+TODO `haddock-mode`
+
+
+
+
+
+
+TODO THEME
+
+min-colors:
+8-color (or 8-bit a.k.a. 256-color) modes
+
+faces:
+helm-faces
+haskell-faces
+
+
+
+
+https://github.com/emacsfodder/emacs-purple-haze-theme/blob/master/purple-haze-theme.el
+
+(unless (>= emacs-major-version 24)
+  (error "purple-haze-theme requires Emacs 24 or later."))
+
+(deftheme purple-haze
+  "purple-haze-theme By: Jason Milkins - emacsfodder.github.com")
+
+(custom-theme-set-variables
+ 'purple-haze
+ '(fringe-mode 6 nil (fringe))
+ '(linum-format " %7d ")
+ )
+
+
+
+
+
+
+
+
+
+
+(eval-after-load 'flycheck
+
+  '(progn
+
+     (flycheck-define-checker idris
+
+       "An Idris syntax and type checker."
+
+       :command ("idris" "--check" "--nocolor" "--warnpartial" source)
+
+       :error-patterns
+
+       ((warning line-start (file-name) ":" line ":" column ":Warning - "
+
+                 (message (and (* nonl) (* "\n" (not (any "/" "~")) (* nonl)))))
+
+        (error line-start (file-name) ":" line ":" column ":"
+
+               (message (and (* nonl) (* "\n" (not (any "/" "~")) (* nonl))))))
+
+       :modes idris-mode)
+
+     (add-to-list 'flycheck-checkers 'idris)))
+
+
+
+
+
+
+
+LOCATION
+
+`emacs-location`
+
+(with-temp-buffer
+  (insert-file FILE)
+  ())
+
+
+(cl-defun location-parse-file (&key string path env
+uri git builtin)
+
+(cl-defun location-parse-directory (&key string path env uri git builtin)
+
+
+(cl-defun location-extract-file (&key string archived compressed tarball )
+
+(cl-defun location-extract-directory (&key )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SERIALIZATION
+
+https://nullprogram.com/blog/2013/12/30/
+
+Almost Everything Prints Readably
+
+Elisp has a small set of primitive data types. All of these primitive types print readably:
+
+integer — `1024`, `?a`
+float — `1.7`
+cons/list — `(...)`
+vector — `[...]` (one-dimensional)
+bool-vector — `#&n"..."`
+string — `"..."`
+char-table — `#^[...]`
+hash-table — `#s(hash-table ...)` (readable since Emacs 23.3)
+byte-code function object — `#[...]`
+symbol `'...` (variable), `#'...` (function).
+
+
+
+
+
+
+
+
+
+
+sboo-haskell-eldoc-documentation-function
+
+
+
+(require 'cl-lib)
+(require 'eldoc)
+(require 'thingatpt)
+
+
+
+
+
+
+     (cl-case (plist-get signature :type)
+        (function
+         (format "%s: %s"
+                 (propertize name 'face 'font-lock-function-name-face)
+                 (go-eldoc--highlight-argument signature index)))
+        (type
+         (format "%s: %s"
+                 (propertize name 'face 'font-lock-type-face)
+                 (plist-get signature :real-type)))))))
+
+
+
+(defsubst go-eldoc--propertize-cursor-thing (bounds)
+  (propertize (go-eldoc--retrieve-concrete-name bounds)
+              'face 'font-lock-variable-name-face))
+
+
+
+(propertize type 'face 'eldoc-highlight-function-argument)) into args
+
+
+
+
+
+
+(defvar go-eldoc--builtins
+  '(("append"  . "append,,func(slice []Type, elems ...Type) []Type")
+
+
+
+         (when curinfo
+              (format "%s: %s"
+                      (go-eldoc--propertize-cursor-thing bounds)
+                      curinfo))))))))
+
+
+
+
+(save-excursion
+    (goto-char (car bounds))
+    (while (looking-back "\\." (1- (point)))
+      (backward-char 1)
+      (skip-chars-backward "[:word:][:multibyte:]\\[\\]"))
+    (buffer-substring-no-properties (point) (cdr bounds))))
+
+
+
+
+
+(add-hook 'haskell-hooks #'sboo-haskell-eldoc-setup)
+
+;;;###autoload
+(defun sboo-haskell-eldoc-setup ()
+
+  "Set up `eldoc-mode' for Haskell and enable it. 
+
+Related:
+
+· `sboo-haskell-eldoc-documentation-function'
+· `eldoc-mode'"
+
+
+  (interactive)
+
+  (setq-local eldoc-documentation-function #'sboo-haskell-eldoc-documentation-function)
+
+;vs (turn-on-eldoc-mode)
+
+  (eldoc-mode +1))
+
+
+
+
+
+(when signature
+
+      (with-temp-buffer
+
+        (idris-propertize-spans (idris-repl-semantic-text-props (cdr signature))
+
+          (insert (car signature)))
+
+        (buffer-string)))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+# (Intra-Buffer) Search
+
+## Links
+
+* <>
+* <https://emacs.stackexchange.com/questions/12742/looking-back-performance>
+* <>
+* <>
+
+## `looking-back`
+
+>The biggest performance issue of looking-back is when it has no limit (or a limit that is far away). If you consider (with-temp-buffer (insert (make-string 10000 ?x)) (looking-back "y")) You'll see it is very fast. Now change the regexp to ".*y" instead : it's unbearably slow even though it's clear to the human reader that this can never match
+
+## ``
+
+
+
+
+
+
+https://github.com/mrbig033/cool-moves
+
+
+
+
+
+
+
+# `mtg-helm`
+
+## Syntax
+
+`mtg-helm`'s syntax mirrors `helm-list-buffers`
+
+M-x mtg-helm RET ing ^av $es *bird @flying
+
+- `ing` — a card whose name has "ing" (as any substring, not necessarily a whole word).
+- `*bird` — a Bird creature card.
+- `@flying` — a card whose text has flying (as any substring, not necessarily a whole word).
+- `^av` — a card whose name starts with "Av".
+- `$es` — a card whose name ends with "es".
+* `` — 
+
+additionally, `mtg-helm` has some mtg-specific syntax.
+
+* `` — 
+* `0/` — 
+* `/1` —
+* `0/1` — 
+* `` — 
+* `` — 
+
+in particular, many non-Oracle characters (i.e. which aren't valid in Oracle text, or which are ignored in Oracle text) are used as operators:
+
+
+## 
+
+
+
+
+
+
+https://github.com/emacs-helm/helm/wiki/Developing#writing-actions
+
+
+
+Creating a Class
+Create your own class inheriting from one of the main classes
+(defclass my-helm-class (helm-source-sync)
+  ((candidates :initform '("foo" "bar" "baz"))))
+
+(helm :sources (helm-make-source "test" 'my-helm-class)
+      :buffer "*helm test*")
+Is the same as creating your source with:
+
+(helm :sources (helm-build-sync-source "test"
+                 :candidates '("foo" "bar" "baz"))
+      :buffer "*helm test*")
+
+
+
+Writing actions
+Actions are specified in the :action slot of your class, it is an alist composed of (ACTION_NAME . FUNCTION), it can be also a symbol defining a customizable action alist.
+
+(defcustom helm-source-foo
+  '(("Do this" . foo)
+    ("Do that" . bar))
+  "A customizable action list."
+  :group 'helm
+  :type '(alist :key-type string :value-type function))
+It is recommended however to use helm-make-actions to define your actions easily, it allow also to create actions with condition, e.g
+
+(helm-make-actions "Do this"
+                   'foo
+                   (lambda ()
+                     (when (featurep 'something)
+                       "Do that"))
+                   'bar)
+
+
+
+
+
+
+
+
+
+http://ergoemacs.org/emacs_manual/elisp/Compiler-Errors.html#Compiler-Errors
+
+boundp / fboundp
+defvar (with no initial value) / declare-function
+
+
+(declare-function gud-find-c-expr "gud" nil)
+
+
+
+
+
+;; -*-no-byte-compile: t; -*-
+;; « no-byte-compile »: never bytecompile this file.
+
+
+
+
+
+(defun sboo-keyword-to-symbol (keyword)
+  "Convert KEYWORD to a symbol.
+
+Example:
+
+• (sboo-keyword-to-symbol :foo)
+ => 'foo
+
+"
+
+  (intern (substring (symbol-name keyword) 1)))
+
+
+
+
+
+
+
+
+# `helm` (package)
+
+
+https://github.com/emacs-helm/helm/wiki/Commands
+
+helm-M-x, which by default is bound to <helm-prefix> M-x, is used to launch commands in Helm. For convenience, you should bind it to M-x.
+
+Features include:
+
+Smart sorting
+Show key bindings next to command names
+Show documentation with persistent action (C-z)
+Show prefix arguments in the mode line
+
+Prefix arguments with helm-M-x
+Prefix arguments should be passed after calling helm-M-x. Simply type the prefix you want (e.g. C-u or M-9) on the highlighted command before hitting RET to execute it, you will see a prefix arg counter appearing in mode-line notifying you the number of prefix args entered.
+
+
+
+
+
+
+
+https://github.com/emacs-helm/helm/wiki/Buffers
+
+The helm-mini command displays buffers and recently visited files. It may be more useful than helm-buffers-list.
+
+
+
+
+
+https://github.com/emacs-helm/helm/wiki/Etags
+
+The helm-etags-select command, bound to <helm-prefix> e by default, can be used to navigate TAGS files built with etags. To jump to the definition of the symbol at point, invoke the command with a universal prefix (C-u <helm-prefix> e).
+
+
+
+
+https://github.com/emacs-helm/helm/wiki/Find-Files
+
+Some common actions and corresponding keys are below:
+
+Action	Key
+Move up	C-p
+Move down	C-n
+Persistent action	C-z
+Up directory	C-l
+
+Persistent action
+C-j and C-z execute the persistent action, which differs depending on context. The persistent actions for different file types are below:
+
+Type	Persistent Action
+File	Shows file name in the Helm buffer.
+Directory	Steps into the directory.
+Symlink	Expand to symlink’s true name
+
+
+
+Browse images
+helm-find-files and its persistent actions make for a fine image browser.
+
+Requirements
+The following requires image-dired (built-in) and ImageMagick.
+
+Navigate to a directory with images.
+Hit C-u C-z on first image.
+Turn on follow-mode with C-c C-f.
+Now, you can navigate the image directory with the <up> and <down> arrow keys, or C-n and C-p. You can also use C-t to split windows vertically and C-}, C-{ to shrink/enlarge the Helm window.
+
+
+
+
+
+
+https://github.com/emacs-helm/helm/wiki/Findutils
+
+helm-find uses GNU find to search for files in a directory hierarchy.
+
+Usage
+Execute helm-find (bound to <helm-prefix> / by default). The search with this command is actually performed literally, however you can use a space to match multiple pattern within a line.
+
+
+
+
+
+
+
+
+
+
+
+# 
+
+## Links
+
+<https://emacsredux.com/blog/2013/06/25/boost-performance-by-leveraging-byte-compilation/>
+<http://ergoemacs.org/emacs/emacs_byte_compile.html>
+
+## Byte-Compilation
+
+Byte-compilation is:
+
+* Portable 
+* Faster
+* Smaller
+* 
+
+Byte-compilation is a function of Emacs that transforms Lisp into byte-code. Byte-code, run by an interpreter in Emacs, can be executed more quickly than Lisp. However, because it isn't written in machine code, it can be directly transferred between machines without having to be recompiled. Functions byte-compiled by earlier versions of Emacs can be correctly interpreted by Emacs, but the opposite is not necessarily true.
+
+.el, and create a byte-code version with the extension .elc.
+
+
+Emacs’s Lisp interpreter is able to interpret two kinds of code: humanly readable code (stored in files with .el extension) and machine optimized code (called byte-compiled code), which is not humanly readable.
+
+(defun er-byte-compile-init-dir ()
+  "Byte-compile all your dotfiles."
+  (interactive)
+  (byte-recompile-directory user-emacs-directory 0))
+
+
+Emacs will load code from the .elc files if present alongside the .el files, so you’ll have to take steps to ensure you don’t have stale .elc files lying around. I’d suggest the following solution:
+
+(defun er-remove-elc-on-save ()
+  "If you're saving an Emacs Lisp file, likely the .elc is no longer valid."
+  (add-hook 'after-save-hook
+            (lambda ()
+              (if (file-exists-p (concat buffer-file-name "c"))
+                  (delete-file (concat buffer-file-name "c"))))
+            nil
+            t))
+
+(add-hook 'emacs-lisp-mode-hook 'er-remove-elc-on-save)
+
+
+
+Loading Byte Compiled File
+In your init file, when you use load, if you want emacs to load the byte compiled file if it exists, you should not include the “.el” suffix. For example, do it like this
+
+;; load elisp file, use byte compiled version (.elc) if exist
+(load "my_emacs_keybinding") ; no file name extension here
+
+
+
+
+
+This code will make Emacs delete the some_file.elc file, every time the some_file.el file in the same folder is saved.
+
+## Byte-Compile Desktop files?
+
+
+
+
+
+
+
+
+emacs-build
+
+
+
+
+find -L . -type f -name '*.el* -exec emacs --batch --function byte-compile-file '{}' '+'
+
+
+
+
+EMACS_BUILD="${emacs}/bin --batch --function byte-compile-file"
+
+find -L . -type f -name '*.el*' -exec "$EMACS_BUILD" '{}' '+'
+
+
+
+
+
+
+
+(defgroup sboo-haskell nil
+  "My haskell customization."
+  :group 'sboo)
+
+
+(defgroup sboo-desktop nil
+  "My customization for Desktop Persistence."
+  :group 'sboo)
+
+
+
+
+
+
+A group can also provide quick access to the online doc, source code, bug reporting, etc. for a package. Here, for instance, is the definition of group Icicles-Key-Completion (with some code elided).
+
+(defgroup Icicles-Key-Completion nil
+  "Icicles preferences related to key completion (`icicle-complete-keys')."
+  :prefix "icicle-" :group 'Icicles
+  :link `(url-link :tag "Send Bug Report" ...)
+  :link '(url-link :tag "Other Libraries by Drew" ...)
+  :link '(url-link :tag "Download" ...)
+  :link '(url-link :tag "Description" ...)
+  :link '(emacs-commentary-link :tag "Doc-Part2" "icicles-doc2")
+  :link '(emacs-commentary-link :tag "Doc-Part1" "icicles-doc1"))
+This group is itself a subgroup of group Icicles (see :group). It provides links in the Customize buffer for sending a bug report, downloading, and accessing the doc in the source
+
+
+(defgroup sboo-$1 nil
+  "My $1."
+  :group 'sboo)
+
+
+
+
+
+
+
+
+
+
+
+
+https://github.com/emacs-helm/helm/wiki/Developing
+
+
+
+
+
+
+
+
+https://github.com/manateelazycat/awesome-tab/blob/master/README.md
+
+
+
+
+
+Deft buffer is simply a file browser which lists the titles of all text files in the Deft directory followed by short summaries and last modified times. The title is taken to be the first line of the file and the summary is extracted from the text that follows. Files are, by default, sorted in terms of the last modified date, from newest to oldest.
+
+
+https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-compile.el
+
+
+
+
+
+Also `M-x describe-face` which will default to the face under the cursor. You may need to disable hl-line mode or else it will always show hl-line as the face.
+
+
+
+
+
+
+
+pragma completion...
+
+include is ignored
+
+warning and deprecated are strings. Read in an optional Haskell variable. Read in a string and performed double quote escaping and end brace escaping. 
+
+inline and inlineable and no*. Read in a mandatory Haskell variable.
+
+
+
+
+
+
+
+
+
+
+
+
+{-# SPECIALIZE hammeredLookup :: [(Widget, value)] -> Widget -> value #-}
+
+
+
+
+
+
+Also note that the argument to DEPRECATED and WARNING can also be a list of strings, in which case the strings will be presented on separate lines in the resulting warning message,
+{-# DEPRECATED foo, bar ["Don't use these", "Use gar instead"] #-}
+
+
+
+
+
+
+
+The MINIMAL pragma is used to specify the minimal complete definition of a class, i.e. specify which methods must be implemented by all instances. If an instance does not satisfy the minimal complete definition, then a warning is generated. This can be useful when a class has methods with circular defaults. For example
+
+class Eq a where
+    (==) :: a -> a -> Bool
+    (/=) :: a -> a -> Bool
+    x == y = not (x /= y)
+    x /= y = not (x == y)
+    {-# MINIMAL (==) | (/=) #-}
+Without the MINIMAL pragma no warning would be generated for an instance that implements neither method.
+
+The syntax for minimal complete definition is:
+
+mindef ::= name
+        |  '(' mindef ')'
+        |  mindef '|' mindef
+        |  mindef ',' mindef
+
+
+
+TODO elisp implementation of the BNF in Haskell / GHC documentation.
+
+ ::=
+ |  
+'(' ')'
+
+
+
+
+
+
+
+
+
+
+
+ https://wiki.archlinux.org/index.php/XDG_Base_Directory
+ 
+  It's possible to set HOME, but it has unexpected side effects. So far the most promising approach is modifying another Emacs environment variable to alter the load path and author your own site file which can manually load up your init file, but it changes the load process significantly.
+ 
+
+
+
+
+
+
+
+https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-desktop.el
+
+
+
+
+
+
+
+
+(defun sboo-faces (&key constants function-names) 
+
+ (mapconcat 'identity _ "\\|")
+
+  ())
+
+;; e.g.
+;; 
+;; (sboo-faces :constants '("Pi" 'Infinity") :function-names '("Sin" "Cos" "Sum"))
+;!
+;; →
+;;
+;; '(
+;;  ("Pi\\|Infinity" . font-lock-constant-face)
+;;  ("Sin\\|Cos\\|Sum" . font-lock-function-name-face)
+;; )
+
+
+
+
+
+
+The following are faces predefined by font-lock-mode.
+
+font-lock-builtin-face
+font-lock-comment-delimiter-face
+font-lock-comment-face
+font-lock-constant-face
+font-lock-doc-face
+font-lock-function-name-face
+font-lock-keyword-face
+font-lock-negation-char-face
+font-lock-preprocessor-face
+font-lock-regexp-grouping-backslash
+font-lock-regexp-grouping-construct
+font-lock-string-face
+font-lock-type-face
+font-lock-variable-name-face
+font-lock-warning-face
+
+
+(These are both face and variable.)
+
+Here's pre-defined faces in emacs.
+
+default
+bold
+italic
+bold-italic
+underline
+fixed-pitch
+variable-pitch
+shadow
+link
+link-visited
+highlight
+match
+isearch
+lazy-highlight
+error
+warning
+success
+
+
+
+
+
+
+
+
+http://ergoemacs.org/emacs/elisp_define_face.html
+
+(setq mymath-highlights
+      '(("Sin\\|Cos\\|Sum" . font-lock-function-name-face)
+        ("Pi\\|Infinity" . font-lock-constant-face)))
+
+(define-derived-mode mymath-mode prog-mode "mymath"
+  "major mode for editing mymath language code."
+  (setq font-lock-defaults '(mymath-highlights)))
+
+
+
+(use-package comint
+
+
+  :custom
+
+
+  (comint-buffer-maximum-size 20000 "Increase comint buffer size.")
+
+
+  (comint-prompt-read-only t "Make the prompt read only."))
+
+
+
+
+;; Remove the mode name for projectile-mode, but show the project name.
+
+
+(use-package projectile
+  :delight '(:eval (concat " " (projectile-project-name))))
+
+
+
+(use-package hydra)
+
+(use-package ivy)
+
+(use-package ivy-hydra
+
+
+  :after (ivy hydra))
+
+
+
+https://github.com/jwiegley/use-package.git
+
+https://github.com/jwiegley/use-package/blob/master/README.md
+
+
+
+## `use-package`
+
+### Usage
+
+```elisp
+(eval-when-compile
+  (require 'use-package))
+
+
+(require 'diminish)                ;; for « : diminish »
+
+
+(require 'bind-key)                ;; for « :bind »
+
+```
+
+### 
+
+`:defer` accepts an optional integer argument.
+
+
+`:defer [N]` causes the package to be loaded -- if it has not already been -- after `N` seconds of idle time.
+
+### 
+
+
+
+
+
+(defun nix--profile-paths ()
+  "Returns a list of all paths in the NIX_PROFILES environment
+variable, ordered from more-specific (the user profile) to the
+least specific (the system profile)"
+  (reverse (split-string (or (getenv "NIX_PROFILES") ""))))
+
+;;; Extend `load-path' to search for elisp files in subdirectories of
+;;; all folders in `NIX_PROFILES'. Also search for one level of
+;;; subdirectories in these directories to handle multi-file libraries
+;;; like `mu4e'.'
+
+
+(require 'seq)
+
+(let* ((subdirectory-sites (lambda (site-lisp)
+                             (when (file-exists-p site-lisp)
+                               (seq-filter (lambda (f) (file-directory-p (file-truename f)))
+                                           ;; Returns all files in `site-lisp', excluding `.' and `..'
+                                           (directory-files site-lisp 'full "^\\([^.]\\|\\.[^.]\\|\\.\\..\\)")))))
+       (paths (apply #'append
+                     (mapcar (lambda (profile-dir)
+                               (let ((site-lisp (concat profile-dir "/share/emacs/site-lisp/")))
+                                 (cons site-lisp (funcall subdirectory-sites site-lisp))))
+                             (nix--profile-paths)))))
+  (setq load-path (append paths load-path)))
+
+
+;;; Make `woman' find the man pages
+
+
+(eval-after-load 'woman
+  '(setq woman-manpath
+         (append (mapcar (lambda (x) (concat x "/share/man/"))
+                         (nix--profile-paths))
+                 woman-manpath)))
+
+
+
+
+
+
+
+
+
+
+pkgs/applications/editors/emacs/site-start.el
+
+(defun nix--profile-paths ()
+  "Returns a list of all paths in the NIX_PROFILES environment
+variable, ordered from more-specific (the user profile) to the
+least specific (the system profile)"
+  (reverse (split-string (or (getenv "NIX_PROFILES") ""))))
+
+;;; Extend `load-path' to search for elisp files in subdirectories of
+;;; all folders in `NIX_PROFILES'. Also search for one level of
+;;; subdirectories in these directories to handle multi-file libraries
+;;; like `mu4e'.'
+(require 'seq)
+(let* ((subdirectory-sites (lambda (site-lisp)
+                             (when (file-exists-p site-lisp)
+                               (seq-filter (lambda (f) (file-directory-p (file-truename f)))
+                                           ;; Returns all files in `site-lisp', excluding `.' and `..'
+                                           (directory-files site-lisp 'full "^\\([^.]\\|\\.[^.]\\|\\.\\..\\)")))))
+       (paths (apply #'append
+                     (mapcar (lambda (profile-dir)
+                               (let ((site-lisp (concat profile-dir "/share/emacs/site-lisp/")))
+                                 (cons site-lisp (funcall subdirectory-sites site-lisp))))
+                             (nix--profile-paths)))))
+  (setq load-path (append paths load-path)))
+
+
+;;; Make `woman' find the man pages
+(eval-after-load 'woman
+  '(setq woman-manpath
+         (append (mapcar (lambda (x) (concat x "/share/man/"))
+                         (nix--profile-paths))
+                 woman-manpath)))
+
+;;; Make tramp work for remote NixOS machines
+(eval-after-load 'tramp-sh
+  ;; TODO: We should also add the other `NIX_PROFILES' to this path.
+  ;; However, these are user-specific, so we would need to discover
+  ;; them dynamically after connecting via `tramp'
+  '(add-to-list 'tramp-remote-path "/run/current-system/sw/bin"))
+
+;;; C source directory
+;;;
+;;; Computes the location of the C source directory from the path of
+;;; the current file:
+;;; from: /nix/store/<hash>-emacs-<version>/share/emacs/site-lisp/site-start.el
+;;; to:   /nix/store/<hash>-emacs-<version>/share/emacs/<version>/src/
+(let ((emacs
+       (file-name-directory                      ; .../emacs/
+        (directory-file-name                     ; .../emacs/site-lisp
+         (file-name-directory load-file-name)))) ; .../emacs/site-lisp/
+      (version
+       (file-name-as-directory
+        (concat
+         (number-to-string emacs-major-version)
+         "."
+         (number-to-string emacs-minor-version))))
+      (src (file-name-as-directory "src")))
+  (setq find-function-C-source-directory (concat emacs version src)))
+
+
+
+
+
+
+
+‘-L dir’
+‘--directory=dir’
+Prepend directory dir to the variable load-path. If you specify multiple ‘-L’ options, Emacs preserves the relative order; i.e., using ‘-L /foo -L /bar’ results in a load-path of the form ("/foo" "/bar" ...). If dir begins with ‘:’, Emacs removes the ‘:’ and appends (rather than prepends) the remainder to load-path. (On MS Windows, use ‘;’ instead of ‘:’; i.e., use the value of path-separator.) 
+
+
+
+
+
+
+--file="${1}" 
+
+"+linenum:columnnum FILE"
+Visit the specified file, then go to line number linenum and put point at column number columnnum.
+
+
+
+
+#!/usr/bin/env bash
+
+CURDIR="$PWD"
+
+findconfig() {
+    # via https://unix.stackexchange.com/questions/293393/find-a-specific-file-in-the-nearest-ancestor-of-the-current-working-directory
+    # from: https://www.npmjs.com/package/find-config#algorithm
+    # 1. If X/file.ext exists and is a regular file, return it. STOP
+    # 2. If X has a parent directory, change X to parent. GO TO 1
+    # 3. Return NULL.
+    if [ -f "$1" ]; then
+        printf '%s\n' "${PWD%/}/$1"
+    elif [ "$PWD" = / ]; then
+        false
+    else
+        # a subshell so that we don't affect the caller's $PWD
+        (cd .. && findconfig "$1")
+    fi
+}
+
+if [ "$1" != "--really" ]; then
+    if (which direnv && direnv exec . true) 2>&1 >/dev/null; then
+        echo wrapping using direnv
+        export ROOT="${DIRENV_DIR:1}"
+        exec direnv exec . "$0" --really "$@"
+    elif which nix-shell 2>&1 >/dev/null; then
+
+        NIX_SHELL="$(findconfig shell.nix)"
+        NIX_DEFAULT="$(findconfig default.nix)"
+        USE_SHELL_NIX=false
+
+        if [ -n "$NIX_SHELL" -a -n "$NIX_DEFAULT" ]; then
+            # choose the longer path
+            if [ ${#NIX_SHELL} -gt ${#NIX_DEFAULT} ]; then
+                USE_SHELL_NIX=true
+            fi
+        else
+            if [ -n "$NIX_SHELL" ]; then
+                USE_SHELL_NIX=true
+            fi
+        fi
+
+        if $USE_SHELL_NIX; then
+            echo wrapping using nix-shell "$NIX_SHELL"
+            export ROOT="$(dirname "$NIX_SHELL")"
+            exec nix-shell "$NIX_SHELL" --run "$0 --really $@"
+        else
+            echo wrapping using nix-shell -A env "$NIX_DEFAULT"
+            export ROOT="$(dirname "$NIX_DEFAULT")"
+            exec nix-shell "$NIX_DEFAULT" -A env --run "$0 --really $@"
+        fi
+    fi
+
+fi
+
+shift
+OUTDIR="/tmp/dante/$(echo ${ROOT} | md5sum | cut -d' ' -f1)"
+echo "ROOT=$ROOT"
+echo "OUTDIR=$OUTDIR"
+echo "USE_CABAL=$USE_CABAL"
+
+if [ "$USE_CABAL" ]; then
+    echo using cabal
+    cabal new-repl --builddir="$OUTDIR" "$@"
+else
+    echo using ghci
+    mkdir -p "$OUTDIR"
+    GHCI_SCRIPT="${OUTDIR}/.ghci"
+    echo ":cd ${ROOT}" > "$GHCI_SCRIPT"
+    shift
+    ghci -O0 \
+         -ghci-script "$GHCI_SCRIPT" \
+	       -ghci-script "${ROOT}/.ghci" \
+	       -outputdir="${OUTDIR}" \
+         -Wall \
+         "$@"
+fi
+
+
+
+
+
+
+
+helm-wikipedia-suggest
+
+
+
+
+
+
+
+
+(defun sboo-shell-command-to-string (&rest command)
+
+  "Invoke `shell-command-to-string' on COMMAND, stripping a trailing newline." ; TODO escaping
+
+  (interactive )
+
+  (replace-regexp-in-string "\r?\n\\'" "" 
+
+    (shell-command-to-string (mapconcat 'identity command " "))))
+
+
+
+
+
+
+
+
+
+The key is to create a package that provide a
+    <filename>default.el</filename> file in
+    <filename>/share/emacs/site-start/</filename>. Emacs knows to load this
+    file automatically when it starts. e.g.:
+ 
+
+<screen>
+{
+  packageOverrides = pkgs: with pkgs; rec {
+
+
+    myEmacsConfig = writeText "default.el" ''
+;; initialize package
+
+(require 'package)
+(package-initialize 'noactivate)
+(eval-when-compile
+  (require 'use-package))
+
+;; load some packages
+
+(use-package company
+  :bind ("&lt;C-tab&gt;" . company-complete)
+  :diminish company-mode
+  :commands (company-mode global-company-mode)
+  :defer 1
+  :config
+  (global-company-mode))
+
+(use-package counsel
+  :commands (counsel-descbinds)
+  :bind (([remap execute-extended-command] . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-c g" . counsel-git)
+         ("C-c j" . counsel-git-grep)
+         ("C-c k" . counsel-ag)
+         ("C-x l" . counsel-locate)
+         ("M-y" . counsel-yank-pop)))
+
+(use-package flycheck
+  :defer 2
+  :config (global-flycheck-mode))
+
+(use-package ivy
+  :defer 1
+  :bind (("C-c C-r" . ivy-resume)
+         ("C-x C-b" . ivy-switch-buffer)
+         :map ivy-minibuffer-map
+         ("C-j" . ivy-call))
+  :diminish ivy-mode
+  :commands ivy-mode
+  :config
+  (ivy-mode 1))
+
+(use-package magit
+  :defer
+  :if (executable-find "git")
+  :bind (("C-x g" . magit-status)
+         ("C-x G" . magit-dispatch-popup))
+  :init
+  (setq magit-completing-read-function 'ivy-completing-read))
+
+(use-package projectile
+  :commands projectile-mode
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :defer 5
+  :config
+  (projectile-global-mode))
+    '';
+
+    myEmacs = emacsWithPackages (epkgs: (with epkgs.melpaStablePackages; [
+      (runCommand "default.el" {} ''
+mkdir -p $out/share/emacs/site-lisp
+cp ${myEmacsConfig} $out/share/emacs/site-lisp/default.el
+'')
+      company
+      counsel
+      flycheck
+      ivy
+      magit
+      projectile
+      use-package
+    ]));
+  };
+}
+
+
+   <para>
+    This provides a fairly full Emacs start file. It will load in addition to
+    the user's presonal config. You can always disable it by passing
+    <command>-q</command> to the Emacs command.
+   </para>
+
+
+
+
+
+
+
+
+
+
+
+
+
+git clone sboosali/emacs-natlink
+    
+git co -b  "melpa"
+
+
+
+
+
+natlink
+
+(natlink :repo "sboosali/emacs-natlink"
+      :branch "melpa"
+      :fetcher github
+
+      :files ("src/*.el"
+              "emacs-natlink.sh"
+              (:exclude "emacs-natlink-pkg.el")))
+
+
+
+
+
+
+
+
+
+
+
+(setq diff-switches "-u")
+
+;; ^ "diff -u"
+;;
+;;     -u, -U NUM, --unified[=NUM]
+;;             output NUM (default 3) lines of unified context
+;; 
+
+;; Unified Diff:
+;; 
+;; The format starts with the same two-line header as the context format, except that the original file is preceded by "---" and the new file is preceded by "+++".
+;; 
+;; 
+;; 
+
+
+
+
+(progn
+(setq ispell-dictionary "en_US")
+(setq ispell-hunspell-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" t ("-d" "en_US") nil utf-8)))
+(setq ispell-program-name "hunspell")
+(setq ispell-really-hunspell t)
+())
+
+;; ^ `ispell'
+;;
+;; 
+;;
+
+
+
+
+(setq tab-always-indent 'complete)
+
+;; ^ Double-TAB
+
+
+
+
+
+
+
+
+;; `executable-make-buffer-file-executable-if-script-p':
+
+(defun sboo/register-hook-upon-save-to-make-script-buffer-files-executable ()
+  (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p))
+
+
+(add-hook 'shell-mode #'sboo/register-hook-upon-save-to-make-script-buffer-files-executable)
+
+
+
+
+
+
+
+
+
+
+
+
+;; make both fringes 4 pixels wide
+(fringe-mode 4)
+
+;; make the left fringe 4 pixels wide and the right disappear
+(fringe-mode '(4 . 0))
+
+;; restore the default sizes
+(fringe-mode nil)
+
+`(fringe-mode nil)` is equivalent to `(fringe-mode '(8 . 8))`.
+
+
+
+
+
+
+
+
+lisp/better-defaults.el
+
+;; -*- coding: utf-8; mode: emacs-lisp -*-
+
+(when (fboundp 'menu-bar-mode)
+  (menu-bar-mode -1))
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
+
+(when (fboundp 'global-font-lock-mode)
+  (global-font-lock-mode t)
+  (setq font-lock-maximum-decoration t))
+
+(auto-insert-mode t)
+(cua-mode t)
+(fringe-mode '(2 . 4))
+(ido-mode t)
+(ido-everywhere t)
+
+(defun tvaughan/kill-this-buffer ()
+  "Kill this buffer."
+  (interactive)
+  (kill-buffer (current-buffer)))
+
+(setq-default fill-column 78)
+(setq-default indent-tabs-mode nil)
+
+(setq auto-insert-directory (expand-file-name "templates" user-emacs-directory))
+(setq auto-insert-query nil)
+(setq auto-revert-verbose nil)
+(setq backup-directory (expand-file-name "backups" user-emacs-directory))
+(setq backup-directory-alist `(("." . ,backup-directory)))
+(setq case-fold-search nil)
+(setq column-number-mode t)
+(setq compilation-scroll-output t)
+(setq create-lockfiles nil)
+(setq default-directory (getenv "HOME"))
+(setq delete-by-moving-to-trash t)
+(setq diff-switches "-u")
+(setq dired-listing-switches "-AFl --group-directories-first --time-style=long-iso")
+(setq erc-fill-prefix "      + ")
+(setq erc-hide-list '("JOIN" "PART" "QUIT"))
+(setq erc-insert-timestamp-function 'erc-insert-timestamp-left)
+(setq erc-timestamp-format "[%H:%M] ")
+(setq ibuffer-expert t)
+(setq ido-auto-merge-work-directories-length -1)
+(setq ido-case-fold t)
+(setq ido-create-new-buffer 'always)
+(setq ido-enable-flex-matching t)
+(setq ido-use-virtual-buffers t)
+(setq inhibit-startup-screen t)
+(setq initial-buffer-choice '(lambda () (ibuffer nil "*Buffer List*") (get-buffer "*Buffer List*")))
+(setq initial-scratch-message nil)
+(setq ispell-dictionary "en_US")
+(setq ispell-hunspell-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" t ("-d" "en_US") nil utf-8)))
+(setq ispell-program-name "hunspell")
+(setq ispell-really-hunspell t)
+(setq require-final-newline t)
+(setq ring-bell-function 'ignore)
+(setq save-interprogram-paste-before-kill t)
+(setq superword-mode t)
+(setq tab-always-indent 'complete)
+(setq tramp-default-method "ssh")
+(setq transient-mark-mode t)
+(setq uniquify-buffer-name-style 'post-forward)
+(setq wdired-allow-to-change-permissions t)
+
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+(global-set-key (kbd "C-x k") 'tvaughan/kill-this-buffer)
+(global-set-key (kbd "C-x w") 'delete-frame)
+
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-M-s") 'isearch-forward)
+(global-set-key (kbd "C-M-r") 'isearch-backward)
+
+(global-set-key (kbd "C-x C-m") 'execute-extended-command)
+(global-set-key (kbd "C-c C-m") 'execute-extended-command)
+
+(global-set-key (kbd "C-w") 'backward-kill-word)
+(global-set-key (kbd "C-x C-k") 'kill-region)
+(global-set-key (kbd "C-c C-k") 'kill-region)
+
+(add-hook 'after-save-hook
+          'executable-make-buffer-file-executable-if-script-p)
+
+(add-hook 'dired-load-hook
+	  '(lambda ()
+             (load "dired-x")))
+
+(add-hook 'ibuffer-mode-hook
+          '(lambda ()
+             (ibuffer-auto-mode t)))
+
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (when (eq major-mode 'compilation-mode)
+    (ansi-color-apply-on-region compilation-filter-start (point-max))))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+
+(provide 'better-defaults)
+
+;; <https://github.com/carrete/.emacs.d>
+
+
+
+
+
+
+
+
+
+
+
+lisp/setup-pinned-buffer-mode.el
+
+;; -*- coding: utf-8; mode: emacs-lisp -*-
+
+(define-minor-mode pinned-buffer-mode
+  "Pin the current buffer to the selected window."
+  nil " P" nil
+  (set-window-dedicated-p (selected-window) pinned-buffer-mode))
+
+(global-set-key (kbd "C-c p") 'pinned-buffer-mode)
+
+(provide 'setup-pinned-buffer-mode)
+
+;; Dedicated Windows
+;;
+;; <https://www.gnu.org/software/emacs/manual/html_node/elisp/Dedicated-Windows.html>
+;;
+;; 
+;; 
+
+;; <https://github.com/carrete/.emacs.d>
+
+
+
+
+
+
+
+
+
+
+
+
+
+(cl-defun sboo-haskell-new-module (module-name &key snippet-name)
+
+"Create a new module named MODULE-NAME in a file, from yas-snippet SNIPPET-NAME
+the given file.
+"
+
+(interactive (list (sboo-haskell--suggest-module-names)
+ (sboo-haskell--suggest-snippet-names))))
+
+(progn
+
+
+
+()))
+
+
+sboo-haskell--suggest-module-names
+
+
+
+
+
+
+
+
+
+./scripts/add- https://github.com/m-cat/nimbus-theme.git
+
+
+
+
+
+
+
+
+
+(defun sboo-expand ()
+
+      "Expand (`company-complete-common' or `yas-next-field-or-maybe-expand')."
+
+
+      (interactive)
+
+      (if company-candidates
+          (company-complete-common)
+
+        (yas-next-field-or-maybe-expand)))
+ 
+
+
+
+
+defun sboo-kp-1 ()
+
+      "company-complete-common or yas-next-field-or-maybe-expand."
+      (interactive)
+
+      (if company-candidates
+          (company-complete-common)
+        (yas-next-field-or-maybe-expand)))
+
+
+
+
+
+
+
+
+Make yasnippet to not jump to next field on `tab` if company show completion candidates. Also `C-g` must cancel company first.
+
+```
+    (defun mad/yas-company-next-field ()
+      "company-complete-common or yas-next-field-or-maybe-expand."
+      (interactive)
+      (if company-candidates
+          (company-complete-common)
+        (yas-next-field-or-maybe-expand)))
+    
+    (define-key yas-keymap [tab] #'mad/yas-company-next-field)
+    (define-key yas-keymap (kbd "TAB") #'mad/yas-company-next-field)
+
+    (defun mad/yas-company-cancel ()
+      "company-abort or yas-abort-snippet."
+      (interactive)
+      (if company-candidates
+          (company-abort)
+        (yas-abort-snippet)))
+    
+    (define-key yas-keymap (kbd "C-g") #'mad/yas-company-cancel)
+```
+
+
+
+
+
+
+sparse keyword pattern:
+
+
+
+
+;;;###autoload
+(cl-defun ... (EVENT
+
+                    &key
+
+                                 (mouse-binding 'mouse-1)
+
+                                 mouse-1
+                                 mouse-2
+                                 mouse-3
+                                 mouse-4
+                                 mouse-5
+                                 wheel-down
+                                 wheel-up
+
+                                 down-mouse-1
+                                 down-mouse-2
+                                 down-mouse-3
+                                 down-mouse-4
+                                 down-mouse-5
+
+                                 double-mouse-1
+                                 double-mouse-2
+                                 double-mouse-3
+                                 double-mouse-4
+                                 double-mouse-5
+
+                                 triple-mouse-1
+                                 triple-mouse-2
+                                 triple-mouse-3
+                                 triple-mouse-4
+                                 triple-mouse-5
+
+                                 A-mouse-1
+                                 A-mouse-2
+                                 A-mouse-3
+                                 A-mouse-4
+                                 A-mouse-5
+                                 A-wheel-down
+                                 A-wheel-up
+
+                                 C-mouse-1
+                                 C-mouse-2
+                                 C-mouse-3
+                                 C-mouse-4
+                                 C-mouse-5
+                                 C-wheel-down
+                                 C-wheel-up
+
+                                 M-mouse-1
+                                 M-mouse-2
+                                 M-mouse-3
+                                 M-mouse-4
+                                 M-mouse-5
+                                 M-wheel-down
+                                 M-wheel-up
+
+                                 S-mouse-1
+                                 S-mouse-2
+                                 S-mouse-3
+                                 S-mouse-4
+                                 S-mouse-5
+                                 S-wheel-down
+                                 S-wheel-up
+
+                                 s-mouse-1
+                                 s-mouse-2
+                                 s-mouse-3
+                                 s-mouse-4
+                                 s-mouse-5
+                                 s-wheel-down
+                                 s-wheel-up
+                                 )
+
+
+  (interactive "e")
+
+  (let ((map (make-sparse-keymap))
+        )
+
+      (define-key map `[,mouse-binding] ...)
+
+
+      (dolist (var '(
+
+                     mouse-1
+                     mouse-2
+                     mouse-3
+                     mouse-4
+                     mouse-5
+                     wheel-down
+                     wheel-up
+
+                     down-mouse-1
+                     down-mouse-2
+                     down-mouse-3
+                     down-mouse-4
+                     down-mouse-5
+
+                     double-mouse-1
+                     double-mouse-2
+                     double-mouse-3
+                     double-mouse-4
+                     double-mouse-5
+
+                     triple-mouse-1
+                     triple-mouse-2
+                     triple-mouse-3
+                     triple-mouse-4
+                     triple-mouse-5
+
+                     A-mouse-1
+                     A-mouse-2
+                     A-mouse-3
+                     A-mouse-4
+                     A-mouse-5
+                     A-wheel-down
+                     A-wheel-up
+
+                     C-mouse-1
+                     C-mouse-2
+                     C-mouse-3
+                     C-mouse-4
+                     C-mouse-5
+                     C-wheel-down
+                     C-wheel-up
+
+                     M-mouse-1
+                     M-mouse-2
+                     M-mouse-3
+                     M-mouse-4
+                     M-mouse-5
+                     M-wheel-down
+                     M-wheel-up
+
+                     S-mouse-1
+                     S-mouse-2
+                     S-mouse-3
+                     S-mouse-4
+                     S-mouse-5
+                     S-wheel-down
+                     S-wheel-up
+
+                     s-mouse-1
+                     s-mouse-2
+                     s-mouse-3
+                     s-mouse-4
+                     s-mouse-5
+                     s-wheel-down
+                     s-wheel-up))
+
+        (when (symbol-value var)
+          (define-key map `[,var] (symbol-value var))))
+
+
+  map))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(propertize "foo"
+
+            'face       'italic
+            'mouse-face 'bold-italic)
+
+;; ⇒ 
+;; #("foo" 0 3 (mouse-face bold-italic face))
+
+
+
+
+
+
+compile- time (i e. macro) graceful-commands: 
+
+
+
+
+
+
+
+next-thing-at-point 'word
+
+
+
+
+
+
+(setq resize-mini-windows nil)
+
+When the minibuffer is not active, you can resize its window permanently by using the window sizing commands in the frame's other window, or dragging the mode line with the mouse. (Due to details of the current implementation, for this to work resize-mini-windows must be nil.)
+
+
+
+
+
+
+# user-defined environment-variables for emacs-configuration
+
+launch-time configurations:
+
+* the `` — `:: Bool`
+* the `emacs-directory` — `:: String`
+* the profile predicates (`builtins` or `small` or `large`) — `:: Bool`
+* the `` — `:: Bool`
+* the `` — `:: Bool`
+
+
+
+
+
+
+
+
+
+
+
+
+rjsx-mode
+
+
+
+
+https://github.com/clemera/buffer-expose?files=1
+
+    (setq buffer-expose-hide-regexes '("hide" "this"))
+
+
+
+
+
+
+
+
+
+https://github.com/syohex/emacs-helm-themes?files=1
+
+
+
+
+
+> For instance, Dired's major mode keymap binds mouse-2 to the following command:
+
+```elisp
+(defun dired-mouse-find-file-other-window (event)
+
+
+       "In Dired, visit the file or directory name you click on."
+
+       (interactive "e")
+
+       (let ((window (posn-window (event-end event)))
+             (pos (posn-point (event-end event)))
+             file)
+
+         (if (not (windowp window))
+             (error "No file chosen"))
+         (with-current-buffer (window-buffer window)
+           (goto-char pos)
+           (setq file (dired-get-file-for-visit)))
+         (if (file-directory-p file)
+             (or (and (cdr dired-subdir-alist)
+                      (dired-goto-subdir file))
+                 (progn
+                   (select-window window)
+                   (dired-other-window file)))
+           (select-window window)
+           (find-file-other-window (file-name-sans-versions file t)))))
+```
+
+> This command uses the functions posn-window and posn-point to determine where the click occurred, and dired-get-file-for-visit to determine which file to visit.
+
+
+
+
+
+(eval-after-load 'ox-html
+  ;; If you prefer to use ~ for <code> tags. Replace "code" with
+  ;; "verbatim" here, and replace "~" with "=" below.
+  '(push '(code . "<kbd>%s</kbd>") org-html-text-markup-alist))
+
+(define-key org-mode-map "\C-ck" #'endless/insert-key)
+
+
+(defun endless/insert-key (key)
+  "Ask for a key then insert its description.
+Will work on both org-mode and any mode that accepts plain html."
+
+
+  (interactive "kType key sequence: ")
+
+
+  (let* ((orgp (derived-mode-p 'org-mode))
+         (tag (if orgp "~%s~" "<kbd>%s</kbd>")))
+
+
+    (if (null (equal key "\C-m"))
+        (insert 
+         (format tag (help-key-description key nil)))
+      ;; If you just hit RET.
+      (insert (format tag ""))
+      (forward-char (if orgp -1 -6)))))
+
+
+
+
+
+
+
+
+
+https://github.com/fgallina/region-bindings-mode
+
+
+
+
+
+
+
+
+(defun f-traverse-upwards (fn &optional path)
+  "Traverse up as long as FN return nil, starting at PATH.
+If FN returns a non-nil value, the path sent as argument to FN is
+returned.  If no function callback return a non-nil value, nil is
+returned."
+  (unless path
+    (setq path default-directory))
+  (when (f-relative? path)
+    (setq path (f-expand path)))
+  (if (funcall fn path)
+      path
+    (unless (f-root? path)
+      (f-traverse-upwards fn (f-parent path)))))
+
+
+
+
+
+;; Dispatch Popup
+
+;;;###autoload (autoload 'magit-dispatch-popup "magit" nil t)
+(magit-define-popup magit-dispatch-popup
+  "Popup console for dispatching other popups."
+  :actions '("Popup and dwim commands"
+             (?A "Cherry-picking"  magit-cherry-pick-popup)
+             (?b "Branching"       magit-branch-popup)
+             (?B "Bisecting"       magit-bisect-popup)
+             (?c "Committing"      magit-commit-popup)
+             (?d "Diffing"         magit-diff-popup)
+             (?D "Change diffs"    magit-diff-refresh-popup)
+             (?e "Ediff dwimming"  magit-ediff-dwim)
+             (?E "Ediffing"        magit-ediff-popup)
+             (?f "Fetching"        magit-fetch-popup)
+             (?F "Pulling"         magit-pull-popup)
+             (?l "Logging"         magit-log-popup)
+             (?L "Change logs"     magit-log-refresh-popup)
+             (?m "Merging"         magit-merge-popup)
+             (?M "Remoting"        magit-remote-popup)
+             (?o "Submodules"      magit-submodule-popup)
+             (?O "Subtrees"        magit-subtree-popup)
+             (?P "Pushing"         magit-push-popup)
+             (?r "Rebasing"        magit-rebase-popup)
+             (?t "Tagging"         magit-tag-popup)
+             (?T "Notes"           magit-notes-popup)
+             (?V "Reverting"       magit-revert-popup)
+             (?w "Apply patches"   magit-am-popup)
+             (?W "Format patches"  magit-patch-popup)
+             (?X "Resetting"       magit-reset-popup)
+             (?y "Show Refs"       magit-show-refs-popup)
+             (?z "Stashing"        magit-stash-popup)
+             (?! "Running"         magit-run-popup)
+             (?% "Worktree"        magit-worktree-popup)
+             (lambda ()
+               (and (with-current-buffer magit-pre-popup-buffer
+                      (derived-mode-p 'magit-mode))
+                    (propertize "Applying changes" 'face 'magit-popup-heading)))
+             (?a "Apply"           magit-apply)
+             (?s "Stage"           magit-stage)
+             (?u "Unstage"         magit-unstage)
+             (?v "Reverse"         magit-reverse)
+             (?S "Stage all"       magit-stage-modified)
+             (?U "Unstage all"     magit-unstage-all)
+             (?k "Discard"         magit-discard)
+             (lambda ()
+               (and (with-current-buffer magit-pre-popup-buffer
+                      (derived-mode-p 'magit-mode))
+                    (propertize "Essential commands" 'face 'magit-popup-heading)))
+             (?g  "    refresh current buffer"   magit-refresh)
+             ;; These bindings only work because of :setup-function.
+             (?\t   "  toggle section at point"  magit-section-toggle)
+             (?\r   "  visit thing at point"     magit-visit-thing)
+             ;; This binding has no effect and only appears to do
+             ;; so because it is identical to the global binding.
+             ("C-h m" "show all key bindings"    describe-mode))
+  :setup-function 'magit-dispatch-popup-setup
+  :max-action-columns (lambda (heading)
+                        (pcase heading
+                          ("Popup and dwim commands" 4)
+                          ("Applying changes" 3)
+                          ("Essential commands" 1))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(dolist (SYMBOL '(stage-all-changes unstage-all-changes amend-published))
+  (remove-from-list 'magit-no-confirm SYMBOL))
+
+;;^ See URL `https://magit.vc/manual/magit.html#Completion-Confirmation-and-the-Selection'.
+
+
+
+
+
+
+
+
+## Layers
+
+<https://github.com/syl20bnr/spacemacs/blob/master/doc/LAYERS.org#anatomy-of-a-layer>
+
+A layer is a folder somewhere in Spacemacs’ layer-search-path that contains these files (listed in loading order):
+
+
+* layers.el
+declare additional layers
+
+
+*packages.el
+the packages list and configuration
+
+
+* funcs.el
+all functions used in the layer should be declared here
+
+
+* config.el
+layer specific configuration
+
+
+* keybindings.el
+general key bindings
+
+
+
+
+
+
+
+
+
+
+
+find proj-dir -type f -not -iwholename '*TAGS' -not -size +16k | ctags -f ~/proj/output/TAGS -e -L -
+
+
+
+
+
+
+
+
+(cl-defun my-flymake-backend-function (REPORT-FUNCTION &key &allow-other-keys)
+  ...)
+
+;; ^ NOTE the argument list « (... &key &allow-other-keys) » means "require no explicit keywords, but accept any other (ignored) keywords".
+
+
+
+
+    (define-key map "\M-p" 'flymake-goto-prev-error)
+    (define-key map "\M-n" 'flymake-goto-next-error)
+
+
+
+
+
+
+
+
+
+
+
+
+(defun sboo-character-printable-p (CHAR)
+  "Whether the given Unicode character is printable.
+
+Wraps `printable-chars'."
+  (aref printable-chars CHAR))
+
+
+
+
+(defun sboo-string-hash-prepend-value-to-key (TABLE)
+
+  (cl-flet ((CLOSURE (key value)
+    (puthash (F key value) value TABLE))
+
+  CLOSURE)
+
+
+
+(cl-defun sboo-make-map-hash-table-keys (&key table function)
+
+
+prepend-value-to-key (TABLE)
+
+  (cl-flet ((CLOSURE (key value)
+    (puthash (F key value) value TABLE))
+
+  CLOSURE)
+
+
+
+
+
+
+(let ((TABLE
+(make-hash-table 
+  :size 131072
+  :weakness nil
+  :test 'equal)))
+
+  (maphash (sboo-make-map-hash-table-keys :table TABLE :function sboo-prepend-with-space) ucs-names)
+
+;;;
+
+(defun sboo-unicode-prepend-name-with-character-and-codepoint (CHAR)
+
+  ".
+"
+  (let* ((NAME (get-char-code-property char propname CHAR 'name))
+
+        ;; TODO (LITERAL (char-to-string CHAR))
+
+        (LITERAL  (format "%c" CHAR))
+        ;; ^ the « %c » format-specifier formats a codepoint as a character (TODO if printable?).
+
+        (CODEPOINT (format "%X" CHAR))
+        ;; ^ the « %X » format-specifier formats a hexadeximal.
+
+        (CATEGORY (char-property-get CHAR 'general-category))
+
+        (DESCRIPTION (char-code-property-description 'general-category CATEGORY))
+
+       ())
+
+  (format "%s     %s     %s     %s" NAME LITERAL CODEPOINT DESCRIPTION))
+
+
+;; ^ See URL `https://www.gnu.org/software/emacs/manual/html_node/elisp/Character-Properties.html'.
+
+;; ^ DOCS `get-char-code-property':
+;;
+;; (get-char-code-property CHAR PROPNAME)
+;; 
+;; decomposition if: not nil or a singleton list of the character itself (IE decomposes trivially to just itself).
+;; bidi-class if: not `L' (the default, IE left to right directionality).
+;; numeric-value if: exists and is a number (The value of this property is a number. Examples of characters that have this property include fractions, subscripts, superscripts, Roman numerals, currency numerators, and encircled numbers. For example, the value of this property for the character U+2155 (vulgar fraction one fifth) is 0.2.)
+;; paired-bracket if: exists.
+
+;; ^ DOCS `char-code-property-description':
+;;
+;; (char-code-property-description PROP VALUE)
+;;
+;; > This function returns the description string of property PROP'S VALUE, or nil if VALUE has no description.
+;; 
+          (char-code-property-description 'general-category 'Zs)
+               ⇒ "Separator, Space"
+;;
+          (char-code-property-description 'general-category 'Nd)
+               ⇒ "Number, Decimal Digit"
+;;
+          (char-code-property-description 'numeric-value '1/5)
+               ⇒ nil
+;; 
+
+;; ^ DOCS `printable-chars':
+;;
+;; > The value of this variable is a char-table that specifies, for each character, whether it is printable or not. That is, if evaluating:
+;; >
+;; >    (aref printable-chars CHAR) 
+;; >
+;; > results in t, the character CHAR is printable, and if it results in nil, it is not.
+
+;; ^ `format`:
+;;
+;; (format STRING &rest OBJECTS)
+;;
+;; > This function returns a string equal to string, replacing any format specifications with encodings of the corresponding objects. The arguments objects are the computed values to be formatted.
+;; >
+;; > The characters in string, other than the format specifications, are copied directly into the output, including their text properties, if any. Any text properties of the format specifications are copied to the produced string representations of the argument objects.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(defun sboo-prepend-with-space (x y)
+  (format-message "%s %s y x))
+
+;; ^ 
+;;   M-: sboo-prepend-with-space "BULLET" "·")
+;;   "· BULLET"
+
+
+
+
+
+;; `maphash':
+;;
+;; (maphash FUNCTION TABLE)
+;;
+;; > This function calls function once for each of the associations in table. The function function should accept two arguments—a key listed in table, and its associated value. maphash returns nil.
+;; 
+
+
+
+
+
+
+https://github.com/Wilfred/ht.el
+
+
+
+
+
+
+ranger:
+
+Toggle the file preview, between literal (raw) or fully formatted
+Indirectly scroll through
+
+
+
+
+
+
+
+
+https://github.com/xahlee/xah-html-mode.el
+
+
+
+
+
+face-list
+This function returns a list of all defined face names.
+
+
+
+A face can specify different appearances for different types of displays. For example, a face can make text red on a color display, but use a bold font on a monochrome display. To specify multiple appearances for a face, select ‘For All Kinds of Displays’ in the menu you get from invoking ‘[State]’.
+
+
+
+
+haskell-keyword-face: for keywords
+haskell-type-face: for type names and type class names
+haskell-constructor-face: for constructors
+haskell-definition-face: function and operator name at the definition place
+haskell-operator-face: operators
+haskell-pragma-face: GHC pragmas
+haskell-literate-comment-face: literate comments
+haskell-quasi-quote-face: quasi quotes unless using mode specific highlighting
+haskell-c2hs-hook-pair-face: c2hs hooks
+haskell-c2hs-hook-name-face: c2hs hook names
+
+
+There is also support to use mode-specific syntax highlighing for quasiquotes.
+
+anim/font-lock-quasi-quotes
+At this point quasi quotes for HTML, XML, shell scripts, Hamlet templates and SQL are supported out of the box. Customize haskell-font-lock-quasi-quote-modes to make sure your quoters are supported.
+
+
+
+
+
+
+
+
+
+
+
+https://github.com/emacs-jp/replace-colorthemes/blob/master/screenshots.md
+
+
+https://github.com/emacs-jp/replace-colorthemes/blob/master/high-contrast-theme.el
+
+https://github.com/emacs-jp/replace-colorthemes/blob/master/greiner-theme.el
+
+https://github.com/emacs-jp/replace-colorthemes/blob/master/rotor-theme.el
+
+
+
+
+
+
+Here's a minimal example of how I do this in my config, making C-x m the "leader" key everywhere:
+
+(define-prefix-command 'test-keymap)
+(global-set-key (kbd "C-x m") 'test-keymap)
+(define-key test-keymap "m" '(lambda () (interactive) (message "testing")))
+
+
+
+I use C-SPC to pull up a custom menu of commands that I use all the time, like org-mode stuff, quickly accessing magit. I use which-key to show the "menu" of keybindings, and general.el to actually set the keys
+
+
+
+
+a global minor-mode for one's personal keymap:
+
+(bind-keys* .......) from the bind-key package basically does this. So I bind f1 such it's a prefix that can't be overwritten by other things, then bind whatever I want inside that keymap.
+
+« https://www.reddit.com/r/emacs/comments/6iubd2/anyone_use_your_own_global_minor_mode_for_keymaps/ »
+
+
+
+
+
+
+
+
+
+
+
+
+https://github.com/clemera/objed/blob/master/README.asc
+
+
+
+
+
+
+
+
+
+
+TODO (make-local-variable 'eldoc-documentation-function)
+              (setq eldoc-documentation-function 'scheme-get-current-symbol-info)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(progn
+  (define-key search-active-map (kbd "<right>") #')
+  (define-key seatch-active-map (kbd "<left>")  #'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;; hack by emacs-fu:
+
+;;Awesome copy/paste!----------------------
+;;My most used hack! If nothing is marked/highlighted, and you copy or cut
+;;(C-w or M-w) then use column 1 to end. No need to "C-a C-k" or "C-a C-w" etc.
+(defadvice kill-ring-save (before slick-copy activate compile) "When called
+  interactively with no active region, copy a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (message "Copied line")
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead."
+  (interactive
+    (if mark-active (list (region-beginning) (region-end))
+      (list (line-beginning-position)
+        (line-beginning-position 2)))))
+;;--------------------------------------------
+
+
+
+
+
+
+
+
+7.42 Time-stamp files with "Time-stamp: <>" in header
+;;Time-stamp-----------------------------------
+;; when there is a "Time-stamp: <>" in the first 10 lines of the file,
+;; emacs will write time-stamp information there when saving the file.
+(setq time-stamp-active t          ; do enable time-stamps
+      time-stamp-line-limit 10     ; check first 10 buffer lines for Time-stamp: <>
+      time-stamp-format "Last changed %04y-%02m-%02d %02H:%02M:%02S by %L, %u") ; date format
+(add-hook 'write-file-hooks 'time-stamp) ; update when saving
+;;--------------------------------------------
+
+
+
+
+
+
+Backups
+
+<https://www.gnu.org/software/emacs/manual/html_node/emacs/Backup.html>
+
+
+make backups files to specific backup directory, and keep several versions. I don't like the "file~" method as it clutters up, instead stick them all in a common folder.
+
+;;Backups-------------------------------------
+(defconst my-backup-dir
+  (expand-file-name (concat user-emacs-directory "backups")))
+
+(setq make-backup-files t ;; make backup first time a file is saved
+      version-control t   ;; number and keep versions of backups
+      backup-by-copying t ;; and copy (don't clobber symlinks) them to...
+      backup-directory-alist `(("." . ,my-backup-dir)) ;; ...here
+      kept-new-versions 2
+      kept-old-versions 5
+      delete-old-versions t ;; don't ask about deleting old versions
+      ;;vc-make-backup-files t ;; even backup files under version control (git/svn/etc.)
+      ;;make-backup-files nil      ;;No annoying "~file.txt"
+      ;;auto-save-default nil      ;;no auto saves to #file#
+      ;;auto-save-interval 300     ;; Auto save "file" to "#file#" every 300 (default)
+      )
+
+;; if no backup directory exists, then create it:
+(if (not (file-exists-p my-backup-dir))
+    (mkdir my-backup-dir t))
+;;--------------------------------------------
+
+
+
+
+
+
+
+
+
+
+(when (require 'goto-chg nil 'noerror)
+  (global-set-key (kbd "s-c") 'goto-last-change)
+  (global-set-key (kbd "s-S-c") 'goto-last-change-reverse))
+
+;; ^ "Go to the place where you last changed something. I actually find myself sometimes undoing something just to get to where I made a change and then undo the undo. With goto-chg, no more! It jumps the marker to the last place of a change."
+
+
+
+
+
+
+
+
+
+
+echo "(provide 'sboo-ediff)" > sboo/sboo-ediff.el
+e sboo/sboo-ediff.el
+
+;; No (awkward) separate control-window:
+
+
+(customize-set-variable 'ediff-window-setup-function 'ediff-setup-windows-plain)
+
+;; Side-by-side comparison is easier than vertical-split:
+
+(customize-set-variable 'ediff-split-window-function 'split-window-horizontally)
+
+
+
+
+
+
+
+
+
+
+
+;TODO xpm for each capital letter (& greek letters)
+
+;; URL `https://github.com/tpope/tpope/tree/master/.pixmaps/mini'.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+High Contrast Theme — <https://github.com/emacs-jp/replace-colorthemes/blob/master/high-contrast-theme.el>
+
+Solarized Light — <https://github.com/bbatsov/solarized-emacs>
+
+Spacemacs Theme — <https://github.com/nashamri/spacemacs-theme/blob/master/spacemacs-common.el>
+
+Andreas Theme
+avk-daylight
+Greiner Theme
+
+ 
+
+
+
+
+(use-package projectile
+  :commands (projectile-project-root projectile-project-p) ; for neotree below
+
+
+(use-package neotree
+
+
+  :commands (neotree-toggle errge/neotree-project-dir)
+
+
+  :bind (("s-p d" . errge/neotree-project-dir))
+
+
+  :functions (neo-global--window-exists-p neotree-dir neotree-find)
+
+
+  :config
+
+  (defun errge/neotree-project-dir ()
+    "Open NeoTree using the git root.
+
+See URL `https://www.emacswiki.org/emacs/NeoTree'."
+    (interactive)
+
+
+    (let ((project-dir (projectile-project-root))
+          (file-name (buffer-file-name)))
+
+
+      (neotree-toggle)
+      (if project-dir
+          (if (neo-global--window-exists-p)
+              (progn
+                (neotree-dir project-dir)
+                (neotree-find file-name)))
+        (message "Could not find git project root.")))))
+
+
+
+
+(use-package company
+  :diminish company-mode
+  :functions (global-company-mode)
+  :bind (("M-/" . company-complete)
+         ("C-M-/" . company-dabbrev))
+  :config
+  (global-company-mode))
+
+
+
+
+
+
+
+
+;; start server, so we can connect anytime with emacsclient
+
+(unless noninteractive
+  (setq server-socket-dir (format "/tmp/emacs-%d-%s-%d"
+                                  (user-uid)
+                                  (format-time-string "%Y%m%d-%H%M%S")
+                                  (emacs-pid)))
+  (server-start)
+  (add-hook 'kill-emacs-hook #'(lambda () (delete-directory server-socket-dir t))))
+
+
+
+
+
+
+
+
+
+
+
+(setq tool-bar-position 'left)
+
+
+EOF

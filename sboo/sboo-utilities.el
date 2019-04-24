@@ -860,13 +860,13 @@ Related:
 
 (define-key special-event-map [sigusr1] #'sboo-reload-config)
 
-;; ^ Handle a `sigusr1' event, by reloading the configuration.
+;; ^ Handle a `sigusr1' event, by reloading the personal configuration.
 
 ;;----------------------------------------------;;
 
 (define-key special-event-map [sigusr2] #'keyboard-quit)
 
-;; ^ Handle a `sigusr2' event, by terminating computation
+;; ^ Handle a `sigusr2' event, by terminating the current computation
 ;;   (to “thaw” Emacs, if frozen).
 
 ;;==============================================;;
