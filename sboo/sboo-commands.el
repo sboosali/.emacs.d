@@ -822,6 +822,32 @@ Inputs:
 
 ;;==============================================;;
 
+(defun sboo-read-coding-system ()
+
+  "Relevant completion for (known, good) Coding-Systems.
+
+Output:
+
+• a `coding-system-p'."
+
+  (let* (
+         )
+
+    (completing-read "Coding-System: " )))
+
+;;----------------------------------------------;;
+
+(defun sboo-set-coding-system (coding-system)
+
+  "`set-buffer-file-coding-system' to CODING-SYSTEM."
+
+  (interactive (list
+                (sboo-read-coding-system)))
+
+  (set-buffer-file-coding-system coding-system))
+
+;;==============================================;;
+
 (defun sboo-set-input-method-TeX ()
 
   "Set the `input-method' to « TeX ».
@@ -847,6 +873,96 @@ Note:
   (interactive)
 
   (set-input-method nil t))
+
+;;==============================================;;
+;; TODO widgets...
+
+;; M-: (widget-choose "Browser" '(("Firefox" . firefox) ("Google Chrome" . google-chrome)))
+;;
+
+(ignore-errors
+
+  (widget)
+
+  (widget-checklist-add-item)
+
+  ())
+
+;;==============================================;;
+
+(defun sboo-custom-groups-p (symbol)
+
+  "Get all Customization Groups.
+
+Output:
+
+• a `listp' of `symbolp's.
+  Everything defined by `defgroup'.
+  An average `length' is 75. 
+
+Notes:
+
+• `defgroup' sets the `custom-group' property of the `symbolp')."
+
+  (let* ((GROUPS )
+         )
+
+    (mapatoms (lambda (*SYMBOL*)
+                (let ((GROUP (get *SYMBOL* 'custom-group))
+                      )
+                  (when GROUP
+                    (push *SYMBOL* GROUPS)))))
+    GROUPS))
+
+;;----------------------------------------------;;
+
+(defun sboo-custom-groups-list ()
+
+  "Get all Customization Groups.
+
+Output:
+
+• a `listp' of `symbolp's.
+  Everything defined by `defgroup'.
+  An average `length' is 75. 
+
+Notes:
+
+• `defgroup' sets the `custom-group' property of the `symbolp')."
+
+  (let* ((GROUPS )
+         )
+
+    (mapatoms (lambda (*SYMBOL*)
+                (let ((GROUP (get *SYMBOL* 'custom-group))
+                      )
+                  (when GROUP
+                    (push *SYMBOL* GROUPS)))))
+    GROUPS))
+
+;;----------------------------------------------;;
+
+(defun sboo-read-custom-group ()
+
+  "Read a Customization Group (from the user).
+
+Output:
+
+• a `symbolp'.
+  a Customization Group (defined via `defgroup').
+
+Notes:
+
+• `defgroup' sets the `custom-group' property of the `symbolp')."
+
+  (interactive)
+
+  (let* ((CANDIDATES (sboo-custom-groups-list))
+         (STRING     (completing-read "Customization Group: " CANDIDATES nil 'confirm "sboo-"))
+         (SYMBOL     (intern-soft STRING))
+         )
+
+    SYMBOL))
 
 ;;==============================================;;
 

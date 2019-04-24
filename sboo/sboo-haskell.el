@@ -22,8 +22,8 @@
 
 ;; Builtins:
 
-;; (require 'cl-lib)
-;; (require 'pcase)
+(require 'cl-lib)
+(require 'pcase)
 
 ;;----------------------------------------------;;
 ;; Customization -------------------------------;;
@@ -293,7 +293,30 @@ See:
   (let* ((COMPILE-COMMAND (sboo-haskell-get-compile-command :buffer buffer))
          )
 
-    (setq-local compile-command COMPILE-COMMAND)))
+    (setq-local compile-command COMPILE-COMMAND)
+
+    ;;TODO add `sboo-haskell-set-compilation-search-paths' to `compile' hook, conditioned on haskell:
+
+    ()))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-haskell-set-compilation-search-path ()
+
+  "Extend `compilation-search-path' (with subdirectories which have a Haskell package).
+
+See:
+
+• `sboo-haskell-get-compilation-search-paths'"
+
+  (interactive)
+
+  (let* ((COMPILE-PATHS (sboo-haskell-get-compilation-search-paths))
+        )
+
+    (setq-local compilation-search-path (append compilation-search-path COMPILE-PATHS))
+
+    compilation-search-path))
 
 ;;----------------------------------------------;;
 
@@ -414,6 +437,82 @@ Output:
     (format-message "%s %s"
                     "stack script"
                     FILE)))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-haskell-get-compilation-search-paths (&key root)
+
+  "Extra `compilation-search-path's, given project-directory ROOT.
+
+Inputs:
+
+• ROOT — a `stringp'.
+  Defaults to `sboo-haskell-guess-project-root'.
+
+Output:
+
+• a `stringp'."
+
+  (let* ((ROOT (or root
+                   (sboo-haskell-guess-project-root)))
+
+         (SUBDIRECTORIES (directory-files ROOT)) ; TODO strip ./dist( » and version-control directories.
+          All (recursive) subdirectories, of the project root directory, with a « .cabal » file. 
+         )
+
+    SUBDIRECTORIES))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-haskell-guess-project-root (&key file)
+
+  "Guess (the directory of) the project which FILE is part of.
+
+Inputs:
+
+• FILE — a `stringp'.
+  a filepath.
+
+Output:
+
+• a `stringp'.
+  a filepath, a directory which is an ancestor of FILE.
+
+Implementation:
+
+• Tries `dante-project-root' (from the `dante' package, if available).
+• Tries `intero-project-root' (from the `intero' package, if available).
+• Tries `projectile-project-root' (from the `projectile' package, if available).
+• Calls function `sboo-haskell-locate-dominating-project-directory'.
+• Defaults to `default-directory'."
+
+  (or (bound-and-true-p dante-project-root)
+      (bound-and-true-p intero-project-root)
+      (bound-and-true-p projectile-project-root)
+      (sboo-haskell-locate-dominating-project-directory :directory (file-name-directory file))
+      default-directory))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-haskell-locate-dominating-project-directory (&key directory)
+
+  "« dirname » of `'sboo-haskell-locate-dominating-project-file'."
+
+  (file-name-directory (sboo-haskell-locate-dominating-project-file :directory directory)))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-haskell-locate-dominating-project-file (&key directory)
+
+  "`locate-dominating-file' for « cabal.project » and « stack.yaml »."
+
+  (let ((DIRECTORY (or directory default-directory))
+        )
+
+  (or (locate-dominating-file DIRECTORY "cabal.project")
+      (locate-dominating-file DIRECTORY "stack.yaml")
+      (locate-dominating-file DIRECTORY "package.yaml")
+      (locate-dominating-file DIRECTORY #'sboo-haskell--has-cabal-file-p))))
 
 ;;----------------------------------------------;;
 ;; Functions: `eldoc' --------------------------;;
@@ -568,6 +667,34 @@ Related:
 ;; (insert (propertize "xyz" 'help-echo "help-echo"))
 
 ;;----------------------------------------------;;
+;; Utilities -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-haskell--has-cabal-file-p (directory)
+
+  "Does DIRECTORY have a « .cabal » file?"
+
+  (cl-find-if #'sboo-haskell--is-cabal-file-p
+              (directory-files directory)))
+
+;;----------------------------------------------;;
+
+(defun sboo-haskell--is-cabal-file-p (file)
+
+  "Is FILE a « .cabal » file?
+
+Examples:
+
+• M-: (sboo-haskell--is-cabal-file-p \"example.cabal\")
+  t
+• M-: (sboo-haskell--is-cabal-file-p \"example.yaml\")
+  nil"
+
+  (if (string-match-p (rx (1+ any) ".cabal" eos) file)
+      t
+    nil))
+
+;;----------------------------------------------;;
 ;; Hacks ---------------------------------------;;
 ;;----------------------------------------------;;
 
@@ -585,6 +712,10 @@ Related:
 ;; ERROR "Couldn't guess that module name. Does it exist?"
 ;;
 ;; « -fdefer-type-errors »
+
+;; `directory-files-recursively':
+;;
+;; (directory-files-recursively DIRECTORY REGEXP &optional INCLUDE-DIRECTORIES)
 
 ;; 
 

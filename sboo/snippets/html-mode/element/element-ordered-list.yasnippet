@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+#
+# key         : ol
+# name        : [sboo] Ordered List element, i.e. « <ol> <li></li>... </ol> ».
+# type        : snippet
+# condition   : (let ((KEY "ol")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 12) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+<ol type="${4:1}" start="${4:1}">
+  <li>${1:x}</li>
+  <li>${2:y}</li>
+  <li>${3:z}</li>
+  $0
+</ol>

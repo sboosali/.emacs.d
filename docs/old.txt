@@ -2360,25 +2360,264 @@ just return nil."
 (ignore-errors (with-temp-buffer (insert "Example Header") (downcase-region (point-min) (point-max)) (let* ((replace-char-fold t)) (replace-string " " "-" (point-min) (point-max)) (buffer-substring-no-properties (point-min) (point-max))))
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+(defun sboo-custom-groups-list ()
+
+  "Get all Customization Groups.
+
+Output:
+
+• a `listp' of `symbolp's.
+  Everything defined by `defgroup'.
+  An average `length' is 75. 
+
+Notes:
+
+• `defgroup' sets the `custom-group' property of the `symbolp')."
+
+  (let* ((GROUPS )
+         )
+
+    (mapatoms (lambda (*SYMBOL*)
+                (let ((GROUP (get *SYMBOL* 'custom-group))
+                      )
+                  (when GROUP
+                    (push *SYMBOL* GROUPS)))))
+    GROUPS))
 
 ;;----------------------------------------------;;
 
+(defun sboo-read-custom-group ()
+
+  "Read a Customization Group (from the user).
+
+Output:
+
+• a `symbolp'.
+  a Customization Group (defined via `defgroup').
+
+Notes:
+
+• `defgroup' sets the `custom-group' property of the `symbolp')."
+
+  (interactive)
+
+  (let* ((CANDIDATES (sboo-custom-groups-list))
+         (STRING     (completing-read "Customization Group: " CANDIDATES nil 'confirm "sboo-"))
+         (SYMBOL     (intern-soft STRING))
+         )
+
+    SYMBOL))
 ;;----------------------------------------------;;
+
+(progn
+
+  ;;--------------------------;;
+  
+  (use-package spaceline
+
+    :config
+
+    (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main))))
+
+    ())
+
+  ;;--------------------------;;
+  
+  (use-package spaceline-config
+
+    :config
+
+    (spaceline-helm-mode +1)
+    (spaceline-emacs-theme)
+
+    ())
+
+  ;;--------------------------;;
+  
+  ())
+  
+;; `http://amitp.blogspot.com/2017/01/emacs-spaceline-mode-line.html'
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+  (setq markdown-command "multimarkdown")
+
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+(use-package emacs
+
+  :delight
+
+  (visual-line-mode " VL")
+  ;; ^ Shorten `visual-line-mode'.
+
+  (auto-fill-function " aF")
+  ;; ^ Shorten `auto-fill-mode'.
+
+  )
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+(use-package autorevert
+
+  :delight
+
+  (auto-revert-mode " aR")
+  ;; ^ Shorten `auto-revert-modee'.
+
+  )
 
 ;;----------------------------------------------;;
+
+(use-package face-remap
+
+  :delight
+
+  (buffer-face-mode)
+  ;; ^ Hide `buffer-face-mode'.
+
+  )
+
+;;----------------------------------------------;;
+Note that when using a symbol or a function to provide a dynamically generated list of paths, you must inform the byte-compiler of this definition so the value is available at byte-compilation time. This is done by using the special form eval-and-compile (as opposed to eval-when-compile). Further, this value is fixed at whatever was determined during compilation, to avoid looking up the same information again on each startup:
+
+(eval-and-compile
+  (defun ess-site-load-path ()
+    (shell-command "find ~ -path ess/lisp")))
+
+(use-package ess-site
+  :load-path (lambda () (list (ess-site-load-path)))
+  :commands R)
+
+;;----------------------------------------------;;
+(defun magnars/rgrep-fullscreen (regexp &optional files dir confirm)
+
+  "Open grep in full screen, saving windows."
+
+  (interactive
+   (progn
+     (grep-compute-defaults)
+     (cond
+      ((and grep-find-command (equal current-prefix-arg '(16)))
+       (list (read-from-minibuffer "Run: " grep-find-command
+                                   nil nil 'grep-find-history)))
+      ((not grep-find-template)
+       (error "grep.el: No `grep-find-template' available"))
+      (t (let* ((regexp (grep-read-regexp))
+                (files (grep-read-files regexp))
+                (dir (ido-read-directory-name "Base directory: "
+                                              nil default-directory t))
+                (confirm (equal current-prefix-arg '(4))))
+           (list regexp files dir confirm))))))
+
+  (window-configuration-to-register ?$)
+  (rgrep regexp files dir confirm)
+  (switch-to-buffer "*grep*")
+  (delete-other-windows)
+  (beginning-of-buffer))
+;;----------------------------------------------;;
+(defun markdown--style-map-prompt ()
+  "Return a formatted prompt for Markdown markup insertion."
+  (when markdown-enable-prefix-prompts
+    (concat
+     "Markdown: "
+     (propertize "bold" 'face 'markdown-bold-face) ", "
+     (propertize "italic" 'face 'markdown-italic-face) ", "
+     (propertize "code" 'face 'markdown-inline-code-face) ", "
+     (propertize "C = GFM code" 'face 'markdown-code-face) ", "
+     (propertize "pre" 'face 'markdown-pre-face) ", "
+     (propertize "footnote" 'face 'markdown-footnote-text-face) ", "
+     (propertize "q = blockquote" 'face 'markdown-blockquote-face) ", "
+     (propertize "h & 1-6 = heading" 'face 'markdown-header-face) ", "
+     (propertize "- = hr" 'face 'markdown-hr-face) ", "
+     "C-h = more")))
+
+(defun markdown--command-map-prompt ()
+  "Return prompt for Markdown buffer-wide commands."
+  (when markdown-enable-prefix-prompts
+    (concat
+     "Command: "
+     (propertize "m" 'face 'markdown-bold-face) "arkdown, "
+     (propertize "p" 'face 'markdown-bold-face) "review, "
+     (propertize "o" 'face 'markdown-bold-face) "pen, "
+     (propertize "e" 'face 'markdown-bold-face) "xport, "
+     "export & pre" (propertize "v" 'face 'markdown-bold-face) "iew, "
+     (propertize "c" 'face 'markdown-bold-face) "heck refs, "
+     (propertize "u" 'face 'markdown-bold-face) "nused refs, "
+     "C-h = more")))
+
+
+;;----------------------------------------------;;
+(defun sboo-haskell--has-cabal-file-p (file)
+
+  "Is FILE a « .cabal » file?"
+
+  (string-match-p ".\\.cabal\\'" file))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-haskell-get-compilation-search-paths (&key root)
+
+  "Extra `compilation-search-path's, given project-directory ROOT.
+
+Inputs:
+
+• ROOT — a `stringp'.
+  Defaults to `sboo-haskell-guess-project-root'.
+
+Output:
+
+• a `stringp'."
+
+  (let* ((ROOT (or root
+                   (sboo-haskell-guess-project-root)))
+
+         (SUBDIRECTORIES (directory-files ROOT)) ; TODO All (recursive) subdirectories, of the project root directory, with a « .cabal » file. directory-files-recursively directory regexp &optional include-directories
+         )
+
+    SUBDIRECTORIES))
+
+;;----------------------------------------------;;
+(cl-defun sboo-haskell-set-compile-command (&key buffer)
+
+  "Set `compile-command' to to `sboo-haskell-get-compile-command'.
+
+See:
+
+• `sboo-haskell-set-compile-command'"
+
+  (let* ((COMPILE-COMMAND (sboo-haskell-get-compile-command :buffer buffer))
+         (COMPILE-PATHS   (sboo-haskell-get-compilation-search-paths))
+         )
+
+    (setq-local compile-command COMPILE-COMMAND)
+
+    ;;TODO mv to `compile' hook, conditioned on haskell:
+    ;;  (setq-local compilation-search-path (append compilation-search-path COMPILE-PATHS))
+
+    ()))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-haskell-set-compilation-search-path (&key buffer)
+
+  "Extend `compilation-search-path' (with subdirectories which have a Haskell package).
+
+See:
+
+• `sboo-haskell-get-compilation-search-paths'"
+
+  (interactive (list
+                (current-buffer)
+                ))
+
+  (let* ((COMPILE-PATHS (sboo-haskell-get-compilation-search-paths))
+        )
+
+    (setq-local compilation-search-path (append compilation-search-path COMPILE-PATHS))
+
+    compilation-search-path))
 
 ;;----------------------------------------------;;
 

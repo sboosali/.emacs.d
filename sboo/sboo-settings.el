@@ -308,6 +308,16 @@
 ;; Default `show-help-function' is `tooltip-show-help'.
 
 ;;----------------------------------------------;;
+;; Minibuffer:
+
+
+;;----------------------------------------------;;
+;; Echo Area:
+
+
+
+;;----------------------------------------------;;
+;; Help
 
 (sboo-custom-set help-at-pt-display-when-idle t
   "automatically show Local Help (i.e. the ‘kbd-help’ or ‘help-echo’ Text Property of the character-at-point) on point-over (i.e. when `point' moves there, not when the `cursor' hovers over).")

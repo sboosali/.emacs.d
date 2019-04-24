@@ -394,7 +394,7 @@ Related:
 
   "« sboo »'s customization."
 
-  :link '(url-link "https://github.com/sboosali/.emacs.d#readme")
+  :link '(url-link :tag "GitHub" "https://github.com/sboosali/.emacs.d#readme")
   :group 'local)
 
 ;;----------------------------------------------;;
@@ -620,32 +620,6 @@ Related:
   (add-startup-hook! #'sboo-compilation-config!))
 
 ;;==============================================;;
-
-(defun magnars/rgrep-fullscreen (regexp &optional files dir confirm)
-
-  "Open grep in full screen, saving windows."
-
-  (interactive
-   (progn
-     (grep-compute-defaults)
-     (cond
-      ((and grep-find-command (equal current-prefix-arg '(16)))
-       (list (read-from-minibuffer "Run: " grep-find-command
-                                   nil nil 'grep-find-history)))
-      ((not grep-find-template)
-       (error "grep.el: No `grep-find-template' available"))
-      (t (let* ((regexp (grep-read-regexp))
-                (files (grep-read-files regexp))
-                (dir (ido-read-directory-name "Base directory: "
-                                              nil default-directory t))
-                (confirm (equal current-prefix-arg '(4))))
-           (list regexp files dir confirm))))))
-
-  (window-configuration-to-register ?$)
-  (rgrep regexp files dir confirm)
-  (switch-to-buffer "*grep*")
-  (delete-other-windows)
-  (beginning-of-buffer))
 
 ;;----------------------------;;
 
@@ -923,6 +897,28 @@ Related:
 ;; because they are actual packages.
 ;;
 ;; See: (describe-variable 'package--builtins)
+
+;;----------------------------------------------;;
+
+(use-package emacs
+
+  :no-require t
+
+  :delight
+
+  (visual-line-mode " VL")
+  ;; ^ Shorten `visual-line-mode'.
+
+  (auto-revert-mode " aR")
+  ;; ^ Shorten `auto-revert-modee'.
+
+  (auto-fill-function " aF")
+  ;; ^ Shorten `auto-fill-mode'.
+
+  (buffer-face-mode)
+  ;; ^ Hide `buffer-face-mode'.
+
+  )
 
 ;;----------------------------------------------;;
 
@@ -1553,7 +1549,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   (use-package projectile
 
-    ;;;TODO :delight '(:eval (concat " " (projectile-project-name)))
+    :delight '(:eval (concat " " (projectile-project-name)))
 
     ;; ^
     ;; [1] Hide the mode name for projectile-mode;
@@ -1696,7 +1692,8 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   :init
 
-  (setq markdown-command "multimarkdown")
+  (setq markdown-command "markdown")
+  ;; ^ `pandoc'. TODO
 
   :config
 
@@ -1772,7 +1769,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
   :config
 
   (add-hook 'xmodmap-mode-hook #'sboo-set-font-to-iosevka)
-  
+
   ())
 
 ;;----------------------------------------------;;
@@ -1870,13 +1867,15 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 (use-package rainbow-mode
 
-    :load-path "/nix/store/qnl0dlq0zsvg5rnd6c9grdn1phv9xc7x-emacs-rainbow-mode-1.0.1/share/emacs/site-lisp/elpa/rainbow-mode-1.0.1/" ;FIXME dont hardcode, must eval at macro-time.
+  :load-path "/nix/store/qnl0dlq0zsvg5rnd6c9grdn1phv9xc7x-emacs-rainbow-mode-1.0.1/share/emacs/site-lisp/elpa/rainbow-mode-1.0.1/" ;FIXME dont hardcode, must eval at macro-time.
 
-    :hook (prog-mode text-mode)
+  :delight
 
-    :config
+  :hook (prog-mode text-mode)
 
-    ())
+  :config
+
+  ())
 
 ;;----------------------------------------------;;
 
@@ -1890,8 +1889,15 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
-(when (require 'volatile-highlights nil :no-error)
-  (volatile-highlights-mode t))
+(use-package volatile-highlights
+
+  :diminish
+
+  :config
+
+  (volatile-highlights-mode +1)
+
+  ())
 
 ;;----------------------------------------------;;
 
@@ -1945,9 +1951,11 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 (use-package eimp
 
-    :hook (image-mode-hook)
+  :if window-system
 
-    )
+  :hook (image-mode-hook)
+
+  )
 
 ;;----------------------------------------------;;
 ;; Appearence ----------------------------------;;
@@ -1957,30 +1965,31 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   ;;--------------------------;;
   
-  (use-package spaceline
+  (use-package telephone-line
 
     :config
 
-    (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main))))
+    (setq telephone-line-lhs
+          '((evil   . (telephone-line-evil-tag-segment))
+            (accent . (telephone-line-vc-segment
+                       telephone-line-erc-modified-channels-segment
+                       telephone-line-process-segment))
+            (nil    . (telephone-line-minor-mode-segment
+                       telephone-line-buffer-segment))))
 
-    ())
+    (setq telephone-line-rhs
+          '((nil    . (telephone-line-misc-info-segment))
+            (accent . (telephone-line-major-mode-segment))
+            (evil   . (telephone-line-airline-position-segment))))
 
-  ;;--------------------------;;
-  
-  (use-package spaceline-config
-
-    :config
-
-    (spaceline-helm-mode +1)
-    (spaceline-emacs-theme)
+    (telephone-line-mode +1)
+    ;; ^ Activation (i.e. « (`*-mode' +1) ») must follow Initialization (i.e. « (`setq' *-* ...) »).
 
     ())
 
   ;;--------------------------;;
   
   ())
-
-;; `http://amitp.blogspot.com/2017/01/emacs-spaceline-mode-line.html'
 
 ;;----------------------------------------------;;
 
