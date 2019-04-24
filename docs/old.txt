@@ -2619,7 +2619,41 @@ See:
 
     compilation-search-path))
 
+
+;;==============================================;;
+
+(define-key special-event-map [sigusr1] #'keyboard-quit)
+
+;; ^ Handle a `sigusr1' event.
+
 ;;----------------------------------------------;;
+
+(progn
+
+  ;;--------------------------;;
+
+  (defun sboo-handle-sigusr2 ()
+    "Handle a `sigusr2' event.
+
+Example (triggering):
+
+  $ kill -SIGUSR2 $(pgrep emacs)
+
+Related:
+
+• `special-event-map'"
+
+  (interactive)
+
+  (let* ((EVENT last-input-event)
+        )
+    (message "Caught « SIGUSR2 » signal: « %S »" EVENT)))
+
+  ;;--------------------------;;
+
+  (define-key special-event-map [sigusr2] #'sboo-handle-sigusr2))
+
+;;==============================================;;
 
 ;;----------------------------------------------;;
 

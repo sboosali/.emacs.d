@@ -829,16 +829,17 @@ Links:
 
 ;;      ;; URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Text-Registers.html'
 
-;;----------------------------------------------;;
+;;==============================================;;
 
-(progn
+(defun sboo-reload-config ()
+    "Reload my personal configuration (at `sboo-init-file'). 
 
-  (defun sboo-handle-sigusr1 ()
-    "Handle a SIGUSR1 event.
+Usage:
 
-Example (triggering):
+• Handle a `sigusr2' event.
+• Example (triggering):
 
-  $ kill -SIGUSR1 $(pgrep emacs)
+  $ kill -SIGUSR2 $(pgrep emacs)
 
 Related:
 
@@ -846,11 +847,27 @@ Related:
 
   (interactive)
 
-  (let* ((EVENT last-input-event)
+  (let* ((CONFIG sboo-init-file)
         )
-    (message "Caught « SIGUSR1 » signal: « %S »" EVENT)))
 
-  (define-key special-event-map [sigusr1] #'sboo-handle-sigusr1))
+    (message "Caught « SIGUSR2 » signal. Reloading `sboo-init-file': « %s »" CONFIG)
+
+    (load sboo-init-file)
+
+    t))
+
+;;----------------------------------------------;;
+
+(define-key special-event-map [sigusr1] #'sboo-reload-config)
+
+;; ^ Handle a `sigusr1' event, by reloading the configuration.
+
+;;----------------------------------------------;;
+
+(define-key special-event-map [sigusr2] #'keyboard-quit)
+
+;; ^ Handle a `sigusr2' event, by terminating computation
+;;   (to “thaw” Emacs, if frozen).
 
 ;;==============================================;;
 
