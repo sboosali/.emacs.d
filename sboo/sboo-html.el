@@ -567,6 +567,64 @@ Example:
        (_ nil)))))
 
 ;;----------------------------------------------;;
+;; Functions: `compile' ------------------------;;
+;;----------------------------------------------;;
+ 
+(cl-defun sboo-html-set-compile-command (&key buffer)
+
+  "Set `compile-command' to to `sboo-html-get-compile-command'.
+
+See:
+
+• `sboo-html-set-compile-command'"
+
+  (when-let* ((COMPILE-COMMAND (sboo-html-get-compile-command :buffer buffer))
+              )
+
+    (setq-local compile-command COMPILE-COMMAND)
+
+    ;;TODO add `sboo-html-set-compilation-search-paths' to `compile' hook, conditioned on html:
+
+    ()))
+
+;; TODO! default `compile-command's for: index.html (`browse-url-of-file'), Test.hs, TestSuite.hs, DocTest.hs, UnitTest.hs (test-suite), PropTest.hs, Bench.hs, Benchmark.hs, BenchTime.hs, BenchSpace.hs (bench), ForeignLibrary.hs, SO.hs, DLL.hs, DYLIB.hs (foreign-library).
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-html-get-compile-command (&key buffer)
+
+  "Guess a `compile-command' for an HTML file.
+
+Uses:
+
+• the interpreter — a “shebang”s of the program `xdg-open', (e.g. « #!/bin/env open »), program `open', program `firefox', and program `google-chrome' (c.f. `interpreter-mode-alist').
+• File-Local Variables —  (c.f. `file-local-variables-alist', automatically set by « .dir-locals.el » ancestors, « ;;; -*- ... -*- » lines near the top of the buffer, and « ;; Local Variables: ;; ... ;; End: » lines near the bottom.)
+• the “project” — guessed by a dominating `index.html' (c.f. `locate-dominating-file').
+
+Links:
+
+• URL `'"
+
+  ;TODO get component from .dir-locals.el, like « sboo-cabal-target ».
+  ;TODO get project-root from locate-dominating-file cabal.project.
+  ;TODO get default-directory from subdirectory of project-root
+
+  (let* ((BUFFER (or buffer (current-buffer)))
+         (FILE   (buffer-file-name BUFFER))
+
+         (COMPILE-COMMAND
+
+          (pcase (sboo-html-guess-compile-command :buffer buffer)
+
+            ('cabal (sboo-html-compile-command-cabal-script :file FILE))
+            ('stack (sboo-html-compile-command-stack-script :file FILE))
+
+            (_      sboo-html-compile-command-default)))
+         )
+
+    COMPILE-COMMAND))
+
+;;----------------------------------------------;;
 ;; Configuration -------------------------------;;
 ;;----------------------------------------------;;
 

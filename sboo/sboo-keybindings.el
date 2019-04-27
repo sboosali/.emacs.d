@@ -280,7 +280,56 @@ Wraps `forward-thing'."
 
   (forward-thing 'defun -1))
 
+;;==============================================;;
+;; DWIM Editing
+
+;; each Editing Command:
+;;
+;; • edits the region, if `use-region-p'.
+;; • edits a default Text Object (mostly `word'), otherwise.
+
+;; Define a `*-dwim' wrapper for each of these Editing Command pairs:
+;;
+;; `upcase-word'
+;; `upcase-region'
+;;
+;; `downcase-word'
+;; `downcase-region'
+;;
+;; `capitalize-word'
+;; `capitalize-region'
+;;
+
+;;TODO;; LOL these already exist!
+
 ;;----------------------------------------------;;
+
+(defun upcase-dwim (arg)
+  (interactive "*p")
+  (if (use-region-p)
+      (upcase-region (region-beginning) (region-end))
+    (upcase-word arg)))
+
+;; sboo-defmarco-region-dwim edit-dwim edit-region edit-object)
+
+;;----------------------------------------------;;
+;; `upcase-word'
+;; `upcase-region'
+
+;; (sboo-defmarco-region-dwim upcase-dwim upcase-region upcase-word)
+
+;;----------------------------------------------;;
+
+;; `downcase-word'
+;; `downcase-region'
+
+;;----------------------------------------------;;
+
+;; `capitalize-word'
+;; `capitalize-region'
+
+;;----------------------------------------------;;
+
 
 ;;==============================================;;
 ;;; Key Translations ===========================;;
@@ -497,53 +546,107 @@ Wraps `forward-thing'."
 ;;----------------------------------------------;;
 
 (progn
+  (define-prefix-command 'sboo-text-keymap)
+
+;;(define-key sboo-text-keymap (kbd "a") #')
+;;(define-key sboo-text-keymap (kbd "b") #')
+;;(define-key sboo-text-keymap (kbd "c") #')
+;;(define-key sboo-text-keymap (kbd "d") #')
+;;(define-key sboo-text-keymap (kbd "e") #')
+;;(define-key sboo-text-keymap (kbd "f") #')
+;;(define-key sboo-text-keymap (kbd "g") #')
+;;(define-key sboo-text-keymap (kbd "h") #')
+  (define-key sboo-text-keymap (kbd "i") #'indent-region) ; [I]ndent
+;;(define-key sboo-text-keymap (kbd "j") #')
+;;(define-key sboo-text-keymap (kbd "k") #')
+;;(define-key sboo-text-keymap (kbd "l") #')
+;;(define-key sboo-text-keymap (kbd "m") #')
+;;(define-key sboo-text-keymap (kbd "n") #')
+;;(define-key sboo-text-keymap (kbd "o") #')
+;;(define-key sboo-text-keymap (kbd "p") #')
+;;(define-key sboo-text-keymap (kbd "q") #')
+;;(define-key sboo-text-keymap (kbd "r") #')
+  (define-key sboo-text-keymap (kbd "s") #'sort-lines) ; [S]ort
+;;(define-key sboo-text-keymap (kbd "t") #')
+;;(define-key sboo-text-keymap (kbd "u") #')
+;;(define-key sboo-text-keymap (kbd "v") #')
+;;(define-key sboo-text-keymap (kbd "w") #')
+;;(define-key sboo-text-keymap (kbd "x") #')
+;;(define-key sboo-text-keymap (kbd "y") #')
+;;(define-key sboo-text-keymap (kbd "z") #')
+
+  #'sboo-text-keymap)
+
+;;----------------------------------------------;;
+
+(progn
   (define-prefix-command 'sboo-mark-keymap)
 
   (define-key sboo-mark-keymap (kbd "a") #'mark-beginning-of-buffer)
   (define-key sboo-mark-keymap (kbd "b") #'mark-whole-buffer)
-  (define-key sboo-mark-keymap (kbd "e") #'mark-end-of-buffer)
-
-  (define-key sboo-mark-keymap (kbd "w") #'mark-word)
-  (define-key sboo-mark-keymap (kbd "p") #'mark-paragraph)
-
-  (define-key sboo-mark-keymap (kbd "x") #'mark-sexp)
+;;(define-key sboo-mark-keymap (kbd "c") #'mark-)
   (define-key sboo-mark-keymap (kbd "d") #'mark-defun)
+  (define-key sboo-mark-keymap (kbd "e") #'mark-end-of-buffer)
+;;(define-key sboo-mark-keymap (kbd "f") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "g") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "h") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "i") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "j") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "k") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "l") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "m") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "n") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "o") #'mark-)
+  (define-key sboo-mark-keymap (kbd "p") #'mark-paragraph)
+;;(define-key sboo-mark-keymap (kbd "q") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "r") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "s") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "t") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "u") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "v") #'mark-)
+  (define-key sboo-mark-keymap (kbd "w") #'mark-word)
+  (define-key sboo-mark-keymap (kbd "x") #'mark-sexp)
+;;(define-key sboo-mark-keymap (kbd "y") #'mark-)
+;;(define-key sboo-mark-keymap (kbd "z") #'mark-)
 
-;;(define-key sboo-mark-keymap (kbd "") #'mark-)
+  #'sboo-mark-keymap)
+
+;;----------------------------------------------;;
+
+  (progn
+
+  (global-set-key (kbd "s-a") #'sboo-copy-buffer-contents)  ; "copy All"
+;;(global-set-key (kbd "s-b") #')
+  (global-set-key (kbd "s-c") #'sboo-insert-char)           ; "Character"
+  (global-set-key (kbd "s-d") #'xref-find-definitions)      ; "Definitions"
+  (global-set-key (kbd "s-e") #'sboo-eval)                  ; "Eval"
+  (global-set-key (kbd "s-f") #'describe-function)          ; "Function"
+;;(global-set-key (kbd "s-g") #')
+  (global-set-key (kbd "s-h") #'helm-command-prefix)        ; "Helm"
+  (global-set-key (kbd "s-i") #'imenu)
+;;(global-set-key (kbd "s-j") #')
+  (global-set-key (kbd "s-k") #'describe-key)               ; "Key"
+  (global-set-key (kbd "s-l") #'align-regexp)               ; a"L"ign
+  (global-set-key (kbd "s-m") #'sboo-mark-keymap)           ; « "m"ark-* »
+;;(global-set-key (kbd "s-n") #')
+  (global-set-key (kbd "s-o") #'find-file-at-point)         ;MNEMONIC: "Open file". ;OLD: other-window.
+;;(global-set-key (kbd "s-q") #')
+  (global-set-key (kbd "s-r") #'xref-find-references)       ; "References"
+  (global-set-key (kbd "s-s") #'sboo-launch-shell)          ; "Shell"
+  (global-set-key (kbd "s-t") #'sboo-text-keymap)           ; "Text"
+;;(global-set-key (kbd "s-u") #')
+  (global-set-key (kbd "s-v") #'describe-variable)          ; "Variable"
+  (global-set-key (kbd "s-w") #'list-flycheck-errors)       ; "Warnings & errors"
+;;(global-set-key (kbd "s-x") #')
+  (global-set-key (kbd "s-y") #'yas-insert-snippet)         ; "expand Yasnippet"
+;;(global-set-key (kbd "s-z") #')
+
   ())
 
 ;;----------------------------------------------;;
 
-(global-set-key (kbd "s-a") #'sboo-copy-buffer-contents)  ; "copy All"
-;;(global-set-key (kbd "s-b") #')
-(global-set-key (kbd "s-c") #'sboo-insert-char)           ; "Character"
-(global-set-key (kbd "s-d") #'xref-find-definitions)      ; "Definitions"
-(global-set-key (kbd "s-e") #'sboo-eval)                  ; "Eval"
-(global-set-key (kbd "s-f") #'describe-function)          ; "Function"
-;;(global-set-key (kbd "s-g") #')
-(global-set-key (kbd "s-h") #'helm-command-prefix)        ; "Helm"
-(global-set-key (kbd "s-i") #'imenu)
-;;(global-set-key (kbd "s-j") #')
-(global-set-key (kbd "s-k") #'describe-key)               ; "Key"
-(global-set-key (kbd "s-l") #'align-regexp)               ; a"L"ign
-(global-set-key (kbd "s-m") #'sboo-mark-keymap)           ; « "m"ark-* »
-;;(global-set-key (kbd "s-n") #')
-(global-set-key (kbd "s-o") #'find-file-at-point)         ;MNEMONIC: "Open file". ;OLD: other-window.
-(global-set-key (kbd "s-p") #'compile)                    ; "comPile"
-;;(global-set-key (kbd "s-q") #')
-(global-set-key (kbd "s-r") #'xref-find-references)       ; "References"
-(global-set-key (kbd "s-s") #'sboo-launch-shell)          ; "Shell"
-(global-set-key (kbd "s-t") #'sboo-launch-term)           ; "Terminal"
-;;(global-set-key (kbd "s-u") #')
-(global-set-key (kbd "s-v") #'describe-variable)          ; "Variable"
-(global-set-key (kbd "s-w") #'list-flycheck-errors)       ; "Warnings & errors"
-;;(global-set-key (kbd "s-x") #')
-(global-set-key (kbd "s-y") #'helm-show-kill-ring)        ; super "Yank"
-;;(global-set-key (kbd "s-z") #')
-
-;;----------------------------------------------;;
-
 ;;(global-set-key (kbd "s-d") #'dired)
+;;(global-set-key (kbd "s-t") #'sboo-launch-term)           ; "Terminal"
 ;;(global-set-key (kbd "s-p") #'proced)
 
 ;;==============================================;;

@@ -178,8 +178,9 @@ Extends `haskell-font-lock-quasi-quote-modes'."
 
 (defcustom sboo-haskell-hooks-list
 
-  (list #'sboo-haskell-prettify-symbols
-        #'sboo-haskell-set-compile-command
+  (list #'sboo-haskell-set-compile-command
+        #'sboo-haskell-prettify-symbols
+        #'superword-mode
  ;;TODO #'sboo-haskell-font-lock-add-keywords
         )
 
@@ -281,7 +282,7 @@ Examples:
 ;;----------------------------------------------;;
 ;; Functions: `compile' ------------------------;;
 ;;----------------------------------------------;;
-
+ 
 (cl-defun sboo-haskell-set-compile-command (&key buffer)
 
   "Set `compile-command' to to `sboo-haskell-get-compile-command'.
@@ -299,24 +300,7 @@ See:
 
     ()))
 
-;;----------------------------------------------;;
-
-(cl-defun sboo-haskell-set-compilation-search-path ()
-
-  "Extend `compilation-search-path' (with subdirectories which have a Haskell package).
-
-See:
-
-• `sboo-haskell-get-compilation-search-paths'"
-
-  (interactive)
-
-  (let* ((COMPILE-PATHS (sboo-haskell-get-compilation-search-paths))
-        )
-
-    (setq-local compilation-search-path (append compilation-search-path COMPILE-PATHS))
-
-    compilation-search-path))
+;; TODO! default `compile-command's for: Main.hs (executable), Test.hs, TestSuite.hs, DocTest.hs, UnitTest.hs (test-suite), PropTest.hs, Bench.hs, Benchmark.hs, BenchTime.hs, BenchSpace.hs (bench), ForeignLibrary.hs, SO.hs, DLL.hs, DYLIB.hs (foreign-library).
 
 ;;----------------------------------------------;;
 
@@ -352,6 +336,25 @@ Links:
          )
 
     COMPILE-COMMAND))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-haskell-set-compilation-search-path ()
+
+  "Extend `compilation-search-path' (with subdirectories which have a Haskell package).
+
+See:
+
+• `sboo-haskell-get-compilation-search-paths'"
+
+  (interactive)
+
+  (let* ((COMPILE-PATHS (sboo-haskell-get-compilation-search-paths))
+        )
+
+    (setq-local compilation-search-path (append compilation-search-path COMPILE-PATHS))
+
+    compilation-search-path))
 
 ;;----------------------------------------------;;
 
@@ -515,7 +518,26 @@ Implementation:
       (locate-dominating-file DIRECTORY #'sboo-haskell--has-cabal-file-p))))
 
 ;;----------------------------------------------;;
-;; Functions: `eldoc' --------------------------;;
+;; Functions: Aesthetic ------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-haskell-prettify-symbols ()
+
+  "Extend `prettify-symbols-alist' with `sboo-haskell-prettify-symbols-alist'."
+
+  (interactive)
+
+  (if prettify-symbols-mode
+
+      (prettify-symbols-mode 0)
+
+    (progn
+      (setq-local prettify-symbols-alist sboo-haskell-prettify-symbols-alist)
+
+      (prettify-symbols-mode +1))))
+
+;;----------------------------------------------;;
+;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
 (defun sboo-haskell-doc-current-info ()
@@ -604,23 +626,6 @@ Implementation:
 
 ;;----------------------------------------------;;
 ;; Functions -----------------------------------;;
-;;----------------------------------------------;;
-
-(defun sboo-haskell-prettify-symbols ()
-
-  "Extend `prettify-symbols-alist' with `sboo-haskell-prettify-symbols-alist'."
-
-  (interactive)
-
-  (if prettify-symbols-mode
-
-      (prettify-symbols-mode 0)
-
-    (progn
-      (setq-local prettify-symbols-alist sboo-haskell-prettify-symbols-alist)
-
-      (prettify-symbols-mode +1))))
-
 ;;----------------------------------------------;;
 
 (cl-defun sboo-add-help-echo (&key echo string region)

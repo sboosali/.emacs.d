@@ -1579,10 +1579,39 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
     :mode ("\\.yasnippet\\'" . snippet-mode)
 
     :bind (("<kp-home>" . yas-next-field-or-maybe-expand)
-          )
-    
+           )
+
+    :custom
+    (yas-wrap-around-region t
+                            "Set « $0 » field to `region'.")
+    (yas-indent-line 'fixed
+                     "Indent the snippet to the current column (of the snippet, not the file into which the snippet is being inserted).")
+    (yas-snippet-dirs       `(,sboo-snippets-directory)
+                            "Register personal snippets.")
+    (yas-new-snippet-default "\
+# -*- mode: snippet -*-
+#
+# key         : $1
+# name        : [sboo] a « $2 ».
+#
+# type        : snippet
+# condition   : (let ((KEY "$1")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# commentary  : 
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+$0")
+    (yas-trigger-symbo "↣"
+                       "Unicode-ify.")
+
+    :custom-face
+    (yas-field-highlight-face ((t (:inherit 'region :slant italic)))) ;TODO
+
+
     :init
-    (setq yas-snippet-dirs (list sboo-snippets-directory))
+    (setq yas-alias-to-yas/prefix-p nil)
 
     ;; ^ `setq' vs `add-to-list': remove the default.
 
@@ -1721,7 +1750,27 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   ;; ^ FlyCheck builds-in a « jsonlint » checker
   ;; ^ « jsonlint » is a JSON Linter.
+
+  (when (>= emacs-major-version 25)
+
+    (defun sboo/alist/json-mode-value-p (kv) 
+      (let* ((v (cdr kv)) (b (eq 'json-mode v))) b))
+
+    (cl-delete-if #'sboo/alist/json-mode-value-p magic-mode-alist)
+    (cl-delete-if #'sboo/alist/json-mode-value-p magic-fallback-mode-alist)
+
+    ;; ^ Remove `json-mode' from `magic-mode-alist'.
+
+    ())
+
   ())
+
+;; ^ `json-mode' registers:
+;;
+;;     ;; Well formatted JSON files almost always begin with “{” or “[”.
+;;     ;;;###autoload
+;;     (add-to-list 'magic-fallback-mode-alist '("^[{[]$" . json-mode))
+;;
 
 ;;----------------------------------------------;;
 

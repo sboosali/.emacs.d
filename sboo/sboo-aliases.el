@@ -99,8 +99,8 @@
 
 ;;----------------------------------------------;;
 
-(defalias '/gl #'goto-line)
-(defalias '/gc #'goto-char)
+(defalias '/jl #'goto-line)             ;[J]ump-to-[L]ine
+(defalias '/jc #'goto-char)             ;[J]ump-to-[C]har
 
 ;; ^ use `goto-char' with « --debug-init » (from messages like « eval-buffer( ... ) ; Reading at buffer position 7897 »)
 
@@ -192,8 +192,8 @@
 
 ;;----------------------------------------------;;
 
-(defalias '/m  #'magit)
-(defalias '/ms #'magit-status)
+(defalias '/g  #'magit)                 ;[G]it
+(defalias '/gs #'magit-status)          ;[G]it [S]tatus
 
 ;;----------------------------------------------;;
 
@@ -203,6 +203,18 @@
 
 (defalias '/hs #'sboo-dante-mode) ; mnemonic: "h" for "Haskell".
 (defalias '/hr #'dante-restart)   ; mnemonic: "h" for "Haskell".
+
+;;----------------------------------------------;;
+
+;; `markdown-mode' aliases.
+;; : (<PACKAGE>)-<OBJECT>-<ACTION>.
+
+(progn
+
+  (defalias '/mli #'markdown-insert-link) ;[M]arkdown [I]nsert [L]ink
+  (defalias '/mci #'markdown-insert-code) ;[M]arkdown [I]nsert [C]ode
+
+  'markdown-mode)
 
 ;;----------------------------------------------;;
 

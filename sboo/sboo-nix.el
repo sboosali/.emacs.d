@@ -116,7 +116,8 @@ Usage:
 (defcustom sboo-nix-hooks-list
 
   (list #'sboo-nix-set-compile-command
-        #'subword-mode
+        #'sboo-nix-prettify-symbols
+        #'superword-mode
         )
 
   "Hooks for `nix-mode'.
@@ -255,6 +256,23 @@ anywhere in « nix-build »'s stdout."
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
+(defun sboo-haskell-prettify-symbols ()
+
+  "Extend `prettify-symbols-alist' with `sboo-haskell-prettify-symbols-alist'."
+
+  (interactive)
+
+  (if prettify-symbols-mode
+
+      (prettify-symbols-mode 0)
+
+    (progn
+      (setq-local prettify-symbols-alist sboo-haskell-prettify-symbols-alist)
+
+      (prettify-symbols-mode +1))))
+
+;;----------------------------------------------;;
+
 (defun sboo-nix-set-compile-command ()
 
   "Set `compile-command' to `sboo-nix-compile-command'."
@@ -264,6 +282,9 @@ anywhere in « nix-build »'s stdout."
          )
 
     (setq-local compile-command STRING)))
+
+;; TODO! default `compile-command's for: home.nix.
+;; TODO? default `compile-command's for: default.nix, shell.nix.
 
 ;;----------------------------------------------;;
 

@@ -830,10 +830,25 @@ Output:
 
 • a `coding-system-p'."
 
-  (let* (
+  (let* ((CHOICES (sboo-list-coding-systems))
          )
 
-    (completing-read "Coding-System: " )))
+    (completing-read "Coding-System: " CHIOCES)))
+
+;;----------------------------------------------;;
+
+(defun sboo-list-coding-systems ()
+
+  "Relevant completion for (known, good) Coding-Systems.
+
+Output:
+
+• a `coding-system-p'."
+
+  (let* ((CODING-SYSTEMS (sort-coding-systems (coding-system-list 'base-only)))
+         )
+
+    CODING-SYSTEMS))
 
 ;;----------------------------------------------;;
 
@@ -845,6 +860,63 @@ Output:
                 (sboo-read-coding-system)))
 
   (set-buffer-file-coding-system coding-system))
+
+;;----------------------------------------------;;
+
+(defun sboo-get-coding-system ()
+
+  "Return (and print) the current Coding-System.
+
+Output:
+
+• a `coding-system-p'."
+
+  (let* ((CODING-SYSTEM )
+         )
+
+    (when (called-interactively-p)
+      (message "%S" CODING-SYSTEM))
+
+    CODING-SYSTEM))
+
+;;----------------------------------------------;;
+
+(defun sboo-get-coding-system-info (&optional coding-system)
+
+  "Information about CODING-SYSTEM.
+
+Input:
+
+• a `coding-system-p'.
+  Defaults to the `current-buffer's coding system, prompting for completion.
+
+Output:
+
+• a plist.
+
+Examples:
+
+• M-: (sboo-get-coding-system-info 'utf-8)
+    ⇒ '(:system utf-8 :type utf-8 :charsets (unicode))
+    
+Related:
+
+• `describe-coding-system'"
+
+  (interactive "zCoding System: ")
+  ;(interactive (list (sboo-read-coding-system)))
+
+  (let* ((CODING-SYSTEM   (or coding-system buffer-file-coding-system))
+         (CODING-TYPE     (coding-system-type         CODING-SYSTEM))
+         (CODING-CHARSETS (coding-system-charset-list CODING-SYSTEM))
+
+         (PLIST `(:system ,CODING-SYSTEM :type ,CODING-TYPE :charsets ,CODING-CHARSETS))
+        )
+
+    (when (called-interactively-p)
+      (message "%S" PLIST))
+
+    PLIST))
 
 ;;==============================================;;
 
