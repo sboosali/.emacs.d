@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 #
-# key         : mode
-# name        : a « *-mode » file (a major mode).
-# condition   : (let ((KEY "mode")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# key         : minor-mode
+# name        : [sboo] a « define-minor-mode » file.
+# condition   : (let ((KEY "minor-mode")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil) (FILENAME (file-name-nondirectory (buffer-file-name))) (FEATURE (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))) (MODE (string-remove-suffix "-mode" (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 # type        : snippet
@@ -114,64 +114,7 @@
   :group '`MODE`)
 
 ;;----------------------------------------------;;
-;;; Macros
-;;----------------------------------------------;;
-
-(eval-when-compile
-
-  ;;--------------------------;;
-
-  (defconst `MODE`-rx-constituents
-
-    `(
-      ;; rulename
-      (rulename . ,(rx (and
-                        symbol-start
-                        letter
-                        (0+ (or "-" alnum))
-                        symbol-end)))
-
-    "Auxiliary regular expressions for ``MODE`-rx'."))
-
-  ;;--------------------------;;
-
-  (defmacro `MODE`-rx (&rest sexps)
-
-     "`MODE`-specific replacement for `rx'.
-
-In addition to the standard forms of `rx', the following forms
-are available:
-
-`rulename'
-      Any valid rule name.  The name of a rule is simply the
-      name itself, that is, a sequence of characters, beginning
-      with an alphabetic character, and followed by a combination
-      of alphabetics, digits, and hyphens (dashes).
-
-      For more see: https://tools.ietf.org/html/rfc5234#section-2.1
-
-See `rx' documentation for more information about REGEXPS param."
-
-     (let ((rx-constituents
-            (append `MODE`-rx-constituents rx-constituents))
-           )
-       (cond
-
-        ((null sexps)
-         (error "No regexp"))
-
-        ((cdr sexps)
-         (rx-to-string `(and ,@sexps) t))
-
-        (t
-         (rx-to-string (car sexps) t)))))
-
-  ;;--------------------------;;
-
-  ())
-
-;;----------------------------------------------;;
-;;; Version
+;;; Info ---------------------------------------;;
 ;;----------------------------------------------;;
 
 (defun `MODE`-mode-version (&optional show-version)
@@ -196,47 +139,6 @@ just return nil."
     (when show-version
       (message "`(identity MODE)` Mode version: %s" version))
     version))
-
-;;----------------------------------------------;;
-;;; Font Locking
-;;----------------------------------------------;;
-
-(defvar `MODE`-font-lock-keywords
-
-  \`(
-
-    ;; LHS nonterminals
-    (,(`MODE`-rx (and line-start
-                   "<"
-                   (group rulename)
-                   ">"))
-     1 font-lock-function-name-face)
-
-    ;; other nonterminals
-    (,(`MODE`-rx (and "<"
-                   (group rulename)
-                   ">"))
-     1 font-lock-builtin-face)
-
-    ;; "may expand into" symbol
-    (,(`MODE`-rx (and (0+ space)
-                   symbol-start
-                   (group "::=")
-                   symbol-end
-                   (0+ space)))
-     1 font-lock-constant-face)
-
-    ;; Alternatives
-    (,(`MODE`-rx (and (0+ space)
-                   symbol-start
-                   (group "|")
-                   symbol-end
-                   (0+ space)))
-     1 font-lock-warning-face)
-
-    )
-
-  "Font lock keywords for BNF Mode.")
 
 ;;----------------------------------------------;;
 ;;; Initialization
@@ -268,7 +170,7 @@ just return nil."
 ;;----------------------------------------------;;
 
 ;;;###autoload
-(define-derived-mode `MODE`-mode prog-mode "BNF"
+(define-minor-mode `MODE`-mode "`MODE`"
 
   "A major mode for $2."
 

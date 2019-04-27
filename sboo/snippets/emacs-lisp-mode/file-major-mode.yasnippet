@@ -1,0 +1,328 @@
+# -*- mode: snippet -*-
+#
+# key         : mode
+# name        : a « *-mode » file (a major mode).
+# condition   : (let ((KEY "mode")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil) (FILENAME (file-name-nondirectory (buffer-file-name))) (FEATURE (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))) (MODE (string-remove-suffix "-mode" (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# type        : snippet
+#
+# --
+;;; `FILENAME` --- Major mode for ${2:SYNOPSIS} -*- lexical-binding: t; -*-
+
+;;==============================================;;
+;; Copyright (C) 2019 Spiros Boosalis
+
+;; Author: Spiros Boosalis <samboosalis@gmail.com> 
+;; Maintainer: Spiros Boosalis <samboosalis@gmail.com> 
+;; Version: 0.1.0
+;; URL: https://github.com/sboosali/`FEATURE`
+;; Keywords: languages
+;; Package-Requires: ((cl-lib "0.5") (pkg-info "0.4") (emacs "24.3"))
+
+;; This file is not part of GNU Emacs.
+
+;;==============================================;;
+;;; License
+
+;; This file is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License
+;; as published by the Free Software Foundation; either version 3
+;; of the License, or (at your option) any later version.
+
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this file; if not, write to the Free Software
+;; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+;; 02110-1301, USA.
+
+;;==============================================;;
+;;; Commentary:
+
+;; GNU Emacs major mode for $2.
+;;
+;; 
+;;
+;; Usage: 
+;;
+;;   (require '`MODE`-mode)
+;;
+;; Bugs: https://github.com/sboosali/`FEATURE`/issues
+;;
+;; History: https://github.com/sboosali/`FEATURE`/blob/master/CHANGELOG.md
+
+;;==============================================;;
+;;; Code:
+
+;;----------------------------------------------;;
+;;; Compatibility
+;;----------------------------------------------;;
+
+;; Work around emacs bug#18845, cc-mode expects cl to be loaded
+;; while `MODE`-mode only uses cl-lib (without compatibility aliases)
+
+(eval-and-compile
+  (if (and (= emacs-major-version 24) (>= emacs-minor-version 4))
+      (require 'cl-lib)))
+
+;;----------------------------------------------;;
+;;; Requirements
+;;----------------------------------------------;;
+
+;; Tell the byte compiler about autoloaded functions from packages
+(declare-function pkg-info-version-info "pkg-info" (package))
+
+;;----------------------------------------------;;
+
+(eval-when-compile
+  (require 'rx))
+
+;;----------------------------------------------;;
+
+(require 'cl-lib)
+(require 'pkg-info)
+
+;;----------------------------------------------;;
+;;; Customization
+;;----------------------------------------------;;
+
+;;;###autoload
+(defgroup `MODE` nil
+
+  "Major mode for ."
+
+;;  :tag "`MODE`"
+;;  :group '
+
+  :link '(url-link              :tag "GitHub"     "https://github.com/sboosali/`FEATURE`#readme")
+  :link '(emacs-commentary-link :tag "Commentary" "`MODE`-mode")
+
+  :prefix "`MODE`-")
+
+;;----------------------------------------------;;
+
+(defcustom `MODE`-mode-hook nil
+
+  "List of callbacks to be called when entering `(identity MODE)` Mode."
+
+  :type 'hook
+
+  :group '`MODE`)
+
+;;----------------------------------------------;;
+;;; Macros
+;;----------------------------------------------;;
+
+(eval-when-compile
+
+  ;;--------------------------;;
+
+  (defconst `MODE`-rx-constituents
+
+    `(
+      ;; rulename
+      (rulename . ,(rx (and
+                        symbol-start
+                        letter
+                        (0+ (or "-" alnum))
+                        symbol-end)))
+
+    "Auxiliary regular expressions for ``MODE`-rx'."))
+
+  ;;--------------------------;;
+
+  (defmacro `MODE`-rx (&rest sexps)
+
+     "`MODE`-specific replacement for `rx'.
+
+In addition to the standard forms of `rx', the following forms
+are available:
+
+`rulename'
+      Any valid rule name.  The name of a rule is simply the
+      name itself, that is, a sequence of characters, beginning
+      with an alphabetic character, and followed by a combination
+      of alphabetics, digits, and hyphens (dashes).
+
+      For more see: https://tools.ietf.org/html/rfc5234#section-2.1
+
+See `rx' documentation for more information about REGEXPS param."
+
+     (let ((rx-constituents
+            (append `MODE`-rx-constituents rx-constituents))
+           )
+       (cond
+
+        ((null sexps)
+         (error "No regexp"))
+
+        ((cdr sexps)
+         (rx-to-string `(and ,@sexps) t))
+
+        (t
+         (rx-to-string (car sexps) t)))))
+
+  ;;--------------------------;;
+
+  ())
+
+;;----------------------------------------------;;
+;;; Info ---------------------------------------;;
+;;----------------------------------------------;;
+
+(defun `MODE`-mode-version (&optional show-version)
+
+  "Display string describing the version of `MODE` Mode.
+
+If called interactively or if SHOW-VERSION is non-nil, show the
+version in the echo area and the messages buffer.
+
+The returned string includes both, the version from package.el
+and the library version, if both are present and different.
+
+If the version number could not be determined, signal an error
+if called interactively or if SHOW-VERSION is non-nil, otherwise
+just return nil."
+
+  (interactive (list t))
+
+  (let ((version (pkg-info-version-info '`MODE`-mode))
+        )
+
+    (when show-version
+      (message "`(identity MODE)` Mode version: %s" version))
+    version))
+
+;;----------------------------------------------;;
+
+;; TODO popup `help-mode'...
+
+(defun `MODE`-mode-help ()
+
+  "Popup a tutorial.
+
+Effects:
+
+• Popup a `help-mode' buffer.
+"
+
+  (interactive)
+
+  ())
+
+;;----------------------------------------------;;
+;;; Font Locking
+;;----------------------------------------------;;
+
+(defvar `MODE`-font-lock-keywords
+
+  \`(
+
+    ;; LHS nonterminals
+    (,(`MODE`-rx (and line-start
+                   "<"
+                   (group rulename)
+                   ">"))
+     1 font-lock-function-name-face)
+
+    ;; other nonterminals
+    (,(`MODE`-rx (and "<"
+                   (group rulename)
+                   ">"))
+     1 font-lock-builtin-face)
+
+    ;; "may expand into" symbol
+    (,(`MODE`-rx (and (0+ space)
+                   symbol-start
+                   (group "::=")
+                   symbol-end
+                   (0+ space)))
+     1 font-lock-constant-face)
+
+    ;; Alternatives
+    (,(`MODE`-rx (and (0+ space)
+                   symbol-start
+                   (group "|")
+                   symbol-end
+                   (0+ space)))
+     1 font-lock-warning-face)
+
+    )
+
+  "Font lock keywords for `MODE` Mode.")
+
+;;----------------------------------------------;;
+;;; Initialization
+;;----------------------------------------------;;
+
+(defvar `MODE`-mode-syntax-table
+
+  (let ((table (make-syntax-table)))
+
+    ;; Give CR the same syntax as newline
+    (modify-syntax-entry ?\^m "> b" table)
+    ;; Characters used to delimit string constants
+    (modify-syntax-entry ?\"  "\""  table)
+    ;; Comments setup
+    (modify-syntax-entry ?#   "<"   table)
+    (modify-syntax-entry ?\n  ">"   table)
+    ;; Treat ::= as sequence of symbols
+    (modify-syntax-entry ?\:  "_"   table)
+    (modify-syntax-entry ?\=  "_"   table)
+    ;; Treat | as a symbol
+    (modify-syntax-entry ?\|  "_"   table)
+    ;; Group angle brackets
+    (modify-syntax-entry ?\<  "(>"  table)
+    (modify-syntax-entry ?\>  ")<"  table)
+    table)
+
+  "Syntax table in use in ``MODE`-mode' buffers.")
+
+;;----------------------------------------------;;
+
+;;;###autoload
+(define-derived-mode `MODE`-mode prog-mode "`MODE`"
+
+  "A major mode for $2."
+
+  :group        '`MODE`-mode
+  :syntax-table `MODE`-mode-syntax-table
+
+  ;; Comment setup
+  (setq-local comment-use-syntax t)
+  (setq-local comment-auto-fill-only-comments t)
+  (setq-local comment-start "# ")
+  (setq-local comment-end "")
+  (setq-local font-lock-keyword-face 'php-keyword)
+
+  ;; Font locking
+  (setq font-lock-defaults '( `MODE`-font-lock-keywords
+                              ;; ^ Keywords
+
+                              nil
+                              ;; ^ Keywords-only?
+
+                              t
+                              ;; ^ Case-sensitive?
+
+                              ))
+
+  ())
+
+;;----------------------------------------------;;
+
+;;;###autoload
+(add-to-list 'auto-mode-alist
+             '("\\.${3:EXTENSION}`\\'" . `MODE`-mode))
+
+;;==============================================;;
+(provide '`FEATURE`)
+
+;; Local Variables:
+;; End:
+
+;;; `FILENAME` ends here

@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+#
+# key         : xvul
+# name        : [sboo] an XML Variable-List for docstrings, e.g. « <varlist><varentry>  ... ».
+# type        : snippet
+# expand-env  : ()
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : Named like HTML « ul ».
+#
+# --
+<varlist>
+  <varentry>
+    <term>${1:<literal>null</literal>}</term>
+    <listitem><para>{2:The default.}</para></listitem>
+  <varentry>
+  $0
+</varlist>

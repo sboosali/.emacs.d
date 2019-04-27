@@ -1,10 +1,12 @@
 # -*- mode: snippet -*-
 #
-# key         : xcode
-# name        : [sboo] an XML Code Block for docstrings, i.e. « <code> ... ».
+# key         : xprogram
+# name        : [sboo] XML docstring for a Program, e.g. « <programlisting language=nix> ... ».
 # type        : snippet
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
-<code>$0</code>
+<programlisting language="${1:nix}">
+ $2;
+</programlisting>

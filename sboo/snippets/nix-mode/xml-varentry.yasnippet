@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+#
+# key         : xvli
+# name        : [sboo] an XML Variable List-Item for docstrings, i.e. « <varlist><varentry>  ... ».
+# type        : snippet
+# expand-env  : ()
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : Named like HTML « li ».
+#
+# --
+<varentry>
+  <term>${1:<literal>null</literal>}</term>
+  <listitem><para>{2:The default.}</para></listitem>
+<varentry>
+$0

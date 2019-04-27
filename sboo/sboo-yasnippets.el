@@ -1,4 +1,35 @@
 ;;; -*- lexical-binding: t -*-
+
+
+
+
+
+
+
+
+
+
+
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
+
+;; `yas-wrap-around-region':
+;; 
+;; What to insert for snippet’s $0 field.
+;; 
+;; • If set to a character, insert contents of corresponding register.
+;; 
+;;   This can be overridden on a per-snippet basis.
+;;   A value of ‘cua’ is considered equivalent to ‘?0’ for backwards compatibility.
+;; 
+;; • If non-nil insert region contents.
+;;
+
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;----------------------------------------------;;

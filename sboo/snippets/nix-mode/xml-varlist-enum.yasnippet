@@ -1,0 +1,23 @@
+# -*- mode: snippet -*-
+#
+# key         : xenum
+# name        : [sboo] XML docstring for « types.enum », e.g. « <varlist><varentry><literal>"..." ».
+# type        : snippet
+# expand-env  : ( (yas-indent-line 'fixed) )
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+<varlist>
+  <varentry>
+    <term><literal>${1:null}</literal></term>
+    <listitem><para>$4</para></listitem>
+  </varentry>
+  <varentry>
+    <term><literal>"$2"</literal></term>
+    <listitem><para>$5.</para></listitem>
+  </varentry>
+  <varentry>
+    <term><literal>"$3"</literal></term>
+    <listitem><para>$6.</para></listitem>
+  </varentry>
+</varlist>
