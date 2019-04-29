@@ -14,6 +14,12 @@
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
+;; `yas-insert-snippet':
+;;
+;; With prefix argument NO-CONDITION, bypass filtering of snippets
+;; by condition.
+;;
+
 ;; `yas-wrap-around-region':
 ;; 
 ;; What to insert for snippet’s $0 field.

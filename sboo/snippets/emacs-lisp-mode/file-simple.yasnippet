@@ -1,9 +1,9 @@
 # -*- mode: snippet -*-
 #
-# key         : file-complex
-# name        : [sboo] a (complex) « *.el » file.
+# key         : file-simple
+# name        : [sboo] a (simple) « *.el » file.
 # type        : snippet
-# condition   : (let ((KEY "file")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# condition   : (let ((KEY "file-simple")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil)
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
@@ -17,9 +17,9 @@
 ;; Author: Spiros Boosalis <samboosalis@gmail.com>
 ;; Maintainer: Spiros Boosalis <samboosalis@gmail.com>
 ;; Version: 0.0.0
-;; URL: https://github.com/sboosali/$1
-;; Keywords:
-;; Package-Requires: ((cl-lib "0.5") (pkg-info "0.4") (emacs "25.1"))
+;; URL: https://github.com/sboosali/.emacs.d
+;; Keywords: 
+;; Package-Requires: ((cl-lib "0.5") (emacs "25.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -44,28 +44,19 @@
 ;;==============================================;;
 ;;; Commentary:
 
-;; GNU Emacs major mode for $2.
-;;
-;; Usage: 
-;;
-;;   (progn (require '$1) ($1-$3))
-;;
-;; Installation: 
-;;
-;;   (use-package $1)
+;; $2.
 ;;
 ;; Commands provided:
 ;;
-;; • \`$1-${3:help}'
-;; • \`$1-version'
+;; • \`$1-${3:get}'
 ;;
 ;; Variables provided:
 ;;
 ;; • \`$1-${4:default}'
 ;;
-;; Bugs: https://github.com/sboosali/$1/issues
+;; Bugs: https://github.com/sboosali/.emacs.d/issues
 ;;
-;; History: https://github.com/sboosali/$1/blob/master/CHANGELOG.md
+;; History: https://github.com/sboosali/.emacs.d/blob/master/CHANGELOG.md
 ;;
 
 ;;==============================================;;
@@ -75,16 +66,17 @@
 ;;; Requirements -------------------------------;;
 ;;----------------------------------------------;;
 
-(require 'cl-lib)
-(require 'pcase)
-(require 'seq)
-(require 'subr-x)
-(require 'pkg-info)
+(eval-when-compile
+
+  (require 'cl-lib))
 
 ;;----------------------------------------------;;
 
-(eval-when-compile
-  (require 'rx))
+(progn
+
+  (require 'seq)
+  (require 'subr-x)
+  (require 'pcase))
 
 ;;----------------------------------------------;;
 ;;; Customization ------------------------------;;
@@ -95,7 +87,7 @@
 
   "$2."
 
-  :link '(url-link :tag "GitHub" "https://github.com/sboosali/$1#readme")
+  :link '(url-link :tag "GitHub" "https://github.com/sboosali/.emacs.d#readme")
 
   :prefix "$1-"
 ;;  :group '
@@ -103,7 +95,7 @@
 
 ;;==============================================;;
 
-(defcustom $1-default
+(defcustom $1-${4:default}
 
   nil
 
@@ -131,31 +123,6 @@ a \`symbolp'."
         )
 
     ()))
-
-;;----------------------------------------------;;
-
-(defun $1-version (&optional show-version)
-
-  "Display string describing the version of BNF Mode.
-
-If called interactively or if SHOW-VERSION is non-nil, show the
-version in the Echo Area and the Messages Buffer.
-
-The returned string includes both, the version from package.el
-and the library version, if both are present and different.
-
-If the version number could not be determined, signal an error
-if called interactively or if SHOW-VERSION is non-nil, otherwise
-just return nil."
-
-  (interactive (list t))
-
-  (let ((VERSION (pkg-info-version-info '$1))
-        )
-
-    (when show-version
-      (message "%s (\`$1' version)" VERSION))
-    VERSION))
 
 ;;==============================================;;
 (provide '$1)

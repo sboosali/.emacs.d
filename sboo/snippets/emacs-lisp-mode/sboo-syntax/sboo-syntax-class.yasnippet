@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+#
+# key         : sc
+# name        : [sboo-syntax] Declare « (defconst sboo-syntax-class-* ...) ».
+#
+# type        : snippet
+# condition   : (let ((FILE "sboo-syntax")) (string-prefix-p FILE (file-name-base (buffer-file-name)) :ignore-case))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# commentary  : 
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+
+(defconst sboo-syntax-class-${1:the-syntax-class} ?\\$2
+
+  "Syntax Class for ${1:$(string-join (split-string (capitalize yas-text) "[-]+" :omit-nulls) " ")} characters.")
+
+$0
