@@ -77,7 +77,18 @@
 ;; Settings (early) ----------------------------;;
 ;;----------------------------------------------;;
 
-(setq tool-bar-style 'both)
+(ignore-errors
+  (custom-set-variables
+
+   '(enable-local-variables :safe :eager nil "set only Safe Variables (don't query for unsafe ones).")
+
+   ;; ^ Set `enable-local-variables' early (to prevent Confirmation Prompts like « _ may not be safe. Enable it? y, n, !. »).
+
+   '(tool-bar-style 'both :eager nil "each Icon of the Tool Bar has both Image (above) and Label (below).")
+
+   ;; ^ Set `tool-bar-style' early (to prevent interface resizing/thrasing during Emacs).
+
+   ))
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
@@ -463,7 +474,9 @@ Related:
 
   (sboo-autosave-init!)
 
-  (add-startup-hook! #'sboo-autosave-config!))
+  (sboo-autosave-config!))
+
+;;(add-startup-hook! #'sboo-autosave-config!))
 
 ;;----------------------------------------------;;;
 
@@ -889,6 +902,15 @@ Related:
     "Increase.")
 
   ())
+
+;;----------------------------------------------;;
+
+;; Xah Lee functions:
+
+(when (require 'sboo-xah nil :no-error)
+
+  ())
+
 ;;----------------------------------------------;;
 ;; `package-builtins': -------------------------;;
 ;;----------------------------------------------;;
@@ -1401,36 +1423,54 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   (use-package company
 
-    :init (global-company-mode)
+    :init
 
-    :config (progn
+    ;; Default (/ Global) `company-backends':
 
-              (setq company-backends sboo-company-backends)
+    (setq sboo-company-backends
+          
+          '(
+            (company-files          ; files & directory
+             company-keywords       ; keywords
+             company-capf
+             company-yasnippet)
+            
+            (company-abbrev
+             company-dabbrev))
+          )
 
-              (bind-key [remap completion-at-point] #'company-complete company-mode-map)
-              ;; ^ Use Company for completion
-              ;;
-              ;; NOTE `:bind' syntax is (`kbd' ...) only, no [`remap' ...]
+    :config
 
-              (setq company-tooltip-align-annotations t)
-              ;; ^
+    (progn
 
-              (setq company-show-numbers t)
-              ;; ^ 
-              ;; FYI candidate selection via `M-{number}'
-              ;; (i.e. `M-1', `M-2', ..., `M-9').
-              
-              (setq company-dabbrev-downcase nil)
-              ;; ^
+      (setq company-backends sboo-company-backends)
 
-              (setq company-minimum-prefix-length 1)
+      (bind-key [remap completion-at-point] #'company-complete company-mode-map)
+      ;; ^ Use Company for completion
+      ;;
+      ;; NOTE `:bind' syntax is (`kbd' ...) only, no [`remap' ...]
 
-              ;; ^ minimum prefix length for idle completion.
-              ;;
-              ;; Default is 3.
-              ;;
+      (setq company-tooltip-align-annotations t)
+      ;; ^
 
-              ())
+      (setq company-show-numbers t)
+      ;; ^ 
+      ;; FYI candidate selection via `M-{number}'
+      ;; (i.e. `M-1', `M-2', ..., `M-9').
+      
+      (setq company-dabbrev-downcase nil)
+      ;; ^
+
+      (setq company-minimum-prefix-length 1)
+
+      ;; ^ minimum prefix length for idle completion.
+      ;;
+      ;; Default is 3.
+      ;;
+
+      (global-company-mode)
+
+      ())
 
     :diminish company-mode)
 
@@ -1745,23 +1785,30 @@ $0")
 
   :config
 
+  ;;--------------------------;;
+
   (add-hook 'json-mode-hook #'flycheck-mode)
   (add-hook 'json-mode-hook #'sboo-set-font-to-iosevka)
 
   ;; ^ FlyCheck builds-in a « jsonlint » checker
   ;; ^ « jsonlint » is a JSON Linter.
 
-  (when (>= emacs-major-version 25)
+  ;;--------------------------;;
 
-    (defun sboo/alist/json-mode-value-p (kv) 
-      (let* ((v (cdr kv)) (b (eq 'json-mode v))) b))
+  (when (>= emacs-major-version 25)     ; for `cl-delete-if'.
 
-    (cl-delete-if #'sboo/alist/json-mode-value-p magic-mode-alist)
+    (defun sboo/alist/json-mode-value-p (KV)
+      "e.g. « (sboo/alist/json-mode-value-p '(\"^[{[]$\" . json-mode)) » is `t'."
+      (let* ((V (cdr KV)) (B (eq 'json-mode V))) B))
+
+    (cl-delete-if #'sboo/alist/json-mode-value-p magic-mode-alist) ;TODO
     (cl-delete-if #'sboo/alist/json-mode-value-p magic-fallback-mode-alist)
 
     ;; ^ Remove `json-mode' from `magic-mode-alist'.
 
     ())
+
+  ;;--------------------------;;
 
   ())
 
@@ -1831,7 +1878,12 @@ $0")
 
   (add-to-list 'wrap-region-except-modes 'magit-status-mode)
 
-  (require 'sboo-html nil :no-error)
+  (when (require 'sboo-html nil :no-error)
+
+    (dolist (HOOK sboo-html-hooks-list)
+      (add-hook HOOK #'sboo-html-set-insert-command))
+
+    ())
 
   (wrap-region-add-wrappers
 
@@ -2078,6 +2130,24 @@ $0")
   :hook (after-init . doom-modeline-mode)
 
   :disabled)
+
+;;----------------------------------------------;;
+;; Conditional Configuration -------------------;;
+;;----------------------------------------------;;
+
+;; (use-package edit-server
+;;   :if window-system
+;;   :init
+;;   (add-hook 'after-init-hook 'server-start t)
+;;   (add-hook 'after-init-hook 'edit-server-start t)
+;;   ())
+
+;;----------------------------------------------;;
+
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns))
+  :config
+  (exec-path-from-shell-initialize))
 
 ;;----------------------------------------------;;
 ;; Finalization --------------------------------;;

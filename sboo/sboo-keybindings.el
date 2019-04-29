@@ -281,6 +281,83 @@ Wraps `forward-thing'."
   (forward-thing 'defun -1))
 
 ;;==============================================;;
+
+(defun sboo-yas-insert-snippet ()
+
+  "Unconditional `yas-insert-snippet'."
+
+  (interactive)
+
+  (yas-insert-snippet :unconditional))
+
+;;==============================================;;
+
+(defvar-local sboo-insert-command
+
+  nil
+
+  "A reference to a `functionp'.
+
+(For `sboo-insert'.)")
+
+;;----------------------------------------------;;
+
+(defun sboo-insert ()
+
+  "Context-Sensitive `insert'.
+
+For example:
+
+• Calls `sgml-tag' in HTML Mode(s).
+
+Bound to... \\[sbo-insert]
+
+Calls `sboo-insert-command'."
+
+  (interactive)
+
+  (if (bound-and-true-p sboo-insert-command)
+      (let* ((VALUE (symbol-value 'sboo-insert-command))
+             )
+        (cl-typecase VALUE
+
+          (command (call-interactively VALUE))
+
+          (function (funcall VALUE))
+
+          ;;(symbol (... (symbol-value VALUE)))
+
+          (string (insert VALUE))
+
+          (t ())))
+    (message "`sboo-insert-command' not locally-defined.")))
+
+;;----------------------------------------------;;
+
+(defun sboo-insert-command-default ()
+
+  "A default `sboo-insert-command'.
+
+Returns:
+
+• `sboo-yas-insert-snippet'.
+
+"
+
+  (interactive)
+
+  (cond
+
+   ((featurep 'yasnippet)
+
+    (if (fboundp #'sboo-yas-insert-snippet)
+          #'sboo-yas-insert-snippet
+      #'yas-insert-snippet))
+
+   (t nil)))
+
+;sboo-yas-insert-snippet
+;;==============================================;;
 ;; DWIM Editing
 
 ;; each Editing Command:
@@ -457,6 +534,9 @@ Wraps `forward-thing'."
 (global-set-key (kbd "M-<up>")   #'beginning-of-buffer)
 (global-set-key (kbd "M-<down>") #'end-of-buffer)
 
+(global-set-key (kbd "<M-prior>") #'xah-backward-block)
+(global-set-key (kbd "<M-next>")  #'xah-forward-block)
+
 ;;==============================================;;
 ;;; Control Keybindings (`C-')...
 ;;==============================================;;
@@ -623,13 +703,14 @@ Wraps `forward-thing'."
   (global-set-key (kbd "s-f") #'describe-function)          ; "Function"
 ;;(global-set-key (kbd "s-g") #')
   (global-set-key (kbd "s-h") #'helm-command-prefix)        ; "Helm"
-  (global-set-key (kbd "s-i") #'imenu)
+  (global-set-key (kbd "s-i") #'sboo-insert)                ; [I]nsert
 ;;(global-set-key (kbd "s-j") #')
   (global-set-key (kbd "s-k") #'describe-key)               ; "Key"
   (global-set-key (kbd "s-l") #'align-regexp)               ; a"L"ign
   (global-set-key (kbd "s-m") #'sboo-mark-keymap)           ; « "m"ark-* »
 ;;(global-set-key (kbd "s-n") #')
   (global-set-key (kbd "s-o") #'find-file-at-point)         ;MNEMONIC: "Open file". ;OLD: other-window.
+  (global-set-key (kbd "s-p") #'helm-show-kill-ring)        ; [P]aste from History.
 ;;(global-set-key (kbd "s-q") #')
   (global-set-key (kbd "s-r") #'xref-find-references)       ; "References"
   (global-set-key (kbd "s-s") #'sboo-launch-shell)          ; "Shell"
@@ -638,7 +719,7 @@ Wraps `forward-thing'."
   (global-set-key (kbd "s-v") #'describe-variable)          ; "Variable"
   (global-set-key (kbd "s-w") #'list-flycheck-errors)       ; "Warnings & errors"
 ;;(global-set-key (kbd "s-x") #')
-  (global-set-key (kbd "s-y") #'yas-insert-snippet)         ; "expand Yasnippet"
+  (global-set-key (kbd "s-y") #'sboo-yas-insert-snippet)    ; [Y]asnippet
 ;;(global-set-key (kbd "s-z") #')
 
   ())
@@ -646,6 +727,7 @@ Wraps `forward-thing'."
 ;;----------------------------------------------;;
 
 ;;(global-set-key (kbd "s-d") #'dired)
+;;(global-set-key (kbd "s-i") #'imenu)
 ;;(global-set-key (kbd "s-t") #'sboo-launch-term)           ; "Terminal"
 ;;(global-set-key (kbd "s-p") #'proced)
 

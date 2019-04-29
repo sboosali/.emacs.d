@@ -111,6 +111,27 @@ A `listp' of `symbolp's."
 
 ;;----------------------------------------------;;
 
+(defcustom sboo-html-hooks-list
+
+  '(
+    html-mode-hook
+    mhtml-mode-hook
+    markdown-mode-hook
+    gfm-mode-hook
+   )
+
+  "Hooks for `sboo-html-modes-list' (e.g. `html-mode-hook').
+
+A `listp' of `symbolp's."
+
+  :type '(repeated (choice (const nil)
+                           (symbol :tag "Hook")))
+
+  :safe #'sboo-symbol-listp
+  :group 'sboo-html)
+
+;;----------------------------------------------;;
+
 (defcustom sboo-markdown-modes-list
 
   '(
@@ -358,6 +379,16 @@ a(n optionally distinct) trigger-keys."
   "Accessor for variable `sboo-html-attribute-list'."
 
   sboo-html-attribute-list)
+
+;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-html-set-insert-command ()
+
+  "`sboo-insert' to `sgml-tag'."
+
+  (setq-local sboo-insert-command #'sgml-tag))
 
 ;;----------------------------------------------;;
 ;; Functions -----------------------------------;;

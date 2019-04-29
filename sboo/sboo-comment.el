@@ -572,7 +572,7 @@ Related:
          (LENGTH         (sboo-comment-length))
          (PREFIX         (sboo-comment-prefix-string))
          (SUFFIX         (sboo-comment-suffix-string))
-         (PADDING-CHAR   (sboo-comment-h1-infix-char))
+         (PADDING-CHAR   (sboo-comment-h2-infix-char))
 
          (TEXT          (sboo-comment--capitalize text))
          (TEXT-PREFIX   (concat PREFIX " " TEXT " "))

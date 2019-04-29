@@ -156,9 +156,6 @@
 ;; Settings: Toolbar ---------------------------;;
 ;;----------------------------------------------;;
 
-(sboo-custom-set tool-bar-style both
-  "each Icon of the Tool Bar has both Image (above) and Label (below).")
-
 (sboo-custom-set tool-bar-position left 
   "the Tool Bar is on the left.")
 
@@ -313,7 +310,6 @@
 
 ;;----------------------------------------------;;
 ;; Echo Area:
-
 
 
 ;;----------------------------------------------;;
