@@ -2663,12 +2663,119 @@ Related:
 
 ;;----------------------------------------------;;
 
-
 ;;==============================================;;
 
-;;----------------------------------------------;;
+(cl-typecase sboo-insert
+                      (command " (Com)")
+                      (class   " (Class)")
+                      (generic " (Gen)")
+                      (fbound  " (Fun)")
+                      (bound   " (Var)")
+                      (face    " (Face)"))
+
+(defvar-local sboo-insert
+
+  "nil"
+
+  "For `sboo-insert'.")
+
+(setq-local sboo-insert #'sgml)
 
 ;;----------------------------------------------;;
+
+(defun sboo-insert ()
+
+  "Context-Sensitive `insert'."
+
+  (interactive)
+
+  (if (bound-and-true-p sboo-insert)
+      (cl-typecase ( sboo-insert)
+
+        (command (call-interactively sboo-insert))
+
+        (function (funcall sboo-insert))
+
+        (string (insert sboo-insert))
+
+        (t ()))
+    (message "`sboo-insert' not locally-defined.")))
+
+
+(defun sboo-insert ()
+
+  "Context-Sensitive `insert'."
+
+  (interactive)
+
+  (if (bound-and-true-p sboo-insert)
+      (let* ((VALUE (symbol-value 'sboo-insert))
+             )
+        (cl-typecase VALUE
+
+          (command (call-interactively VALUE))
+
+          (function (funcall VALUE))
+
+          ;;(symbol (... (symbol-value VALUE)))
+
+          (string (insert VALUE))
+
+          (t ())))
+    (message "`sboo-insert' not locally-defined.")))
+
+;;==============================================;;
+(defun sboo-syntax/char-entry-p (entry)
+
+  "Return t if ENTRY is: a `characterp's; or a `consp' of `characterp's."
+
+  (or ()
+      ()))
+
+;;----------------------------------------------;;
+
+(defun sboo-syntax/char-entry-p (entry)
+
+  "Return t if ENTRY is: a `characterp's; or a `consp' of `characterp's."
+
+  (pcase entry
+
+    (`(,x . ,y) (and (characterp x) (characterp y)))
+    (x (characterp x))
+
+    (_ f)))
+    
+;;----------------------------------------------;;
+
+(cl-defun sboo-syntax-add-bracket-entries (brackets &key syntax-table)
+
+  "Register each pair of bracket characters with `sboo-syntax-add-bracket-entry'.
+
+Input:
+
+• BRACKETS — a `listp'.
+  each entry is either: a `consp' (c.f. an Association List) of `characterp's; or a `characterp' (which is interpreted as a pair of that same character duplicated).
+• SYNTAX-TABLE — an optional `char-table-p'.
+  a syntax table.
+
+Examples:
+
+• M-: (sboo-syntax-add-bracket-entries '((?< . ?>) (?« . ?»)) :syntax-table standard-syntax-table)"
+
+  (cl-assert (sboo-syntax/list-of-chars-or-char-cons-p brackets) t)
+  (cl-assert (sboo-syntax/optional-char-table-p syntax-table) t)
+
+  (let* ((SYNTAX-DESCRIPTION-OPENING (string ?\( closing))
+         (SYNTAX-DESCRIPTION-CLOSING (string ?\) opening))
+         )
+
+    (dolist (PAIR brackets)
+       (let* ((OPENING ())  
+        (CLOSING ())
+        )
+       (sboo-syntax-add-bracket-entry OPENING CLOSING :syntax-table syntax-table))))
+
+      (or syntax-table (syntax-table)))
 
 ;;----------------------------------------------;;
 
