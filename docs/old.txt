@@ -2778,6 +2778,20 @@ Examples:
       (or syntax-table (syntax-table)))
 
 ;;----------------------------------------------;;
+;;; `minibuffer-local-filename-completion-map'
+
+(dolist (*MAP* (list minibuffer-local-filename-completion-map
+                     minibuffer-local-completion-map
+                     minibuffer-local-must-match-map
+
+                     helm-find-files-map
+                     ))
+
+  (define-key *MAP* (kbd "<kp-left>")  #'backward-char)
+  (define-key *MAP* (kbd "<kp-right>") #'forward-char)
+
+  ())
+
 
 ;;----------------------------------------------;;
 
