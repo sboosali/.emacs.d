@@ -1,9 +1,11 @@
 # -*- mode: snippet -*-
 #
-# key         : yas
-# name        : a verbose « .yasnippet » header.
+# key         : yas-html-elem
+# name        : [sboo-html] Generate a Snippet for HTML Elements, e.g. « <$1>...</$1> ».
+#
 # type        : snippet
-# condition   : (let ((KEY "yas")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+#
+# commentary  : 
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
@@ -11,23 +13,13 @@
 # -*- mode: snippet -*-
 #
 # key         : $1
-# name        : [sboo] the « <$1>...</$1> » element.
+# name        : [sboo] HTML Element, e.g. « <$1>...</$1> »
+#
 # type        : snippet
-# condition   : (let ((KEY "$1")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
-# expand-env  : ((yas-wrap-around-region 'nil))
+# expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
+#
+# commentary  : 
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
-<$1>`yas-selected-text`</$1>$0
-
-# -*- mode: snippet -*-
-#
-# key         : $1
-# name        : a « $2 ».
-# type        : snippet
-# condition   : (let ((KEY "$1")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
-# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-# contributor : Spiros Boosalis <samboosalis@gmail.com> 
-#
-# --
-$0
+<$1>\`yas-selected-text\`\$0</$1>$0

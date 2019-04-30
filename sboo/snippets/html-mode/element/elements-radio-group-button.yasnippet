@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+#
+# key         : radio
+# name        : [sboo] HTML Radio Group Button, i.e. « <input type="radio"> ... »
+#
+# type        : snippet
+# expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
+#
+# commentary  : 
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+<input type="radio" id="${1:radio-group}" name="$2" value="$1">
+<label for="$1">${1:$(string-join (split-string (capitalize yas-text) "[-]+" :omit-nulls) " ")}</label>$0

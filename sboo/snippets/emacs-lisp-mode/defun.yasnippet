@@ -1,9 +1,9 @@
 # -*- mode: snippet -*-
 #
 # key         : defun
-# name        : a verbose « defun » declaration.
+# name        : [sboo] a verbose « defun » declaration.
 # condition   : (let ((KEY "defun")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
-# expand-env  : ((yas-wrap-around-region 'nil))
+# expand-env  : ((yas-wrap-around-region t))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
@@ -33,6 +33,9 @@ Links:
 Related:
 
 • \`'"
+
+  ;;(cl-assert (not (equal x y)) :show-args "the arguments must differ")
+  ;;(cl-check-type n (integer 1 *) "a positive integer")
 
   (let* ()
 
