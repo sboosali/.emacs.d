@@ -323,7 +323,7 @@ Links:
   ;TODO get project-root from locate-dominating-file cabal.project.
   ;TODO get default-directory from subdirectory of project-root
 
-  (let* ((FILE (if buffer (buffer-file-name buffer) nil))
+  (let* ((FILE (buffer-file-name buffer))
 
          (COMPILE-COMMAND
 

@@ -1744,27 +1744,35 @@ $0")
 ;; External Packages: Formats ------------------;;
 ;;----------------------------------------------;;
 
-(use-package markdown-mode
+(when (require 'sboo-html nil :no-error)
 
-  :commands (markdown-mode gfm-mode)
-  
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'"       . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode)
-         )
+  (use-package markdown-mode
 
-  :bind (:map markdown-mode-map
-              ("TAB" . dabbrev-expand)
-         :map gfm-mode-map
-              ("TAB" . dabbrev-expand)
-         )
+    :commands (markdown-mode gfm-mode)
 
-  :init
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'"       . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode)
+           )
 
-  (setq markdown-command "markdown")
-  ;; ^ `pandoc'. TODO
+    :bind (:map markdown-mode-map
+                ("TAB" . dabbrev-expand)
+                :map gfm-mode-map
+                ("TAB" . dabbrev-expand)
+                )
 
-  :config
+    :init
+
+    (setq markdown-command "markdown")
+    ;; ^ `pandoc'. TODO
+
+    :config
+
+    (dolist (HOOK sboo-html-hooks)
+      (dolist (FUNCTION sboo-html-functions)
+        (add-hook HOOK FUNCTION)))
+
+    ())
 
   ())
 
@@ -1854,19 +1862,23 @@ $0")
 
 ;;----------------------------------------------;;
 
-(use-package xmodmap-mode
+(when (require 'sboo-xmodmap nil :no-error)
 
-  :mode        "\\.xmodmap\\'"
-  :interpreter "xmodmap"
+  (use-package xmodmap-mode
 
-  :init
-  ()
+    :mode        "\\.xmodmap\\'"
+    :interpreter "xmodmap"
 
-  :config
+    :init
 
-  (add-hook 'xmodmap-mode-hook #'sboo-set-font-to-iosevka)
+    ()
 
-  ())
+    :config
+
+    (dolist (HOOK sboo-xmodmap-hooks-list)
+      (add-hook 'xmodmap-mode-hook HOOK))
+
+    ()))
 
 ;;----------------------------------------------;;
 ;; External Packages: Editing ------------------;;
@@ -1878,12 +1890,7 @@ $0")
 
   (add-to-list 'wrap-region-except-modes 'magit-status-mode)
 
-  (when (require 'sboo-html nil :no-error)
-
-    (dolist (HOOK sboo-html-hooks-list)
-      (add-hook HOOK #'sboo-html-set-insert-command))
-
-    ())
+  (require 'sboo-html nil :no-error)
 
   (wrap-region-add-wrappers
 

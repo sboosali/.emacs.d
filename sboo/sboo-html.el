@@ -90,6 +90,23 @@ Links:
 
 ;;==============================================;;
 
+(defcustom sboo-html-functions
+
+  (list #'sboo-html-set-insert-command
+        #'superword-mode
+        )
+
+  "Hooks for Major Modes in `sboo-html-modes-list'.
+
+Zero-or-more function-symbols."
+
+  :type '(repeat (function))
+
+  :safe #'listp
+  :group 'sboo-html)
+
+;;----------------------------------------------;;
+
 (defcustom sboo-html-modes-list
 
   '(
@@ -111,7 +128,7 @@ A `listp' of `symbolp's."
 
 ;;----------------------------------------------;;
 
-(defcustom sboo-html-hooks-list
+(defcustom sboo-html-hooks
 
   '(
     html-mode-hook
@@ -122,7 +139,14 @@ A `listp' of `symbolp's."
 
   "Hooks for `sboo-html-modes-list' (e.g. `html-mode-hook').
 
-A `listp' of `symbolp's."
+A `listp' of `symbolp's.
+
+By default:
+
+• `html-mode-hook'
+• `mhtml-mode-hook'
+• `markdown-mode-hook'
+• `gfm-mode-hook'"
 
   :type '(repeated (choice (const nil)
                            (symbol :tag "Hook")))

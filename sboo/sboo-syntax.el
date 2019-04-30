@@ -220,7 +220,7 @@ M-: (sboo-syntax/char-entry-p '(?1 ?2 ?3))
 
     (?« . ?»)
 
-    ?\|
+    ?|
    )
 
   "Associates bracket characters with their matching character."
@@ -239,7 +239,7 @@ M-: (sboo-syntax/char-entry-p '(?1 ?2 ?3))
 
 (cl-defun sboo-syntax-add-bracket-entries (brackets &key syntax-table)
 
-  "Register each pair of bracket characters with `sboo-syntax-add-bracket-entry'.
+  "Register (with SYNTAX-TABLE) the bracket-character(s) in BRACKETS.
 
 Input:
 
@@ -247,6 +247,10 @@ Input:
   each entry is either: a `consp' (c.f. an Association List) of `characterp's; or a `characterp' (which is interpreted as a pair of that same character duplicated).
 • SYNTAX-TABLE — an optional `char-table-p'.
   a syntax table.
+
+Effect:
+
+• Calls `sboo-syntax-add-bracket-entry' on each entry in BRACKETS.
 
 Examples:
 
@@ -262,18 +266,22 @@ Examples:
          )
 
     (dolist (ENTRY ENTRIES)
-       (let* ((OPENING ())  
-        (CLOSING ())
-        )
-       (sboo-syntax-add-bracket-entry OPENING CLOSING :syntax-table syntax-table))))
 
-      (or syntax-table (syntax-table)))
+      (pcase ENTRY
+
+        (`(,(and (pred characterp) OPENING) . ,(and (pred characterp) CLOSING))
+
+         (sboo-syntax-add-bracket-entry OPENING CLOSING :syntax-table syntax-table))
+
+        (_ nil)))
+
+      (or syntax-table (syntax-table))))
 
 ;;----------------------------------------------;;
 
 (cl-defun sboo-syntax-add-bracket-entry (opening closing &key syntax-table)
 
-  "Associate characters OPENING and CLOSING as brackets.
+  "Associate characters OPENING and CLOSING as brackets (in SYNTAX-TABLE).
 
 Input:
 
@@ -305,7 +313,6 @@ Related:
 
     (or syntax-table (syntax-table))))
 
-
 ;;----------------------------------------------;;
 
 (defun sboo-syntax/normalize-entries (entries)
@@ -332,9 +339,7 @@ M-: (sboo-syntax/normalize-entries '(?| (?< . ?>) (?« ?»)))
         (when ENTRY-NORMALIZED
           (push ENTRY-NORMALIZED ENTRIES-NORMALIZED))))
 
-    (nreverse ENTRIES-NORMALIZED)
-
-    ENTRIES-NORMALIZED))
+    (nreverse ENTRIES-NORMALIZED)))
 
 ;;----------------------------------------------;;
 

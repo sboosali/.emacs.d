@@ -2160,6 +2160,29 @@ Related:
 ;;
 
 ;;----------------------------------------------;;
+;; HTML ----------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-html-escape (start end)
+
+  "Escape HTML characters in the region between START and END.
+
+URL `http://shallowsky.com/blog/linux/editors/emacs-escape-html.html'."
+
+  (interactive "r")
+
+  (save-excursion
+    (save-restriction
+      (narrow-to-region start end)
+      (goto-char (point-min))
+      (replace-string "&" "&amp;")
+      (goto-char (point-min))
+      (replace-string "<" "&amp;lt;")
+      (goto-char (point-min))
+      (replace-string ">" "&gt;")
+      ())))
+
+;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
