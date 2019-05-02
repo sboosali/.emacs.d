@@ -2183,6 +2183,23 @@ URL `http://shallowsky.com/blog/linux/editors/emacs-escape-html.html'."
       ())))
 
 ;;----------------------------------------------;;
+;; `font-lock' ---------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-insert-font-lock-string-face (text)
+
+  (interactive "sString (Unquoted): ")
+
+  (let* ((TEXT-ESCAPED     (format "%S" text))
+         (TEXT-PROPERTIZED (propertize TEXT-ESCAPED
+                                       'font-lock-face 'font-lock-string-face))
+        )
+
+    (insert TEXT-PROPERTIZED)))
+
+;; M-: (sboo-insert-font-lock-string-face "example \"string\"")
+
+;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 

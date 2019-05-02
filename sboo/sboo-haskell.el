@@ -258,6 +258,25 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
 ;; e.g. a `dante' buffer: « *dante:spiros:lib:spiros:~/haskell/spiros/* »
 
 ;;----------------------------------------------;;
+;; Faces ---------------------------------------;;
+;;----------------------------------------------;;
+
+;; (defface sboo-haskell-keyword-face
+;;   '((t (:foreground "yellow")))
+;;   "Custom face for `haskell-keyword-face'."
+;;   :group 'haskell)
+
+;; (defface sboo-haskell-constructor-face
+;;   '((t (:background "red")))
+;;   "Custom face for `haskell-constructor-face'."
+;;   :group 'haskell)
+
+;; ;; TODO `setq` doesn't work for faces:
+
+;; (setq haskell-keyword-face 'sboo-haskell-keyword-face)
+;; (setq haskell-constructor-face 'sboo-haskell-constructor-face)
+
+;;----------------------------------------------;;
 ;; Functions: `font-lock' ----------------------;;
 ;;----------------------------------------------;;
 

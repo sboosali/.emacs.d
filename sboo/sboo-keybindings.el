@@ -526,8 +526,17 @@ Returns:
 
 (global-set-key (kbd "M-g") #'goto-line)
 
+(global-set-key (kbd "M-l") #'downcase-dwim)   ; Shadows: `downcase-word'.
+(global-set-key (kbd "M-c") #'capitalize-dwim) ; Shadows: `capitalize-word'.
+(global-set-key (kbd "M-u") #'upcase-dwim)     ; Shadows: `upcase-word'.
+
 (global-set-key (kbd "M-`") #'sboo-switch-to-previous-buffer)
 (global-set-key (kbd "M-~") #'sboo-switch-to-previous-buffer)
+
+(global-set-key (kbd "M-:") #'comment-dwim) ; Shadows: `eval-expression'.
+
+;; ^ Thus, both « M-; » and « M-S-; » are identical.
+;;   NOTE shadows `eval-expression', but `eval-expression' has been bound to « <f11> ».
 
 (global-set-key (kbd "M-.") #'sboo-jump)
 
@@ -612,6 +621,17 @@ Returns:
 ;;(global-set-key (kbd "s-8") #')
 ;;(global-set-key (kbd "s-9") #')
 ;;(global-set-key (kbd "s-0") #')
+
+(global-set-key (kbd "s-!") #'delete-other-windows)
+(global-set-key (kbd "s-@") #'split-window-below)
+(global-set-key (kbd "s-#") #'split-window-right)
+;;(global-set-key (kbd "s-$") #')
+;;(global-set-key (kbd "s-%") #')
+;;(global-set-key (kbd "s-^") #')
+;;(global-set-key (kbd "s-&") #')
+;;(global-set-key (kbd "s-*") #')
+;;(global-set-key (kbd "s-(") #')
+;;(global-set-key (kbd "s-)") #')
 
 ;;==============================================;;
 ;; « s-<LETTER> »

@@ -406,7 +406,12 @@ Related:
   "« sboo »'s customization."
 
   :link '(url-link :tag "GitHub" "https://github.com/sboosali/.emacs.d#readme")
-  :group 'local)
+
+  :group 'local
+
+  ;; ^ Group `local' means: your personal (“site-local”) configuration.
+
+  )
 
 ;;----------------------------------------------;;
 ;; Settings ------------------------------------;;

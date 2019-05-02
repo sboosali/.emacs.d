@@ -1,8 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 
-;;==============================================;;
 ;;; Commentary:
-;;==============================================;;
 
 ;; Personal Settings.
 ;; 
@@ -14,9 +12,7 @@
 ;;
 ;; 
 
-;;==============================================;;
 ;;; Code:
-;;==============================================;;
 
 ;;----------------------------------------------;;
 ;; Imports -------------------------------------;;
@@ -136,6 +132,20 @@
 
 ;; (custom-set-faces
 ;;   `(minibuffer-prompt ((t (:family "Iosevka")))))
+
+;;----------------------------------------------;;
+;; Settings: Themes ----------------------------;;
+;;----------------------------------------------;;
+
+(ignore-errors
+
+  (let ((THEME-DIRECTORY
+         (if (bound-and-true-p sboo-theme-directory)
+             sboo-theme-directory
+           (expand-file-name "~/.emacs.d/sboo/themes")))
+        )
+
+    (custom-set-variables `(custom-theme-directory ,THEME-DIRECTORY :eager nil "Personal themes."))))
 
 ;;----------------------------------------------;;
 
