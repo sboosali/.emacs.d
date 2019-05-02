@@ -2795,16 +2795,41 @@ Examples:
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+# name        : [sboo] a « define-derived-mode » file (a major mode), « *-mode.el ».
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+finder-by-keyword
+https://www.gnu.org/software/emacs/manual/html_node/emacs/Package-Keywords.html
 
 ;;----------------------------------------------;;
+define-generic-mode
+;;----------------------------------------------;;
+(ignore-errors
 
+  (when (>= emacs-major-version 24)
+
+    (add-to-theme-path! sboo-theme-directory)
+    (add-to-theme-path! (emacs-subdir "themes"))
+
+    (progn
+      (sboo-register-submodule-packages! "solarized")
+      (sboo-register-submodule-themes!   "solarized")
+      (load-theme 'solarized :no-confirm))
+
+    ()))
+;;----------------------------------------------;;
+(insert (propertize "\"" 'font-lock-face 'font-lock-string-face))"
 ;;----------------------------------------------;;
 
+(defun sboo-insert-font-lock-string-face (text)
+
+  (let* ((TEXT-ESCAPED     (concat "\"" (text) "\""))
+         (TEXT-PROPERTIZED (propertize TEXT-ESCAPED
+                                       'font-lock-face 'font-lock-string-face))
+        )
+
+    (insert TEXT-PROPERTIZED)))
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

@@ -77,6 +77,51 @@ Version 2016-06-15"
               (setq $i n)))
      (setq $i (1+ $i)))))
 
+;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun xah-escape-quotes-dwim (@begin @end)
+  "Replace 「\"」 by 「\\\"」 in current line or text selection.
+See also: `xah-unescape-quotes-dwim'
+
+URL `http://ergoemacs.org/emacs/elisp_escape_quotes.html'
+Version 2017-01-11"
+
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (region-end))
+     (list (line-beginning-position) (line-end-position))))
+
+  (save-excursion
+      (save-restriction
+        (narrow-to-region @begin @end)
+        (goto-char (point-min))
+        (while (search-forward "\"" nil t)
+          (replace-match "\\\"" :fixedcase :literal)))))
+
+;;----------------------------------------------;;
+
+(defun xah-unescape-quotes-dwim (@begin @end)
+  "Replace  「\\\"」 by 「\"」 in current line or text selection.
+See also: `xah-escape-quotes-dwim'
+
+URL `http://ergoemacs.org/emacs/elisp_escape_quotes.html'
+
+Version 2017-01-11"
+
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (region-end))
+     (list (line-beginning-position) (line-end-position))))
+
+  (save-excursion
+    (save-restriction
+      (narrow-to-region @begin @end)
+      (goto-char (point-min))
+      (while (search-forward "\\\"" nil t)
+        (replace-match "\"" :fixedcase :literal)))))
+
 ;;==============================================;;
 (provide 'sboo-xah)
 

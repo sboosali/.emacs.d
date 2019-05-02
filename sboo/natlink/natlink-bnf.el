@@ -20,6 +20,7 @@
 
   "Keywords for `natlink-bnf-mode'.")
 
+
 ;;----------------------------------------------;;
 
 (defvar natlink-bnf-file-extensions
