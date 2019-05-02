@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 #
-# key         : major
-# name        : [sboo] a « define-derived-mode » file (a major mode).
-# condition   : (let ((KEY "major")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# key         : minor-simple
+# name        : [sboo] a (simple) « define-minor-mode » file.
+# condition   : (let ((KEY "minor-simple")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil) (FILENAME (file-name-nondirectory (buffer-file-name))) (FEATURE (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))) (MODE (string-remove-suffix "-mode" (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 # type        : snippet
@@ -15,7 +15,7 @@
 
 ;; Author: Spiros Boosalis <samboosalis@gmail.com> 
 ;; Maintainer: Spiros Boosalis <samboosalis@gmail.com> 
-;; Version: 0.1.0
+;; Version: 0.0.0
 ;; URL: https://github.com/sboosali/`FEATURE`
 ;; Keywords: languages
 ;; Package-Requires: ((cl-lib "0.5") (pkg-info "0.4") (emacs "24.3"))
@@ -49,7 +49,7 @@
 ;;
 ;; Usage: 
 ;;
-;;   (require '`MODE`-mode)
+;;   (require 'bnf-mode)
 ;;
 ;; Bugs: https://github.com/sboosali/`FEATURE`/issues
 ;;
@@ -63,7 +63,7 @@
 ;;----------------------------------------------;;
 
 ;; Work around emacs bug#18845, cc-mode expects cl to be loaded
-;; while `MODE`-mode only uses cl-lib (without compatibility aliases)
+;; while bnf-mode only uses cl-lib (without compatibility aliases)
 
 (eval-and-compile
   (if (and (= emacs-major-version 24) (>= emacs-minor-version 4))
@@ -114,69 +114,12 @@
   :group '`MODE`)
 
 ;;----------------------------------------------;;
-;;; Macros
-;;----------------------------------------------;;
-
-(eval-when-compile
-
-  ;;--------------------------;;
-
-  (defconst `MODE`-rx-constituents
-
-    `(
-      ;; rulename
-      (rulename . ,(rx (and
-                        symbol-start
-                        letter
-                        (0+ (or "-" alnum))
-                        symbol-end)))
-
-    "Auxiliary regular expressions for ``MODE`-rx'."))
-
-  ;;--------------------------;;
-
-  (defmacro `MODE`-rx (&rest sexps)
-
-     "`MODE`-specific replacement for `rx'.
-
-In addition to the standard forms of `rx', the following forms
-are available:
-
-`rulename'
-      Any valid rule name.  The name of a rule is simply the
-      name itself, that is, a sequence of characters, beginning
-      with an alphabetic character, and followed by a combination
-      of alphabetics, digits, and hyphens (dashes).
-
-      For more see: https://tools.ietf.org/html/rfc5234#section-2.1
-
-See `rx' documentation for more information about REGEXPS param."
-
-     (let ((rx-constituents
-            (append `MODE`-rx-constituents rx-constituents))
-           )
-       (cond
-
-        ((null sexps)
-         (error "No regexp"))
-
-        ((cdr sexps)
-         (rx-to-string `(and ,@sexps) t))
-
-        (t
-         (rx-to-string (car sexps) t)))))
-
-  ;;--------------------------;;
-
-  ())
-
-;;----------------------------------------------;;
 ;;; Info ---------------------------------------;;
 ;;----------------------------------------------;;
 
 (defun `MODE`-mode-version (&optional show-version)
 
-  "Display string describing the version of `MODE` Mode.
+  "Display string describing the version of BNF Mode.
 
 If called interactively or if SHOW-VERSION is non-nil, show the
 version in the echo area and the messages buffer.
@@ -196,64 +139,6 @@ just return nil."
     (when show-version
       (message "`(identity MODE)` Mode version: %s" version))
     version))
-
-;;----------------------------------------------;;
-
-;; TODO popup `help-mode'...
-
-(defun `MODE`-mode-help ()
-
-  "Popup a tutorial.
-
-Effects:
-
-• Popup a \`help-mode' buffer.
-"
-
-  (interactive)
-
-  ())
-
-;;----------------------------------------------;;
-;;; Font Locking
-;;----------------------------------------------;;
-
-(defvar `MODE`-font-lock-keywords
-
-  \\`(
-
-    ;; LHS nonterminals
-    (,(`MODE`-rx (and line-start
-                   "<"
-                   (group rulename)
-                   ">"))
-     1 font-lock-function-name-face)
-
-    ;; other nonterminals
-    (,(`MODE`-rx (and "<"
-                   (group rulename)
-                   ">"))
-     1 font-lock-builtin-face)
-
-    ;; "may expand into" symbol
-    (,(`MODE`-rx (and (0+ space)
-                   symbol-start
-                   (group "::=")
-                   symbol-end
-                   (0+ space)))
-     1 font-lock-constant-face)
-
-    ;; Alternatives
-    (,(`MODE`-rx (and (0+ space)
-                   symbol-start
-                   (group "|")
-                   symbol-end
-                   (0+ space)))
-     1 font-lock-warning-face)
-
-    )
-
-  "Font lock keywords for `MODE` Mode.")
 
 ;;----------------------------------------------;;
 ;;; Initialization
@@ -280,12 +165,12 @@ Effects:
     (modify-syntax-entry ?\>  ")<"  table)
     table)
 
-  "Syntax table in use in \``MODE`-mode' buffers.")
+  "Syntax table in use in ``MODE`-mode' buffers.")
 
 ;;----------------------------------------------;;
 
 ;;;###autoload
-(define-derived-mode `MODE`-mode prog-mode "`MODE`"
+(define-minor-mode `MODE`-mode "`MODE`"
 
   "A major mode for $2."
 

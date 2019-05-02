@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 #
-# key         : minor-mode
-# name        : [sboo] a « define-minor-mode » file.
-# condition   : (let ((KEY "minor-mode")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# key         : minor
+# name        : [sboo] a « define-minor-mode » file (a major mode).
+# condition   : (let ((KEY "minor")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil) (FILENAME (file-name-nondirectory (buffer-file-name))) (FEATURE (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))) (MODE (string-remove-suffix "-mode" (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 # type        : snippet
@@ -15,7 +15,7 @@
 
 ;; Author: Spiros Boosalis <samboosalis@gmail.com> 
 ;; Maintainer: Spiros Boosalis <samboosalis@gmail.com> 
-;; Version: 0.1.0
+;; Version: 0.0.0
 ;; URL: https://github.com/sboosali/`FEATURE`
 ;; Keywords: languages
 ;; Package-Requires: ((cl-lib "0.5") (pkg-info "0.4") (emacs "24.3"))
@@ -165,7 +165,7 @@ just return nil."
     (modify-syntax-entry ?\>  ")<"  table)
     table)
 
-  "Syntax table in use in ``MODE`-mode' buffers.")
+  "Syntax table in use in \``MODE`-mode' buffers.")
 
 ;;----------------------------------------------;;
 

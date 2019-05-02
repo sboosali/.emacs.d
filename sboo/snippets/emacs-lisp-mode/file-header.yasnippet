@@ -32,7 +32,10 @@
 
 ;; Builtins:
 
-(require 'cl-lib)
-;;(require 'pcase)
-;;(require 'seq)
+(eval-when-compile 
+  (require 'cl-lib))
+
+(progn
+  (require 'pcase)
+  (require 'seq))
 

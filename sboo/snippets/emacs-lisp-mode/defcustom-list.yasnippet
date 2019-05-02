@@ -21,6 +21,6 @@ Zero-or-more ${2:value}s."
   :type '(repeated (choice (const nil)
                            (${4:string} :tag "$2")))
 
-  :safe t
+  :safe #'listp
   :group 'sboo)
 

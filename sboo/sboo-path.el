@@ -1,18 +1,4 @@
-# -*- mode: snippet -*-
-#
-# key         : file
-# name        : [sboo] a « *.el » file.
-#
-# type        : snippet
-# condition   : (let ((KEY "file")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
-# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-#
-# commentary  : 
-# contributor : Spiros Boosalis <samboosalis@gmail.com> 
-#
-# --
-
-;;; ${1:FEATURE}.el --- ${2:SYNOPSIS} -*- coding: utf-8; lexical-binding: t -*-
+;;; sboo-path.el --- (Personal) filepaths aliases -*- coding: utf-8; lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -40,15 +26,15 @@
 
 ;;; Commentary:
 
-;; __SYNOPSIS__.
+;; Aliases for frequently-accessed filepaths.
 ;;
 ;; Commands:
 ;;
-;; • \`xxx-feature-xxx-*'
+;; • `xxx-feature-xxx-*'
 ;;
 ;; Variables:
 ;;
-;; • \`xxx-feature-xxx-*'
+;; • `xxx-feature-xxx-*'
 ;;
 ;; 
 
@@ -77,11 +63,31 @@
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
-$0
-
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
+
+(defcustom sboo-paths-alist
+
+  '(
+    ( . "")
+    ( . "")
+    ( . "")
+    ( . "")
+    ( . "")
+    ( . "")
+   )
+
+  ".
+
+Aliases (`symbolp's) for filepaths (`stringp's)."
+
+  :type '(alist :key-type   (symbol :tag "Alias")
+                :value-type (choice (const nil)
+                                    (string :tag "Filepath")))
+
+  :safe #'lisp
+  :group 'sboo)
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
@@ -95,9 +101,9 @@ $0
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
 
-(provide '$1)
+(provide 'sboo-path)
 
 ;; Local Variables:
 ;; End:
 
-;;; $1.el ends here
+;;; sboo-path.el ends here

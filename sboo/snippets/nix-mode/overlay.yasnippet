@@ -1,12 +1,17 @@
 # -*- mode: snippet -*-
 #
-# key         : =overlay
-# name        : [sboo] the identity `nix` overlay.
-# condition   : (= (length "=overlay") (current-column))
+# key         : overlay
+# name        : [sboo] the identity « nix » overlay.
+#
+# type        : snippet
+# condition   : (let ((KEY "overlay")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-# contributor : Spiros Boosalis
+#
+# commentary  : 
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
+
 ##################################################
 self: super:
 

@@ -1,0 +1,34 @@
+# -*- mode: snippet -*-
+#
+# key         : imports
+# name        : [sboo] Section named « ;; Imports » with standard « (require ...) ».
+#
+# type        : snippet
+# condition   : (let ((KEY "imports")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# commentary  : 
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+
+;;----------------------------------------------;;
+;; Imports -------------------------------------;;
+;;----------------------------------------------;;
+
+;; Builtins:
+
+(eval-when-compile
+
+  (require 'cl-lib))
+
+;;----------------------------------------------;;
+
+;; Builtins:
+
+(progn
+
+  (require 'pcase)
+  (require 'subr-x))
+
+$0

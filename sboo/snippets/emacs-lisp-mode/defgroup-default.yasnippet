@@ -9,13 +9,9 @@
 # --
 ;;----------------------------------------------;;
 
-(defgroup sboo-${1:name}
-
-  nil
+(defgroup sboo-${1:name} nil
 
   "$0."
 
-;;:link (url-link "$3")
-
-  :group '${2:super-group})
-
+  :prefix '$2
+  :group '${2:sboo})

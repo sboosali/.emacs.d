@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 #
-# key         : defstring
-# name        : a « defcustom » declaration for « (:string) » types.
-# condition   : (let ((KEY "defstring")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# key         : deffile
+# name        : a « defcustom » declaration for « :file » types.
+# condition   : (let ((KEY "deffile")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
@@ -17,7 +17,7 @@
 
 a \`stringp'."
 
-  :type '(string :tag "$3")
+  :type '(file :must-match t :tag "${3:File}")
 
   :safe #'stringp
   :group 'sboo)

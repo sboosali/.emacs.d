@@ -22,6 +22,6 @@ Associates `keywordp's with ${3:value}s."
                 :value-type (choice (const nil)
                                     (string :tag "$3")))
 
-  :safe t
+  :safe #'listp
   :group 'sboo)
 

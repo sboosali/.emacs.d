@@ -1,9 +1,9 @@
 # -*- mode: snippet -*-
 #
-# key         : major
-# name        : [sboo] a « define-derived-mode » file (a major mode).
-# condition   : (let ((KEY "major")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
-# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil) (FILENAME (file-name-nondirectory (buffer-file-name))) (FEATURE (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))) (MODE (string-remove-suffix "-mode" (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))))
+# key         : major-simple
+# name        : [sboo] a (simple) « define-derived-mode » file.
+# condition   : (let ((KEY "major-simple")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region t) (FILENAME (file-name-nondirectory (buffer-file-name))) (FEATURE (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))) (MODE (string-remove-suffix "-mode" (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 # type        : snippet
 #
@@ -123,7 +123,7 @@
 
   (defconst `MODE`-rx-constituents
 
-    `(
+    \`(
       ;; rulename
       (rulename . ,(rx (and
                         symbol-start
@@ -131,18 +131,18 @@
                         (0+ (or "-" alnum))
                         symbol-end)))
 
-    "Auxiliary regular expressions for ``MODE`-rx'."))
+    "Auxiliary regular expressions for \``MODE`-rx'."))
 
   ;;--------------------------;;
 
   (defmacro `MODE`-rx (&rest sexps)
 
-     "`MODE`-specific replacement for `rx'.
+     "`MODE`-specific replacement for \`rx'.
 
-In addition to the standard forms of `rx', the following forms
+In addition to the standard forms of \`rx', the following forms
 are available:
 
-`rulename'
+\`rulename'
       Any valid rule name.  The name of a rule is simply the
       name itself, that is, a sequence of characters, beginning
       with an alphabetic character, and followed by a combination
@@ -150,7 +150,7 @@ are available:
 
       For more see: https://tools.ietf.org/html/rfc5234#section-2.1
 
-See `rx' documentation for more information about REGEXPS param."
+See \`rx' documentation for more information about REGEXPS param."
 
      (let ((rx-constituents
             (append `MODE`-rx-constituents rx-constituents))
@@ -220,7 +220,7 @@ Effects:
 
 (defvar `MODE`-font-lock-keywords
 
-  \\`(
+  \`(
 
     ;; LHS nonterminals
     (,(`MODE`-rx (and line-start
