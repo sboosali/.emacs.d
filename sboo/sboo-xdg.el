@@ -24,8 +24,6 @@
 (require 'cl-lib)
 (require 'pcase)
 
-;;
-
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
@@ -39,6 +37,11 @@ Output a symbol:
 • 'posix   — for Linux and MacOs.
 • 'windows — for Windows.
 • 'posix   — for unknown filesystems.
+
+Uses:
+
+• `system-type'
+• `window-system'
 
 The XDG Base Directories specification distinguishes between only these two platforms."
 
@@ -73,17 +76,17 @@ See function `sboo-xdg-platform'.")
 ;;----------------------------------------------;;
 
 (defconst xdg-data 'xdg-data
-  "Symbol representing XDG_DATA_HOME.")
+  "Symbol representing « $XDG_DATA_HOME ».")
 
 ;;----------------------------------------------;;
 
 (defconst xdg-config 'xdg-config
-  "Symbol representing XDG_CONFIG_HOME.")
+  "Symbol representing « $XDG_CONFIG_HOME ».")
 
 ;;----------------------------------------------;;
 
 (defconst xdg-cache 'xdg-cache
-  "Symbol representing XDG_CACHE_HOME.")
+  "Symbol representing « $XDG_CACHE_HOME ».")
 
 ;;----------------------------------------------;;
 

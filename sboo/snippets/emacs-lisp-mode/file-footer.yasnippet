@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+#
+# key         : footer
+# name        : [sboo] a « .el » library footer.
+# type        : snippet
+# condition   : (let ((KEY "footer")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
+
+;; $0
+;;
+;;
+
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
+(provide '`(file-name-base (buffer-file-name))`)
+
+;;; `(file-name-base (buffer-file-name))`.el ends here

@@ -1671,7 +1671,8 @@ $0")
       (interactive "P")
 
       (yas-recompile-all)
-      (yas-reload-all force))
+      (yas-reload-all force)
+      (require 'sboo-yasnippets nil :no-error))
 
     ;;------------------------;;
 
