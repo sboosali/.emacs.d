@@ -2834,6 +2834,41 @@ define-generic-mode
 
 ;;----------------------------------------------;;
 
+(defun sboo-os-current-system ()
+
+  "The current platform, for XDG.
+
+Output:
+
+• a `symbolp'. One of:
+
+    • 'linux   — for Linux (and/or X11).
+    • 'windows — for Windows (and/or WIN32).
+    • 'macos   — for OSX (and/or Cocoa).
+
+Uses:
+
+• `window-system'
+• `system-type'"
+
+  (cond
+
+   ((or (memq system-type   '(gnu/linux)))
+    'linux)
+
+   ((or (memq system-type   '(windows-nt ms-dos))
+        (memq window-system '(w32 pc)))
+    'windows)
+
+   ((or (memq system-type   '(darwin))
+        (memq window-system '(mac ns)))
+    'macos)
+
+   (t
+    nil)))
+
+;;----------------------------------------------;;
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil) (sboo-yas-file-base-name (file-name-base (buffer-file-name))))
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
