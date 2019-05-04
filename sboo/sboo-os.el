@@ -39,12 +39,17 @@
 
 ;; Builtins:
 
-(eval-when-compile 
-  (require 'cl-lib))
+(eval-when-compile
+  (require 'pcase)
+  (require 'cl-lib)
+  )
 
 (progn
-  (require 'pcase))
+  
+  )
 
+;;----------------------------------------------;;
+;; Conditions ----------------------------------;;
 ;;----------------------------------------------;;
 
 (defmacro sboo-os-build-system ()
@@ -68,7 +73,7 @@ Uses:
     ('gnu/linux               (quote 'linux))
     ((or 'windows-nt 'ms-dos) (quote 'windows))
     ('darwin                  (quote 'macos))
-    (_                        (quote nil)))
+    (_                        (quote nil))))
 
 ;; M-: (sboo-os-build-system)
 
@@ -103,9 +108,69 @@ Uses:
 
 (defvar sboo-os-current-system
 
-  (sboo-os-run-system)
+  (or (sboo-os-run-system) (sboo-os-build-system))
 
-  "Current (runtime) operating-system (via `window-system').")
+  "Current (runtime) operating-system (via `sboo-os-run-system').")
+
+;;----------------------------------------------;;
+;; “Re-Exports” --------------------------------;;
+;;----------------------------------------------;;
+
+(pcase sboo-os-current-system
+
+  ('linux   (require 'sboo-os-linux))
+  ('windows (require 'sboo-os-windows))
+  ('macos   (require 'sboo-os-macos))
+
+  (_ ()))
+
+;;----------------------------------------------;;
+;; Commands ------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-os-maximize-frame ()
+
+  "Maximize the `selected-frame'.
+
+Related:
+
+• `set-frame-parameter'"
+
+  (interactive)
+
+  (set-frame-parameter nil 'fullscreen 'maximized))
+
+;;----------------------------------------------;;
+
+(pcase sboo-os-current-system
+
+  ('windows
+
+   (defalias 'sboo-maximize-frame #'sboo-windows-maximize-frame))
+
+  (_
+
+   (defalias 'sboo-maximize-frame #'sboo-os-maximize-frame)))
+
+;;==============================================;;
+
+(pcase sboo-os-current-system
+
+  ('windows
+
+   (setq tramp-default-method sboo-windows-tramp-method))
+
+  (_
+
+   ()))
+
+;;----------------------------------------------;;
+
+;; ;; Load SSH Agent from environment
+;; (when (not (eq sboo-os-current-system 'windows))
+;;     (exec-path-from-shell-copy-env "SSH_AGENT_PID")
+;;     (exec-path-from-shell-copy-env "PATH")
+;;     (exec-path-from-shell-copy-env "SSH_AUTH_SOCK"))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
