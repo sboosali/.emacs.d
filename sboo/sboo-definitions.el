@@ -131,14 +131,6 @@ Wraps `sboo-install-p'."
 
 ;;----------------------------------------------;;
 
-(defconst sboo-lisp-directory
-
-  (emacs-subdir "lisp/")
-
-  "Directory with vendored (individual) ELisp files.")
-
-;;----------------------------------------------;;
-
 (defvar sboo-installed-package-directory
 
   (or (bound-and-true-p package-user-dir)
@@ -176,6 +168,14 @@ Wraps `sboo-install-p'."
 
   (truename-as-directory (concat sboo-root-directory
 				 FilePath)))
+
+;;----------------------------------------------;;
+
+(defconst sboo-lisp-directory
+
+  (sboo-subdir "lisp/")
+
+  "Directory with vendored (individual) ELisp files.")
 
 ;;----------------------------------------------;;
 
