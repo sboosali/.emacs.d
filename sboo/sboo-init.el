@@ -437,6 +437,18 @@ Related:
 ;;
 
 ;;----------------------------------------------;;
+
+(unless (require 'sboo-private "~/.emacs.d/private/sboo-private" :no-error)
+  (require 'sboo-private nil :no-error))
+
+;; ^ NOTE if the "true" `sboo-private' can't be loaded
+;;        (e.g. doesn't exist yet, file doesn't parse, etc),
+;;        load a "fake" one which is always available
+;;        (because it's version-controllled,
+;;        but doesn't contain any sensitive information.)
+;;
+
+;;----------------------------------------------;;
 ;; Themes --------------------------------------;;
 ;;----------------------------------------------;;
 
@@ -614,7 +626,7 @@ Related:
 
 ;;----------------------------------------------;;
 
-(when (require 'sboo-elisp nil :no-error)
+(when (require 'sboo-lisp nil :no-error)
 
   (dolist (MODE sboo-lisp-modes)
     (font-lock-add-keywords MODE sboo-lisp-keywords))
@@ -841,12 +853,40 @@ Related:
 ;;
 ;; Your personal bookmark file is defined by option ‘bookmark-default-file’, which defaults to `~/.emacs.d/bookmarks
 
+
 ;;----------------------------------------------;;
+;; Recent Files
 
-(when (require 'saveplace nil :no-error)
+;;Enable recentf-mode and remember a lot of files.
 
-  (setq-default save-place t)
-  ;TODO; (setq save-place-file (expand-file-name "save-point-places" user-emacs-directory))
+(recentf-mode 1)
+(defvar recentf-max-saved-items)
+(setq recentf-max-saved-items 200)
+
+;;----------------------------------------------;;
+;; `uniquify'
+
+(use-package uniquify
+
+  :custom
+
+  (uniquify-buffer-name-style 'forward "distinguish Synonyms Buffers (better).")
+
+  ;; ^ When two buffers are open with the same name, this makes it easier to tell them apart.
+  )
+
+;;----------------------------------------------;;
+;; `saveplace':
+
+(use-package saveplace
+
+  :custom
+
+  (savve-place t "remember last position for reopened files.")
+
+  :config
+
+  (save-place-mode +1)
 
   ())
 
@@ -854,6 +894,8 @@ Related:
 ;;
 ;; "Save the position I was in each file, i.e. no scrolling down to paragraph N or function foo when I reopen my files."
 ;;
+
+;TODO; (setq save-place-file (expand-file-name "save-point-places" user-emacs-directory))
 
 ;;----------------------------------------------;;
 
@@ -1993,6 +2035,72 @@ $0")
 
 ;;----------------------------------------------;;
 
+;; (use-package rainbow-delimeters
+
+;;   :commands (rainbow-delimiters-mode)
+
+;;   :custom-face
+
+;;   (rainbow-delimeters-max-face-count 6 "fewer faces, higher-contrast.")
+
+;;   ;; (rainbow-delimiters-depth-1-face )
+;;   ;; (rainbow-delimiters-depth-2-face )
+;;   ;; (rainbow-delimiters-depth-3-face )
+;;   ;; (rainbow-delimiters-depth-4-face )
+;;   ;; (rainbow-delimiters-depth-5-face )
+;;   ;; (rainbow-delimiters-depth-6-face )
+
+;;   ;; (rainbow-delimiters-unmatched-face )
+;;   ;; (rainbow-delimiters-mismatched-face )
+
+;;   :config
+
+;;   (let* ((HOOKS
+;;           (if (require 'sboo-lisp nil :no-error)
+;;               sboo-lisp-hooks
+;;             '(emacs-lisp-mode-hook)))
+;;          )
+
+;;     (dolist (HOOK HOOKS)
+;;       (add-hook HOOK #'rainbow-delimiters-mode)))
+
+;;   ())
+
+;;----------------------------------------------;;
+
+;; (use-package rainbow-block
+
+;;   :delight
+
+  ;; :hook (prog-mode text-mode)
+
+  ;; :config
+
+;;   ())
+
+;;----------------------------------------------;;
+
+;; ;; `highlight-numbers': highlight numbers (in any language).
+
+;; (use-package highlight-numbers
+;;   )
+
+;;----------------------------------------------;;
+
+;; ;; `highlight-quoted': highlight *Lisp Symbols* (e.g. `'foo`).
+
+;; (use-package highlight-quoted
+;;   )
+
+;;----------------------------------------------;;
+
+;; ;; `highlight-escape-sequences': highlight *Escape Sequences* (e.g. `"\n"`).
+
+;; (use-package highlight-escape-sequences
+;;   )
+
+;;----------------------------------------------;;
+
 (use-package which-key
 
     )
@@ -2145,7 +2253,37 @@ $0")
   :disabled)
 
 ;;----------------------------------------------;;
+
+;; ;; “It's useful to be able to restart emacs from inside emacs.”
+;; (use-package restart-emacs)
+
+;;----------------------------------------------;;
+
+;; ;; Major Mode for Git Commits.
+;; (use-package git-commit)
+
+;;----------------------------------------------;;
+
+;; (use-package web-mode
+;;   :mode (("\\.mustache\\'" . web-mode))
+;;   ()))
+
+;;----------------------------------------------;;
 ;; Conditional Configuration -------------------;;
+;;----------------------------------------------;;
+
+(when (require 'sboo-os nil :no-error)
+
+  (add-hook 'windows-setup-hook #'sboo-maximize-frame t)
+
+  ())
+
+;;----------------------------------------------;;
+
+;; (when (require 'sboo-ui nil :no-error)
+
+;;   ())
+
 ;;----------------------------------------------;;
 
 ;; (use-package edit-server
@@ -2156,13 +2294,6 @@ $0")
 ;;   ())
 
 ;;----------------------------------------------;;
-
-(use-package exec-path-from-shell
-  :if (memq window-system '(mac ns))
-  :config
-  (exec-path-from-shell-initialize))
-
-;;----------------------------------------------;;
 ;; Finalization --------------------------------;;
 ;;----------------------------------------------;;
 
@@ -2170,9 +2301,14 @@ $0")
   (sboo-fonts-config!))
 
 ;;----------------------------------------------;;
-;;; Notes: -------------------------------------;;
-;;----------------------------------------------;;
 
+(add-hook 'after-init-hook
+          (lambda ()
+            (with-current-buffer sboo-init-file
+              (sboo-set-font-to-iosevka))))
+
+;;----------------------------------------------;;
+;;; Notes: -------------------------------------;;
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
@@ -2274,7 +2410,15 @@ $0")
 ;;   )
 
 ;;----------------------------------------------;;
+
+;; 
+;;
 ;;
 
 ;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
 (provide 'sboo-init)
+
+;;; sboo-init.el ends here

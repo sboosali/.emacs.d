@@ -322,6 +322,8 @@ See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c
                                ".bkp"
                                ;; don't re-open emacs builtin files (jumped to from `describe-*').
                                ".el.gz"
+                               ;; don't save files which may contain sensitive information,
+                               "-private.el"
                                ;;
                                "TAGS")
                            line-end)

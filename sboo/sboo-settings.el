@@ -127,6 +127,13 @@
 ;;   (i.e. the single character "y", instead of typing out the phrase "yes".)
 
 ;;----------------------------------------------;;
+;; Settings: Personal Information --------------;;
+;;----------------------------------------------;;
+
+(sboo-custom-set user-full-name    "Spiros Boosalis"       "")
+(sboo-custom-set user-mail-address "SamBoosalis@gmail.com" "")
+
+;;----------------------------------------------;;
 ;; Settings: Faces -----------------------------;;
 ;;----------------------------------------------;;
 
@@ -244,6 +251,9 @@
 (sboo-custom-set visible-bell t
   "flash a Black Square onto the screen on User Errors (instead of honking loudly through the speakers).")
 
+(sboo-custom-set ring-bell-function 'ignore 
+  "disable Blinking and Flashing.")
+
 ;;----------------------------------------------;;
 
 (sboo-custom-set inhibit-splash-screen     t "fewer Startup Buffers.")
@@ -323,6 +333,12 @@
 
 
 ;;----------------------------------------------;;
+;; Text
+
+(sboo-custom-set sentence-end-double-space nil
+  "sentences end with a Single Period.")
+
+;;----------------------------------------------;;
 ;; Help
 
 (sboo-custom-set help-at-pt-display-when-idle t
@@ -391,6 +407,18 @@
 ;;                ))
 
 ;; (custom-set-variables ... t nil ".")
+
+
+;;----------------------------------------------;;
+;; Scrolling: Scroll Smoothly.
+
+(progn
+
+  (setq scroll-margin 0)
+  (setq scroll-conservatively 10000)
+  (setq scroll-preserve-screen-position t)
+
+  ())
 
 ;;----------------------------------------------;;
 ;; Compilation:
@@ -480,6 +508,14 @@
   "“To get rid of those lingering buffers.”")
 
 ;;TODO;; (add-hook 'eshell-mode-hook 'sboo-eshell-load-bashrc-aliases)
+
+;;----------------------------------------------;;
+;; `shell-script-mode':
+
+;; Auto-executable scripts in « *nix ».
+;; When saving a file that starts with « #! », make it executable.
+
+(add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
 
 ;;----------------------------------------------;;
 ;; Settings: non-Customizeable -----------------;;

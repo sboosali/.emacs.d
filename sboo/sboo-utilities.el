@@ -190,7 +190,6 @@ Links:
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
 ;;  
 
 ;; see http://ivanmalison.github.io/dotfiles/
@@ -296,7 +295,7 @@ Links:
       shell-command-switch "-ic")))
 
 ;;----------------------------------------------;;
-;; Hooks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Hooks ---------------------------------------;;
 ;;----------------------------------------------;;
 
 (defvar sboo-hook-regex "-\\(hook\\|functions\\)$"
@@ -797,7 +796,7 @@ FEATURE — a symbol.
           By default, a personal feature (i.e. named `sboo-*')."
 
   (interactive (list
-                (sboo-read-feature)))
+                (sboo-read-feature :require-match nil)))
 
   (require feature nil :no-error))
 

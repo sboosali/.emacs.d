@@ -2200,6 +2200,116 @@ URL `http://shallowsky.com/blog/linux/editors/emacs-escape-html.html'."
 ;; M-: (sboo-insert-font-lock-string-face "example \"string\"")
 
 ;;----------------------------------------------;;
+;; `ssh' ---------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-ssh-to-host (host)
+
+  "Run program `ssh' into HOST.
+
+Inputs:
+
+• HOST — a `stringp'.
+  the Hostname.
+
+Example:
+
+• M-: (sboo-ssh-to-host \"\")
+    ⇒ 
+
+Links:
+
+• URL `https://michael.englehorn.com/config.html'"
+
+  (interactive "sHost: ")
+
+  (let* ((buffer-name (format "*SSH %s*" host))
+         (buffer (get-buffer buffer-name))
+         )
+
+    (if buffer
+        (switch-to-buffer buffer)
+
+      (progn
+        (multi-term)
+        (term-send-string
+         (get-buffer-process (rename-buffer buffer-name))
+         (format "ssh %s\r" host))))))
+
+;;----------------------------------------------;;
+;; Processes -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-shell-command-buffer (command)
+
+  "Capture `shell-command' output in `help-mode' buffer.
+
+Input:
+
+• COMMAND — a `stringp'.
+  a Command Invocation 
+  (i.e. both the program name and the program arguments as a single line).
+
+Examples:
+
+• M-x sboo-shell-command-buffer 
+  RET \"echo 'example'\"
+  RET
+
+Links:
+
+• URL `https://jakemccrary.com/blog/2013/08/10/emacs-capture-shell-command-output-in-temporary-buffer/'"
+
+  (interactive (list
+                (sboo-read-program :prompt "$ "
+                                   :must-match nil)
+                ))
+
+  (let* ((PROGRAM     ( command))
+         (BUFFER-NAME (format "*Help: %s*" PROGRAM))
+         )
+
+  (with-output-to-temp-buffer BUFFER-NAME
+    (shell-command command
+                   BUFFER-NAME
+                   "*Messages*")
+    (pop-to-buffer BUFFER-NAME))
+
+  BUFFER-NAME))
+
+;; ^ `help-mode':
+;;
+;; close the buffer by just pressing « q ».
+
+;; ^ `shell-command':
+;;
+;; (shell-command COMMAND &optional OUTPUT-BUFFER ERROR-BUFFER)
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-read-program (&key prompt must-match)
+
+  "`completing-read' a program name (on your « $PATH »).
+
+Links:
+
+• URL `'
+
+Uses:
+
+• `shell-command-history'"
+
+  (interactive)
+
+  (let* ((PROMPT     (or prompt "$ "))
+         (MUST-MATCH (or must-match t))
+         (HISTORY    'shell-command-history)
+         (PROGRAMS   ())
+        )
+
+    (completing-read PROMPT PROGRAMS nil MUST-MATCH nil HISTORY)))
+
+;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
