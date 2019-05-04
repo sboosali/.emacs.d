@@ -1,4 +1,12 @@
-# TODO
+# TODO `elisp`
+
+## *Expresso* Expression Language
+
+<https://github.com/willtim/Expresso#README>
+
+## *MagicSetEditor* Scripting Language
+
+<http://magicseteditor.sourceforge.net/doc/script>
 
 ## 
 
@@ -39,9 +47,13 @@ https://github.com/kunalb/poet/blob/master/poet-theme.el#L245
 
 ```
 
-## 
+## TODO: MINOR MODE (?) WHICH EXTENDS THE SYNTAX TABLE WITH ALL UNICODE BRACKET CHARACTERS (E.G. « AND »)
 
 ```
+
+;; make the «French double quote» to be brackets
+(modify-syntax-entry ?« "(»" my-syn-table)
+(modify-syntax-entry ?» ")«" my-syn-table)
 
 ```
 

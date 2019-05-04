@@ -2870,6 +2870,39 @@ Uses:
 ;;----------------------------------------------;;
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil) (sboo-yas-file-base-name (file-name-base (buffer-file-name))))
 ;;----------------------------------------------;;
+(defun sboo-shell-command-buffer (command)
+
+  "Capture `shell-command' output in `help-mode' buffer.
+
+Input:
+
+• COMMAND — a `stringp'.
+  a Command Invocation 
+  (i.e. both the program name and the program arguments as a single line).
+
+Examples:
+
+• M-x sboo-shell-command-buffer 
+  RET \"echo 'example'\"
+  RET
+
+Links:
+
+• URL `https://jakemccrary.com/blog/2013/08/10/emacs-capture-shell-command-output-in-temporary-buffer/'"
+
+  (interactive "s$ ")
+
+  (let* ((PROGRAM     ( command))
+         (BUFFER-NAME (format "*Help: %s*" PROGRAM))
+         )
+
+  (with-output-to-temp-buffer BUFFER-NAME
+    (shell-command command
+                   BUFFER-NAME
+                   "*Messages*")
+    (pop-to-buffer BUFFER-NAME))
+
+  BUFFER-NAME))
 
 ;;----------------------------------------------;;
 

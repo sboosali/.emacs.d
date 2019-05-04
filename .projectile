@@ -1,3 +1,6 @@
+-/private
+-/etc/sboo/obsolete
+
 -/.cask
 
 -/db
@@ -7,5 +10,3 @@
 -/sergv
 -/vendor/dante
 -/vendor/use-package
-
--/etc/sboo/obsolete
