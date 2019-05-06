@@ -1120,11 +1120,86 @@ Related:
 ;; External Packages: Core Configuration -------;;
 ;;----------------------------------------------;;
 
-(sboo-load-file! "sboo-init-helm.el")
+;;(sboo-load-file! "sboo-init-helm.el")
 ;;(sboo-load-file! "sboo-init-use-package.el")
+
+;;----------------------------------------------;;
 
 (when (< emacs-major-version 26)
   (sboo-load-file! "sboo-init-real-auto-save.el"))
+
+;;----------------------------------------------;;
+;; External Packages: Completion ---------------;;
+;;----------------------------------------------;;
+
+(use-package helm
+
+  :diminish helm-mode
+
+  :custom
+
+  (helm-allow-mouse t "Enable mouse (doesn't enable selection-by-clicking, only marking-by-clicking).")
+
+     ;; ^ `helm-allow-mouse'. the mouse is gratuitously disabled by default.
+     ;;   this enables, for example, clicking on a helm candidate to activate it,
+     ;;   rather than navigating it with several arrow and/or character keypresses.
+
+  ;; ^ `helm-boring-buffer-regexp-list'. by default, it's:
+  ;; 
+  ;;     '("\\` " "\\`\\*helm" "\\`\\*Echo Area" "\\`\\*Minibuf")
+  ;;
+
+  (helm-mode-fuzzy-match                 t " ")
+  (helm-completion-in-region-fuzzy-match t " ")
+
+  (helm-register-max-offset              10000 "Increase (Helm's) Maximum Clipboard Size.")
+
+  (helm-split-window-in-side-p           t   " open helm buffer inside current window, not occupy whole other window")
+  (helm-move-to-line-cycle-in-source     nil "Don't cycle (i.e. move to the end or to the beginning of the prior or of the next source) when reaching top or bottom of a source.")
+  (helm-scroll-amount                    8   "Scroll 8 lines (« M-<next> » / « M-<prior> » )")
+
+  (helm-autoresize-min-height 20 "Minimum Height (in lines?) for Helm Windows.")
+  (helm-autoresize-max-height 60 "Maximum Height (in lines?) for Helm Windows.")
+
+  (helm-ff-file-name-history-use-recentf t " ")
+  (helm-echo-input-in-header-line        t " ")
+  (helm-full-frame                       t " ")
+
+  ;;   :bind (:map helm-map
+  ;;               ("<tab>" . helm-execute-persistent-action)
+  ;;               ("C-i"   . helm-execute-persistent-action)
+  ;;               ("C-z"   . helm-select-action)
+  ;;               ("A-v"   . helm-previous-page))
+
+  :config
+
+  (setq helm-command-prefix-key "M-q")
+
+  ;; ^  NOTE `helm-command-prefix-key':
+  ;;    becomes immutable once `helm-config' is `load'ed.
+
+  (when (require 'helm-config nil :no-error)
+
+    ;; Remap keybindings:
+
+    (define-key global-map [remap execute-extended-command] #'helm-M-x)
+    (define-key global-map [remap list-buffers]             #'helm-buffers-list)
+    (define-key global-map [remap find-file]                #'helm-find-files)
+    (define-key global-map [remap occur]                    #'helm-occur)
+
+    ;; website `google' via program `curl':
+
+    (when (executable-find "curl")
+      (setq helm-google-suggest-use-curl-p t))
+
+    ;; Helm and Ido mode are mutually-exclusive:
+    (helm-autoresize-mode +1)
+    (ido-mode  -1))
+
+  ())
+
+;; ^ `helm-mode' vs`helm-autoresize-mode':
+;;   
 
 ;;----------------------------------------------;;
 ;; External Packages: Miscellaneous ------------;;
@@ -1470,27 +1545,13 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   (use-package company
 
-    :init
+    :custom
 
-    ;; Default (/ Global) `company-backends':
-
-    (setq sboo-company-backends
-          
-          '(
-            (company-files          ; files & directory
-             company-keywords       ; keywords
-             company-capf
-             company-yasnippet)
-            
-            (company-abbrev
-             company-dabbrev))
-          )
+    (company-backends sboo-company-backends "my Company Backends.")
 
     :config
 
     (progn
-
-      (setq company-backends sboo-company-backends)
 
       (bind-key [remap completion-at-point] #'company-complete company-mode-map)
       ;; ^ Use Company for completion
@@ -1515,7 +1576,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
       ;; Default is 3.
       ;;
 
-      (global-company-mode)
+      (global-company-mode +1)
 
       ())
 
