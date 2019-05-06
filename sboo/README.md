@@ -39,5 +39,11 @@ NOTE `use-package` is used (by `init.el`) like so:
 * always configures external (/installed) packages (for convenience and legibility)
 * /never/ configures internal (/builtin) packages (for robustness).
 
+## Dependencies
+
+### Vendored Dependencies
+
+- `./highlight-*`
+- ``./rainbow-*`
 
 ## 

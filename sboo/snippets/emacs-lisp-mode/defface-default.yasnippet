@@ -9,14 +9,12 @@
 # --
 ;;----------------------------------------------;;
 
-(defface sboo-${1:name}
+(defface xxx-feature-xxx-$1-face
 
-  ${2:nil}
+  '((t :inherit font-lock-$1-face))
 
-  "$0."
+  "Face for $1s."
 
-  :type '($3)
+  :group 'xxx-feature-xxx-faces)
 
-  :safe #'listp
-  :group 'sboo)
-
+$0
