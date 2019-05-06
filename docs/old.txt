@@ -3498,6 +3498,104 @@ mv c1eecef199dd64490ad586bfe71364ddcba19a3a/68747470733a2f2f7261772e676974687562
 
 
 
+(progn
+  (define-prefix-command 'sboo-paths-keymap)
+
+  ;; ^ aliases and /or keyboard shortcuts for frequently-visited files and/or directories .
+
+;;(define-key sboo-paths-keymap (kbd "a") "")
+;;(define-key sboo-paths-keymap (kbd "b") "")
+;;(define-key sboo-paths-keymap (kbd "c") "")
+;;(define-key sboo-paths-keymap (kbd "d") "")
+  (define-key sboo-paths-keymap (kbd "e") "~/.emacs.d" )
+;;(define-key sboo-paths-keymap (kbd "f") "")
+;;(define-key sboo-paths-keymap (kbd "g") "")
+;;(define-key sboo-paths-keymap (kbd "h") "")
+;;(define-key sboo-paths-keymap (kbd "i") "")
+;;(define-key sboo-paths-keymap (kbd "j") "")
+;;(define-key sboo-paths-keymap (kbd "k") "")
+;;(define-key sboo-paths-keymap (kbd "l") "")
+;;(define-key sboo-paths-keymap (kbd "m") "")
+;;(define-key sboo-paths-keymap (kbd "n") "")
+;;(define-key sboo-paths-keymap (kbd "o") "")
+;;(define-key sboo-paths-keymap (kbd "p") "")
+;;(define-key sboo-paths-keymap (kbd "q") "")
+;;(define-key sboo-paths-keymap (kbd "r") "")
+;;(define-key sboo-paths-keymap (kbd "s") "")
+;;(define-key sboo-paths-keymap (kbd "t") "")
+;;(define-key sboo-paths-keymap (kbd "u") "")
+;;(define-key sboo-paths-keymap (kbd "v") "")
+;;(define-key sboo-paths-keymap (kbd "w") "")
+;;(define-key sboo-paths-keymap (kbd "x") "")
+;;(define-key sboo-paths-keymap (kbd "y") "")
+;;(define-key sboo-paths-keymap (kbd "z") "")
+
+  #'sboo-paths-keymap)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;----------------------------------------------;;
+;; `upcase-word'
+;; `upcase-region'
+
+;; (sboo-defmarco-region-dwim upcase-dwim upcase-region upcase-word)
+
+;;----------------------------------------------;;
+
+;; `downcase-word'
+;; `downcase-region'
+
+;;----------------------------------------------;;
+
+;; `capitalize-word'
+;; `capitalize-region'
+
+;;----------------------------------------------;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ##################################################

@@ -356,7 +356,9 @@ Returns:
 
    (t nil)))
 
-;sboo-yas-insert-snippet
+                                        ;sboo-yas-insert-snippet
+
+
 ;;==============================================;;
 ;; DWIM Editing
 
@@ -364,6 +366,8 @@ Returns:
 ;;
 ;; • edits the region, if `use-region-p'.
 ;; • edits a default Text Object (mostly `word'), otherwise.
+
+;;TODO (sboo-defmarco-region-dwim edit-dwim edit-region edit-object)
 
 ;; Define a `*-dwim' wrapper for each of these Editing Command pairs:
 ;;
@@ -414,53 +418,19 @@ Inputs:
   (if (use-region-p)
       (copy-region-as-kill (region-beginning) (region-end))
 
-    (kill-line argument)))
-
-
-  (beg end)))
-
-(defun kill-region-dwim ()
-  "When called interactively with no active region, kill current line."
-  (interactive)
-  (let ((beg (if (makd-mark-active) (region-beginning) (point-at-bol)))
-        (end (if (makd-mark-active) (region-end) (point-at-bol 2))))
-    (kill-region beg end)))
-
-
-;; (sboo-defmarco-region-dwim edit-dwim edit-region edit-object)
-
-;;----------------------------------------------;;
-;; `upcase-word'
-;; `upcase-region'
-
-;; (sboo-defmarco-region-dwim upcase-dwim upcase-region upcase-word)
-
-;;----------------------------------------------;;
-
-;; `downcase-word'
-;; `downcase-region'
-
-;;----------------------------------------------;;
-
-;; `capitalize-word'
-;; `capitalize-region'
-
-;;----------------------------------------------;;
-
+    (copy-line argument)))
 
 ;;==============================================;;
 ;;; Key Translations ===========================;;
 ;;==============================================;;
 
-(unless t
-
-  ;; ^ whether these keyboard translations have already been configured globally
-  ;;   (e.g. via « xmodmap »)
-
-  (sboo-swap-parentheses-and-square-brackets)
-  (sboo-swap-semicolon-and-colon)
-  (sboo-swap-double-quote-with-single-quote)
-  ())
+;; (unless t
+;;   ;; ^ whether these keyboard translations have already been configured globally
+;;   ;;   (e.g. via « xmodmap »)
+;;   (sboo-swap-parentheses-and-square-brackets)
+;;   (sboo-swap-semicolon-and-colon)
+;;   (sboo-swap-double-quote-with-single-quote)
+;;   ())
 
 ;;==============================================;;
 ;;; Unset ======================================;;
@@ -716,6 +686,42 @@ Inputs:
 ;;(define-key sboo-text-keymap (kbd "z") #')
 
   #'sboo-text-keymap)
+
+;;----------------------------------------------;;
+
+(progn
+  (define-prefix-command 'sboo-paths-keymap)
+
+  ;; ^ aliases and /or keyboard shortcuts for frequently-visited files and/or directories .
+
+;;(define-key sboo-paths-keymap (kbd "a") "")
+;;(define-key sboo-paths-keymap (kbd "b") "")
+;;(define-key sboo-paths-keymap (kbd "c") "")
+;;(define-key sboo-paths-keymap (kbd "d") "")
+  (define-key sboo-paths-keymap (kbd "e") "~/.emacs.d" )
+;;(define-key sboo-paths-keymap (kbd "f") "")
+;;(define-key sboo-paths-keymap (kbd "g") "")
+;;(define-key sboo-paths-keymap (kbd "h") "")
+;;(define-key sboo-paths-keymap (kbd "i") "")
+;;(define-key sboo-paths-keymap (kbd "j") "")
+;;(define-key sboo-paths-keymap (kbd "k") "")
+;;(define-key sboo-paths-keymap (kbd "l") "")
+;;(define-key sboo-paths-keymap (kbd "m") "")
+;;(define-key sboo-paths-keymap (kbd "n") "")
+;;(define-key sboo-paths-keymap (kbd "o") "")
+;;(define-key sboo-paths-keymap (kbd "p") "")
+;;(define-key sboo-paths-keymap (kbd "q") "")
+;;(define-key sboo-paths-keymap (kbd "r") "")
+;;(define-key sboo-paths-keymap (kbd "s") "")
+;;(define-key sboo-paths-keymap (kbd "t") "")
+;;(define-key sboo-paths-keymap (kbd "u") "")
+;;(define-key sboo-paths-keymap (kbd "v") "")
+;;(define-key sboo-paths-keymap (kbd "w") "")
+;;(define-key sboo-paths-keymap (kbd "x") "")
+;;(define-key sboo-paths-keymap (kbd "y") "")
+;;(define-key sboo-paths-keymap (kbd "z") "")
+
+  #'sboo-paths-keymap)
 
 ;;----------------------------------------------;;
 
