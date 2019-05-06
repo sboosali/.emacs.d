@@ -211,6 +211,11 @@
 
 ;; (setq interprogram-cut-function #'gui-select-text)
 
+(when (display-graphic-p)
+  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+
+;; ^ URL `http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html'
+
 ;;----------------------------------------------;;
 ;; Settings: Backups ---------------------------;;
 ;;----------------------------------------------;;

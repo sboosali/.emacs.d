@@ -3464,6 +3464,42 @@ Safe (doesn't throw an error when the package can't be `load'ed).
 
 
 
+
+https://github.com/jaypei/emacs-neotree
+
+
+
+
+wget https://raw.githubusercontent.com/tsdh/highlight-parentheses.el/master/highlight-parentheses.e
+
+
+wget https://raw.githubusercontent.com/Wilfred/helpful/master/helpful.el
+
+
+
+
+
+
+
+
+
+wget https://raw.githubusercontent.com/ankurdave/color-identifiers-mode/master/color-identifiers-mode.el
+
+wget https://camo.githubusercontent.com/c1eecef199dd64490ad586bfe71364ddcba19a3a/68747470733a2f2f7261772e6769746875622e636f6d2f616e6b7572646176652f636f6c6f722d6964656e746966696572732d6d6f64652f67682d70616765732f64656d6f2d7374617469632e706e67
+
+md img
+mv c1eecef199dd64490ad586bfe71364ddcba19a3a/68747470733a2f2f7261772e6769746875622e636f6d2f616e6b7572646176652f636f6c6f722d6964656e746966696572732d6d6f64652f67682d70616765732f64656d6f2d7374617469632e706e67 img/color-identifiers-mode.jpg
+
+
+
+
+
+
+
+
+
+
+
 ##################################################
 
 
