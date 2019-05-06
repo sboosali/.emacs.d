@@ -292,7 +292,7 @@ Wraps `forward-thing'."
 
 ;;==============================================;;
 
-(defvar-local sboo-insert-command
+(defvar-local sboo-insert-function
 
   nil
 
@@ -312,12 +312,12 @@ For example:
 
 Bound to... \\[sbo-insert]
 
-Calls `sboo-insert-command'."
+Calls `sboo-insert-function'."
 
   (interactive)
 
-  (if (bound-and-true-p sboo-insert-command)
-      (let* ((VALUE (symbol-value 'sboo-insert-command))
+  (if (bound-and-true-p sboo-insert-function)
+      (let* ((VALUE (symbol-value 'sboo-insert-function))
              )
         (cl-typecase VALUE
 
@@ -330,13 +330,13 @@ Calls `sboo-insert-command'."
           (string (insert VALUE))
 
           (t ())))
-    (message "`sboo-insert-command' not locally-defined.")))
+    (message "`sboo-insert-function' not locally-defined.")))
 
 ;;----------------------------------------------;;
 
-(defun sboo-insert-command-default ()
+(defun sboo-insert-function-default ()
 
-  "A default `sboo-insert-command'.
+  "A default `sboo-insert-function'.
 
 Returns:
 
@@ -380,14 +380,54 @@ Returns:
 ;;TODO;; LOL these already exist!
 
 ;;----------------------------------------------;;
+;; `kill-region' or `kill-line'.
 
-(defun upcase-dwim (arg)
+(defun sboo-cut-dwim (&optional argument)
+
+  "Do-What-I-Mean: `kill-region' or `kill-line'.
+
+Inputs:
+
+• ARGUMENT — an `integerp'.
+  Prefix-Argument. Passthru to `kill-line'."
+
   (interactive "*p")
-  (if (use-region-p)
-      (upcase-region (region-beginning) (region-end))
-    (upcase-word arg)))
 
-;; sboo-defmarco-region-dwim edit-dwim edit-region edit-object)
+  (if (use-region-p)
+      (kill-region (region-beginning) (region-end))
+
+    (kill-line argument)))
+
+;;----------------------------------------------;;
+
+(defun sboo-copy-dwim (&optional argument)
+
+  "Do-What-I-Mean: `copy-region' or `copy-buffer'.
+
+Inputs:
+
+• ARGUMENT — an `integerp'.
+  Prefix-Argument. Passthru to `'."
+
+  (interactive "*p")
+
+  (if (use-region-p)
+      (copy-region-as-kill (region-beginning) (region-end))
+
+    (kill-line argument)))
+
+
+  (beg end)))
+
+(defun kill-region-dwim ()
+  "When called interactively with no active region, kill current line."
+  (interactive)
+  (let ((beg (if (makd-mark-active) (region-beginning) (point-at-bol)))
+        (end (if (makd-mark-active) (region-end) (point-at-bol 2))))
+    (kill-region beg end)))
+
+
+;; (sboo-defmarco-region-dwim edit-dwim edit-region edit-object)
 
 ;;----------------------------------------------;;
 ;; `upcase-word'
@@ -680,6 +720,40 @@ Returns:
 ;;----------------------------------------------;;
 
 (progn
+  (define-prefix-command 'sboo-mode-keymap)
+
+;;(define-key sboo-mode-keymap (kbd "a") #')
+;;(define-key sboo-mode-keymap (kbd "b") #')
+;;(define-key sboo-mode-keymap (kbd "c") #')
+;;(define-key sboo-mode-keymap (kbd "d") #')
+;;(define-key sboo-mode-keymap (kbd "e") #')
+;;(define-key sboo-mode-keymap (kbd "f") #')
+;;(define-key sboo-mode-keymap (kbd "g") #')
+;;(define-key sboo-mode-keymap (kbd "h") #')
+;;(define-key sboo-mode-keymap (kbd "i") #')
+;;(define-key sboo-mode-keymap (kbd "j") #')
+;;(define-key sboo-mode-keymap (kbd "k") #')
+;;(define-key sboo-mode-keymap (kbd "l") #')
+;;(define-key sboo-mode-keymap (kbd "m") #')
+  (define-key sboo-mode-keymap (kbd "n") #'sboo-prog-new)
+;;(define-key sboo-mode-keymap (kbd "o") #')
+;;(define-key sboo-mode-keymap (kbd "p") #')
+;;(define-key sboo-mode-keymap (kbd "q") #')
+;;(define-key sboo-mode-keymap (kbd "r") #')
+;;(define-key sboo-mode-keymap (kbd "s") #')
+;;(define-key sboo-mode-keymap (kbd "t") #')
+;;(define-key sboo-mode-keymap (kbd "u") #')
+;;(define-key sboo-mode-keymap (kbd "v") #')
+;;(define-key sboo-mode-keymap (kbd "w") #')
+;;(define-key sboo-mode-keymap (kbd "x") #')
+;;(define-key sboo-mode-keymap (kbd "y") #')
+;;(define-key sboo-mode-keymap (kbd "z") #')
+
+  #'sboo-mode-keymap)
+
+;;----------------------------------------------;;
+
+(progn
   (define-prefix-command 'sboo-mark-keymap)
 
   (define-key sboo-mark-keymap (kbd "a") #'mark-beginning-of-buffer)
@@ -725,9 +799,9 @@ Returns:
   (global-set-key (kbd "s-h") #'helm-apropos)               ; [H]elp
   (global-set-key (kbd "s-i") #'sboo-insert)                ; [I]nsert
 ;;(global-set-key (kbd "s-j") #')
-  (global-set-key (kbd "s-k") #'describe-key)               ; "Key"
+  (global-set-key (kbd "s-k") #'sboo-mark-keymap)           ; « mar[K]-* » commands.
   (global-set-key (kbd "s-l") #'align-regexp)               ; a"L"ign
-  (global-set-key (kbd "s-m") #'sboo-mark-keymap)           ; « "m"ark-* »
+  (global-set-key (kbd "s-m") #'sboo-mode-keymap)           ;[M]ode-specific commands.
 ;;(global-set-key (kbd "s-n") #')
   (global-set-key (kbd "s-o") #'find-file-at-point)         ;MNEMONIC: "Open file". ;OLD: other-window.
   (global-set-key (kbd "s-p") #'helm-show-kill-ring)        ; [P]aste from History.
@@ -749,6 +823,7 @@ Returns:
 ;;(global-set-key (kbd "s-d") #'dired)
 ;;(global-set-key (kbd "s-h") #'helm-command-prefix)        ; "Helm"
 ;;(global-set-key (kbd "s-i") #'imenu)
+;;(global-set-key (kbd "s-k") #'describe-key)               ; "Key"
 ;;(global-set-key (kbd "s-t") #'sboo-launch-term)           ; "Terminal"
 ;;(global-set-key (kbd "s-p") #'proced)
 

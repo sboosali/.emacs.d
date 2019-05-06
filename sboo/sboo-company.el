@@ -1,39 +1,73 @@
-;;; -*- lexical-binding: t -*-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; sboo-company.el --- -*- lexical-binding: t -*-
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; `company' Settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Copyright © 2019 Spiros Boosalis
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; `company-backends' ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Version: 0.0.0
+;; Package-Requires: ((emacs "25") seq pcase)
+;; Author:  Spiros Boosalis <samboosalis@gmail.com>
+;; Homepage: https://github.com/sboosali/.emacs.d
+;; Keywords: local
+;; Created: 05 May 2019
+;; License: GPL-3.0-or-later
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Mode-specific `company-backends': Haskell
+;; This file is not part of GNU Emacs.
+;;
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+;;; Commentary:
 
+;; Personal configuration for `company'.
+;; 
+;; 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Mode-specific `company-backends': ELisp
+;;; Code:
 
+;;----------------------------------------------;;
+;; Imports -------------------------------------;;
+;;----------------------------------------------;;
 
+;; Builtins:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Mode-specific `company-backends': bash
+(eval-when-compile 
+  (require 'cl-lib))
 
+(progn
+  (require 'pcase)
+  (require 'seq))
 
+;;----------------------------------------------;;
+;; Company Backends ----------------------------;;
+;;----------------------------------------------;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Mode-specific `company-backends': Python
+;; Mode-specific `company-backends': Haskell
+
+;;----------------------------------------------;;
+;; Mode-specific `company-backends': ELisp
+
+;;----------------------------------------------;;
+;; Mode-specific `company-backends': bash
+
+;;----------------------------------------------;;
+;; Mode-specific `company-backends': Python
 
 (defun sboo-company-python ()
   
   (add-to-list (make-local-variable 'company-backends)
                #'company-anaconda))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Mode-specific `company-backends': JavaScript
+;;----------------------------------------------;;
+;; Mode-specific `company-backends': JavaScript
 
 (defun sboo-company-javascript ()
 
@@ -42,82 +76,129 @@
   (add-to-list (make-local-variable 'company-backends)
                #'company-tern))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; `company-complete-number' Utilities ;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Variables -----------------------------------;;
+;;----------------------------------------------;;
 
-;; `company-complete-number' :
+(defgroup sboo-company nil
+
+  "Personal `company' customization."
+
+  :prefix 'sboo
+  :group 'sboo)
+
+;;==============================================;;
+
+(defcustom sboo-company-backends
+
+  '(
+
+    (
+     company-files     ; Files (& Directories).
+     company-keywords  ; Keywords.
+     company-capf      ; Completion-At-Point Functions.
+     company-yasnippet ;
+     )
+
+    (
+     company-abbrev    ; Abbreviations
+     company-dabbrev   ; Dynamic Abbreviations
+     )
+
+    )
+
+  "Company Backends, ordered by priority.
+
+each Company Backend in a group has a higher priority than
+any Company Backend in a later group (and a lower priority than
+any Company Backend in an earlier group).
+
+`listp' of `listp's of `symbolp's."
+
+  :type '(repeated (repeated (symbol :tag "Company Backend")))
+
+  :safe #'listp
+  :group 'sboo-company)
+
+;; ^ Default (/ Global) `company-backends':
+
+;;----------------------------------------------;;
+;; Commands ------------------------------------;;
+;;----------------------------------------------;;
+
+;; `company-complete-number' utilities:
 ;;
 ;; (company-complete-number N)
 ;; Insert the Nth candidate visible in the tooltip.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-company-complete-1 () "Specialized `company-complete-number'."
        (interactive)
        (company-complete-number 1))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-company-complete-2 () "Specialized `company-complete-number'."
        (interactive)
        (company-complete-number 2))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-company-complete-3 () "Specialized `company-complete-number'."
        (interactive)
        (company-complete-number 3))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-company-complete-4 () "Specialized `company-complete-number'."
        (interactive)
        (company-complete-number 4))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-company-complete-5 () "Specialized `company-complete-number'."
        (interactive)
        (company-complete-number 5))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-company-complete-6 () "Specialized `company-complete-number'."
        (interactive)
        (company-complete-number 6))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-company-complete-7 () "Specialized `company-complete-number'."
        (interactive)
        (company-complete-number 7))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-company-complete-8 () "Specialized `company-complete-number'."
        (interactive)
        (company-complete-number 8))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-company-complete-9 () "Specialized `company-complete-number'."
        (interactive)
        (company-complete-number 9))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 (defun sboo-company-complete-10 () "Specialized `company-complete-number'."
        (interactive)
        (company-complete-number 10))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Definitions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
 
 (defun sboo-company-complete-common-or-previous-cycle ()
+
   "Backwards `company-complete-common-or-cycle'."
+
   (interactive)
+
   (company-complete-common-or-cycle -1))
 
 ;; ^ `company-complete-common-or-cycle' :
@@ -125,13 +206,9 @@
 ;; > "Insert the common part of all candidates, or select the next one."
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;; `'
-
-;;; `'
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
 
 ;;; `company-backends'
 ;;
@@ -186,5 +263,5 @@
 ;; - 
 ;; - 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 (provide 'sboo-company)

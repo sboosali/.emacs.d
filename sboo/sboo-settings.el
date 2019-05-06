@@ -183,15 +183,7 @@
   "visually raise a Tool Bar Item when the Mouse hovers over it.")
 
 ;;----------------------------------------------;;
-;; Settings: Individual ------------------------;;
-;;----------------------------------------------;;
-
-;; (sboo-custom-set t
-;;   ".")
-
-;; (sboo-custom-set t
-;;   ".")
-
+;; Settings: Undo ------------------------------;;
 ;;----------------------------------------------;;
 
 (sboo-custom-set undo-limit 20000000
@@ -201,6 +193,11 @@
   "maximize Undo History.")
 
 ;;----------------------------------------------;;
+;; Settings: Clipboard -------------------------;;
+;;----------------------------------------------;;
+
+(sboo-custom-set select-enable-clipboard t
+  "Non-nil means: cutting and pasting uses the clipboard.")
 
 (sboo-custom-set cua-keep-region-after-copy t
   "standard Windows behavior.")
@@ -208,6 +205,28 @@
 (sboo-custom-set kill-whole-line t
   "« C-k » eats newlines (a.k.a. it kills the whole line). By enabling `kill-whole-line', we can type just « C-k » where before we typed « C-k C-k ».")
 
+;; (setq select-enable-primary   t)
+
+;; (setq mouse-yank-at-point t)
+
+;; (setq interprogram-cut-function #'gui-select-text)
+
+;;----------------------------------------------;;
+;; Settings: Backups ---------------------------;;
+;;----------------------------------------------;;
+
+;; (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+
+;; (setq delete-old-versions -1)
+;; (setq version-control t)
+;; (setq vc-make-backup-files t)
+;; (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
+
+;; “By default, Emacs saves backup files in the current directory. These are the files ending in ~ that are cluttering up your directory lists. The following code stashes them all in ~/.emacs.d/backups, where I can find them with C-x C-f (find-file) if I really need to.”
+;; “Disk space is cheap. Save lots.”
+
+;;----------------------------------------------;;
+;; Settings: Whitespace ------------------------;;
 ;;----------------------------------------------;;
 
 (sboo-custom-set truncate-lines nil
@@ -228,6 +247,8 @@
 (sboo-custom-set show-paren-style mixed
   "highlight the Parenthesized Expression, unless the Matching Parenthesis is visible (not just the Parenthesis).")
 
+;;----------------------------------------------;;
+;; Settings: Scrolling -------------------------;;
 ;;----------------------------------------------;;
 
 (sboo-custom-set scroll-step                     1
@@ -260,6 +281,16 @@
 (sboo-custom-set initial-scratch-message nil "fewer Startup Buffers.")
 
 ;;----------------------------------------------;;
+;; Settings ------------------------------------;;
+;;----------------------------------------------;;
+
+;; (sboo-custom-set t
+;;   ".")
+
+;; (sboo-custom-set t
+;;   ".")
+
+;;----------------------------------------------;;
 
 (sboo-custom-set initial-major-mode text-mode
   "the default Major Mode for a new Buffer.")
@@ -279,14 +310,7 @@
 
 ;; (setq echo-keystrokes 0.1)
 
-;; (setq mouse-yank-at-point t)
-
 ;; (setq switch-to-buffer-preserve-window-point t)
-
-(sboo-custom-set select-enable-clipboard t
-  "Non-nil means: cutting and pasting uses the clipboard.")
-
-;; (setq select-enable-primary   t)
 
 ;;----------------------------------------------;;
 
@@ -592,10 +616,29 @@
 ;; 
 ;; 
 
-;;; Links
+;;; `simple':
+;;
+;;(defvar interprogram-cut-function #'gui-select-text
+;;  "Function to call to make a killed region available to other programs.
+;;Most window systems provide a facility for cutting and pasting
+;;text between different programs, such as the clipboard on X and
+;;MS-Windows, or the pasteboard on Nextstep/Mac OS.
+;;
+;;This variable holds a function that Emacs calls whenever text is
+;;put in the kill ring, to make the new kill available to other
+;;programs.  The function takes one argument, TEXT, which is a
+;;string containing the text which should be made available.")
+;;
+
+;;; Links:
 ;;
 ;; - http://ergoemacs.org/emacs/emacs_best_redo_mode.html
 ;;
 
-;;==============================================;;
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
 (provide 'sboo-settings)
+
+;;; sboo-settings.el ends here
