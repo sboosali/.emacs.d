@@ -1,9 +1,9 @@
-;;; sboo-flycheck.el --- -*- lexical-binding: t -*-
+;;; sboo-text.el --- -*- lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
 ;; Version: 0.0.0
-;; Package-Requires: ((emacs "25"))
+;; Package-Requires: ((emacs "25") seq pcase)
 ;; Author:  Spiros Boosalis <samboosalis@gmail.com>
 ;; Homepage: https://github.com/sboosali/.emacs.d
 ;; Keywords: local
@@ -27,7 +27,7 @@
 
 ;;; Commentary:
 
-;; Personal `flycheck' configuration.
+;; Configure `text-mode' (and derived modes).
 ;; 
 ;; 
 
@@ -37,61 +37,24 @@
 ;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
-(eval-when-compile
-  (require 'rx)
+;; Builtins:
+
+(eval-when-compile 
   (require 'cl-lib))
 
 ;;----------------------------------------------;;
-;; Variables -----------------------------------;;
+;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
-(defvar sboo-flycheck-display-buffer
+(defun sboo-text-config ()
 
-  `( ,(rx bos "*Flycheck errors*" eos)
-     (display-buffer-reuse-window display-buffer-in-side-window)
-     (side            . bottom)
-     (reusable-frames . visible)
-     (window-height   . 0.33)
-   )
+  "Configure `text-mode'."
 
-  "Display Rule for `flycheck' buffrers.
+  (remove-hook 'text-mode-hook #'turn-on-auto-fill)
 
-Display Rule which tells Emacs to always display the error list at the bottom side of the frame,
- occupying a third of the entire height of the frame.
+  (add-hook 'text-mode-hook #'turn-on-visual-line-mode)
 
-Links:
-
-• URL `http://www.flycheck.org/en/latest/user/error-list.html#tune-error-list-display'.")
-
-;;----------------------------------------------;;
-;; Commands ------------------------------------;;
-;;----------------------------------------------;;
-
-(defun sboo-flycheck ()
-
-  "Display the « Flycheck Errors » buffer.
-
-Calls:
-
-•  `flycheck-list-errors'.
-•  `delete-other-windows'.
-
-Notes:
-
-• « Flycheck Errors » has major mode `flycheck-error-list-mode'.
-
-• With `sboo-flycheck-display-buffer' in `display-buffer-alist', 
-  the `flycheck-error-list-mode' buffer is shown on the Bottom Window."
-
-  (interactive)
-
-  (delete-other-windows)
-  (flycheck-list-errors))
-
-;; ^ NOTE
-;; 
-;;   • `flycheck-list-errors' calls `display-buffer'.
-;; 
+  'text-mode-hook)
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
@@ -105,6 +68,6 @@ Notes:
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
 
-(provide 'sboo-flycheck)
+(provide 'sboo-text)
 
-;;; sboo-flycheck.el ends here
+;;; sboo-text.el ends here

@@ -27,7 +27,7 @@
 
 ;;; Commentary:
 
-;; .
+;; Configure `prog-mode' (and derived modes.
 ;; 
 ;; 
 
@@ -58,18 +58,22 @@
 ;;TODO (indent-according-to-mode)
 ;; indent-line-function
 
+;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
 
+(defun sboo-prog-config ()
+
+  "Configure `prog-mode'."
+
+  ;; (remove-hook 'prog-mode-hook #'turn-on-auto-fill)
+  ;; (add-hook 'prog-mode-hook #'turn-on-visual-line-mode)
+
+  'prog-mode-hook)
 
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
-
-
-
-
-
-
-
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

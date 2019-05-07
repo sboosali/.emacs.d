@@ -70,12 +70,16 @@ Uses:
 
   (pcase system-type
 
-    ('gnu/linux               (quote 'linux))
+    ((or 'gnu 'gnu/linux)     (quote 'linux))
     ((or 'windows-nt 'ms-dos) (quote 'windows))
     ('darwin                  (quote 'macos))
+    ('gnu/kfreebsd            (quote 'bsd))
+
     (_                        (quote nil))))
 
 ;; M-: (sboo-os-build-system)
+
+
 
 ;;----------------------------------------------;;
 
@@ -97,9 +101,11 @@ Uses:
 
   (pcase system-type
 
-    ('gnu/linux               'linux)
+    ((or 'gnu 'gnu/linux)     'linux)
     ((or 'windows-nt 'ms-dos) 'windows)
     ('darwin                  'macos)
+    ('gnu/kfreebsd            'bsd)
+
     (_                        nil)))
 
 ;; M-: (sboo-os-run-system)
