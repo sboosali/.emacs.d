@@ -1828,7 +1828,7 @@ $0
 ;;----------------------------------------------;;
 
 
-(defun sboo-init-use-package ()
+(defun sboo-use-package-init ()
 
   "Register and initialize `use-package'.
 
@@ -3545,6 +3545,274 @@ mv c1eecef199dd64490ad586bfe71364ddcba19a3a/68747470733a2f2f7261772e676974687562
 
 
 
+# -*- mode: snippet -*-
+#
+# key         : url
+# name        : [sboo] a « URL `...' » hyperlink.
+#
+# type        : snippet
+# condition   : t
+# expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : TODO « condition » upon being within a Comment or String.
+#
+# --
+URL \``yas-selected-text`'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;----------------------------------------------;;
+;; Completion
+
+(use-package dabbrev
+
+  :diminish (abbrev-mode " A")
+
+  :custom
+
+  (abbrev-file-name (sboo-xdg-config "dabbrev/abbrev_defs.el") "« XDG-BaseDirs » conformant.")
+
+  :config
+
+  (add-hook 'text-mode-hook #'abbrev-mode)
+
+  (when (file-exists-p abbrev-file-name)
+    (quietly-read-abbrev-file))
+
+  ())
+
+;; ^ "`dabbrev'" abbreviates "Dynamic ABBREViation".
+
+;; ^ Links:
+;;
+;;   • URL `https://www.gnu.org/software/emacs/manual/html_node/elisp/Abbrev-Files.html'
+;;   • URL `http://ergoemacs.org/emacs/emacs_abbrev_mode_tutorial.html'
+;;   • URL `https://www.emacswiki.org/emacs/AbbrevMode'
+;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+# -*- mode: snippet -*-
+#
+# key         : dockbd
+# name        : [sboo] Docstring: a command's live keybinding(s) (e.g. « \\[find-file] »)
+#
+# type        : snippet
+# condition   : t
+# expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : TODO « condition » upon being within a Comment or String.
+# --
+\\\\[`
+(let* ((CHOICES ())
+       )
+  (cl-some (lambda (fn) (funcall fn "Command: " CHOICES)) yas-prompt-functions))
+`$0]
+
+
+
+
+
+# -*- mode: snippet -*-
+#
+# key         : dockbd
+# name        : [sboo] Docstring: a command's live keybinding(s) (e.g. « \\[find-file] »)
+#
+# type        : snippet
+# condition   : t
+# expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : TODO « condition » upon being within a Comment or String.
+# --
+\\\\[`
+
+(let* ((CHOICES   obarray)
+       (PREDICATE #'commandp)
+       (INITIAL   nil)
+       (PROMPT    "Command: ")
+       )
+  (completing-read PROMPT CHOICES PREDICATE nil INITIAL))
+
+`$0]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(use-package rainbow-delimiters
+
+  :commands (rainbow-delimiters-mode)
+
+  :custom-face
+
+  (rainbow-delimiters-max-face-count 6 "fewer faces, higher-contrast.")
+
+  ;;TODO:
+
+  ;; (rainbow-delimiters-depth-1-face )
+  ;; (rainbow-delimiters-depth-2-face )
+  ;; (rainbow-delimiters-depth-3-face )
+  ;; (rainbow-delimiters-depth-4-face )
+  ;; (rainbow-delimiters-depth-5-face )
+  ;; (rainbow-delimiters-depth-6-face )
+
+  ;; (rainbow-delimiters-unmatched-face )
+  ;; (rainbow-delimiters-mismatched-face )
+
+  :config
+
+  (let* ((LISP-HOOKS
+          (if (require 'sboo-lisp nil :no-error)
+              sboo-lisp-hooks
+            '(emacs-lisp-mode-hook)))
+         )
+
+    (dolist (HOOK LISP-HOOKS)
+      (add-hook HOOK #'rainbow-delimiters-mode)))
+
+  ())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3599,6 +3867,35 @@ mv c1eecef199dd64490ad586bfe71364ddcba19a3a/68747470733a2f2f7261772e676974687562
 
 
 ##################################################
+
+
+;;----------------------------------------------;;
+
+(when (require 'sboo-yasnippets nil :no-error)
+
+  (use-package yasnippet-snippets
+
+    ;;------------------------;;
+
+    :config
+
+    ()))
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/AndreaCrotti/yasnippet-snippets'
+;;   • URL `http://andreacrotti.github.io/yasnippet-snippets/snippets.html'
+;;
+
+
+
+
+
+
+
+
+
+
 
 
 

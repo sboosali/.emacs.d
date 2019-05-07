@@ -217,7 +217,7 @@ In end of data:
 
 In toplevel form:
 
-    ./sboo/sboo-init-use-package-2.el:24:9:Warning: assignment to free
+    ./sboo/sboo-use-package-init-2.el:24:9:Warning: assignment to free
     variable `use-package-verbose'
 
 In end of data:
