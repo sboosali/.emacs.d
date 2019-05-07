@@ -1,28 +1,58 @@
-;;; -*- lexical-binding: t -*-
+;;; sboo-nix.el --- -*- lexical-binding: t -*-
 
-;;==============================================;;
+;; Copyright © 2019 Spiros Boosalis
+
+;; Version: 0.0.0
+;; Package-Requires: ((emacs "25") seq pcase)
+;; Author:  Spiros Boosalis <samboosalis@gmail.com>
+;; Homepage: https://github.com/sboosali/.emacs.d
+;; Keywords: local
+;; Created: 07 May 2019
+;; License: GPL-3.0-or-later
+
+;; This file is not part of GNU Emacs.
+;;
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 ;;; Commentary:
 
-;; Configuration for the Haskell programming language.
+;; Personal configuration for the Nix programming language.
 ;;
 ;; See:
 ;;
 ;; * `sboo-nix-compile-command'
-;; * `sboo-nix-'
+;; * `sboo-nix-hooks-list'
 ;; 
 
-;;==============================================;;
 ;;; Code:
 
 ;;----------------------------------------------;;
 ;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
-;; builtins:
+;; Builtins:
 
-(require 'cl-lib)
-(require 'pcase)
-(require 'rx)
+(eval-when-compile
+  (require 'rx)
+  (require 'pcase)
+  (require 'cl-lib))
+
+;;----------------------------------------------;;
+
+(progn
+  (require 'pcase)
+  (require 'seq))
 
 ;;----------------------------------------------;;
 ;; Macros --------------------------------------;;
@@ -75,7 +105,7 @@ a `booleanp'.")
 
   "Personal Nix customization."
 
-  :prefix "sboo-nix-"
+  :prefix 'sboo
 
   :group 'sboo
   :group 'nix)
@@ -256,9 +286,9 @@ anywhere in « nix-build »'s stdout."
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
-(defun sboo-haskell-prettify-symbols ()
+(defun sboo-nix-prettify-symbols ()
 
-  "Extend `prettify-symbols-alist' with `sboo-haskell-prettify-symbols-alist'."
+  "Extend `prettify-symbols-alist' with `sboo-nix-prettify-symbols-alist'."
 
   (interactive)
 
@@ -267,7 +297,7 @@ anywhere in « nix-build »'s stdout."
       (prettify-symbols-mode 0)
 
     (progn
-      (setq-local prettify-symbols-alist sboo-haskell-prettify-symbols-alist)
+      (setq-local prettify-symbols-alist sboo-nix-prettify-symbols-alist)
 
       (prettify-symbols-mode +1))))
 
@@ -386,5 +416,18 @@ Output:
 ;;   error: attribute 'XF86Tools' at ./x11/lib/keycodes.nix:175:2 already defined at ./x11/lib/keycodes.nix:166:2
 ;;
 
-;;==============================================;;
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
+
+;; 
+;;
+;;
+
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
 (provide 'sboo-nix)
+
+;;; sboo-nix.el ends here

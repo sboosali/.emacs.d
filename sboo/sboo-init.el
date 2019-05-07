@@ -1303,7 +1303,7 @@ Related:
 
 (use-package helm
 
-  :diminish helm-mode
+  :delight (helm-mode " ⎈")
 
   :custom
 
@@ -1328,16 +1328,16 @@ Related:
 
   (helm-register-max-offset              10000 "Increase (Helm's) Maximum Clipboard Size.")
 
-  (helm-split-window-in-side-p           t   " open helm buffer inside current window, not occupy whole other window")
-  (helm-move-to-line-cycle-in-source     nil "Don't cycle (i.e. move to the end or to the beginning of the prior or of the next source) when reaching top or bottom of a source.")
+  (helm-split-window-in-side-p           t   "open the Helm Buffer inside the currently-`selected-window' (don't occupy the whole `other-window').")
+  (helm-move-to-line-cycle-in-source     nil "Don't cycle (i.e. move to the end or to the beginning of the prior or of the next source) when reaching top-or-bottom of a source.")
   (helm-scroll-amount                    8   "Scroll 8 lines (« M-<next> » / « M-<prior> » )")
-
-  (helm-autoresize-min-height 20 "Minimum Height (in lines?) for Helm Windows.")
-  (helm-autoresize-max-height 60 "Maximum Height (in lines?) for Helm Windows.")
 
   (helm-ff-file-name-history-use-recentf t " ")
   (helm-echo-input-in-header-line        t " ")
   (helm-full-frame                       t " ")
+
+  (helm-autoresize-min-height 20 "Minimum Height (in lines?) for Helm Windows.")
+  (helm-autoresize-max-height 60 "Maximum Height (in lines?) for Helm Windows.")
 
   ;;   :bind (:map helm-map
   ;;               ("<tab>" . helm-execute-persistent-action)
@@ -1345,7 +1345,7 @@ Related:
   ;;               ("C-z"   . helm-select-action)
   ;;               ("A-v"   . helm-previous-page))
 
-  :config
+  :init
 
   (when (require 'helm-config nil :no-error)
 
@@ -1353,28 +1353,35 @@ Related:
 
     (define-key global-map [remap execute-extended-command] #'helm-M-x)
     (define-key global-map [remap list-buffers]             #'helm-buffers-list)
-    (define-key global-map [remap find-file]                #'helm-find-files)
+    (define-key global-map [remap find-file]                #'helm-find-files) ; Includes the « `<tool-bar>' `<new-file>' ».
+    (define-key global-map [remap find-file-existing]       #'helm-find-files) ; Includes the « `<tool-bar>' `<open-file>' »?
     (define-key global-map [remap occur]                    #'helm-occur)
+
+    (define-key global-map [remap menu-find-file-existing]  #'helm-find-files) ; The `toolbar's `<open-file>'.
 
     (when (executable-find "curl")
       (setq helm-google-suggest-use-curl-p t))
 
-    ;; ^ website `google' via program `curl':
+    ;; ^ website `google' via program `curl'.
 
-    ;; Helm and Ido mode are mutually-exclusive:
-    (helm-autoresize-mode +1)
-    (ido-mode             -1))
+    ())
 
-  ())
+  :config
+
+  ;; Helm and Ido mode are mutually-exclusive:
+
+  (helm-autoresize-mode +1)
+  (ido-mode             -1))
 
 ;; ^ Links:
 ;;
 ;;   • URL `https://github.com/emacs-helm/helm'
-;;   • URL `'
-;;
+;;   • URL `https://emacs-helm.github.io/helm/'
+;;   • URL `https://github.com/emacs-helm/helm/wiki'
+;;   • URL `https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm.el'
+;; 
 
-;; ^ `helm-mode' vs `helm-autoresize-mode':
-;;   
+;; ^ `helm-mode' vs `helm-autoresize-mode': TODO.
 
 ;;----------------------------------------------;;
 
@@ -2806,65 +2813,6 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;
 
 ;;----------------------------------------------;;
-;; External Packages: Miscellaneous ------------;;
-;;----------------------------------------------;;
-
-(use-package desktop-environment
-
-  :commands (desktop-environment-toggle-mute
-             desktop-environment-toggle-microphone-mute
-             desktop-environment-screenshot-part
-             desktop-environment-volume-decrement
-             desktop-environment-volume-increment
-             )
-
-  :init
-
-  ;; See « desktop-environment.el »
-
-  ())
-
-;; ^ the `desktop-environment' `featurep'
-;;   provides `desktop-environment-keyboard-backlight-set'.
-;;   e.g.:
-;;
-;;       (defun desktop-environment-keyboard-backlight-set (value)
-;; "Set keyboard backlight to VALUE."
-;; (dbus-call-method :system
-;;                   "org.freedesktop.UPower"
-;;                   "/org/freedesktop/UPower/KbdBacklight"
-;;                   "org.freedesktop.UPower.KbdBacklight"
-;;                   "SetBrightness"
-;;                   :int32 value)
-;; (message "New keyboard value: %s%%" (desktop-environment-keyboard-backlight-percent)))
-
-;;----------------------------------------------;;
-
-;; Deft is an Emacs mode for quickly browsing, filtering, and editing
-;; directories of plain text notes, inspired by Notational Velocity.
-;; http://jblevins.org/projects/deft
-;; https://github.com/jrblevin/deft
-
-;; (use-package deft
-;;   :config
-
-;;----------------------------------------------;;
-
-;; ;; “It's useful to be able to restart emacs from inside emacs.”
-;; (use-package restart-emacs)
-
-;;----------------------------------------------;;
-
-;; ;; Major Mode for Git Commits.
-;; (use-package git-commit)
-
-;;----------------------------------------------;;
-
-;; (use-package web-mode
-;;   :mode (("\\.mustache\\'" . web-mode))
-;;   ()))
-
-;;----------------------------------------------;;
 ;; External Packages: Help ---------------------;;
 ;;----------------------------------------------;;
 
@@ -2899,30 +2847,105 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;
 
 ;;----------------------------------------------;;
+;; External Packages: Miscellaneous ------------;;
+;;----------------------------------------------;;
 
-;; ;;
-;; ;;  bm
-;; ;;  bookmark+ (bmkp)
-;; ;;  Quickly save and restore point using registers
+(use-package desktop-environment
 
-;; ;;; bm
-;; ;; https://github.com/joodland/bm
-;; (use-package bm
+  :commands (desktop-environment-toggle-mute
+             desktop-environment-toggle-microphone-mute
+             desktop-environment-screenshot-part
+             desktop-environment-volume-decrement
+             desktop-environment-volume-increment
+             )
 
-;;   :config
-;;   (progn
-;;     (setq-default bm-buffer-persistence t) ; buffer persistence on by default
+  :init
 
-;;     (when (display-graphic-p) ; Add fringe only if display is graphic (GUI)
-;;       (define-fringe-bitmap 'bm-marker-left [#xF8    ; ▮ ▮ ▮ ▮ ▮ 0 0 0
-;;                                              #xFC    ; ▮ ▮ ▮ ▮ ▮ ▮ 0 0
-;;                                              #xFE    ; ▮ ▮ ▮ ▮ ▮ ▮ ▮ 0
-;;                                              #x0F    ; 0 0 0 0 ▮ ▮ ▮ ▮
-;;                                              #x0F    ; 0 0 0 0 ▮ ▮ ▮ ▮
-;;                                              #xFE    ; ▮ ▮ ▮ ▮ ▮ ▮ ▮ 0
-;;                                              #xFC    ; ▮ ▮ ▮ ▮ ▮ ▮ 0 0
-;;                                              #xF8])) ; ▮ ▮ ▮ ▮ ▮ 0 0 0
-;;     ()))
+  ;; See « desktop-environment.el »
+
+  ())
+
+;; ^ the `desktop-environment' `featurep'
+;;   provides `desktop-environment-keyboard-backlight-set'.
+;;   e.g.:
+;;
+;;       (defun desktop-environment-keyboard-backlight-set (value)
+;; "Set keyboard backlight to VALUE."
+;; (dbus-call-method :system
+;;                   "org.freedesktop.UPower"
+;;                   "/org/freedesktop/UPower/KbdBacklight"
+;;                   "org.freedesktop.UPower.KbdBacklight"
+;;                   "SetBrightness"
+;;                   :int32 value)
+;; (message "New keyboard value: %s%%" (desktop-environment-keyboard-backlight-percent)))
+
+;;----------------------------------------------;;
+
+(use-package bm
+
+  :custom
+
+  (bm-buffer-persistence t "Do save bookmarks (i.e. enable buffer persistence).")
+
+  :config
+
+  (when (display-graphic-p) ; Add fringe only if display is graphic (GUI)
+    (define-fringe-bitmap 'bm-marker-left [#xF8    ; ▮ ▮ ▮ ▮ ▮ 0 0 0
+                                           #xFC    ; ▮ ▮ ▮ ▮ ▮ ▮ 0 0
+                                           #xFE    ; ▮ ▮ ▮ ▮ ▮ ▮ ▮ 0
+                                           #x0F    ; 0 0 0 0 ▮ ▮ ▮ ▮
+                                           #x0F    ; 0 0 0 0 ▮ ▮ ▮ ▮
+                                           #xFE    ; ▮ ▮ ▮ ▮ ▮ ▮ ▮ 0
+                                           #xFC    ; ▮ ▮ ▮ ▮ ▮ ▮ 0 0
+                                           #xF8])) ; ▮ ▮ ▮ ▮ ▮ 0 0 0
+
+  ())
+
+;; `bm' (a `featurep').
+;; > Quickly save and restore point using registers
+;; 
+
+;; `bmkp' a.k.a bookmark+
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/joodland/bm'
+;;
+
+;;----------------------------------------------;;
+
+(use-package deft
+
+  :commands (deft-new-file deft-new-file-named)
+
+  :config
+
+  ())
+
+;; ^ Deft is an Emacs mode for quickly browsing, filtering, and editing
+;;   directories of plain text notes, inspired by Notational Velocity.
+
+;; ^ Links:
+;;
+;;   • URL `http://jblevins.org/projects/deft'
+;;   • URL `https://github.com/jrblevin/deft'
+;;
+
+;;----------------------------------------------;;
+
+;; ;; Major Mode for Git Commits.
+;; (use-package git-commit)
+
+;;----------------------------------------------;;
+
+;; (use-package web-mode
+;;   :mode (("\\.mustache\\'" . web-mode))
+;;   ()))
+
+;;----------------------------------------------;;
+
+;; ;; “It's useful to be able to restart emacs from inside emacs.”
+;; (use-package restart-emacs)
 
 ;;----------------------------------------------;;
 ;; Conditional Configuration -------------------;;
@@ -2930,15 +2953,20 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 (when (require 'sboo-os nil :no-error)
 
-  (add-hook 'windows-setup-hook #'sboo-maximize-frame t)
+  (add-hook 'window-setup-hook #'sboo-maximize-frame t)
 
   ())
 
+;; ^ NOTE:
+;;
+;;  • `window-setup-hook' is similar to ‘emacs-startup-hook’.
+;;
+
 ;;----------------------------------------------;;
 
-;; (when (require 'sboo-ui nil :no-error)
+(when (require 'sboo-ui nil :no-error)
 
-;;   ())
+  ())
 
 ;;----------------------------------------------;;
 
@@ -2957,19 +2985,11 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
   (sboo-fonts-config!))
 
 ;;----------------------------------------------;;
-
-(add-hook 'after-init-hook
-          (lambda ()
-            (with-current-buffer sboo-init-file
-              (sboo-set-font-to-iosevka))))
-
-;;----------------------------------------------;;
 ;;; Notes: -------------------------------------;;
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
 ;; `wgrep' notes
-
+;;
 ;; KeyBindings:
 ;;
 ;; You can edit the text in the grep buffer after typing C-c C-p. After that the changed text is highlighted. The following keybindings are defined:
@@ -3054,16 +3074,6 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;
 ;; https://github.com/Fuco1/dired-hacks/blob/master/README.md#dired-subtree
 
-
-;;----------------------------------------------;;
-;;
-
-;; (use-package vlf
-
-;;   :config
-;;   (require 'vlf-setup)
-
-;;   )
 
 ;;----------------------------------------------;;
 

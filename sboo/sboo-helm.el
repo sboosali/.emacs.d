@@ -55,14 +55,6 @@
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
-;; See:
-;;
-;; • URL `https://github.com/emacs-helm/helm'
-;; • URL `https://emacs-helm.github.io/helm/'
-;; • URL `https://github.com/emacs-helm/helm/wiki'
-;; • URL `https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm.el'
-;; 
-
 ;;----------------------------------------------;;
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;

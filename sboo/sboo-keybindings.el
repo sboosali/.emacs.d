@@ -1,19 +1,57 @@
-;;; -*- lexical-binding: t -*-
+;;; sboo-keybindings.el --- -*- lexical-binding: t -*-
 
-;;==============================================;;
+;; Copyright © 2019 Spiros Boosalis
+
+;; Version: 0.0.0
+;; Package-Requires: ((emacs "25"))
+;; Author:  Spiros Boosalis <samboosalis@gmail.com>
+;; Homepage: https://github.com/sboosali/.emacs.d
+;; Keywords: local
+;; Created: 07 May 2019
+;; License: GPL-3.0-or-later
+
+;; This file is not part of GNU Emacs.
+;;
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 ;;; Commentary:
 
-;; Global Keybindings:
+;; Personal `global-map' configuration.
 ;;
-;; global keybindings for builtin-commands (mostly).
-;;
-;; 
-
 ;; Sections:
-;; the Commands — will be bound in a keybinding (below)
-;; the Utilities — may be used to define the keybindings (below) 
+;;
+;; • the Commands — will be bound in a keybinding (below)
+;; • the Utilities — may be used to define the keybindings (below) 
+;;
+;; In this file's keybindings, the keys are bound to:
+;;
+;; • Builtin Commands (most) — defined by Emacs.
+;; • Personal Commands (some) — defined in this file.
+;; • Other Commands (some) — undefined (until later, they are defined by external packages).
+;;
 
-;;==============================================;;
+;;; Code:
+
+;;----------------------------------------------;;
+;; Imports -------------------------------------;;
+;;----------------------------------------------;;
+
+;; Builtins:
+
+(eval-when-compile 
+  (require 'cl-lib))
+
 ;;; Code:
 
 ;; (defmacro sboo-key (keys-to-bind command-to-be-bound &optional keymap-to-bind-in)
@@ -45,10 +83,6 @@
   (kbd "<print>")
 
   "Key to invoke `compile'.")
-
-;;----------------------------------------------;;
-;; Utilities -----------------------------------;;
-;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
@@ -513,10 +547,10 @@ Inputs:
 
 ;;----------------------------------------------;;
 
-;;(global-set-key (kbd "<f5>") nil)          ;; « xfce4 » sends « C-c » on « F5 », i.e. Copy / User-Keymap.
-;;(global-set-key (kbd "<f6>") nil)          ;; « xfce4 » sends « C-x » on « F6 », i.e. Cut / Extra-Keymap.
-(global-set-key (kbd "<f7>") #'list-buffers)
-;;(global-set-key (kbd "<f8>") nil)          ;; « xfce4 » sends « C-v » on « F8 », i.e. Paste.
+(global-set-key (kbd "<f5>") nil)
+(global-set-key (kbd "<f6>") #'cua-set-mark) ; a.k.a. « C-a ».
+(global-set-key (kbd "<f7>") #'list-buffers) ; a.k.a. « C-x b ».
+(global-set-key (kbd "<f8>") #'find-file)    ; a.k.a. « C-x f ».
 
 ;;----------------------------------------------;;
 
@@ -1172,7 +1206,7 @@ Inputs:
 ;; `markdown-mode-mouse-map'
 
 
-;;; toolbar
+;;; `toolbar':
 ;;
 ;; `tool-bar-map'
 ;; `compilation-mode-tool-bar-map'
@@ -1180,22 +1214,16 @@ Inputs:
 ;; `'
 ;; `'
 
-;; <f*>
-;;
-;; (global-set-key (kbd "<f5>")  #'list-buffers)
-;; (global-set-key (kbd "<f6>")  #'xah-prior-user-buffer)
-;; (global-set-key (kbd "<f7>")  #'xah-next-user-buffer) 
-;;
-
-;; <*>
-;;
-;; (global-set-key (kbd "<print>")  #'kill-ring-save)
-
 ;;; Links:
 ;;
-;; - https://www.masteringemacs.org/article/mastering-key-bindings-emacs
-;; - https://emacs.stackexchange.com/questions/2461/how-can-i-simulate-an-arbitary-key-event-from-elisp
+;;  • URL `https://www.masteringemacs.org/article/mastering-key-bindings-emacs'
+;;  • URL `https://emacs.stackexchange.com/questions/2461/how-can-i-simulate-an-arbitary-key-event-from-elisp'
 ;;
 
-;;==============================================;;
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
 (provide 'sboo-keybindings)
+
+;;; sboo-keybindings.el ends here
