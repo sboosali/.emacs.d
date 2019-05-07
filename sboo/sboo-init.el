@@ -126,7 +126,7 @@
 
 ;;----------------------------------------------;;
 
-(defun sboo-init-use-package ()
+(defun sboo-use-package-init ()
 
   "Register and initialize `use-package'.
 
@@ -283,8 +283,9 @@ Related:
 • `sboo-desktop-config!'")
 
 ;;----------------------------------------------;;
-;; Settings ------------------------------------;;
+;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
+;; Import `defmacro's:
 
 (eval-when-compile
 
@@ -305,15 +306,19 @@ Related:
 
   ()))
 
-;;----------------------------------------------;;
-
-;;(sboo-init-use-package)
+;;(sboo-use-package-init)
 
 ;;----------------------------------------------;;
+;; Import `defun's:
 
-(list (require 'diminish) (require 'bind-key))
+(progn
+  (require 'bind-key)
+  (require 'diminish)
+  (require 'delight))
 
-;;==============================================;;
+;;----------------------------------------------;;
+;; Settings ------------------------------------;;
+;;----------------------------------------------;;
 ;; Variable Safety:
 
 (dolist (BINDING '( (lexical-binding . t)
@@ -444,7 +449,7 @@ Related:
 ;; ^ NOTE if the "true" `sboo-private' can't be loaded
 ;;        (e.g. doesn't exist yet, file doesn't parse, etc),
 ;;        load a "fake" one which is always available
-;;        (because it's version-controllled,
+;;        (because it's version-controlled,
 ;;        but doesn't contain any sensitive information.)
 ;;
 
@@ -837,6 +842,53 @@ Related:
 ;;
 
 ;;----------------------------------------------;;
+;; Completion
+
+(defvar sboo-abbrev-file
+
+  (condition-case _
+      (sboo-file "dabbrev/abbrev_defs.el")
+    (void-function
+     "~/.emacs.d/sboo/dabbrev/abbrev_defs.el"))
+
+  "Personal (version-controlled) `abbrev-file-name'.")
+
+;;----------------------------;;
+
+(use-package dabbrev
+
+  :diminish (abbrev-mode " A")
+
+  :init
+
+  (let* ((DIRECTORY-DABBREV (file-name-directory sboo-abbrev-file))
+         )
+    (when (not (file-directory-p DIRECTORY-DABBREV))
+      (make-directory DIRECTORY-DABBREV :make-parent-directories)))
+
+  :custom
+
+  (abbrev-file-name sboo-abbrev-file "Personal `dabbrev' config.")
+
+  :config
+
+  (add-hook 'text-mode-hook #'abbrev-mode)
+
+  (when (file-exists-p abbrev-file-name)
+    (quietly-read-abbrev-file))
+
+  ())
+
+;; ^ "`dabbrev'" abbreviates "Dynamic ABBREViation".
+
+;; ^ Links:
+;;
+;;   • URL `https://www.gnu.org/software/emacs/manual/html_node/elisp/Abbrev-Files.html'
+;;   • URL `http://ergoemacs.org/emacs/emacs_abbrev_mode_tutorial.html'
+;;   • URL `https://www.emacswiki.org/emacs/AbbrevMode'
+;;
+
+;;----------------------------------------------;;
 
 (when (require 'sboo-bookmark nil :no-error)
 
@@ -857,11 +909,20 @@ Related:
 ;;----------------------------------------------;;
 ;; Recent Files
 
-;;Enable recentf-mode and remember a lot of files.
+(use-package recentf
 
-(recentf-mode 1)
-(defvar recentf-max-saved-items)
-(setq recentf-max-saved-items 200)
+  :custom
+
+  (recentf-max-saved-items 200 "Remember more files.")
+  (recentf-max-menu-items  15  "Remember more files.")
+
+  :config
+
+  (recentf-mode +1)
+
+  ())
+
+;; ^ "`recentf'" abbreviates "RECENT Files".
 
 ;;----------------------------------------------;;
 ;; `uniquify'
@@ -870,23 +931,27 @@ Related:
 
   :custom
 
-  (uniquify-buffer-name-style 'forward "distinguish Synonyms Buffers (better).")
+  (uniquify-buffer-name-style 'forward
+                              "distinguish Synonyms Buffers (when two buffers are open with the same name, this makes it easier to tell them apart).")
 
-  ;; ^ When two buffers are open with the same name, this makes it easier to tell them apart.
-  )
+  :config
+
+  ())
 
 ;;----------------------------------------------;;
 ;; `saveplace':
 
 (use-package saveplace
 
-  :custom
+  :commands (save-place-mode)
 
-  (savve-place t "remember last position for reopened files.")
+;;:custom
 
   :config
 
   (save-place-mode +1)
+
+  ;; ^ `saveplace' remembers your Last Position for Re-Opened Files."
 
   ())
 
@@ -975,11 +1040,11 @@ Related:
 
   :delight
 
+  (auto-revert-mode " 🗘")
+  ;; ^ Shorten `auto-revert-modee'.
+
   (visual-line-mode " VL")
   ;; ^ Shorten `visual-line-mode'.
-
-  (auto-revert-mode " aR")
-  ;; ^ Shorten `auto-revert-modee'.
 
   (auto-fill-function " aF")
   ;; ^ Shorten `auto-fill-mode'.
@@ -987,36 +1052,105 @@ Related:
   (buffer-face-mode)
   ;; ^ Hide `buffer-face-mode'.
 
-  )
+  :config
+
+  ())
 
 ;;----------------------------------------------;;
 
-(use-package calendar
-  :defer t
-  :config (setq calendar-week-start-day 1))
+(use-package autorevert
+
+  :commands (auto-revert-mode)
+
+  :delight (auto-revert-mode " 🗘")
+  ;; ^ Shorten `auto-revert-modee'.
+
+  :config
+
+  ())
 
 ;;----------------------------------------------;;
 
-(use-package vc
-  :defer t
-  :config (setq vc-follow-symlinks t))
-
-;;----------------------------------------------;;
-
-;; no multiframe ediff
 (use-package ediff
+
   :defer t
-  :config (setq ediff-window-setup-function 'ediff-setup-windows-plain))
+
+  :custom
+
+  (ediff-window-setup-function 'ediff-setup-windows-plain "“Plain” means “no multiframe ediff”.")
+
+  :config
+
+  ())
+
+;;----------------------------------------------;;
+
+(use-package eldoc
+
+  :defer t
+
+  :commands (eldoc-mode)
+
+  :delight (eldoc-mode)
+
+;;:custom
+
+  :config
+
+  ())
 
 ;;----------------------------------------------;;
 
 (use-package sql
+
   :defer t
 
   :config
 
   (when (require 'sboo-sql nil :no-error)
     ())
+
+  ())
+
+;;----------------------------------------------;;
+
+(use-package find-dired
+
+  :custom
+
+  (find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld") "“By default Emacs will pass -exec to find and that makes it very slow. It is better to collate the matches and then use xargs to run the command.”")
+
+  :config
+
+  ())
+
+;; ^ URL `https://www.masteringemacs.org/article/working-multiple-files-dired'
+
+;;----------------------------------------------;;
+
+(use-package calendar
+
+  :defer t
+
+  :custom
+
+  (calendar-week-start-day 0 "“0 means Sunday, 1 means Monday, etc”")
+
+  :config
+
+  ())
+
+;;----------------------------------------------;;
+
+(use-package vc
+
+  :defer t
+
+  :custom
+
+  (vc-follow-symlinks t "don't ask when visiting a symbolic link to a version-controlled file (but do warn in the echo area).")
+
+  :config
 
   ())
 
@@ -1117,16 +1251,51 @@ Related:
 ;; When done, the return value is passed to FINISH-FUNC.  Example:
 
 ;;----------------------------------------------;;
-;; External Packages: Core Configuration -------;;
+;; External Packages: Prioritized Packages -----;;
+;;----------------------------------------------;;
+
+;;(sboo-load-file! "sboo-init-use-package.el")
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/jwiegley/use-package'
+;;
+
 ;;----------------------------------------------;;
 
 ;;(sboo-load-file! "sboo-init-helm.el")
-;;(sboo-load-file! "sboo-init-use-package.el")
+
+;;----------------------------------------------;;
+;; External Packages: Libraries ----------------;;
+;;----------------------------------------------;;
+
+(use-package dash)
+
+;; ^ URL `https://github.com/magnars/dash.el'
 
 ;;----------------------------------------------;;
 
-(when (< emacs-major-version 26)
-  (sboo-load-file! "sboo-init-real-auto-save.el"))
+(use-package s)
+
+;; ^ URL `https://github.com/magnars/s.el'
+
+;;----------------------------------------------;;
+
+(use-package f)
+
+;; ^ URL `https://github.com/rejeep/f.el'
+
+;;----------------------------------------------;;
+
+(use-package ht)
+
+;; ^ URL `https://github.com/Wilfred/ht.el'
+
+;;----------------------------------------------;;
+
+(use-package ov)
+
+;; ^ URL `https://github.com/ShingoFukuyama/ov.el'
 
 ;;----------------------------------------------;;
 ;; External Packages: Completion ---------------;;
@@ -1140,14 +1309,19 @@ Related:
 
   (helm-allow-mouse t "Enable mouse (doesn't enable selection-by-clicking, only marking-by-clicking).")
 
-     ;; ^ `helm-allow-mouse'. the mouse is gratuitously disabled by default.
-     ;;   this enables, for example, clicking on a helm candidate to activate it,
-     ;;   rather than navigating it with several arrow and/or character keypresses.
+  ;; ^ `helm-allow-mouse'. the mouse is gratuitously disabled by default.
+  ;;   this enables, for example, clicking on a helm candidate to activate it,
+  ;;   rather than navigating it with several arrow and/or character keypresses.
 
   ;; ^ `helm-boring-buffer-regexp-list'. by default, it's:
   ;; 
   ;;     '("\\` " "\\`\\*helm" "\\`\\*Echo Area" "\\`\\*Minibuf")
   ;;
+
+  (helm-command-prefix-key "M-q" "the Default (« C-x c ») is too similar to `kill-emacs's keybinding.")
+
+  ;; ^  NOTE `helm-command-prefix-key':
+  ;;    becomes immutable once `helm-config' is `load'ed.
 
   (helm-mode-fuzzy-match                 t " ")
   (helm-completion-in-region-fuzzy-match t " ")
@@ -1173,11 +1347,6 @@ Related:
 
   :config
 
-  (setq helm-command-prefix-key "M-q")
-
-  ;; ^  NOTE `helm-command-prefix-key':
-  ;;    becomes immutable once `helm-config' is `load'ed.
-
   (when (require 'helm-config nil :no-error)
 
     ;; Remap keybindings:
@@ -1187,123 +1356,308 @@ Related:
     (define-key global-map [remap find-file]                #'helm-find-files)
     (define-key global-map [remap occur]                    #'helm-occur)
 
-    ;; website `google' via program `curl':
-
     (when (executable-find "curl")
       (setq helm-google-suggest-use-curl-p t))
 
+    ;; ^ website `google' via program `curl':
+
     ;; Helm and Ido mode are mutually-exclusive:
     (helm-autoresize-mode +1)
-    (ido-mode  -1))
+    (ido-mode             -1))
 
   ())
 
-;; ^ `helm-mode' vs`helm-autoresize-mode':
+;; ^ Links:
+;;
+;;   • URL `https://github.com/emacs-helm/helm'
+;;   • URL `'
+;;
+
+;; ^ `helm-mode' vs `helm-autoresize-mode':
 ;;   
 
 ;;----------------------------------------------;;
-;; External Packages: Miscellaneous ------------;;
+
+(when (require 'sboo-company nil :no-error)
+
+  ;;------------------------;;
+
+  (use-package company
+
+    :diminish (company-mode " ©")
+
+    ;;------------------------;;
+
+    :custom
+
+    (company-backends sboo-company-backends "personal Company Backends.")
+
+    (company-show-numbers               t   "")
+    (company-minimum-prefix-length      1   "minimum Prefix Length for Idle Completion.")
+    (company-tooltip-align-annotations  t   "")
+    (company-dabbrev-downcase           nil "")
+
+    ;;------------------------;;
+
+    :config
+
+    (bind-key [remap completion-at-point] #'company-complete company-mode-map)
+
+    ;; ^ use Company for Emacs's Builtin Completion.
+
+    ;; ^ NOTE why not `:bind'?
+    ;;   Because `:bind''s syntax is « (`kbd' ...) » only, no « [`remap' ...] ».
+
+    ;;------------------------;;
+
+    ;; `company-active-map':
+
+    (define-key company-active-map (kbd "TAB")       #'company-complete-common-or-cycle)
+    (define-key company-active-map (kbd "<backtab>") #'sboo-company-complete-common-or-previous-cycle)
+
+    (bind-keys :map company-active-map
+
+               ("<kp-1>"      . sboo-company-complete-1)
+               ("<kp-end>"    . sboo-company-complete-1)
+
+               ("<kp-2>"      . sboo-company-complete-2)
+               ("<kp-down>"   . sboo-company-complete-2)
+
+               ("<kp-3>"      . sboo-company-complete-3)
+               ("<kp-next>"   . sboo-company-complete-3)
+
+               ("<kp-4>"      . sboo-company-complete-4)
+               ("<kp-left>"   . sboo-company-complete-4)
+
+               ("<kp-5>"      . sboo-company-complete-5)
+               ("<kp-begin>"  . sboo-company-complete-5)
+
+               ("<kp-6>"      . sboo-company-complete-6)
+               ("<kp-right>"  . sboo-company-complete-6)
+
+               ("<kp-7>"      . sboo-company-complete-7)
+               ("<kp-home>"   . sboo-company-complete-7)
+
+               ("<kp-8>"      . sboo-company-complete-8)
+               ("<kp-up>"     . sboo-company-complete-8)
+
+               ("<kp-9>"      . sboo-company-complete-9)
+               ("<kp-prior>"  . sboo-company-complete-9)
+
+               ("<kp-0>"      . sboo-company-complete-10)
+               ("<kp-insert>" . sboo-company-complete-10)
+
+               )
+
+    ;; ^ FYI candidate selection via `M-{number}'
+    ;;  (i.e. `M-1', `M-2', ..., `M-9').
+
+    ;;------------------------;;
+
+    (global-company-mode +1)))
+
+;;----------------------------------------------;;
+;; External Packages: Templates ----------------;;
+;;----------------------------------------------;;
+
+(when (require 'sboo-yasnippets nil :no-error)
+
+  (use-package yasnippet
+
+    :commands (snippet-mode yas-insert-snippet yas-next-field-or-maybe-expand)
+
+    :diminish (snippet-mode " Y")
+
+    ;;------------------------;;
+
+    :mode ("\\.yasnippet\\'" . snippet-mode)
+
+    ;;------------------------;;
+
+    :bind (("<kp-home>" . yas-next-field-or-maybe-expand)
+           )
+
+    ;;------------------------;;
+
+    :custom
+
+    (yas-wrap-around-region t
+                            "Enables setting « $0 » field to `region' (by default).")
+
+    (yas-indent-line 'fixed
+                     "Indent the snippet to the current column (of the snippet, not the file into which the snippet is being inserted).")
+
+    (yas-snippet-dirs `(,sboo-snippets-directory)
+                      "Register personal snippets.")
+
+    (yas-trigger-symbol "↣"
+                       "Unicode-ify.")
+
+    (yas-new-snippet-default "\
+# -*- mode: snippet -*-
+#
+# key         : $1
+# name        : [sboo] a « $2 ».
+#
+# type        : snippet
+# condition   : (let ((KEY "$1")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# commentary  : 
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+$0")
+
+    :custom-face
+
+    (yas-field-highlight-face ((t (:inherit 'region :slant italic))))
+
+    :init
+
+    (setq yas-alias-to-yas/prefix-p nil)
+
+    ;; ^ `setq' vs `add-to-list': remove the default.
+
+    ;;------------------------;;
+
+    :config
+
+    (defun sboo-yas-reload (force)
+
+      "Recompile and reload all « .yasnippet » files."
+
+      (interactive "P")
+
+      (yas-recompile-all)
+      (yas-reload-all force)
+      (require 'sboo-yasnippets nil :no-error))
+
+    ;;------------------------;;
+
+    (defalias '/y #'yas-insert-snippet)
+
+    ;;------------------------;;
+
+    ;;(add-to-list 'yas-snippet-dirs "~/.emacs.d/submodules/yasnippet-snippets/snippets")
+
+    ;; ^ Links:
+    ;;
+    ;;   • URL `https://github.com/AndreaCrotti/yasnippet-snippets'
+    ;;   • URL `http://andreacrotti.github.io/yasnippet-snippets/snippets.html'
+    ;;
+
+    ;;------------------------;;
+
+    (add-hook 'emacs-startup-hook #'sboo-yas-reload)
+
+    (yas-global-mode +1)
+
+    ;;------------------------;;
+
+    ()))
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/joaotavora/yasnippet'
+;;   • URL `http://joaotavora.github.io/yasnippet/snippet-development.html'
+;;   • URL `https://joaotavora.github.io/yasnippet/snippet-organization.html'
+;;   • URL `https://joaotavora.github.io/yasnippet/snippet-expansion.html'
+;;   • URL `https://github.com/haskell/haskell-snippets'
+;;
+
+;;----------------------------------------------;;
+;; External Packages: Programming --------------;;
 ;;----------------------------------------------;;
 
 (use-package flycheck
 
   :defer t
 
-  ;;^
-  ;; deferred because flycheck is "more framework than application".
-  ;; i.e. any "application" package will `require` it whenever needed (e.g. `dante`), and afaik, it's not useful alone.
-
-  ;;TODO;; style « *Flycheck error messages* »
-
-  ;;TODO;; mode of « *Flycheck errors* » (e.g. « *Flycheck errors for buffer ...* »)
+  :delight (flycheck-mode " 🛸")
 
   :config
 
   (add-hook 'flycheck-error-list-mode-hook #'visual-line-mode)
 
   (when (require 'sboo-flycheck nil :no-error)
+
     (bind-key "<kp-divide>" #'sboo-flycheck)
+
     (add-to-list 'display-buffer-alist sboo-flycheck-display-buffer))
 
   ())
 
-;; See
-;;     - « https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-flycheck.el »
+;; ^ Links:
+;;
+;;   • URL `https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-flycheck.el'
 ;;
 
+;; ^ NOTES
+;;
+;; • `flycheck' is “«:defer»red” because flycheck is more a Framework than an Application;
+;;    i.e. any "application" package will `require' it whenever needed (e.g. `dante').
+;;
+
+;;TODO;; style « *Flycheck error messages* »
+
+;;TODO;; mode of « *Flycheck errors* » (e.g. « *Flycheck errors for buffer ...* »)
+
 ;;----------------------------------------------;;
 
+(when (require 'sboo-projectile nil :no-error)
 
-;; Deft is an Emacs mode for quickly browsing, filtering, and editing
-;; directories of plain text notes, inspired by Notational Velocity.
-;; http://jblevins.org/projects/deft
-;; https://github.com/jrblevin/deft
+  (use-package projectile
 
-;; (use-package deft
-;;   :config
+    :commands (projectile-mode)
+
+    :delight '(:eval (concat " " (projectile-project-name)))
+
+    ;; ^
+    ;; [1] Hide the mode name for projectile-mode;
+    ;; [2] Show the project name instead.
+
+    :config
+
+    (sboo-append-to-list! projectile-globally-ignored-directories
+                          sboo-excluded-directories)
+
+    (sboo-append-to-list! projectile-globally-ignored-files
+                          sboo-excluded-file-names)
+
+    (sboo-append-to-list! projectile-globally-ignored-file-suffixes
+                          sboo-excluded-file-extensions)
+
+    ()))
 
 ;;----------------------------------------------;;
+;;; `magit': "eMAcs GIT".
 
-(use-package edit-indirect
+(progn
 
-  :commands (edit-indirect-region)
+  (use-package magit
 
-  :config
+    :bind (("s-g s" . magit-status)
+           )
 
-  (defun sboo-edit-indirect-guess-mode (parent-buffer parent-region-begin parent-region-end)
+    :custom
 
-    "Guess the major mode for an edit-indirect buffer.
+    (magit-save-repository-buffers 'dontask "don't ask (just save).")
 
-Calls `set-auto-mode', which parses the « mode » file-local (special) variable 
-(i.e. « -*- mode: ... -*- »)."
+    :config
 
-    (set-auto-mode t))
+    ())
 
-  (customize-set-variable 'edit-indirect-guess-mode-function
-                          #'sboo-edit-indirect-guess-mode
-                          "Override `edit-indirect-default-guess-mode'.")
+  ;;--------------------------;;
+
+  ;; (use-package magithub
+  ;;FIXME crashes magit
+  ;;   )
 
   ())
 
 ;;----------------------------------------------;;
-
-;; (use-package awesome-tab
-
-;;   :config
-
-;;   (awesome-tab-mode t)
-
-;;   ())
-;;TODO;; helm-source-list awesome-tab-build-helm-source)
-
-;;----------------------------------------------;;
-
-;; ;;
-;; ;;  bm
-;; ;;  bookmark+ (bmkp)
-;; ;;  Quickly save and restore point using registers
-
-;; ;;; bm
-;; ;; https://github.com/joodland/bm
-;; (use-package bm
-
-;;   :config
-;;   (progn
-;;     (setq-default bm-buffer-persistence t) ; buffer persistence on by default
-
-;;     (when (display-graphic-p) ; Add fringe only if display is graphic (GUI)
-;;       (define-fringe-bitmap 'bm-marker-left [#xF8    ; ▮ ▮ ▮ ▮ ▮ 0 0 0
-;;                                              #xFC    ; ▮ ▮ ▮ ▮ ▮ ▮ 0 0
-;;                                              #xFE    ; ▮ ▮ ▮ ▮ ▮ ▮ ▮ 0
-;;                                              #x0F    ; 0 0 0 0 ▮ ▮ ▮ ▮
-;;                                              #x0F    ; 0 0 0 0 ▮ ▮ ▮ ▮
-;;                                              #xFE    ; ▮ ▮ ▮ ▮ ▮ ▮ ▮ 0
-;;                                              #xFC    ; ▮ ▮ ▮ ▮ ▮ ▮ 0 0
-;;                                              #xF8])) ; ▮ ▮ ▮ ▮ ▮ 0 0 0
-;;     ()))
-
-;;----------------------------------------------;;
-;; External Packages: Haskell Configuration ----;;
+;; External Packages: Haskell ------------------;;
 ;;----------------------------------------------;;
 
 (when (require 'sboo-haskell nil :no-error)
@@ -1462,8 +1816,13 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   ())
 
+;; ^ Links:
+;;
+;;   • URL `https://github.com/jyp/dante'
+;;
+
 ;;----------------------------------------------;;
-;; External Packages: ProgrammingLanguages -----;;
+;; External Packages: Programming Languages ----;;
 ;;----------------------------------------------;;
 
 (when (require 'sboo-nix nil :no-error)
@@ -1536,91 +1895,17 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
   ())
 
 ;;----------------------------------------------;;
-;; External Packages: `company-*' Configurations
+
+(when (require 'sboo-haskell-compilation nil :no-error)
+
+  ()
+
+  ())
+
 ;;----------------------------------------------;;
+;;; External Packages: `company-*' Configurations
 
 (when (require 'sboo-company nil :no-error)
-
-  ;;------------------------;;
-
-  (use-package company
-
-    :custom
-
-    (company-backends sboo-company-backends "my Company Backends.")
-
-    :config
-
-    (progn
-
-      (bind-key [remap completion-at-point] #'company-complete company-mode-map)
-      ;; ^ Use Company for completion
-      ;;
-      ;; NOTE `:bind' syntax is (`kbd' ...) only, no [`remap' ...]
-
-      (setq company-tooltip-align-annotations t)
-      ;; ^
-
-      (setq company-show-numbers t)
-      ;; ^ 
-      ;; FYI candidate selection via `M-{number}'
-      ;; (i.e. `M-1', `M-2', ..., `M-9').
-      
-      (setq company-dabbrev-downcase nil)
-      ;; ^
-
-      (setq company-minimum-prefix-length 1)
-
-      ;; ^ minimum prefix length for idle completion.
-      ;;
-      ;; Default is 3.
-      ;;
-
-      (global-company-mode +1)
-
-      ())
-
-    :diminish company-mode)
-
-  ;;------------------------;;
-
-  (define-key company-active-map (kbd "TAB") #'company-complete-common-or-cycle)
-
-  (define-key company-active-map (kbd "<backtab>") #'sboo-company-complete-common-or-previous-cycle)
-
-  (bind-keys :map company-active-map
-
-             ("<kp-1>"      . sboo-company-complete-1)
-             ("<kp-end>"    . sboo-company-complete-1)
-
-             ("<kp-2>"      . sboo-company-complete-2)
-             ("<kp-down>"   . sboo-company-complete-2)
-
-             ("<kp-3>"      . sboo-company-complete-3)
-             ("<kp-next>"   . sboo-company-complete-3)
-
-             ("<kp-4>"      . sboo-company-complete-4)
-             ("<kp-left>"   . sboo-company-complete-4)
-
-             ("<kp-5>"      . sboo-company-complete-5)
-             ("<kp-begin>"  . sboo-company-complete-5)
-
-             ("<kp-6>"      . sboo-company-complete-6)
-             ("<kp-right>"  . sboo-company-complete-6)
-
-             ("<kp-7>"      . sboo-company-complete-7)
-             ("<kp-home>"   . sboo-company-complete-7)
-
-             ("<kp-8>"      . sboo-company-complete-8)
-             ("<kp-up>"     . sboo-company-complete-8)
-
-             ("<kp-9>"      . sboo-company-complete-9)
-             ("<kp-prior>"  . sboo-company-complete-9)
-
-             ("<kp-0>"      . sboo-company-complete-10)
-             ("<kp-insert>" . sboo-company-complete-10)
-
-             )
 
   ;;------------------------;;
 
@@ -1676,180 +1961,6 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
   ())
 
 ;;----------------------------------------------;;
-
-(when (require 'sboo-haskell-compilation nil :no-error)
-
-  
-
-  ())
-
-;;----------------------------------------------;;
-
-
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-;; External Packages: Miscellaneous ------------;;
-;;----------------------------------------------;;
-
-(when (require 'sboo-projectile nil :no-error)
-
-  (use-package projectile
-
-    :delight '(:eval (concat " " (projectile-project-name)))
-
-    ;; ^
-    ;; [1] Hide the mode name for projectile-mode;
-    ;; [2] Show the project name instead.
-
-    :config
-
-    (sboo-append-to-list! projectile-globally-ignored-directories
-                          sboo-excluded-directories)
-
-    (sboo-append-to-list! projectile-globally-ignored-files
-                          sboo-excluded-file-names)
-
-    (sboo-append-to-list! projectile-globally-ignored-file-suffixes
-                          sboo-excluded-file-extensions)
-
-    ()))
-
-;;----------------------------------------------;;
-
-(when (require 'sboo-yasnippets nil :no-error)
-
-  (use-package yasnippet
-
-    :demand t
-
-    :mode ("\\.yasnippet\\'" . snippet-mode)
-
-    :bind (("<kp-home>" . yas-next-field-or-maybe-expand)
-           )
-
-    :custom
-    (yas-wrap-around-region t
-                            "Set « $0 » field to `region'.")
-    (yas-indent-line 'fixed
-                     "Indent the snippet to the current column (of the snippet, not the file into which the snippet is being inserted).")
-    (yas-snippet-dirs       `(,sboo-snippets-directory)
-                            "Register personal snippets.")
-    (yas-new-snippet-default "\
-# -*- mode: snippet -*-
-#
-# key         : $1
-# name        : [sboo] a « $2 ».
-#
-# type        : snippet
-# condition   : (let ((KEY "$1")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
-# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-#
-# commentary  : 
-# contributor : Spiros Boosalis <samboosalis@gmail.com> 
-#
-# --
-$0")
-    (yas-trigger-symbo "↣"
-                       "Unicode-ify.")
-
-    :custom-face
-    (yas-field-highlight-face ((t (:inherit 'region :slant italic)))) ;TODO
-
-
-    :init
-    (setq yas-alias-to-yas/prefix-p nil)
-
-    ;; ^ `setq' vs `add-to-list': remove the default.
-
-    :config
-
-    ;;------------------------;;
-
-    (defun sboo-yas-reload (force)
-
-      "Recompile and reload all « .yasnippet » files."
-
-      (interactive "P")
-
-      (yas-recompile-all)
-      (yas-reload-all force)
-      (require 'sboo-yasnippets nil :no-error))
-
-    ;;------------------------;;
-
-    (sboo-yas-reload t)
-
-    (yas-global-mode 1)
-
-    (defalias '/y #'yas-insert-snippet)
-
-    ;;------------------------;;
-
-    ()))
-
-;;----------------------------------------------;;
-;;; `magit': "eMAcs GIT".
-
-(progn
-  
-  (use-package magit
-
-    :bind (("s-g s" . magit-status)
-           )
-    ;; ^ 
-
-    :init
-    (setq magit-save-repository-buffers 'dontask)
-
-    :config
-    ())
-
-  ;;--------------------------;;
-
-  ;; (use-package magithub
-  ;;FIXME crashes magit
-  ;;   )
-
-  ())
-
-;;----------------------------------------------;;
-;;; `wgrep': "Writeable GREP".
-
-(use-package wgrep
-
-  ;; :bind (:map grep-mode-map
-  ;;             ;; ^
-  ;;             ;; NOTE **not** `wgrep-mode-map', which binds:
-  ;;             ;;
-  ;;             ;;     ("C-x C-q" . wgrep-exit)
-  ;;             ;;              
-  ;;             ("C-x C-q" . wgrep-toggle-readonly-area)
-  ;;             ;; ^
-  ;;             ;; the standard keybinding for `toggle-read-only'.
-  ;;             ;; for consistency, e.g. with `wdired'.
-  ;;             ;;
-  ;;             ;; [TODO doesn't work]
-  ;;             )
-
-  :config
-
-  (setq wgrep-auto-save-buffer t)
-  ;; ^ save all edited buffers automatically, after `wgrep-finish-edit'.
-
-  (setq wgrep-enable-key "w")
-  ;; ^ keybinding to switch to wgrep.
-  ;; Mnemonic: "w" for "write-mode" (from "read-only-mode").
-
-  ())
-
-;;----------------------------------------------;;
-;;; `rg': "Rust Grep".
-
-(use-package rg)
-
-;;----------------------------------------------;;
 ;; External Packages: Formats ------------------;;
 ;;----------------------------------------------;;
 
@@ -1885,7 +1996,12 @@ $0")
 
   ())
 
-;; ^ 
+;; ^ Links:
+;;
+;;   • URL `https://github.com/jrblevin/markdown-mode'
+;;
+
+;; ^ NOTE:
 ;;
 ;; `gfm-mode' abbreviates "GitHub-flavored markdown".
 ;;
@@ -1959,15 +2075,16 @@ $0")
 
 ;;  :load-path (sboo-submodule-directory "bnf-mode")
 
-  :commands (bnf-mode))
+  :commands (bnf-mode)
 
-;;----------------------------------------------;;
+  :config
 
-;; (use-package xpm
-;;   :commands (xpm-grok xpm-finish xpm-raster xpm-as-xpm xpm-put-points xpm-generate-buffer)
-;;   :mode (("\\.xpm\\'" . c-mode))
-;;   ; :mode (("\\.xpm\\'" . xpm-mode))
-;;   ())
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/sergeyklay/bnf-mode'
+;;
 
 ;;----------------------------------------------;;
 
@@ -1989,11 +2106,66 @@ $0")
 
     ()))
 
+;; ^ Links:
+;;
+;;   • URL `https://github.com/dominikh/dotfiles/blob/master/emacs.d/contrib/xmodmap-mode.el'
+;;
+
+;;----------------------------------------------;;
+
+;; (use-package xpm
+;;   :commands (xpm-grok xpm-finish xpm-raster xpm-as-xpm xpm-put-points xpm-generate-buffer)
+;;   :mode (("\\.xpm\\'" . c-mode))
+;;   ; :mode (("\\.xpm\\'" . xpm-mode))
+;;   ())
+
 ;;----------------------------------------------;;
 ;; External Packages: Editing ------------------;;
 ;;----------------------------------------------;;
 
+;;; `wgrep': "Writeable GREP".
+
+(use-package wgrep
+
+  ;; :bind (:map grep-mode-map
+  ;;             ;; ^
+  ;;             ;; NOTE **not** `wgrep-mode-map', which binds:
+  ;;             ;;
+  ;;             ;;     ("C-x C-q" . wgrep-exit)
+  ;;             ;;              
+  ;;             ("C-x C-q" . wgrep-toggle-readonly-area)
+  ;;             ;; ^
+  ;;             ;; the standard keybinding for `toggle-read-only'.
+  ;;             ;; for consistency, e.g. with `wdired'.
+  ;;             ;;
+  ;;             ;; [TODO doesn't work]
+  ;;             )
+
+  :config
+
+  (setq wgrep-auto-save-buffer t)
+  ;; ^ save all edited buffers automatically, after `wgrep-finish-edit'.
+
+  (setq wgrep-enable-key "w")
+  ;; ^ keybinding to switch to wgrep.
+  ;; Mnemonic: "w" for "write-mode" (from "read-only-mode").
+
+  ())
+
+;;----------------------------------------------;;
+;;; `rg': "Rust Grep".
+
+(use-package rg
+
+  :config
+
+  ())
+
+;;----------------------------------------------;;
+
 (use-package wrap-region
+
+  :delight (wrap-region-mode " 🎁")
 
   :config
 
@@ -2032,6 +2204,13 @@ $0")
   ;;   (wrap-region-add-wrappers (sboo-markdown-wrap-region-table)))
 
   (wrap-region-mode +1))
+
+;; ^ Links
+;;
+;;   • URL `https://github.com/rejeep/wrap-region.el'
+;;   • URL `http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/'
+;;   • URL `https://www.youtube.com/watch?v=9SWAKPF0fHE'
+;;
 
 ;; ^ `wrap-region-add-wrappers':
 ;;
@@ -2076,100 +2255,147 @@ $0")
 
 ;;----------------------------------------------;;
 
+(use-package expand-region
 
-
-;;----------------------------------------------;;
-;; External Packages: Miscellaneous ------------;;
-;;----------------------------------------------;;
-
-(use-package rainbow-mode
-
-  :load-path "/nix/store/qnl0dlq0zsvg5rnd6c9grdn1phv9xc7x-emacs-rainbow-mode-1.0.1/share/emacs/site-lisp/elpa/rainbow-mode-1.0.1/" ;FIXME dont hardcode, must eval at macro-time.
-
-  :delight
-
-  :hook (prog-mode text-mode)
+  :delight (expand-region-mode " ")
 
   :config
 
   ())
 
-;;----------------------------------------------;;
-
-;; (use-package rainbow-delimeters
-
-;;   :commands (rainbow-delimiters-mode)
-
-;;   :custom-face
-
-;;   (rainbow-delimeters-max-face-count 6 "fewer faces, higher-contrast.")
-
-;;   ;; (rainbow-delimiters-depth-1-face )
-;;   ;; (rainbow-delimiters-depth-2-face )
-;;   ;; (rainbow-delimiters-depth-3-face )
-;;   ;; (rainbow-delimiters-depth-4-face )
-;;   ;; (rainbow-delimiters-depth-5-face )
-;;   ;; (rainbow-delimiters-depth-6-face )
-
-;;   ;; (rainbow-delimiters-unmatched-face )
-;;   ;; (rainbow-delimiters-mismatched-face )
-
-;;   :config
-
-;;   (let* ((HOOKS
-;;           (if (require 'sboo-lisp nil :no-error)
-;;               sboo-lisp-hooks
-;;             '(emacs-lisp-mode-hook)))
-;;          )
-
-;;     (dolist (HOOK HOOKS)
-;;       (add-hook HOOK #'rainbow-delimiters-mode)))
-
-;;   ())
+;; ^ Links:
+;;
+;;   • URL `https://github.com/magnars/expand-region.el'
+;;   • URL `'
+;;
 
 ;;----------------------------------------------;;
 
-;; (use-package rainbow-block
+(use-package sed-mode
 
-;;   :delight
+  :delight (sed-mode " ")
 
-  ;; :hook (prog-mode text-mode)
+  :config
 
-  ;; :config
+  ())
 
-;;   ())
-
-;;----------------------------------------------;;
-
-;; ;; `highlight-numbers': highlight numbers (in any language).
-
-;; (use-package highlight-numbers
-;;   )
+;; ^ Links:
+;;
+;;   • URL `https://github.com/emacsfodder/sed-mode'
+;;   • URL `http://elpa.gnu.org/packages/sed-mode.html'
+;;   • URL `https://www.gnu.org/software/sed/manual/sed.html'
+;;
 
 ;;----------------------------------------------;;
 
-;; ;; `highlight-quoted': highlight *Lisp Symbols* (e.g. `'foo`).
+(use-package edit-indirect
 
-;; (use-package highlight-quoted
-;;   )
+  :commands (edit-indirect-region)
+
+  :delight (edit-indirect-mode)
+
+  :custom
+
+  (edit-indirect-guess-mode-function #'sboo-edit-indirect-guess-mode "Override `edit-indirect-default-guess-mode'.")
+
+  :config
+
+  ;;--------------------------;;
+
+  (defun sboo-edit-indirect-guess-mode (parent-buffer parent-region-begin parent-region-end)
+
+    "Guess the major mode for an edit-indirect buffer.
+Calls `set-auto-mode', which parses the « mode » file-local (special) variable 
+(i.e. « -*- mode: ... -*- »)."
+
+    (set-auto-mode t))
+
+  ;;--------------------------;;
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/Fanael/edit-indirect'
+;;
+
+
+;;----------------------------------------------;;
+;; External Packages: Navigation ---------------;;
+;;----------------------------------------------;;
+
+(use-package smartscan
+
+  :commands (global-smartscan-mode)
+
+  :config
+
+  ;;(global-smartscan-mode +1)
+
+  ())
+
+;; ^ Make « M-n » and « M-p » look for the `symbol-at-point'.
+;;
+;;   • URL `https://github.com/mickeynp/smart-scan'
+;;   • URL `https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el'
+;;
+
+;;----------------------------------------------;;
+;; External Packages: Filesystem ---------------;;
+;;----------------------------------------------;;
+
+(use-package peep-dired
+
+  :custom
+
+  (peep-dired-ignored-extensions '("mkv" "iso" "mp4") "don't preview binary files.")
+
+  :bind (:map peep-dired-mode-map 
+         ("SPC" . nil)
+         ("<backspace>" . nil))
+
+  :config
+
+  ())
+
+;; ^ URL `https://github.com/asok/peep-dired'
+;;
+;;
 
 ;;----------------------------------------------;;
 
-;; ;; `highlight-escape-sequences': highlight *Escape Sequences* (e.g. `"\n"`).
+(use-package neotree
+  :disabled
 
-;; (use-package highlight-escape-sequences
-;;   )
+  :config
 
-;;----------------------------------------------;;
+  ())
 
-(use-package which-key
-
-    )
+;; ^  URL `https://github.com/jaypei/emacs-neotree'
 
 ;;----------------------------------------------;;
+;; External Packages: Terminal -----------------;;
+;;----------------------------------------------;;
 
-;;(require volatile-highlights ())
+(use-package shell-pop
 
+  :bind (("C-t" . shell-pop))
+
+  :config
+
+  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+  (setq shell-pop-term-shell "/bin/zsh")
+  ;; need to do this manually or not picked up by `shell-pop'
+  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type)
+
+  ())
+
+;; ^ URL `http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/'
+
+;; ^ URL `https://github.com/kyagi/shell-pop-el'
+
+;;----------------------------------------------;;
+;; External Packages: Highlighting -------------;;
 ;;----------------------------------------------;;
 
 (use-package volatile-highlights
@@ -2182,105 +2408,272 @@ $0")
 
   ())
 
-;;----------------------------------------------;;
-
-;; (use-package which-key
-;;   ;;
-;;   :diminish which-key-mode
-;;   ;;
-;;   :init
-;;   (setq which-key-idle-secondary-delay 0.5)
-;;   (setq which-key-idle-delay           1.0)
-;;   ;;
-;;   :config
-;;   (which-key-mode t))
-;; ;; ^ After 1 second of an unfinished key-press,
-;; ;; show the documentation of the sub-keys available in the key sequence.
+;; ^ URL `'
 
 ;;----------------------------------------------;;
 
-(use-package desktop-environment
+(use-package rainbow-mode
 
-  :commands (desktop-environment-toggle-mute
-             desktop-environment-toggle-microphone-mute
-             desktop-environment-screenshot-part
-             desktop-environment-volume-decrement
-             desktop-environment-volume-increment
-             )
+  :commands (rainbow-mode)
 
-  :init
+  :delight (rainbow-mode " 🌈")
 
-  ;; See « desktop-environment.el »
+  ;; :hook (prog-mode text-mode)
+
+  :config
 
   ())
 
-;; e.g. this feature provides `desktop-environment-keyboard-backlight-set':
-;;
-;;       (defun desktop-environment-keyboard-backlight-set (value)
-;; "Set keyboard backlight to VALUE."
-;; (dbus-call-method :system
-;;                   "org.freedesktop.UPower"
-;;                   "/org/freedesktop/UPower/KbdBacklight"
-;;                   "org.freedesktop.UPower.KbdBacklight"
-;;                   "SetBrightness"
-;;                   :int32 value)
-;; (message "New keyboard value: %s%%" (desktop-environment-keyboard-backlight-percent)))
-
-;; `dbus-call-method':
-;;
-;; 
+;; ^ URL `'
+;; ^ URL `https://jblevins.org/log/rainbow-mode'
 
 ;;----------------------------------------------;;
 
-(use-package eimp
+(use-package rainbow-delimiters
 
-  :if window-system
+  :commands (rainbow-delimiters-mode)
 
-  :hook (image-mode-hook)
+  :delight (rainbow-delimiters-mode " 🌈")
 
-  )
+  ;;TODO:
+  ;; :custom-face
 
-;;----------------------------------------------;;
-;; Appearence ----------------------------------;;
-;;----------------------------------------------;;
+  ;; (rainbow-delimiters-max-face-count 6 "fewer faces, higher-contrast.")
 
-(progn
+  ;; (rainbow-delimiters-depth-1-face )
+  ;; (rainbow-delimiters-depth-2-face )
+  ;; (rainbow-delimiters-depth-3-face )
+  ;; (rainbow-delimiters-depth-4-face )
+  ;; (rainbow-delimiters-depth-5-face )
+  ;; (rainbow-delimiters-depth-6-face )
 
-  ;;--------------------------;;
-  
-  (use-package telephone-line
+  ;; (rainbow-delimiters-unmatched-face )
+  ;; (rainbow-delimiters-mismatched-face )
 
-    :config
+  :config
 
-    (setq telephone-line-lhs
-          '((evil   . (telephone-line-evil-tag-segment))
-            (accent . (telephone-line-vc-segment
-                       telephone-line-erc-modified-channels-segment
-                       telephone-line-process-segment))
-            (nil    . (telephone-line-minor-mode-segment
-                       telephone-line-buffer-segment))))
+  (let* ((LISP-HOOKS
+          (if (require 'sboo-lisp nil :no-error)
+              sboo-lisp-hooks
+            '(emacs-lisp-mode-hook)))
+         )
 
-    (setq telephone-line-rhs
-          '((nil    . (telephone-line-misc-info-segment))
-            (accent . (telephone-line-major-mode-segment))
-            (evil   . (telephone-line-airline-position-segment))))
+    (dolist (HOOK LISP-HOOKS)
+      (add-hook HOOK #'rainbow-delimiters-mode)))
 
-    (telephone-line-mode +1)
-    ;; ^ Activation (i.e. « (`*-mode' +1) ») must follow Initialization (i.e. « (`setq' *-* ...) »).
-
-    ())
-
-  ;;--------------------------;;
-  
   ())
+
+;; ^ URL `https://github.com/Fanael/rainbow-delimiters'
+
+;;----------------------------------------------;;
+
+(use-package rainbow-identifiers
+
+  :commands (rainbow-identifiers-mode)
+
+  :delight (rainbow-identifiers-mode " 🌈")
+
+  :hook (prog-mode . rainbow-identifiers-mode)
+
+  :config
+
+  ())
+
+;; ^ URL `https://github.com/Fanael/rainbow-identifiers'
+
+;;----------------------------------------------;;
+
+(use-package rainbow-blocks
+
+  :commands (rainbow-blocks-mode)
+
+  :delight (rainbow-blocks-mode " 🌈")
+
+  :delight
+
+  ;; :hook (prog-mode text-mode)
+
+  :config
+
+  ())
+
+;; ^ URL `https://github.com/istib/rainbow-blocks'
+
+;;----------------------------------------------;;
+
+(use-package highlight-numbers
+
+  :commands (highlight-numbers-mode)
+
+  :delight (highlight-numbers-mode)
+
+  :hook (prog-mode . rainbow-identifiers-mode)
+
+  :config
+
+  ())
+
+;; ^ `highlight-numbers': highlight numbers (in any language).
+
+;; ^ URL `https://github.com/Fanael/highlight-quoted'
+
+;;----------------------------------------------;;
+
+(use-package highlight-quoted
+
+  :commands (highlight-quoted-mode)
+
+  :delight (highlight-quoted-mode)
+
+  :hook (prog-mode . rainbow-identifiers-mode)
+
+  :config
+
+  ())
+
+;; ^ URL `https://github.com/Fanael/highlight-numbers'
+
+;; ^ `highlight-quoted': highlight *Lisp Symbols* (e.g. `'foo`).
+
+;;----------------------------------------------;;
+
+(use-package highlight-blocks
+
+  :commands (highlight-blocks-mode)
+
+  :delight (highlight-blocks-mode)
+
+  :config
+
+  (let* ((LISP-HOOKS
+          (if (require 'sboo-lisp nil :no-error)
+              sboo-lisp-hooks
+            '(emacs-lisp-mode-hook)))
+         )
+
+    (dolist (HOOK LISP-HOOKS)
+      (add-hook HOOK #'highlight-blocks-mode)))
+
+  ())
+
+;; ^ URL `https://github.com/Fanael/highlight-blocks'
+
+;; ^ `highlight-blocks': highlights *block* at-`point' (i.e. innermost parenthetical grouping(s)).
+
+;;----------------------------------------------;;
+
+(use-package highlight-escape-sequences
+
+  :commands (highlight-escape-sequences-mode)
+
+  :delight (highlight-escape-sequences-mode)
+
+  :hook (prog-mode . rainbow-identifiers-mode)
+
+  :config
+
+  ())
+
+;; ^ URL `https://github.com/dgutov/highlight-escape-sequences'
+
+;; ^ `highlight-escape-sequences': highlight *Escape Sequences* (e.g. `"\n"`).
+
+;;----------------------------------------------;;
+;; External Packages: Windows/Buffers ----------;;
+;;----------------------------------------------;;
+
+(use-package awesome-tab
+
+  :config
+
+  (awesome-tab-mode +1)
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/manateelazycat/awesome-tab'
+;;
+
+;;TODO;; (add-to-list helm-source-list awesome-tab-build-helm-source)
+
+;;----------------------------------------------;;
+;; External Packages: Appearence ---------------;;
+;;----------------------------------------------;;
+
+(use-package telephone-line
+
+  :custom
+
+  (telephone-line-lhs
+        '((evil   . (telephone-line-evil-tag-segment))
+          (accent . (telephone-line-vc-segment
+                     telephone-line-erc-modified-channels-segment
+                     telephone-line-process-segment))
+          (nil    . (telephone-line-minor-mode-segment
+                     telephone-line-buffer-segment))))
+
+  (telephone-line-rhs
+        '((nil    . (telephone-line-misc-info-segment))
+          (accent . (telephone-line-major-mode-segment))
+          (evil   . (telephone-line-airline-position-segment))))
+
+  :config
+
+  (telephone-line-mode -1)
+  ;; ^ Activation (i.e. « (`*-mode' +1) ») must follow Initialization (i.e. « (`setq' *-* ...) »).
+
+  ())
+
+;;----------------------------------------------;;
+
+(use-package unicode-fonts
+  :disabled
+
+  :load-path "~/.emacs.d/submodules/unicode-fonts"
+
+  :config
+
+  (unicode-fonts-setup)
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/rolandwalker/unicode-fonts'
+;;
 
 ;;----------------------------------------------;;
 
 (use-package all-the-icons
+  :disabled
 
   :load-path "~/.emacs.d/submodules/all-the-icons.el"
 
-  :disabled)
+  :config
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/domtronn/all-the-icons.el'
+;;
+
+;;----------------------------------------------;;
+
+(use-package icons-in-terminal
+  :disabled
+
+  :load-path "~/.emacs.d/submodules/icons-in-terminall"
+
+  :config
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/sebastiencs/icons-in-terminal'
+;;
 
 ;; Installation:
 ;;
@@ -2298,20 +2691,162 @@ $0")
 ;;----------------------------------------------;;
 
 (use-package all-the-icons-dired
+  :disabled
 
   :load-path "~/.emacs.d/submodules/all-the-icons-dired"
 
   :hook (dired-mode . all-the-icons-dired-mode)
 
-  :disabled)
+  :config
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/jtbm37/all-the-icons-dired'
+;;
 
 ;;----------------------------------------------;;
 
 (use-package doom-modeline
+  :disabled
+
+  :load-path "~/.emacs.d/submodules/doom-modeline"
 
   :hook (after-init . doom-modeline-mode)
 
-  :disabled)
+  :config
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/seagle0128/doom-modeline'
+;;
+
+;;----------------------------------------------;;
+;; External Packages: Clipboard ----------------;;
+;;----------------------------------------------;;
+
+(use-package simpleclip
+  :disabled                             ;FIXME
+
+  :config
+
+  (simpleclip-mode +1)
+
+  ())
+
+;; ^ Links:
+;;
+;; ^ URL `https://github.com/rolandwalker/simpleclip'
+;;
+
+;;----------------------------------------------;;
+;; External Packages: Media --------------------;;
+;;----------------------------------------------;;
+
+(use-package eimp
+
+  :if window-system
+
+  :commands (eimp-mode)
+
+  :hook
+  (image-mode eimp-mode)
+
+  :config
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://www.emacswiki.org/emacs/eimp.el'
+;;
+
+;;----------------------------------------------;;
+
+(use-package pdf-tools
+
+  :if window-system
+
+  :load-path "site-lisp/pdf-tools/lisp"
+
+  :commands (pdf-view-mode)
+
+  :magic ("%PDF" . pdf-view-mode)
+
+  :config
+
+  (pdf-tools-install)
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/politza/pdf-tools'
+;;
+
+;;----------------------------------------------;;
+
+(use-package vlf
+
+  :config
+
+  (require 'vlf-setup)
+
+  ())
+
+;; ^ « vlf » abbreviates « View Large Files ».
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/m00natic/vlfi'
+;;
+
+;;----------------------------------------------;;
+;; External Packages: Miscellaneous ------------;;
+;;----------------------------------------------;;
+
+(use-package desktop-environment
+
+  :commands (desktop-environment-toggle-mute
+             desktop-environment-toggle-microphone-mute
+             desktop-environment-screenshot-part
+             desktop-environment-volume-decrement
+             desktop-environment-volume-increment
+             )
+
+  :init
+
+  ;; See « desktop-environment.el »
+
+  ())
+
+;; ^ the `desktop-environment' `featurep'
+;;   provides `desktop-environment-keyboard-backlight-set'.
+;;   e.g.:
+;;
+;;       (defun desktop-environment-keyboard-backlight-set (value)
+;; "Set keyboard backlight to VALUE."
+;; (dbus-call-method :system
+;;                   "org.freedesktop.UPower"
+;;                   "/org/freedesktop/UPower/KbdBacklight"
+;;                   "org.freedesktop.UPower.KbdBacklight"
+;;                   "SetBrightness"
+;;                   :int32 value)
+;; (message "New keyboard value: %s%%" (desktop-environment-keyboard-backlight-percent)))
+
+;;----------------------------------------------;;
+
+;; Deft is an Emacs mode for quickly browsing, filtering, and editing
+;; directories of plain text notes, inspired by Notational Velocity.
+;; http://jblevins.org/projects/deft
+;; https://github.com/jrblevin/deft
+
+;; (use-package deft
+;;   :config
 
 ;;----------------------------------------------;;
 
@@ -2328,6 +2863,66 @@ $0")
 ;; (use-package web-mode
 ;;   :mode (("\\.mustache\\'" . web-mode))
 ;;   ()))
+
+;;----------------------------------------------;;
+;; External Packages: Help ---------------------;;
+;;----------------------------------------------;;
+
+;; (use-package helpful
+
+;;   :config
+
+;;   ())
+
+;; ^ URL `https://github.com/Wilfred/helpful'
+
+;;----------------------------------------------;;
+
+(use-package which-key
+
+  :delight (which-key-mode)
+
+  :custom
+
+  (which-key-idle-delay           1.000 "after « 1s » (one second) of pressing an unfinished keysequence, show the documentation of the sub-keys available in the keysequence.")
+  (which-key-idle-secondary-delay 0.250 "")
+
+  :config
+
+  (which-key-mode +1)
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/justbur/emacs-which-key'
+;;
+
+;;----------------------------------------------;;
+
+;; ;;
+;; ;;  bm
+;; ;;  bookmark+ (bmkp)
+;; ;;  Quickly save and restore point using registers
+
+;; ;;; bm
+;; ;; https://github.com/joodland/bm
+;; (use-package bm
+
+;;   :config
+;;   (progn
+;;     (setq-default bm-buffer-persistence t) ; buffer persistence on by default
+
+;;     (when (display-graphic-p) ; Add fringe only if display is graphic (GUI)
+;;       (define-fringe-bitmap 'bm-marker-left [#xF8    ; ▮ ▮ ▮ ▮ ▮ 0 0 0
+;;                                              #xFC    ; ▮ ▮ ▮ ▮ ▮ ▮ 0 0
+;;                                              #xFE    ; ▮ ▮ ▮ ▮ ▮ ▮ ▮ 0
+;;                                              #x0F    ; 0 0 0 0 ▮ ▮ ▮ ▮
+;;                                              #x0F    ; 0 0 0 0 ▮ ▮ ▮ ▮
+;;                                              #xFE    ; ▮ ▮ ▮ ▮ ▮ ▮ ▮ 0
+;;                                              #xFC    ; ▮ ▮ ▮ ▮ ▮ ▮ 0 0
+;;                                              #xF8])) ; ▮ ▮ ▮ ▮ ▮ 0 0 0
+;;     ()))
 
 ;;----------------------------------------------;;
 ;; Conditional Configuration -------------------;;
@@ -2469,6 +3064,12 @@ $0")
 ;;   (require 'vlf-setup)
 
 ;;   )
+
+;;----------------------------------------------;;
+
+;; `dbus-call-method':
+;;
+;; 
 
 ;;----------------------------------------------;;
 
