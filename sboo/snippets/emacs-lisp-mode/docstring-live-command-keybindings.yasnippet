@@ -1,0 +1,22 @@
+# -*- mode: snippet -*-
+#
+# key         : \[
+# name        : [sboo] Docstring: a command's live keybinding(s) (e.g. « \\[find-file] »)
+#
+# type        : snippet
+# condition   : t
+# expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : TODO « condition » upon being within a Comment or String.
+# --
+\\\\[`
+
+(let* ((CHOICES   obarray)
+       (PREDICATE #'commandp)
+       (INITIAL   nil)
+       (PROMPT    "Command: ")
+       )
+  (completing-read PROMPT CHOICES PREDICATE nil INITIAL))
+
+`] $0

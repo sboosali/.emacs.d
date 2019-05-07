@@ -1,0 +1,22 @@
+# -*- mode: snippet -*-
+#
+# key         : \{
+# name        : [sboo] Docstring: a keymaps' live keybinding(s) (e.g. « \\{text-mode-map} »)
+#
+# type        : snippet
+# condition   : t
+# expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : TODO « condition » upon being within a Comment or String.
+# --
+\\\\{`
+
+(let* ((CHOICES   obarray)
+       (PREDICATE #'keymapp)
+       (INITIAL   nil)
+       (PROMPT    "Keymap: ")
+       )
+  (completing-read PROMPT CHOICES PREDICATE nil INITIAL))
+
+`} $0

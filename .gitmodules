@@ -52,3 +52,12 @@
 [submodule "simpleclip"]
 	path = submodules/simpleclip
 	url = https://github.com/rolandwalker/simpleclip
+[submodule "doom-modeline"]
+	path = submodules/doom-modeline
+	url = https://github.com/seagle0128/doom-modeline
+[submodule "yasnippet"]
+	path = submodules/yasnippet
+	url = https://github.com/joaotavora/yasnippet
+[submodule "yasnippet-snippets"]
+	path = submodules/yasnippet-snippets
+	url = https://github.com/AndreaCrotti/yasnippet-snippets
