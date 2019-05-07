@@ -3899,6 +3899,98 @@ URL \``yas-selected-text`'
 
 
 
+;;(global-set-key (kbd "<f5>") nil)          ;; « xfce4 » sends « C-c » on « F5 », i.e. Copy / User-Keymap.
+;;(global-set-key (kbd "<f6>") nil)          ;; « xfce4 » sends « C-x » on « F6 », i.e. Cut / Extra-Keymap.
+(global-set-key (kbd "<f7>") #'list-buffers)
+;;(global-set-key (kbd "<f8>") nil)          ;; « xfce4 » sends « C-v » on « F8 », i.e. Paste.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(add-hook 'after-init-hook
+          (lambda ()
+            (with-current-buffer sboo-init-file
+              (sboo-set-font-to-iosevka))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;; ;;
+;; ;;  bm
+;; ;;  bookmark+ (bmkp)
+;; ;;  Quickly save and restore point using registers
+
+;; ;;; bm
+;; ;; https://github.com/joodland/bm
+;; (use-package bm
+
+;;   :config
+;;   (progn
+;;     (setq-default bm-buffer-persistence t) ; buffer persistence on by default
+
+;;     (when (display-graphic-p) ; Add fringe only if display is graphic (GUI)
+;;       (define-fringe-bitmap 'bm-marker-left [#xF8    ; ▮ ▮ ▮ ▮ ▮ 0 0 0
+;;                                              #xFC    ; ▮ ▮ ▮ ▮ ▮ ▮ 0 0
+;;                                              #xFE    ; ▮ ▮ ▮ ▮ ▮ ▮ ▮ 0
+;;                                              #x0F    ; 0 0 0 0 ▮ ▮ ▮ ▮
+;;                                              #x0F    ; 0 0 0 0 ▮ ▮ ▮ ▮
+;;                                              #xFE    ; ▮ ▮ ▮ ▮ ▮ ▮ ▮ 0
+;;                                              #xFC    ; ▮ ▮ ▮ ▮ ▮ ▮ 0 0
+;;                                              #xF8])) ; ▮ ▮ ▮ ▮ ▮ 0 0 0
+;;     ()))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ##################################################
