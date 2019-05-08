@@ -162,10 +162,19 @@
 
 ;; ^ « ffap » abbreviates `find-file-at-point'.
 
-(defalias 'yes-or-no-p #'y-or-n-p)
+(fset 'yes-or-no-p #'y-or-n-p)
 
+;; ^ concise boolean prompts.
+;;
 ;; ^ with `y-or-n-p', you press just one key for boolean prompts.
 ;;   (i.e. the single character "y", instead of typing out the phrase "yes".)
+;;
+;; e.g. in `dired-mode': 
+;; when deleting a file, you are prompted by `y-or-n-p';
+;; but when deleting a directory, you are prompted by (the more verbose) `yes-or-no-p'.
+;;
+
+;; ^ (Why `fset'??)
 
 ;;----------------------------------------------;;
 ;; Settings: Personal Information --------------;;

@@ -3,7 +3,7 @@
 ;; Copyright © 2019 Spiros Boosalis
 
 ;; Version: 0.0.0
-;; Package-Requires: ((emacs "25") seq pcase)
+;; Package-Requires: ((emacs "25"))
 ;; Author:  Spiros Boosalis <samboosalis@gmail.com>
 ;; Homepage: https://github.com/sboosali/.emacs.d
 ;; Keywords: local
@@ -52,6 +52,38 @@ Windows lacks the program `ssh'.")
 
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-windows-configure-modifiers ()
+
+  "Configure a Windows keyboard's Modifier Keys (for Windows).
+
+Effects:
+
+• Set Left&Right « ❖ » (Window) to « super ».
+• Set « ▤ » (Menu/App) to « hyper ».
+
+A (standard) Windows keyboard has these Modifier Keys:
+
+• « ❖ » — the (Left and Right) “Window” key(s).
+• « ▤ » — the “Menu” (a.k.a. “App”) key.
+
+Links:
+
+• URL `http://ergoemacs.org/emacs/emacs_hyper_super_keys.html'"
+
+  (progn
+
+    (setq w32-pass-lwindow-to-system nil)
+    (setq w32-pass-rwindow-to-system nil)
+    (setq w32-pass-apps-to-system    nil)
+
+    (setq w32-lwindow-modifier 'super) ; « lwindow » means the “Left Windows” key.
+    (setq w32-rwindow-modifier 'super) ; « rwindow » means the “Right Windows” key.
+    (setq w32-apps-modifier    'hyper) ; « apps » means the “Menu/App” key.
+
+    ()))
+
 ;;----------------------------------------------;;
 
 (defun sboo-windows-maximize-frame ()

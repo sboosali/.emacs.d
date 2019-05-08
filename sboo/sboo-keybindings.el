@@ -633,7 +633,7 @@ Links:
 
 ;;==============================================;;
 
-;;; Control Keybindings (`C-')...
+;;; Control (`C-') Keybindings...
 
 ;;==============================================;;
 
@@ -649,13 +649,13 @@ Links:
   (global-set-key (kbd "<C-down>") #'forward-paragraph))
 
 ;;==============================================;;
-;;; Control+Meta Keybindings (`C-M-')...
+;;; Control+Meta (`C-M-') Keybindings...
 ;;==============================================;;
 
 (global-set-key (kbd "C-M-m") #'maximize-frame)
 
 ;;==============================================;;
-;;; KeyPad (`kp-' Keybindings...
+;;; KeyPad (`kp-') Keybindings...
 ;;==============================================;;
 
 (global-set-key (kbd "<kp-left>")  #'previous-buffer)
@@ -682,6 +682,28 @@ Links:
 (global-set-key (kbd "<kp-subtract>") #'sboo-find-file)
 
 ;;(global-set-key (kbd "<kp-")   #')
+
+;;==============================================;;
+;;; Hyper (`H-') Keybindings...
+;;==============================================;;
+
+(progn
+  ;; Insert Unicode Characters...
+
+  (define-key key-translation-map (kbd "H-o") (kbd "•")) ; BULLET
+  (define-key key-translation-map (kbd "H-v") (kbd "◇")) ; WHITE DIAMOND
+
+  (define-key key-translation-map (kbd "H-1") (kbd "❶")) ; INVERSE CIRCLED DIGIT ONE
+  (define-key key-translation-map (kbd "H-2") (kbd "❷")) ; INVERSE CIRCLED DIGIT TWO
+  (define-key key-translation-map (kbd "H-3") (kbd "❸")) ; INVERSE CIRCLED DIGIT THREE
+  (define-key key-translation-map (kbd "H-4") (kbd "❹")) ; INVERSE CIRCLED DIGIT FOUR
+  (define-key key-translation-map (kbd "H-5") (kbd "❺")) ; INVERSE CIRCLED DIGIT FIVE
+  (define-key key-translation-map (kbd "H-6") (kbd "❻")) ; INVERSE CIRCLED DIGIT SIX
+  (define-key key-translation-map (kbd "H-7") (kbd "❼")) ; INVERSE CIRCLED DIGIT SEVEN
+  (define-key key-translation-map (kbd "H-8") (kbd "❽")) ; INVERSE CIRCLED DIGIT EIGHT
+  (define-key key-translation-map (kbd "H-9") (kbd "❾")) ; INVERSE CIRCLED DIGIT NINE
+
+  ())
 
 ;;==============================================;;
 ;;; Super (`s-') Keybindings...

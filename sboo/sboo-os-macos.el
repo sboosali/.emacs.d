@@ -3,7 +3,7 @@
 ;; Copyright © 2019 Spiros Boosalis
 
 ;; Version: 0.0.0
-;; Package-Requires: ((emacs "25") seq pcase)
+;; Package-Requires: ((emacs "25"))
 ;; Author:  Spiros Boosalis <samboosalis@gmail.com>
 ;; Homepage: https://github.com/sboosali/.emacs.d
 ;; Keywords: local
@@ -38,7 +38,11 @@
 ;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
-;; Builtins:
+;; builtins (internal):
+
+;;----------------------------------------------;;
+
+;; packages (external):
 
 (eval-when-compile 
   (require 'use-package))
@@ -54,9 +58,43 @@
   (exec-path-from-shell-initialize))
 
 ;;----------------------------------------------;;
+;; Commands ------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-macos-configure-modifiers ()
+
+  "Configure a Apple keyboard's Modifier Keys (on MacOS).
+
+Effects:
+
+• Set « ⌘ » (Command) to « meta ».
+• Set Left « ⌥ » (Option) to « super ».
+• Set Right(???) « ⌥ » (Option) to to « hyper ».
+
+A (standard) Apple keyboard has these Modifier Keys:
+
+• « ⌘ » — the (Left and Right) “Apple” keys.
+• « ⌥ » — the “Option” key.
+
+Links:
+
+• URL `http://ergoemacs.org/emacs/emacs_hyper_super_keys.html'"
+
+  (progn
+
+    (setq mac-command-modifier 'meta)
+    (setq mac-option-modifier  'super)
+    (setq mac-control-modifier 'control)
+
+    ;;(setq ns-function-modifier 'hyper)
+    ()))
+
+;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
+;; `exec-path-from-shell'...
+;;
 ;; `exec-path-from-shell-initialize' calls `exec-path-from-shell-copy-env':
 ;;
 ;; • (exec-path-from-shell-copy-env "PATH")

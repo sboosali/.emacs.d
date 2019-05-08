@@ -158,7 +158,43 @@ Related:
 
    (defalias 'sboo-maximize-frame #'sboo-os-maximize-frame)))
 
-;;==============================================;;
+;;----------------------------------------------;;
+;;; Settings -----------------------------------;;
+;;----------------------------------------------;;
+
+;; Keyboard Settings...
+
+(pcase sboo-os-current-system
+
+  ('linux   (sboo-linux-configure-modifiers))
+
+  ('windows (sboo-windows-configure-modifiers))
+
+  ('macos   (sboo-macos-configure-modifiers))
+
+  (_ ()))
+
+;; Hyper and Super:
+;;
+;; • 
+;; • 
+;;
+
+;; Modifier Keys:
+;;
+;; • ❖ Window key (Windows keyboard)
+;; • ▤ Menu key (Windows keyboard)
+;; • ⌥ Option key (Apple keyboard)
+;; • ⌘ Command key (Apple keyboard)
+;; 
+
+;; ^ Links:
+;;
+;;   • URL `http://ergoemacs.org/emacs/emacs_hyper_super_keys.html'
+;;   • URL `'
+;;
+
+;;----------------------------------------------;;
 
 (pcase sboo-os-current-system
 

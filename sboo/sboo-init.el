@@ -45,7 +45,8 @@
 
 ;; Builtins:
 
-(eval-when-compile 
+(eval-when-compile
+  (require 'rx)
   (require 'pcase)
   (require 'cl-lib))
 
@@ -740,6 +741,12 @@ Related:
 
 (use-package grep
 
+  :commands (grep grep-find)
+
+  ;;--------------------------;;
+
+  :hook (grep-mode . sboo-grep-config)
+
   ;;--------------------------;;
 
   :config
@@ -752,28 +759,29 @@ Related:
 
   ;;--------------------------;;
 
-  (add-hook 'grep-mode #'sboo-grep-config)
+  (setq grep-files-aliases (append '(("hs" . "*.hs")
+                                ("md" . "*.md")
+                                )
+                              grep-files-aliases))
 
-  (dolist (CONS '(("hs" . "*.hs")
-                  ("md" . "*.md")
-                  ))
-    (add-to-list 'grep-files-aliases CONS))
-
-  (dolist (DIRECTORY '("tmp" "old" "stdout"
-                       "dist" "dist-newstyle" "dist-dante" ".stack-work"
-                       "elpa" ".cask"
-                       "node_modules" ".bundle"
-                       ))
-    (add-to-list 'grep-find-ignored-directories DIRECTORY))
+  (setq grep-find-ignored-directories (append '("tmp" "old" "stdout"
+                                          "dist" "dist-newstyle" "dist-dante" ".stack-work"
+                                          "elpa" ".cask"
+                                          "node_modules" ".bundle"
+                                          )
+                                         grep-find-ignored-directories))
+  ;;--------------------------;;
 
   ())
 
-;; ^ `grep-files-aliases', by default, holds:
+;; ^ NOTES:
 ;;
-;;     (("all" . "* .[!.]* ..?*")
-;;      ("el" . "*.el")
-;;      ("ch" . "*.[ch]")
-;;      ...)
+;;  • `grep-files-aliases', by default, holds:
+;;
+;;        (("all" . "* .[!.]* ..?*")
+;;         ("el"  . "*.el")
+;;         ("ch"  . "*.[ch]")
+;;         ...)
 ;;
 ;;
 
@@ -801,6 +809,8 @@ Related:
 
 (use-package shell
 
+  ;;--------------------------;;
+
   :bind
 
   ( ("<s>-s" . shell)
@@ -817,14 +827,18 @@ Related:
 
     )
 
+  ;;--------------------------;;
+
+  :hook (sh-mode . flycheck-mode)
+
+  ;; ^ ShellCheck (a Bash Linter) is a builtin FlyCheck checker.
+
+  ;;--------------------------;;
+
   :config
 
-  (add-hook 'sh-mode-hook 'flycheck-mode)
-
-  ;; ^ FlyCheck builds-in a « shellcheck » checker
-  ;; ^ « shellcheck » is a Bash Linter.
-
-  (push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
+  (push (cons (rx "*shell*") display-buffer--same-window-action)
+        display-buffer-alist)
 
    ;; ^
    ;;
@@ -835,7 +849,7 @@ Related:
    ;;
    ;; >  The command `shell` uses `pop-to-buffer`.
    ;; > If you have the Emacs source code, you can see it for yourself by running `C-h d f shell` to open the function's documentation (and then clicking the link to the function's source).
-  ;; `pop-to-buffer` can be configured via `display-buffer-alist`.
+   ;; `pop-to-buffer` can be configured via `display-buffer-alist`.
 
   ())
 
@@ -1076,9 +1090,17 @@ Related:
 
 (use-package flyspell
 
-  :commands (flyspell-mode flyspell-prog-mode flyspell-correct-word)
+  :commands (flyspell-mode flyspell-prog-mode flyspell-auto-correct-word)
 
   :delight (flyspell-mode " 🔤")
+
+  ;;--------------------------;;
+
+  :custom
+
+  ()
+
+  ;;--------------------------;;
 
   :config
 
@@ -1093,6 +1115,7 @@ Related:
 ;;
 ;;   • URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Spelling.html'
 ;;   • URL `https://www.emacswiki.org/emacs/FlySpell'
+;;   • URL `https://stackoverflow.com/questions/22107182/in-emacs-flyspell-mode-how-to-add-new-word-to-dictionary'
 ;;
 
 ;;----------------------------------------------;;
@@ -1116,22 +1139,28 @@ Related:
 
 ;;----------------------------------------------;;
 
-(with-eval-after-load 'comint
+(use-package comint
 
-  (bind-key "<up>"   'comint-previous-matching-input-from-input comint-mode-map)
-  (bind-key "<down>" 'comint-next-matching-input-from-input     comint-mode-map)
+  :bind (:map comint-mode-map
+              ("<up>"   . comint-previous-matching-input-from-input)
+              ("<down>" . 'comint-next-matching-input-from-input)
+              )
 
-  (setq comint-scroll-to-bottom-on-output 'others)
-  (setq comint-scroll-to-bottom-on-input  'this)
+  :custom
 
-  (sboo-custom-set comint-buffer-maximum-size
-      2000
-    "Increase.")
+  (comint-scroll-to-bottom-on-output 'others "‘others’ means — “move ‘point’ down to track STDOUT only in ‘other-window’s (not in the ‘selected-window’).”")
+  (comint-scroll-to-bottom-on-input  'this   "‘this’ means — “move ‘point’ down if you type into the ‘selected-window’.”")
+
+  (comint-buffer-maximum-size 65536 "increase to « 2^16.")
+
+  :config
 
   ())
 
-;; Non-Package features must be configured more because,
-;; with `with-eval-after-load', `define-key', etc.
+;; ^ NOTES
+;;
+;;   • `comint' is a Non-Package (?) Feature.
+;;
 
 ;;----------------------------------------------;;
 ;; Builtin Packages: ---------------------------;;
