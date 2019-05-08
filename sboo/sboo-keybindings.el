@@ -534,8 +534,12 @@ Inputs:
 ;;; Function-Key Keybindings (`<f_>')...
 ;;==============================================;;
 
-(global-set-key (kbd "<f1>")  #'dabbrev-completion)
-(global-set-key (kbd "<f2>")  #'helm-swoop)
+(unless (eq #'dabbrev-completion (global-key-binding (kbd "<f1>")))
+  (global-set-key (kbd "<f1>") #'dabbrev-completion))     ; « F1 » is the “Complete Key”. Overriden by « (use-package ??? ...) ».
+
+(unless (eq #'helm-swoop (global-key-binding (kbd "<f2>")))
+  (global-set-key (kbd "<f2>") #'isearch-forward-regexp)) ; « F2 » is the “Search Key”. Overriden by « (use-package helm-swoop ...) ».
+
 ;; <f3> is 'kmacro-start-macro-or-insert-counter
 ;; <f4> is 'kmacro-start-macro-or-insert-counter
 

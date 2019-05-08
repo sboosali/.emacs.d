@@ -1301,10 +1301,45 @@ Related:
 ;; External Packages: Completion ---------------;;
 ;;----------------------------------------------;;
 
+(use-package helm-config
+
+  :custom
+
+  (helm-command-prefix-key "M-q" "the Default (« C-x c ») is too similar to `kill-emacs's keybinding.")
+
+  ;; ^  NOTE `helm-command-prefix-key':
+  ;;    becomes immutable once `helm-config' is `load'ed.
+
+  ;;   :bind (:map helm-map
+  ;;               ("<tab>" . helm-execute-persistent-action)
+  ;;               ("C-i"   . helm-execute-persistent-action)
+  ;;               ("C-z"   . helm-select-action)
+  ;;               ("A-v"   . helm-previous-page))
+
+  :config
+
+  ;; Remap keybindings:
+
+  (define-key global-map [remap execute-extended-command] #'helm-M-x)
+  (define-key global-map [remap list-buffers]             #'helm-buffers-list)
+  (define-key global-map [remap find-file]                #'helm-find-files) ; Includes the « `<tool-bar>' `<new-file>' ».
+  (define-key global-map [remap find-file-existing]       #'helm-find-files) ; Includes the « `<tool-bar>' `<open-file>' »?
+  (define-key global-map [remap occur]                    #'helm-occur)
+
+  (define-key global-map [remap menu-find-file-existing]  #'helm-find-files) ; The `toolbar's `<open-file>'.
+
+  (when (executable-find "curl")
+    (setq helm-google-suggest-use-curl-p t))
+
+  ;; ^ website `google' via program `curl'.
+
+  ())
+
+;;----------------------------------------------;;
+
 (use-package helm
 
   :delight (helm-mode " ⎈")
-
   :custom
 
   (helm-allow-mouse t "Enable mouse (doesn't enable selection-by-clicking, only marking-by-clicking).")
@@ -1318,11 +1353,6 @@ Related:
   ;;     '("\\` " "\\`\\*helm" "\\`\\*Echo Area" "\\`\\*Minibuf")
   ;;
 
-  (helm-command-prefix-key "M-q" "the Default (« C-x c ») is too similar to `kill-emacs's keybinding.")
-
-  ;; ^  NOTE `helm-command-prefix-key':
-  ;;    becomes immutable once `helm-config' is `load'ed.
-
   (helm-mode-fuzzy-match                 t " ")
   (helm-completion-in-region-fuzzy-match t " ")
 
@@ -1332,39 +1362,11 @@ Related:
   (helm-move-to-line-cycle-in-source     nil "Don't cycle (i.e. move to the end or to the beginning of the prior or of the next source) when reaching top-or-bottom of a source.")
   (helm-scroll-amount                    8   "Scroll 8 lines (« M-<next> » / « M-<prior> » )")
 
-  (helm-ff-file-name-history-use-recentf t " ")
   (helm-echo-input-in-header-line        t " ")
   (helm-full-frame                       t " ")
 
   (helm-autoresize-min-height 20 "Minimum Height (in lines?) for Helm Windows.")
   (helm-autoresize-max-height 60 "Maximum Height (in lines?) for Helm Windows.")
-
-  ;;   :bind (:map helm-map
-  ;;               ("<tab>" . helm-execute-persistent-action)
-  ;;               ("C-i"   . helm-execute-persistent-action)
-  ;;               ("C-z"   . helm-select-action)
-  ;;               ("A-v"   . helm-previous-page))
-
-  :init
-
-  (when (require 'helm-config nil :no-error)
-
-    ;; Remap keybindings:
-
-    (define-key global-map [remap execute-extended-command] #'helm-M-x)
-    (define-key global-map [remap list-buffers]             #'helm-buffers-list)
-    (define-key global-map [remap find-file]                #'helm-find-files) ; Includes the « `<tool-bar>' `<new-file>' ».
-    (define-key global-map [remap find-file-existing]       #'helm-find-files) ; Includes the « `<tool-bar>' `<open-file>' »?
-    (define-key global-map [remap occur]                    #'helm-occur)
-
-    (define-key global-map [remap menu-find-file-existing]  #'helm-find-files) ; The `toolbar's `<open-file>'.
-
-    (when (executable-find "curl")
-      (setq helm-google-suggest-use-curl-p t))
-
-    ;; ^ website `google' via program `curl'.
-
-    ())
 
   :config
 
@@ -1382,6 +1384,63 @@ Related:
 ;; 
 
 ;; ^ `helm-mode' vs `helm-autoresize-mode': TODO.
+
+;;----------------------------------------------;;
+
+;; (use-package helm-mode
+;;   :config
+;;   (helm-mode 1))
+
+;;----------------------------------------------;;
+
+(use-package helm-sys
+
+  :commands (helm-top)
+
+  )
+
+;;----------------------------------------------;;
+
+(use-package helm-dabbrev
+
+  :commands (helm-dabbrev)
+
+  )
+
+;;----------------------------------------------;;
+
+(use-package helm-buffers
+
+  :commands (helm-buffers-list)
+
+  :custom
+
+  (helm-buffers-fuzzy-matching t "Fuzzily-Match buffer-names (for `helm-mini' when listing buffers).")
+
+  (ido-use-virtual-buffers t "`helm-buffers-list' wants this.")
+
+  :config
+
+  (dolist (MODE '(picture-mode artist-mode))
+    (add-to-list 'helm-buffers-favorite-modes MODE))
+                                           
+  )
+
+;;----------------------------------------------;;
+
+(use-package helm-files
+
+  :commands (helm-find-files)
+
+  :custom
+
+  (helm-ff-file-name-history-use-recentf t "use `recentf'.")
+  (helm-ff-search-library-in-sexp        t "search for library in `require' and `declare-function' sexp.")
+
+  (helm-boring-file-regexp-list '("\\.git$" "\\.hg$" "\\.svn$" "\\.CVS$" "\\._darcs$" "\\.la$" "\\.o$" "\\.i$")
+                                "hide these files from the Helm Buffer.")
+
+  )
 
 ;;----------------------------------------------;;
 
@@ -2329,6 +2388,38 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 ;; External Packages: Navigation ---------------;;
+;;----------------------------------------------;;
+
+(use-package helm-swoop
+
+  :commands (helm-swoop helm-multi-swoop)
+
+  :bind (("<f2>"   . helm-swoop)
+         ("S-<f2>" . helm-multi-swoop)
+         )
+
+  :custom
+
+  (helm-swoop-speed-or-color nil "« nil » means: boost the Invoke-Speed (slightly), lose any Text-Color.")
+
+  (helm-swoop-use-fuzzy-match t "Fuzzily-Match.")
+
+  ;; ^ fuzzy matching means: TODO.
+
+  (helm-swoop-split-direction 'split-window-horizontally "Horizontally or Vertically.")
+
+  ;;TODO:
+  ;; helm-swoop-pre-input-function #'symbol-at-point-or-helm-swoop-pattern
+  ;; ;; ^ if there is no symbol at the cursor, use the last used words instead.
+  ;; ;; `helm-swoop-pattern' holds the last used words.
+
+  )
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/ShingoFukuyama/helm-swoop#readme'
+;;
+
 ;;----------------------------------------------;;
 
 (use-package smartscan
