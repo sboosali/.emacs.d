@@ -3989,6 +3989,41 @@ URL \``yas-selected-text`'
 
 
 
+(when (let* ((KEYMAP (current-global-map))) (ignore-errors (kbd "<f1>") KEYMAP))
+  (global-set-key (kbd "<f1>") #'dabbrev-completion))     ; « F1 » is the “Complete Key”. Overriden by « (use-package ??? ...) ».
+
+
+
+(when (not (eq #'dabbrev-completion (global-key-binding (kbd "<f1>"))))
+  (global-set-key (kbd "<f1>") #'dabbrev-completion))     ; « F1 » is the “Complete Key”. Overriden by « (use-package ??? ...) ».
+
+(when (not (eq #'helm-swoop (global-key-binding (kbd "<f2>"))))
+  (global-set-key (kbd "<f2>") #'isearch-forward-regexp)) ; « F2 » is the “Search Key”. Overriden by « (use-package helm-swoop ...) ».
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
