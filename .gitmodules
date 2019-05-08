@@ -43,9 +43,6 @@
 [submodule "icons-in-terminal"]
 	path = submodules/icons-in-terminal
 	url = https://github.com/sebastiencs/icons-in-terminal
-[submodule "all-the-icons.el"]
-	path = submodules/all-the-icons.el
-	url = https://github.com/domtronn/all-the-icons.el
 [submodule "all-the-icons-dired"]
 	path = submodules/all-the-icons-dired
 	url = https://github.com/jtbm37/all-the-icons-dired
