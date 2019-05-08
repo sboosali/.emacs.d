@@ -67,7 +67,7 @@
 
   :link '(url-link :tag "GitHub" "https://github.com/sboosali/haddock-mode")
 
-  :prefix "haddock-"
+  :prefix 'haskell
   :group 'haskell)
 
 ;;==============================================;;

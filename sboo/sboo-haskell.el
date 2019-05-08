@@ -1,4 +1,4 @@
-;;; sboo-haskell.el --- -*- lexical-binding: t -*-
+;;; sboo-haskell.el --- -*- coding: utf-8; lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -31,13 +31,15 @@
 ;;
 ;; See:
 ;;
-;; * `sboo-haskell-compile-command'
-;; * `sboo-haskell-eldoc'
-;; * `sboo-dante-cabal-new-repl'
-;; * `'
-;;
+;; • `sboo-haskell-compile-command'
+;; • `sboo-dante-mode'
+;; • `sboo-haskell-eldoc'
 ;; 
-;;
+;; Libraries:
+;; 
+;; • `haskell'
+;; • `dante'
+;; 
 
 ;;; Code:
 
@@ -47,7 +49,8 @@
 
 ;; Builtins:
 
-(eval-when-compile 
+(eval-when-compile
+  (require 'rx)
   (require 'cl-lib))
 
 ;;----------------------------------------------;;
@@ -60,13 +63,11 @@
 ;; Customization -------------------------------;;
 ;;----------------------------------------------;;
 
-(defgroup sboo-haskell
-
-  nil
+(defgroup sboo-haskell nil
 
   "Personal Haskell customization."
 
-  :prefix "sboo-haskell-"
+  :prefix 'haskell
 
   :group 'sboo
   :group 'haskell)
@@ -200,10 +201,10 @@ then « <div>...</div> » will be fontified by « `html-mode' ».
 
 Extends `haskell-font-lock-quasi-quote-modes'."
 
-  :group 'sboo-haskel
+  :type '(repeat (cons string symbol))
 
-  :safe t
-  :type '(repeat (cons string symbol)))
+  :safe #'listp
+  :group 'sboo-haskell)
 
 ;;----------------------------------------------;;
 
@@ -221,7 +222,7 @@ Zero-or-more function-symbols."
 
   :type '(repeat (function))
 
-  :safe t
+  :safe #'listp
   :group 'sboo-haskell)
 
 ;;; sub word mode lets you navigate (e.g. M-b) between "sub words" of a camelcased word
@@ -241,7 +242,7 @@ How `dante' will truy to launch GHCi."
 
   :type  '(repeated (symbol :tag "`dante-methods-alist' key."))
 
-  :safe  t
+  :safe #'listp
   :group 'sboo-haskell)
 
 ;;----------------------------------------------;;
@@ -254,8 +255,9 @@ How `dante' will truy to launch GHCi."
 
 How `dante' will launch GHCi."
 
-  :type  '(symbol :tag "`dante-methods-alist' key.")
-  :safe  t
+  :type '(symbol :tag "`dante-methods-alist' key.")
+
+  :safe #'symbolp
   :group 'sboo-haskell)
 
 ;;----------------------------------------------;;
@@ -270,8 +272,7 @@ Each symbol represents a particular type (/ info / docs / etc) provider."
                  (const dante
                         :tag "`dante-type-at'"))
 
-  :safe t
-
+  :safe #'symbolp
   :group 'sboo-haskell)
 
 ;;----------------------------------------------;;
@@ -696,28 +697,42 @@ Related:
 (defun sboo-dante-mode ()
   
   "Start/restart `dante'.
-  
-(i.e. `dante-mode' or `dante-restart')."
+
+Conditions:
+
+• Doesn't start for non-file buffers.
+  Thus, in `markdown-mode', we can `edit-indirect-region'
+  a « ``` haskell ... ``` » code block,
+  with syntax highlight via `haskell-mode',
+  without spawning failing Dante processes
+  (since `sboo-dante-mode' is registered with `haskell-mode-hook').
+
+Related:
+
+• `dante-mode' 
+• `dante-restart'"
 
   (interactive)
 
-  (if (bound-and-true-p dante-mode)
+  (when (buffer-file-name)
+
+    (if (bound-and-true-p dante-mode)
+
+        (progn
+          (message "%s" "[sboo] Restarting `dante'...")
+
+          (dante-restart))
 
       (progn
-        (message "%s" "[sboo] Restarting `dante'...")
+        (message "%s" "[sboo] Importing `dante' and `flycheck'...")
 
-        (dante-restart))
+        (when (require 'flycheck nil :no-error)
+          (flycheck-mode 1))
 
-    (progn
-      (message "%s" "[sboo] Importing `dante' and `flycheck'...")
+        (when (require 'dante nil :no-error)
+          (dante-mode 1))
 
-      (when (require 'flycheck nil :no-error)
-        (flycheck-mode 1))
-
-      (when (require 'dante nil :no-error)
-        (dante-mode 1))
-
-      ())))
+        t))))
 
 ;;----------------------------------------------;;
 ;; Functions -----------------------------------;;

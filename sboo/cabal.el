@@ -104,13 +104,11 @@
 ;;;###autoload
 (defgroup cabal nil
 
-  "Cabal-related customization."
+  "Customize Cabal files."
 
   ;;:link (url-link "")
 
-  :prefix "cabal-"
-
-  ;; :group 'languages
+  :prefix 'haskell
   :group 'haskell)
 
 ;;==============================================;;

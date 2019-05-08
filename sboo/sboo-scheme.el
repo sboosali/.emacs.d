@@ -42,7 +42,7 @@
 
   "Personal Scheme customization."
 
-  :prefix "sboo-scheme-"
+  :prefix 'sboo
 
   :group 'sboo
   :group 'scheme)

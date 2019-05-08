@@ -105,7 +105,7 @@ a `booleanp'.")
 
   "Personal Nix customization."
 
-  :prefix 'sboo
+  :prefix 'nix
 
   :group 'sboo
   :group 'nix)

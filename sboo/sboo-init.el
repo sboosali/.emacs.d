@@ -1163,6 +1163,9 @@ Related:
   ;;      starts the Modeline, and thus shouldn't have leading whitespace.
   ;;
 
+  :hook ((emacs-lisp-mode . superword-mode)
+         )
+
   :config
 
   ())
@@ -1833,7 +1836,7 @@ $0")
   (use-package haskell
     :demand t
 
-    :commands    (haskell-mode)
+    :commands (haskell-mode)
 
     :interpreter (("runhaskell"  . haskell-mode)
                   ("runghc"      . haskell-mode)
@@ -1918,26 +1921,34 @@ $0")
     ;;;:hook     ((haskell-mode . haskell-decl-scan-mode))
 
     :init
-    (add-hook 'haskell-mode-hook #'haskell-decl-scan-mode))
+
+    (add-hook 'haskell-mode-hook #'haskell-decl-scan-mode)
+
+    :config
+
+    ())
 
   ;;------------------------;;
 
   (use-package haskell-cabal
-    :after    haskell
+    :after (haskell)
 
     :commands (haskell-cabal-mode)
 
-    :mode        (("\\.cabal\\'"      . haskell-cabal-mode)
-                  ("\\.project\\'"    . haskell-cabal-mode)
-                  ("\\`\\.project\\'" . haskell-cabal-mode)))
+    :mode (("\\.cabal\\'"      . haskell-cabal-mode)
+           ("\\.project\\'"    . haskell-cabal-mode)
+           ("\\`\\.project\\'" . haskell-cabal-mode))
+
+    :config
+
+    ())
 
   ;;------------------------;;
 
   (use-package dante
-    :after    haskell
+    :after (haskell)
 
-    :load-path "/home/sboo/.emacs.d/submodules/dante"
- ;;TODO  :load-path "~/.emacs.d/submodules/dante"
+    :load-path "submodules/dante"
 
     :commands (dante-mode dante-restart)
 
@@ -1950,7 +1961,10 @@ $0")
     :init
 
     (add-hook 'haskell-mode-hook #'flycheck-mode)
-    (add-hook 'haskell-mode-hook #'dante-mode)
+
+    (if (commandp #'sboo-dante-mode)
+        (add-hook 'haskell-mode-hook #'sboo-dante-mode)
+      (add-hook 'haskell-mode-hook #'dante-mode))
 
     :config
 
@@ -2134,7 +2148,7 @@ $0")
 
   (use-package markdown-mode
 
-    :commands (markdown-mode gfm-mode)
+    :commands (markdown-mode gfm-mode markdown-edit-code-block)
 
     :mode (("README\\.md\\'" . gfm-mode)
            ("\\.md\\'"       . markdown-mode)
@@ -2147,10 +2161,9 @@ $0")
                 ("TAB" . dabbrev-expand)
                 )
 
-    :init
+    :custom
 
-    (setq markdown-command "markdown")
-    ;; ^ `pandoc'. TODO
+    (markdown-command "markdown" "")  ;; TODO `pandoc'
 
     :config
 
@@ -2796,7 +2809,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;; ^ `highlight-numbers': highlight numbers (in any language).
 
-;; ^ URL `https://github.com/Fanael/highlight-quoted'
+;; ^ URL `https://github.com/Fanael/highlight-numbers'
 
 ;;----------------------------------------------;;
 
@@ -2814,7 +2827,26 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;; ^ `highlight-quoted': highlight *Lisp Symbols* (e.g. `'foo`).
 
-;; ^ URL `https://github.com/Fanael/highlight-numbers'
+;; ^ URL `https://github.com/Fanael/highlight-quoted'
+
+;;----------------------------------------------;;
+
+(use-package highlight-defined
+
+  :commands (highlight-defined-mode)
+
+  :delight (highlight-defined-mode " 🗱")
+
+;;:hook (emacs-lisp-mode . highlight-defined-mode)
+
+  :config
+
+  ())
+
+;; ^ `highlight-defined': highlight DEFINED *Elisp Symbols*.
+;;   Thus, contrasting UNDEFINED symbols.
+
+;; ^ URL `https://github.com/Fanael/highlight-defined'
 
 ;;----------------------------------------------;;
 

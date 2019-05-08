@@ -110,7 +110,7 @@ Links:
 
   "Personal HTML customization."
 
-  :prefix "sboo-html-"
+  :prefix 'html
 
   :group 'sboo
   :group 'html)
