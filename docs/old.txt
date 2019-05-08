@@ -4060,6 +4060,63 @@ URL \``yas-selected-text`'
 
 
 
+(progn
+
+  ;;--------------------------;;
+
+  (defun sboo-shell-pop-launch ()
+    "Launch `ansi-term' for function `shell-pop'."
+    (ansi-term shell-pop-term-shell))
+
+  ;;--------------------------;;
+
+  (use-package shell-pop
+
+    :commands (shell-pop)
+
+    :bind (("s-x s" . shell-pop)
+           )
+
+    :custom
+
+    (shell-pop-term-shell "/bin/bash"                                              "Bash")
+    (shell-pop-shell-type (list "ansi-term" "*ansi-term*" #'sboo-shell-pop-launch) "use `ansi-term' (not `shell').")
+
+    :config
+
+    (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type)
+
+    ()))
+
+;; ^ Links:
+;;
+;;   • URL `http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/'
+;;   • URL `https://github.com/kyagi/shell-pop-el'
+;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1116,13 +1116,10 @@ Related:
 
   :delight
 
-  (auto-revert-mode " 🗘")
-  ;; ^ Shorten `auto-revert-modee'.
-
   (visual-line-mode " VL")
   ;; ^ Shorten `visual-line-mode'.
 
-  (auto-fill-function " aF")
+  (auto-fill-function " AF")
   ;; ^ Shorten `auto-fill-mode'.
 
   (buffer-face-mode)
@@ -1144,6 +1141,37 @@ Related:
   :config
 
   ())
+
+;;----------------------------------------------;;
+
+(use-package elisp-mode
+
+  :delight (emacs-lisp-mode "elisp")
+
+  ;; ^ Shorten « Emacs-Lisp » to « elisp ».
+  ;;
+  ;; NOTE the `major-mode', unlike any `minor-mode's,
+  ;;      starts the Modeline, and thus shouldn't have leading whitespace.
+  ;;
+
+  :config
+
+  ())
+
+;;----------------------------------------------;;
+
+(use-package find-dired
+
+  :custom
+
+  (find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld") "“By default Emacs will pass -exec to find and that makes it very slow. It is better to collate the matches and then use xargs to run the command.”")
+
+  :config
+
+  ())
+
+;; ^ URL `https://www.masteringemacs.org/article/working-multiple-files-dired'
+
 
 ;;----------------------------------------------;;
 
@@ -1175,6 +1203,21 @@ Related:
 
 ;;----------------------------------------------;;
 
+(use-package vc
+
+  :defer t
+
+  :custom
+
+  (vc-follow-symlinks t "don't ask when visiting a symbolic link to a version-controlled file (but do warn in the echo area).")
+
+  :config
+
+  ())
+
+
+;;----------------------------------------------;;
+
 (use-package sql
 
   :commands (sql-postgres)
@@ -1188,20 +1231,6 @@ Related:
 
 ;;----------------------------------------------;;
 
-(use-package find-dired
-
-  :custom
-
-  (find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld") "“By default Emacs will pass -exec to find and that makes it very slow. It is better to collate the matches and then use xargs to run the command.”")
-
-  :config
-
-  ())
-
-;; ^ URL `https://www.masteringemacs.org/article/working-multiple-files-dired'
-
-;;----------------------------------------------;;
-
 (use-package calendar
 
   :defer t
@@ -1209,20 +1238,6 @@ Related:
   :custom
 
   (calendar-week-start-day 0 "“0 means Sunday, 1 means Monday, etc”")
-
-  :config
-
-  ())
-
-;;----------------------------------------------;;
-
-(use-package vc
-
-  :defer t
-
-  :custom
-
-  (vc-follow-symlinks t "don't ask when visiting a symbolic link to a version-controlled file (but do warn in the echo area).")
 
   :config
 
@@ -1608,7 +1623,7 @@ Related:
 
     :commands (snippet-mode yas-insert-snippet yas-next-field-or-maybe-expand)
 
-    :diminish (snippet-mode " Y")
+    :delight (yas-minor-mode " Y")
 
     ;;------------------------;;
 
@@ -2548,33 +2563,14 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; ^  URL `https://github.com/jaypei/emacs-neotree'
 
 ;;----------------------------------------------;;
-;; External Packages: Terminal -----------------;;
-;;----------------------------------------------;;
-
-(use-package shell-pop
-
-  :bind (("C-t" . shell-pop))
-
-  :config
-
-  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
-  (setq shell-pop-term-shell "/bin/zsh")
-  ;; need to do this manually or not picked up by `shell-pop'
-  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type)
-
-  ())
-
-;; ^ URL `http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/'
-
-;; ^ URL `https://github.com/kyagi/shell-pop-el'
-
-;;----------------------------------------------;;
 ;; External Packages: Highlighting -------------;;
 ;;----------------------------------------------;;
 
 (use-package volatile-highlights
 
-  :diminish
+  :commands (volatile-highlights-mode)
+
+  :delight (volatile-highlights-mode " ⚡")
 
   :config
 
@@ -2582,7 +2578,14 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   ())
 
-;; ^ URL `'
+;; ^ `volatile-highlights' temporarily-highlights changes
+;;    (e.g. from `yank'ing (and pasting), `insert'ing, `undo'ing, etc).
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/k-talo/volatile-highlights.el'
+;;   • URL `http://pragmaticemacs.com/emacs/volatile-highlights/'
+;;
 
 ;;----------------------------------------------;;
 
@@ -2592,14 +2595,14 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   :delight (rainbow-mode " 🌈")
 
-  ;; :hook (prog-mode text-mode)
-
   :config
 
   ())
 
-;; ^ URL `'
-;; ^ URL `https://jblevins.org/log/rainbow-mode'
+;; ^ Links:
+;;
+;;   • URL `https://jblevins.org/log/rainbow-mode'
+;;
 
 ;;----------------------------------------------;;
 
@@ -2679,9 +2682,9 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   :commands (highlight-numbers-mode)
 
-  :delight (highlight-numbers-mode)
+  :delight (highlight-numbers-mode " 🗱")
 
-  :hook (prog-mode . rainbow-identifiers-mode)
+  :hook (prog-mode . highlight-numbers-mode)
 
   :config
 
@@ -2697,17 +2700,37 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   :commands (highlight-quoted-mode)
 
-  :delight (highlight-quoted-mode)
+  :delight (highlight-quoted-mode " 🗱")
 
-  :hook (prog-mode . rainbow-identifiers-mode)
+  :hook (prog-mode . highlight-quoted-mode)
 
   :config
 
   ())
 
+;; ^ `highlight-quoted': highlight *Lisp Symbols* (e.g. `'foo`).
+
 ;; ^ URL `https://github.com/Fanael/highlight-numbers'
 
-;; ^ `highlight-quoted': highlight *Lisp Symbols* (e.g. `'foo`).
+;;----------------------------------------------;;
+
+(use-package highlight-escape-sequences
+
+  :commands (highlight-escape-sequences-mode)
+
+  :delight (highlight-escape-sequences-mode " 🗱")
+
+  :hook (prog-mode . turn-on-hes-mode)
+
+  ;;:custom (hes-mode-alist (append hes-mode-alist) "register Haskell Escape-Sequences.")  ;TODO
+
+  :config
+
+  ())
+
+;; ^ URL `https://github.com/dgutov/highlight-escape-sequences'
+
+;; ^ `highlight-escape-sequences': highlight *Escape Sequences* (e.g. `"\n"`).
 
 ;;----------------------------------------------;;
 
@@ -2715,7 +2738,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   :commands (highlight-blocks-mode)
 
-  :delight (highlight-blocks-mode)
+  :delight (highlight-blocks-mode " 🗱")
 
   :config
 
@@ -2730,33 +2753,17 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   ())
 
-;; ^ URL `https://github.com/Fanael/highlight-blocks'
-
 ;; ^ `highlight-blocks': highlights *block* at-`point' (i.e. innermost parenthetical grouping(s)).
 
-;;----------------------------------------------;;
-
-(use-package highlight-escape-sequences
-
-  :commands (highlight-escape-sequences-mode)
-
-  :delight (highlight-escape-sequences-mode)
-
-  :hook (prog-mode . rainbow-identifiers-mode)
-
-  :config
-
-  ())
-
-;; ^ URL `https://github.com/dgutov/highlight-escape-sequences'
-
-;; ^ `highlight-escape-sequences': highlight *Escape Sequences* (e.g. `"\n"`).
+;; ^ URL `https://github.com/Fanael/highlight-blocks'
 
 ;;----------------------------------------------;;
 ;; External Packages: Windows/Buffers ----------;;
 ;;----------------------------------------------;;
 
 (use-package awesome-tab
+
+  :commands (awesome-tab-mode)
 
   :config
 
@@ -2770,6 +2777,46 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;
 
 ;;TODO;; (add-to-list helm-source-list awesome-tab-build-helm-source)
+
+;;----------------------------------------------;;
+;; External Packages: Terminal -----------------;;
+;;----------------------------------------------;;
+
+(progn
+
+  ;;--------------------------;;
+
+  (defun sboo-shell-pop-launch ()
+    "Launch `ansi-term' for function `shell-pop'."
+    (ansi-term shell-pop-term-shell))
+
+  ;;--------------------------;;
+
+  (use-package shell-pop
+
+    :commands (shell-pop)
+
+    :bind (("s-x s" . shell-pop)
+           )
+
+    :custom
+
+    (shell-pop-term-shell "/bin/bash"                                                      "Bash")
+    (shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda () (sboo-shell-pop-launch))) "use `ansi-term' (not `shell').")
+
+    ;; ^ NOTE `shell-pop' doesn't handle function-symbols correctly (i.e. « #'sboo-shell-pop-launch »).
+
+    :config
+
+    (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type)
+
+    ()))
+
+;; ^ Links:
+;;
+;;   • URL `http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/'
+;;   • URL `https://github.com/kyagi/shell-pop-el'
+;;
 
 ;;----------------------------------------------;;
 ;; External Packages: Appearence ---------------;;
