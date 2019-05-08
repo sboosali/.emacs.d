@@ -4380,6 +4380,207 @@ print-builtin-symbols:
 
 
 
+(use-package grep
+
+  :commands (grep grep-find)
+
+  ;;--------------------------;;
+
+  :hook (grep-mode . sboo-grep-config)
+
+  ;;--------------------------;;
+
+  :config
+
+  (defun sboo-grep-config ()
+
+    "Hook for `grep-mode'."
+
+    (toggle-truncate-lines +1))
+
+  ;;--------------------------;;
+
+  (dolist (CONS '(("hs" . "*.hs")
+                  ("md" . "*.md")
+                  ))
+    (add-to-list 'grep-files-aliases CONS))
+
+  ;;--------------------------;;
+
+  (dolist (DIRECTORY '("tmp" "old" "stdout"
+                       "dist" "dist-newstyle" "dist-dante" ".stack-work"
+                       "elpa" ".cask"
+                       "node_modules" ".bundle"
+                       ))
+    (add-to-list 'grep-find-ignored-directories DIRECTORY))
+
+  ;;--------------------------;;
+
+  ())
+
+
+
+
+
+(use-package grep
+
+  :commands (grep grep-find)
+
+  ;;--------------------------;;
+
+  :hook (grep-mode . sboo-grep-config)
+
+  ;;--------------------------;;
+
+  :custom
+
+  (grep-files-aliases (append '(("hs" . "*.hs")
+                                ("md" . "*.md")
+                                )
+                              grep-files-aliases))
+
+  (grep-find-ignored-directories (append '("tmp" "old" "stdout"
+                                          "dist" "dist-newstyle" "dist-dante" ".stack-work"
+                                          "elpa" ".cask"
+                                          "node_modules" ".bundle"
+                                          )
+                                         grep-find-ignored-directories))
+
+  ;;--------------------------;;
+
+  :config
+
+  (defun sboo-grep-config ()
+
+    "Hook for `grep-mode'."
+
+    (toggle-truncate-lines +1))
+
+  ;;--------------------------;;
+
+  ())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;----------------------------------------------;;
+;;; Settings -----------------------------------;;
+;;----------------------------------------------;;
+
+;; Keyboard Settings...
+
+(progn
+  ;; Insert Unicode Characters...
+
+  (define-key key-translation-map (kbd "H-o") (kbd "•")) ; BULLET
+  (define-key key-translation-map (kbd "H-4") (kbd "◇")) ; WHITE DIAMOND
+
+  (define-key key-translation-map (kbd "H-1") (kbd "①")) ; 
+  (define-key key-translation-map (kbd "H-2") (kbd "②")) ;
+  (define-key key-translation-map (kbd "H-3") (kbd "③")) ; 
+  (define-key key-translation-map (kbd "H-4") (kbd "")) ; 
+  (define-key key-translation-map (kbd "H-5") (kbd "")) ;
+  (define-key key-translation-map (kbd "H-6") (kbd "")) ; 
+  (define-key key-translation-map (kbd "H-7") (kbd "")) ; 
+  (define-key key-translation-map (kbd "H-8") (kbd "")) ;
+  (define-key key-translation-map (kbd "H-9") (kbd "")) ; 
+  (define-key key-translation-map (kbd "H-10") (kbd "")) ; 
+
+  ())
+
+;; Hyper and Super:
+
+;; Modifier Keys:
+;;
+;; • ❖ Window key (Windows keyboard)
+;; • ▤ Menu key (Windows keyboard)
+;; • ⌥ Option key (Apple keyboard)
+;; • ⌘ Command key (Apple keyboard)
+;;
+;; 
+
+;; ^ Links:
+;;
+;;   • URL `http://ergoemacs.org/emacs/emacs_hyper_super_keys.html'
+;;   • URL `'
+;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(defalias 'yes-or-no-p #'y-or-n-p)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
