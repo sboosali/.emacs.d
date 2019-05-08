@@ -280,6 +280,7 @@ Wraps `forward-thing'."
 
 ;; ^ 
 
+;;----------------------------------------------;;
 
 (defun sboo-prior-definition ()
 
@@ -432,76 +433,9 @@ Inputs:
     (copy-line argument)))
 
 ;;==============================================;;
-
-(defun sboo-swap-parentheses-and-square-brackets ()
-  
-  "Swap « [ ] » with « (  ) ».
-
-Calls:
-
-• `keyboard-translate'.
-
-Links:
-
-• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
-
-  (interactive)
-  
-  (keyboard-translate ?\( ?\[)
-  (keyboard-translate ?\[ ?\()
-
-  (keyboard-translate ?\) ?\])
-  (keyboard-translate ?\] ?\)))
-
-;;----------------------------------------------;;
-
-(defun sboo-swap-semicolon-and-colon ()
-  
-  "Swap « ; » with « : ».
-
-Calls:
-
-• `keyboard-translate'.
-
-Links:
-
-• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
-
-  (interactive)
-
-  (keyboard-translate ?\: ?\;)
-  (keyboard-translate ?\; ?\:))
-
-;;----------------------------------------------;;
-
-(defun sboo-swap-double-quote-with-single-quote ()
-  
-  "Swap « ' » with « \" ».
-
-Calls:
-
-• `keyboard-translate'.
-
-Links:
-
-• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
-
-  (interactive)
-
-  (keyboard-translate ?\" ?\')
-  (keyboard-translate ?\' ?\"))
-
-;;==============================================;;
-;; Key Translations ===========================;;
+;;; Key Translations ===========================;;
 ;;==============================================;;
 
-;; (unless t
-;;   ;; ^ whether these keyboard translations have already been configured globally
-;;   ;;   (e.g. via « xmodmap »)
-;;   (sboo-swap-parentheses-and-square-brackets)
-;;   (sboo-swap-semicolon-and-colon)
-;;   (sboo-swap-double-quote-with-single-quote)
-;;   ())
 
 ;;==============================================;;
 ;;; Unset ======================================;;
@@ -703,6 +637,16 @@ Links:
   (define-key key-translation-map (kbd "H-8") (kbd "❽")) ; INVERSE CIRCLED DIGIT EIGHT
   (define-key key-translation-map (kbd "H-9") (kbd "❾")) ; INVERSE CIRCLED DIGIT NINE
 
+  (define-key key-translation-map (kbd "s-1") (kbd "❶")) ; INVERSE CIRCLED DIGIT ONE
+  (define-key key-translation-map (kbd "s-2") (kbd "❷")) ; INVERSE CIRCLED DIGIT TWO
+  (define-key key-translation-map (kbd "s-3") (kbd "❸")) ; INVERSE CIRCLED DIGIT THREE
+  (define-key key-translation-map (kbd "s-4") (kbd "❹")) ; INVERSE CIRCLED DIGIT FOUR
+  (define-key key-translation-map (kbd "s-5") (kbd "❺")) ; INVERSE CIRCLED DIGIT FIVE
+  (define-key key-translation-map (kbd "s-6") (kbd "❻")) ; INVERSE CIRCLED DIGIT SIX
+  (define-key key-translation-map (kbd "s-7") (kbd "❼")) ; INVERSE CIRCLED DIGIT SEVEN
+  (define-key key-translation-map (kbd "s-8") (kbd "❽")) ; INVERSE CIRCLED DIGIT EIGHT
+  (define-key key-translation-map (kbd "s-9") (kbd "❾")) ; INVERSE CIRCLED DIGIT NINE
+
   ())
 
 ;;==============================================;;
@@ -805,7 +749,7 @@ Links:
 ;;(define-key sboo-paths-keymap (kbd "b") "")
 ;;(define-key sboo-paths-keymap (kbd "c") "")
 ;;(define-key sboo-paths-keymap (kbd "d") "")
-  (define-key sboo-paths-keymap (kbd "e") "~/.emacs.d" )
+;;(define-key sboo-paths-keymap (kbd "e") "~/.emacs.d" )
 ;;(define-key sboo-paths-keymap (kbd "f") "")
 ;;(define-key sboo-paths-keymap (kbd "g") "")
 ;;(define-key sboo-paths-keymap (kbd "h") "")
@@ -828,7 +772,7 @@ Links:
 ;;(define-key sboo-paths-keymap (kbd "y") "")
 ;;(define-key sboo-paths-keymap (kbd "z") "")
 
-  #'sboo-paths-keymap)
+  'sboo-paths-keymap)
 
 ;;----------------------------------------------;;
 
@@ -951,7 +895,6 @@ Links:
   (global-set-key (kbd "s-l") #'align-regexp)               ; a[L]ign
   (global-set-key (kbd "s-m") #'sboo-mode-keymap)           ; [M]ode-specific commands.
   (global-set-key (kbd "s-n") #'sboo-navigation-keymap)     ; [N]avigation Commands.
-  page-break').
   (global-set-key (kbd "s-o") #'find-file-at-point)         ; [O]pen file.
   (global-set-key (kbd "s-p") #'helm-show-kill-ring)        ; [P]aste from History.
 ;;(global-set-key (kbd "s-q") #')

@@ -4675,6 +4675,78 @@ Total: 3730 glyphes
 
 ==============================================
 
+;;==============================================;;
+
+(defun sboo-swap-parentheses-and-square-brackets ()
+  
+  "Swap « [ ] » with « (  ) ».
+
+Calls:
+
+• `keyboard-translate'.
+
+Links:
+
+• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
+
+  (interactive)
+  
+  (keyboard-translate ?\( ?\[)
+  (keyboard-translate ?\[ ?\()
+
+  (keyboard-translate ?\) ?\])
+  (keyboard-translate ?\] ?\)))
+
+;;----------------------------------------------;;
+
+(defun sboo-swap-semicolon-and-colon ()
+  
+  "Swap « ; » with « : ».
+
+Calls:
+
+• `keyboard-translate'.
+
+Links:
+
+• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
+
+  (interactive)
+
+  (keyboard-translate ?\: ?\;)
+  (keyboard-translate ?\; ?\:))
+
+;;----------------------------------------------;;
+
+(defun sboo-swap-double-quote-with-single-quote ()
+  
+  "Swap « ' » with « \" ».
+
+Calls:
+
+• `keyboard-translate'.
+
+Links:
+
+• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
+
+  (interactive)
+
+  (keyboard-translate ?\" ?\')
+  (keyboard-translate ?\' ?\"))
+
+;;----------------------------------------------
+
+;; (unless t
+;;   ;; ^ whether these keyboard translations have already been configured globally
+;;   ;;   (e.g. via « xmodmap »)
+;;   (sboo-swap-parentheses-and-square-brackets)
+;;   (sboo-swap-semicolon-and-colon)
+;;   (sboo-swap-double-quote-with-single-quote)
+;;   ())
+
+==============================================
+
 
 
 

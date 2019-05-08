@@ -146,7 +146,6 @@ Usage:
 (defcustom sboo-nix-hooks-list
 
   (list #'sboo-nix-set-compile-command
-        #'sboo-nix-prettify-symbols
         #'superword-mode
         )
 

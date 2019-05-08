@@ -2039,9 +2039,9 @@ $0")
 
     (add-hook 'haskell-mode-hook #'flycheck-mode)
 
-    (if (commandp #'sboo-dante-mode)
-        (add-hook 'haskell-mode-hook #'sboo-dante-mode)
-      (add-hook 'haskell-mode-hook #'dante-mode))
+    ;; (if (commandp #'sboo-dante-mode)
+    ;;     (add-hook 'haskell-mode-hook #'sboo-dante-mode)
+    ;;   (add-hook 'haskell-mode-hook #'dante-mode))
 
     :config
 
