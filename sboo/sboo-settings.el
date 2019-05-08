@@ -111,10 +111,10 @@
 (progn
 
   (prefer-coding-system       'utf-8)
-  (set-default-coding-systems 'utf-8)
-  (set-terminal-coding-system 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
-  (setq buffer-file-coding-system 'utf-8)
+;; (set-default-coding-systems 'utf-8)
+;; (set-terminal-coding-system 'utf-8)
+;; (set-keyboard-coding-system 'utf-8)
+;; (setq buffer-file-coding-system 'utf-8)
 
   ;; ^ UTF-8 as the default Unicode Encoding.
 
