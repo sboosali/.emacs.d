@@ -58,6 +58,3 @@
 [submodule "yasnippet-snippets"]
 	path = submodules/yasnippet-snippets
 	url = https://github.com/AndreaCrotti/yasnippet-snippets
-[submodule "submodules/all-the-icons"]
-	path = submodules/submodules/all-the-icons
-	url = https://github.com/domtronn/all-the-icons.el
