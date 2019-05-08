@@ -1,0 +1,31 @@
+#!/usr/bin/emacs --script
+
+;;----------------------------------------------;;
+
+(defvar sboo-builtin-features-list
+
+  '(
+    json
+    
+    )
+
+  "")
+
+(dolist (FEATURE sboo-builtin-features-list)
+  (require FEATURE))
+
+;;----------------------------------------------;;
+
+(defvar sboo-builtin-symbols-list nil
+  "")
+
+(defun sboo-register-builtin-symbols (symbol)
+  (push symbol sboo-builtin-symbols-list))
+
+(mapatoms #'sboo-builtin-symbols-list)
+
+;;----------------------------------------------;;
+
+(prin1 sboo-builtin-symbols-list)
+
+;;----------------------------------------------;;
