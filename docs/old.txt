@@ -4117,6 +4117,299 @@ URL \``yas-selected-text`'
 
 
 
+(progn
+  (define-prefix-command 'sboo-select-keymap)
+
+  (define-key sboo-select-keymap (kbd "a") #'mark-beginning-of-buffer)
+  (define-key sboo-select-keymap (kbd "b") #'mark-whole-buffer)
+;;(define-key sboo-select-keymap (kbd "c") #'mark-)
+  (define-key sboo-select-keymap (kbd "d") #'mark-defun)
+  (define-key sboo-select-keymap (kbd "e") #'mark-end-of-buffer)
+;;(define-key sboo-select-keymap (kbd "f") #'mark-)
+;;(define-key sboo-select-keymap (kbd "g") #'mark-)
+;;(define-key sboo-select-keymap (kbd "h") #'mark-)
+;;(define-key sboo-select-keymap (kbd "i") #'mark-)
+;;(define-key sboo-select-keymap (kbd "j") #'mark-)
+;;(define-key sboo-select-keymap (kbd "k") #'mark-)
+;;(define-key sboo-select-keymap (kbd "l") #'mark-)
+;;(define-key sboo-select-keymap (kbd "m") #'mark-)
+;;(define-key sboo-select-keymap (kbd "n") #'mark-)
+;;(define-key sboo-select-keymap (kbd "o") #'mark-)
+  (define-key sboo-select-keymap (kbd "p") #'mark-paragraph)
+;;(define-key sboo-select-keymap (kbd "q") #'mark-)
+;;(define-key sboo-select-keymap (kbd "r") #'mark-)
+;;(define-key sboo-select-keymap (kbd "s") #'mark-)
+;;(define-key sboo-select-keymap (kbd "t") #'mark-)
+;;(define-key sboo-select-keymap (kbd "u") #'mark-)
+;;(define-key sboo-select-keymap (kbd "v") #'mark-)
+  (define-key sboo-select-keymap (kbd "w") #'mark-word)
+  (define-key sboo-select-keymap (kbd "x") #'mark-sexp)
+;;(define-key sboo-select-keymap (kbd "y") #'mark-)
+;;(define-key sboo-select-keymap (kbd "z") #'mark-)
+
+  #'sboo-select-keymap)
+
+
+
+
+
+
+
+
+;;==============================================;;
+
+(defun sboo-next-page-break ()
+
+  "Move to the next Page-Break (i.e. « ^L »)."
+
+  ())
+
+;;----------------------------------------------;;
+
+(defun sboo-prior-page-break ()
+
+  "Move to the prior Page-Break (i.e. « ^L »)."
+
+  ())
+
+
+
+
+
+
+
+
+
+
+
+
+(progn
+
+  ;;--------------------------;;
+
+  (defun sboo-goto-last-change ()
+    "Invert `goto-last-change'."        ;TODO
+    (interactive "P")
+    (goto-last-change -1))
+
+  ;;--------------------------;;
+
+  (use-package goto-last-change
+
+  :commands (goto-last-change)
+
+  :bind (("<C-left>"  . goto-last-change)
+        ;; ("<C-right>" . sboo-goto-last-change)
+         )
+
+  :config
+
+  ()))
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/camdez/goto-last-change.el'
+;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==============================================
+
+https://github.com/danlamanna/.emacs.d/blob/master/init.el
+
+(use-package uniquify
+  :config (custom-set-variables
+           '(uniquify-buffer-name-style 'reverse)
+           '(uniquify-separator " - ")
+           '(uniquify-after-kill-buffer-p t)
+           '(uniquify-ignore-buffers-re "^\\*")))
+
+
+(prefer-coding-system       'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(setq buffer-file-coding-system 'utf-8)
+
+(put 'narrow-to-region 'disabled nil)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  (wrap-region-add-wrappers
+
+   `(
+
+     ("`" "`" nil (markdown-mode gfm-mode))
+
+     ;; ^ « <code> » syntax (e.g. « `pandoc` »).
+
+     ("%" "%" nil (bat-mode))
+
+     ;; ^ Environment-Variable syntax (e.g. « %APPDATA% »).
+
+     ("{-" "-}"    ";" (haskell-mode))
+
+     ("/* " " */"  ";" (nix-mode javascript-mode css-mode java-mode))
+
+     ("<!--" "-->" ";" ,(or (bound-and-true-p sboo-html-modes-list) '(html-mode)))
+
+     ("#|" "|#"    ";" (scheme-mode))
+
+     ;; ^ Mode-Specific, Multi-Line Comments:
+     ;;
+     ;;   • « ; » (i.e. the semicolon character)
+     ;;     is our universal trigger-key for commenting a region;
+     ;;     c.f. « M-; » runs `comment-dwim' across langauges.
+     ;;
+
+     ))
+
+
+
+
+     ("`" "'" "`" (emacs-lisp-mode))
+
+     ;; ^ Syntax for hyperlinks, in Elisp (docstrings).
+     ;;   « `...' » is the ASCII-version of  « ‘...’ » .
+
+
+
+
+       ("_" "_" nil ,(append MARKDOWN-MODES '(haskell-mode haddock-mode)))
+
+       ;; ^ Syntax for emphasis, in Markdown and Haddocks.
+       ;;   i.e. « _ » for « <em> », and « __ » for « <strong> ».
+
+       ("_" "_" nil ,(append MARKDOWN-MODES '(haskell-mode haddock-mode)))
+
+       ;; ^ Syntax for emphasis, in Markdown and Haddocks.
+       ;;   i.e. « _ » for « <em> », and « __ » for « <strong> ».
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==============================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

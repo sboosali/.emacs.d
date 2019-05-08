@@ -344,9 +344,8 @@ Related:
 ;; Import `defun's:
 
 (progn
-  (require 'bind-key)
-  (require 'diminish)
-  (require 'delight))
+  (require 'bind-key nil :no-error)
+  (require 'delight  nil :no-error))
 
 ;;----------------------------------------------;;
 ;; Settings ------------------------------------;;
@@ -547,7 +546,17 @@ Related:
 ;;; Internal Packages:
 
 ;;----------------------------------------------;;
-;; Internal Packages: --------------------------;;
+;;; Internal Packages: -------------------------;;
+;;----------------------------------------------;;
+
+(use-package minibuffer
+
+  :config
+
+  (add-to-list 'completion-styles 'substring nil)
+
+  ())
+
 ;;----------------------------------------------;;
 
 (when (require 'sboo-toolbar nil :no-error)
@@ -932,7 +941,7 @@ Related:
 
 (use-package dabbrev
 
-  :diminish (abbrev-mode " A")
+  :delight (abbrev-mode " A")
 
   :init
 
@@ -1541,7 +1550,7 @@ Related:
 
   (use-package company
 
-    :diminish (company-mode " ©")
+    :delight (company-mode " ©")
 
     ;;------------------------;;
 
@@ -2322,7 +2331,17 @@ $0")
 
 (use-package wrap-region
 
+  :commands (wrap-region-mode)
+
   :delight (wrap-region-mode " 🎁")
+
+  ;;--------------------------;;
+
+  :hook ((text-mode . wrap-region-mode)
+         (prog-mode . wrap-region-mode)
+         )
+
+  ;;--------------------------;;
 
   :config
 
@@ -2330,28 +2349,104 @@ $0")
 
   (require 'sboo-html nil :no-error)
 
-  (wrap-region-add-wrappers
+  (let* ((MARKDOWN-MODES (or (bound-and-true-p sboo-markdown-modes-list)
+                             '(markdown-mode gfm-mode)))
+         (HTML-MODES     (or (bound-and-true-p sboo-html-modes-list)
+                             (append '(html-mode mhtml-mode) MARKDOWN-MODES)))
+         (ORG-MODES      '(org-mode))
+         )
 
-   '(
-     ("{-" "-}"    ";" (haskell-mode))
+    (wrap-region-add-wrappers
 
-     ("/* " " */"  ";" (nix-mode javascript-mode css-mode java-mode))
+     `(
 
-     ("<!--" "-->" ";" ,(or (bound-and-true-p sboo-html-modes-list) html-mode))
+       ("`" "`" nil ,(append MARKDOWN-MODES '(haskell-mode haddock-mode)))
 
-     ;; ^ « ; » (i.e. the semicolon character) is our universal trigger-key for commenting a region.
-     ;;
-     ;;   c.f. « M-; » runs `comment-dwim' across langauges.
+       ;; ^ Syntax for code blocks (e.g. « `pandoc` »), in Markdown and Haddocks.
+       ;;   Syntax for operators (e.g. « `fmap` »), in Haskell.
 
-     ("`" "`" nil (markdown-mode gfm-mode))
+       ("‘" "’" "`" (emacs-lisp-mode))
 
-     ;; ^ « <code> » syntax.
+       ;; ^ Syntax for hyperlinks, in Elisp (docstrings).
+       ;;   « `...' » is the ASCII-Analogue of « ‘...’ » .
 
-     ("%" "%" nil (bat-mode))
+       ("*" "*" nil ,MARKDOWN-MODES)
 
-     ;; ^ Environment Variable syntax.
+       ;; ^ Syntax for emphasis, in Markdown.
+       ;;   i.e. « * » for « <em> », and « ** » for « <strong> ».
 
-     ))
+       ("_" "_" nil ,MARKDOWN-MODES)
+
+       ;; ^ Syntax for emphasis, in Markdown.
+       ;;   i.e. « _ » for « <em> », and « __ » for « <strong> ».
+
+       ("__" "__" "_" (haskell-mode haddock-mode))
+
+       ;; ^ Syntax for emphasis, in Haddocks.
+       ;;   i.e. « __ » for « <strong> »
+       ;;   (no single-underscore, i.e. no « _ »).
+
+       ("/" "/" nil (haskell-mode haddock-mode))
+
+       ;; ^ Syntax for for emphasis, in Haddocks.
+
+       ("~" "~" nil ,MARKDOWN-MODES)
+
+       ;; ^ Syntax for strike-through, in Markdown.
+
+       ("<" ">" "<" ,(append MARKDOWN-MODES '(haskell-mode haddock-mode)))
+       ("<" ">" "," ,(append MARKDOWN-MODES '(haskell-mode haddock-mode)))
+
+       ;; ^ Syntax for hyperlinks, in both Markdown and Haddocks.
+       ;;   « , » because it shares a key with « < » (unshifted).
+
+       ("<<" ">>" ">" (haskell-mode haddock-mode))
+
+       ;; ^ Syntax for image hyperlinks, in Haddocks.
+       ;;   « > » (the closing pair) because « < » (the opening pair) is already taken.
+
+       ("@" "@" nil (haskell-mode haddock-mode))
+
+       ;; ^ Syntax for code blocks, in Haddock.
+
+       ("=" "=" nil ,ORG-MODES)
+       ("+" "+" nil ,ORG-MODES)
+       
+       ;; ^ See `org-emphasis-alist':
+       ;;
+       ;;   •  « =verbatim= »
+       ;;   •  « +strike-through+ »
+       ;;
+
+       ("%" "%" nil (bat-mode))
+
+       ;; ^ Environment-Variable syntax (e.g. « %APPDATA% »), in Batch (a.k.a. « BAT »).
+
+       ("{-" "-}"    ":" (haskell-mode))
+
+       ("/* " " */"  ":" (nix-mode c-mode c++-mode javascript-mode css-mode java-mode))
+
+       ("<!--" "-->" ":" ,HTML-MODES)
+
+       ("#|" "|#"    ":" (scheme-mode))
+
+       ;; ^ Mode-Specific, Multi-Line Comments:
+       ;;
+       ;;   • « ; », i.e. the semicolon-character,
+       ;;     shares a key with the colon-character (unshifted),
+       ;;     is our universal trigger-key for commenting a region;
+       ;;     c.f. « M-; » runs `comment-dwim' across langauges.
+       ;;
+
+       ("¿" "?" "?" (text-mode))
+       ("¡" "!" "!" (text-mode))
+
+       ;; ^ Spanish-language Inverted Question/Exclamation Marks.
+       ;;   URL `https://en.wikipedia.org/wiki/Inverted_question_and_exclamation_marks'
+
+       ;;     ‹ ›  « »
+
+       )))
 
   (when (bound-and-true-p sboo-html-wrap-region-table)
     (wrap-region-add-wrappers (sboo-html-wrap-region-table)))
@@ -2360,55 +2455,34 @@ $0")
   ;; (when (bound-and-true-p sboo-markdown-wrap-region-table)
   ;;   (wrap-region-add-wrappers (sboo-markdown-wrap-region-table)))
 
-  (wrap-region-mode +1))
+  ())
 
 ;; ^ Links
 ;;
 ;;   • URL `https://github.com/rejeep/wrap-region.el'
 ;;   • URL `http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/'
 ;;   • URL `https://www.youtube.com/watch?v=9SWAKPF0fHE'
+;;   • URL `https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'
+;;   • URL `https://www.haskell.org/haddock/doc/html/ch03s08.html' 
+;;   • URL `https://orgmode.org/manual/Markup.html' 
 ;;
 
-;; ^ `wrap-region-add-wrappers':
+;; ^ Notes about `wrap-region'...
 ;;
-;; e.g.:
+;; • `wrap-region-table', by default, holds ① quotation characters, and ② matching bracket characters:
 ;;
-;;   (wrap-region-add-wrappers
-;;    '(("$" "$")
-;;      ("{-" "-}" "#")
-;;      ("/" "/" nil ruby-mode)
-;;      ("/* " " */" "#" (java-mode javascript-mode css-mode))
-;;      ("`" "`" nil (markdown-mode ruby-mode))))
+;;       '(("\"" "\"")
+;;         ("'"  "'")
+;;         ("("  ")")
+;;         ("{"  "}")
+;;         ("["  "]")
+;;         ("<"  ">"))
 ;;
-;; `wrap-region-add-wrappers' extends `wrap-region-table'.
+;;    and can be inspected with:
 ;;
-;; `wrap-region-add-wrappers' calls `wrap-region-add-wrapper'.
+;;        M-: (hash-table-keys wrap-region-table)
+;;          ⇒ '(";" "`" "%" "\"" "'" "(" "{" "[" "<")
 ;;
-;; 
-
-;; ^ `wrap-region-table'
-;;
-;; Default `wrap-region-table':
-;;
-;;      '(("\"" "\"")
-;;       ("'"  "'")
-;;       ("("  ")")
-;;       ("{"  "}")
-;;       ("["  "]")
-;;       ("<"  ">"))
-;;
-;; 
-
-;; ^ `wrap-region-add-wrapper':
-;;
-;;   (wrap-region-add-wrapper LEFT RIGHT &optional KEY MODE-OR-MODES)
-;;
-;; >Add new LEFT and RIGHT wrapper.
-;; >
-;; >Optional KEY is the trigger key and MODE-OR-MODES is a single
-;; mode or multiple modes that the wrapper should trigger in.
-;;
-;; 
 
 ;;----------------------------------------------;;
 
@@ -2527,6 +2601,36 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;
 ;;   • URL `https://github.com/mickeynp/smart-scan'
 ;;   • URL `https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el'
+;;
+
+;;----------------------------------------------;;
+
+(use-package goto-last-change
+
+  :load-path "sboo/lisp"
+
+  :commands (goto-last-change)
+
+  ;;--------------------------;;
+
+  :bind (("<C-left>"  . goto-last-change)
+         ;; ("<C-right>" . sboo-goto-last-change)
+         )
+
+  ;;--------------------------;;
+
+  :config
+
+  (defun sboo-goto-last-change ()
+    "Invert `goto-last-change'."        ;TODO
+    (interactive "P")
+    (goto-last-change -1))
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/camdez/goto-last-change.el'
 ;;
 
 ;;----------------------------------------------;;
@@ -2764,6 +2868,18 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 (use-package awesome-tab
 
   :commands (awesome-tab-mode)
+
+  :custom
+
+  (awesome-tab-style "alternate" "Rectilinear Tabs (default are Rounded).")
+
+  (awesome-tab-label-fixed-length 14 "FixedWidth Tabs: all Tab Labels share the same length (unit is number-of-characters).")
+
+;;(awesome-tab-buffer-groups-function #' "")
+
+  (awesome-tab-background-color "#fdf6e3")  ; the Background-Color of Solarized-Theme.
+;;(awesome-tab-selected         "#fdf6e3")
+;;(awesome-tab-unselected       "#fdf6e3")
 
   :config
 
@@ -3297,9 +3413,58 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
+;; `wrap-region'...
+;;
+;; • `wrap-region-table'
+;;
+;; Default `wrap-region-table':
+;;
+;;      '(("\"" "\"")
+;;       ("'"  "'")
+;;       ("("  ")")
+;;       ("{"  "}")
+;;       ("["  "]")
+;;       ("<"  ">"))
+;;
 ;; 
 ;;
+;; • `wrap-region-add-wrappers':
 ;;
+;; e.g.:
+;;
+;;   (wrap-region-add-wrappers
+;;    '(("$" "$")
+;;      ("{-" "-}" "#")
+;;      ("/" "/" nil ruby-mode)
+;;      ("/* " " */" "#" (java-mode javascript-mode css-mode))
+;;      ("`" "`" nil (markdown-mode ruby-mode))))
+;;
+;; `wrap-region-add-wrappers' extends `wrap-region-table'.
+;;
+;; `wrap-region-add-wrappers' calls `wrap-region-add-wrapper'.
+;;
+;; 
+;;
+;; • `wrap-region-add-wrapper':
+;;
+;;   (wrap-region-add-wrapper LEFT RIGHT &optional KEY MODE-OR-MODES)
+;;
+;; >Add new LEFT and RIGHT wrapper.
+;; >
+;; >Optional KEY is the trigger key and MODE-OR-MODES is a single
+;; mode or multiple modes that the wrapper should trigger in.
+;;
+;; 
+
+;;----------------------------------------------;;
+
+;; `awesome-tab'...
+;;
+;; GroupRules:
+;;
+;; • `awesome-tab-buffer-groups-function' defaults to function `awesome-tab-buffer-groups'.
+;;
+;; • 
 
 ;;----------------------------------------------;;
 ;; EOF -----------------------------------------;;

@@ -170,63 +170,40 @@ Related:
 
 ;;==============================================;;
 
-(defun sboo-swap-parentheses-and-square-brackets ()
-  
-  "Swap « [ ] » with « (  ) ».
+(defun sboo-page-backward (&optional count)
 
-Calls:
+  "Move to the prior Page-Break (i.e. « ^L »).
 
-• `keyboard-translate'.
+Related:
 
-Links:
+• `forward-page'"
 
-• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
+  (interactive "p")
 
-  (interactive)
-  
-  (keyboard-translate ?\( ?\[)
-  (keyboard-translate ?\[ ?\()
+  (let* ((COUNT (* -1 count))
+         )
 
-  (keyboard-translate ?\) ?\])
-  (keyboard-translate ?\] ?\)))
+    (forward-page COUNT)))
 
-;;----------------------------------------------;;
-
-(defun sboo-swap-semicolon-and-colon ()
-  
-  "Swap « ; » with « : ».
-
-Calls:
-
-• `keyboard-translate'.
-
-Links:
-
-• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
-
-  (interactive)
-
-  (keyboard-translate ?\: ?\;)
-  (keyboard-translate ?\; ?\:))
+;; ^ NOTE « (interactive "p") »:
+;;
+;;  • is the Numeric-Prefix-Argument — i.e. the `prefix-numeric-value' of `current-prefix-arg'.
 
 ;;----------------------------------------------;;
 
-(defun sboo-swap-double-quote-with-single-quote ()
-  
-  "Swap « ' » with « \" ».
+(defun sboo-page-forward (&optional count)
 
-Calls:
+  "Move to the next Page-Break (i.e. « ^L »).
 
-• `keyboard-translate'.
+Related:
 
-Links:
+• `forward-page'"
 
-• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
+  (interactive "p")
 
-  (interactive)
+  (forward-page count))
 
-  (keyboard-translate ?\" ?\')
-  (keyboard-translate ?\' ?\"))
+;;TODO or next comment-section. 
 
 ;;==============================================;;
 
@@ -455,7 +432,67 @@ Inputs:
     (copy-line argument)))
 
 ;;==============================================;;
-;;; Key Translations ===========================;;
+
+(defun sboo-swap-parentheses-and-square-brackets ()
+  
+  "Swap « [ ] » with « (  ) ».
+
+Calls:
+
+• `keyboard-translate'.
+
+Links:
+
+• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
+
+  (interactive)
+  
+  (keyboard-translate ?\( ?\[)
+  (keyboard-translate ?\[ ?\()
+
+  (keyboard-translate ?\) ?\])
+  (keyboard-translate ?\] ?\)))
+
+;;----------------------------------------------;;
+
+(defun sboo-swap-semicolon-and-colon ()
+  
+  "Swap « ; » with « : ».
+
+Calls:
+
+• `keyboard-translate'.
+
+Links:
+
+• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
+
+  (interactive)
+
+  (keyboard-translate ?\: ?\;)
+  (keyboard-translate ?\; ?\:))
+
+;;----------------------------------------------;;
+
+(defun sboo-swap-double-quote-with-single-quote ()
+  
+  "Swap « ' » with « \" ».
+
+Calls:
+
+• `keyboard-translate'.
+
+Links:
+
+• URL `https://www.cliki.net/Editing+Lisp+Code+with+Emacs'."
+
+  (interactive)
+
+  (keyboard-translate ?\" ?\')
+  (keyboard-translate ?\' ?\"))
+
+;;==============================================;;
+;; Key Translations ===========================;;
 ;;==============================================;;
 
 ;; (unless t
@@ -551,8 +588,8 @@ Inputs:
 
 ;;----------------------------------------------;;
 
-(global-set-key (kbd "<f5>") nil)
-(global-set-key (kbd "<f6>") #'cua-set-mark) ; a.k.a. « C-a ».
+(global-set-key (kbd "<f5>") #'cua-set-mark) ; a.k.a. « C-a ».
+(global-set-key (kbd "<f6>") #'helm-recentf) ;
 (global-set-key (kbd "<f7>") #'list-buffers) ; a.k.a. « C-x b ».
 (global-set-key (kbd "<f8>") #'find-file)    ; a.k.a. « C-x f ».
 
@@ -595,11 +632,21 @@ Inputs:
 (global-set-key (kbd "<M-next>")  #'xah-forward-block)
 
 ;;==============================================;;
+
 ;;; Control Keybindings (`C-')...
+
 ;;==============================================;;
 
 (global-set-key (kbd "C-o") #'other-window)
 (global-set-key (kbd "C-;") #'comment-region)
+
+(progn
+  (global-set-key (kbd "<C-prior>") #'sboo-page-backward) ; Overrides: `scroll-right'.
+  (global-set-key (kbd "<C-next>")  #'sboo-page-forward)) ; Overrides: `scroll-left'.
+
+(progn
+  (global-set-key (kbd "<C-up>")   #'backward-paragraph)
+  (global-set-key (kbd "<C-down>") #'forward-paragraph))
 
 ;;==============================================;;
 ;;; Control+Meta Keybindings (`C-M-')...
@@ -798,6 +845,41 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
+  (define-prefix-command 'sboo-navigation-keymap)
+
+;;(define-key sboo-navigation-keymap (kbd "a") #')
+;;(define-key sboo-navigation-keymap (kbd "b") #')
+;;(define-key sboo-navigation-keymap (kbd "c") #')
+;;(define-key sboo-navigation-keymap (kbd "d") #')
+;;(define-key sboo-navigation-keymap (kbd "e") #')
+;;(define-key sboo-navigation-keymap (kbd "f") #')
+;;(define-key sboo-navigation-keymap (kbd "g") #')
+;;(define-key sboo-navigation-keymap (kbd "h") #')
+;;(define-key sboo-navigation-keymap (kbd "i") #')
+;;(define-key sboo-navigation-keymap (kbd "j") #')
+;;(define-key sboo-navigation-keymap (kbd "k") #')
+;;(define-key sboo-navigation-keymap (kbd "l") #')
+;;(define-key sboo-navigation-keymap (kbd "m") #')
+;;(define-key sboo-navigation-keymap (kbd "n") #')
+;;(define-key sboo-navigation-keymap (kbd "o") #')
+  (define-key sboo-navigation-keymap (kbd "p <up>")   #'sboo-page-backward) ; [P]age-Breaks. (c.f.`page-delimiter').
+  (define-key sboo-navigation-keymap (kbd "p <down>") #'sboo-page-forward)  ; [P]age-Breaks. (c.f.`page-delimiter').
+;;(define-key sboo-navigation-keymap (kbd "q") #')
+;;(define-key sboo-navigation-keymap (kbd "r") #')
+;;(define-key sboo-navigation-keymap (kbd "s") #')
+;;(define-key sboo-navigation-keymap (kbd "t") #')
+;;(define-key sboo-navigation-keymap (kbd "u") #')
+;;(define-key sboo-navigation-keymap (kbd "v") #')
+;;(define-key sboo-navigation-keymap (kbd "w") #')
+;;(define-key sboo-navigation-keymap (kbd "x") #')
+;;(define-key sboo-navigation-keymap (kbd "y") #')
+;;(define-key sboo-navigation-keymap (kbd "z") #')
+
+  #'sboo-navigation-keymap)
+
+;;----------------------------------------------;;
+
+(progn
   (define-prefix-command 'sboo-mark-keymap)
 
   (define-key sboo-mark-keymap (kbd "a") #'mark-beginning-of-buffer)
@@ -831,9 +913,9 @@ Inputs:
 
 ;;----------------------------------------------;;
 
-  (progn
+(progn
 
-  (global-set-key (kbd "s-a") #'sboo-copy-buffer-contents)  ; "copy All"
+  (global-set-key (kbd "s-a") #'sboo-copy-buffer-contents)  ; copy [A]ll.
 ;;(global-set-key (kbd "s-b") #')
   (global-set-key (kbd "s-c") #'sboo-insert-char)           ; "Character"
   (global-set-key (kbd "s-d") #'xref-find-definitions)      ; "Definitions"
@@ -843,15 +925,16 @@ Inputs:
   (global-set-key (kbd "s-h") #'helm-apropos)               ; [H]elp
   (global-set-key (kbd "s-i") #'sboo-insert)                ; [I]nsert
 ;;(global-set-key (kbd "s-j") #')
-  (global-set-key (kbd "s-k") #'sboo-mark-keymap)           ; « mar[K]-* » commands.
-  (global-set-key (kbd "s-l") #'align-regexp)               ; a"L"ign
-  (global-set-key (kbd "s-m") #'sboo-mode-keymap)           ;[M]ode-specific commands.
-;;(global-set-key (kbd "s-n") #')
-  (global-set-key (kbd "s-o") #'find-file-at-point)         ;MNEMONIC: "Open file". ;OLD: other-window.
+  (global-set-key (kbd "s-k") #'sboo-mark-keymap)           ; Mar[K] Commands (i.e. « mar[K]-* »).
+  (global-set-key (kbd "s-l") #'align-regexp)               ; a[L]ign
+  (global-set-key (kbd "s-m") #'sboo-mode-keymap)           ; [M]ode-specific commands.
+  (global-set-key (kbd "s-n") #'sboo-navigation-keymap)     ; [N]avigation Commands.
+  page-break').
+  (global-set-key (kbd "s-o") #'find-file-at-point)         ; [O]pen file.
   (global-set-key (kbd "s-p") #'helm-show-kill-ring)        ; [P]aste from History.
 ;;(global-set-key (kbd "s-q") #')
   (global-set-key (kbd "s-r") #'xref-find-references)       ; "References"
-  (global-set-key (kbd "s-s") #'sboo-launch-shell)          ; "Shell"
+  (global-set-key (kbd "s-s") #'sboo-select-keymap)         ; [S]election Commands.
   (global-set-key (kbd "s-t") #'sboo-text-keymap)           ; "Text"
 ;;(global-set-key (kbd "s-u") #')
   (global-set-key (kbd "s-v") #'describe-variable)          ; "Variable"
@@ -868,6 +951,7 @@ Inputs:
 ;;(global-set-key (kbd "s-h") #'helm-command-prefix)        ; "Helm"
 ;;(global-set-key (kbd "s-i") #'imenu)
 ;;(global-set-key (kbd "s-k") #'describe-key)               ; "Key"
+;;(global-set-key (kbd "s-s") #'sboo-launch-shell)          ; "Shell"
 ;;(global-set-key (kbd "s-t") #'sboo-launch-term)           ; "Terminal"
 ;;(global-set-key (kbd "s-p") #'proced)
 

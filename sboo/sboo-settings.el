@@ -1,8 +1,33 @@
-;;; -*- lexical-binding: t -*-
+;;; sboo-settings.el --- -*- coding: utf-8; lexical-binding: t -*-
+
+;; Copyright © 2019 Spiros Boosalis
+
+;; Version: 0.0.0
+;; Package-Requires: ((emacs "25") seq pcase)
+;; Author:  Spiros Boosalis <samboosalis@gmail.com>
+;; Homepage: https://github.com/sboosali/.emacs.d
+;; Keywords: local
+;; Created: 08 May 2019
+;; License: GPL-3.0-or-later
+
+;; This file is not part of GNU Emacs.
+;;
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
-;; Personal Settings.
+;; Personal settings.
 ;; 
 ;; Settings should be both **fast** and **safe**,
 ;; Like « (use-package :init ...) », they are eager.
@@ -18,7 +43,10 @@
 ;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
-(require 'cl-lib)
+;; Builtins:
+
+(eval-when-compile 
+  (require 'cl-lib))
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
@@ -58,6 +86,7 @@
 ;;----------------------------------------------;;
 
 (defun sboo-proced-settings ()
+
   "My `proced' settings (enable Auto-Refresh)."
 
   (progn
@@ -66,7 +95,9 @@
     ()))
 
 ;;----------------------------------------------;;
+
 (defun sboo-dired-settings ()
+
   "My `dired' settings (enable Auto-Refresh)."
 
   (progn
@@ -74,14 +105,24 @@
     ()))
 
 ;;----------------------------------------------;;
-;; Settings: Collective ------------------------;;
+;;; Settings: Unicode  -------------------------;;
 ;;----------------------------------------------;;
 
-(prefer-coding-system 'utf-8)
-(set-language-environment "UTF-8")
-;;(set-default-coding-systems 'utf-8)
+(progn
 
-;; ^ UTF-8 is the default Unicode Encoding.
+  (prefer-coding-system       'utf-8)
+  (set-default-coding-systems 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (setq buffer-file-coding-system 'utf-8)
+
+  ;; ^ UTF-8 as the default Unicode Encoding.
+
+  (set-language-environment "UTF-8"))
+
+;;----------------------------------------------;;
+;; Settings: Collective ------------------------;;
+;;----------------------------------------------;;
 
 (cua-mode +1)
 
