@@ -1014,6 +1014,8 @@ Notes:
 
 (use-package recentf
 
+  :commands (recentf-mode recentf-open-files)
+
   :delight (recentf-mode " ⏲")
 
   :init
@@ -3073,8 +3075,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 (use-package unicode-fonts
   :disabled
-
-  :load-path "~/.emacs.d/submodules/unicode-fonts"
+  :load-path "submodules/unicode-fonts"
 
   :config
 
@@ -3091,8 +3092,13 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 (use-package all-the-icons-dired
   :disabled
+  :load-path "submodules/all-the-icons-dired"
 
-  :load-path "~/.emacs.d/submodules/all-the-icons-dired"
+  :after (:any all-the-icons icons-in-terminal)
+
+  ;;--------------------------;;
+
+  :commands (all-the-icons-dired-mode)
 
   :hook (dired-mode . all-the-icons-dired-mode)
 
@@ -3124,8 +3130,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 (use-package doom-modeline
   :disabled
-
-  :load-path "~/.emacs.d/submodules/doom-modeline"
+  :load-path "submodules/doom-modeline"
 
   :hook (after-init . doom-modeline-mode)
 

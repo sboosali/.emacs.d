@@ -51,7 +51,6 @@
 ;;----------------------------------------------;;
 
 (use-package all-the-icons
-  :disabled
   :load-path "submodules/all-the-icons"
 
   :config
@@ -66,6 +65,7 @@
 ;;----------------------------------------------;;
 
 (use-package icons-in-terminal
+  :disabled
   :load-path "submodules/icons-in-terminal"
 
   :config
