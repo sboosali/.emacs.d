@@ -954,7 +954,7 @@ Related:
 
   (condition-case _
       (sboo-file "dabbrev/abbrev_defs.el")
-    (void-function
+    ((void-function void-variable)
      "~/.emacs.d/sboo/dabbrev/abbrev_defs.el"))
 
   "Personal (version-controlled) `abbrev-file-name'.")
@@ -967,14 +967,14 @@ Related:
 
   :init
 
-  (let* ((DIRECTORY-DABBREV (file-name-directory sboo-abbrev-file))
+  (let* ((DIRECTORY (file-name-directory sboo-abbrev-file))
          )
-    (when (not (file-directory-p DIRECTORY-DABBREV))
-      (make-directory DIRECTORY-DABBREV :make-parent-directories)))
+    (when (not (file-directory-p DIRECTORY))
+      (make-directory DIRECTORY :make-parent-directories)))
 
   :custom
 
-  (abbrev-file-name sboo-abbrev-file "Personal `dabbrev' config.")
+  (abbrev-file-name sboo-abbrev-file "Personal `dabbrev' config.") ; Default: « "~/.emacs.d/abbrev_defs" ».
 
   :config
 
@@ -995,6 +995,56 @@ Related:
 ;;
 
 ;;----------------------------------------------;;
+;; Recent Files
+
+(defvar sboo-recentf-file
+
+  (condition-case _
+      (sboo-xdg-data "emacs/recentf/recentf.el")
+    ((void-function void-variable)
+     "~/.local/share/emacs/recentf/recentf.el"))
+
+  "XDG-conformant `recentf-save-file'.
+
+Notes:
+
+• `recentf-save-file' persists `recentf-list'.")
+
+;;----------------------------;;
+
+(use-package recentf
+
+  :delight (recentf-mode " ⏲")
+
+  :init
+
+  (let* ((DIRECTORY (file-name-directory sboo-recentf-file))
+         )
+    (when (not (file-directory-p DIRECTORY))
+      (make-directory DIRECTORY :make-parent-directories)))
+
+  :custom
+
+  (recentf-save-file sboo-recentf-file "XDG-conformant `recentf' data.") ; Default: « "~/.emacs.d/recentf" ».
+
+  (recentf-max-saved-items 1024 "Remember more files.")
+  (recentf-max-menu-items  15  "Display more files.")
+
+  :config
+
+  (recentf-mode +1)
+
+  ())
+
+;; ^ "`recentf'" abbreviates "[RECENT] [F]iles".
+
+;; ^ Links:
+;;
+;;   • URL `https://www.masteringemacs.org/article/find-files-faster-recent-files-package'
+;;   • URL `'
+;;
+
+;;----------------------------------------------;;
 ;; Bookmarks
 
 (when (require 'sboo-bookmark nil :no-error)
@@ -1011,25 +1061,6 @@ Related:
 ;; ‘M-x bookmark-delete’ – delete a bookmark by name
 ;;
 ;; Your personal bookmark file is defined by option ‘bookmark-default-file’, which defaults to `~/.emacs.d/bookmarks
-
-
-;;----------------------------------------------;;
-;; Recent Files
-
-(use-package recentf
-
-  :custom
-
-  (recentf-max-saved-items 200 "Remember more files.")
-  (recentf-max-menu-items  15  "Remember more files.")
-
-  :config
-
-  (recentf-mode +1)
-
-  ())
-
-;; ^ "`recentf'" abbreviates "RECENT Files".
 
 ;;----------------------------------------------;;
 ;; `uniquify'
@@ -3058,51 +3089,6 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
-(use-package all-the-icons
-  :disabled
-
-  :load-path "~/.emacs.d/submodules/all-the-icons.el"
-
-  :config
-
-  ())
-
-;; ^ Links:
-;;
-;;   • URL `https://github.com/domtronn/all-the-icons.el'
-;;
-
-;;----------------------------------------------;;
-
-(use-package icons-in-terminal
-  :disabled
-
-  :load-path "~/.emacs.d/submodules/icons-in-terminall"
-
-  :config
-
-  ())
-
-;; ^ Links:
-;;
-;;   • URL `https://github.com/sebastiencs/icons-in-terminal'
-;;
-
-;; Installation:
-;;
-;; M-: (all-the-icons-install-fonts)
-
-;; Usage:
-;;
-;; M-: (insert (all-the-icons-icon-for-file "foo.hs"))
-;; M-: (all-the-icons-insert-icons-for 'faicon 10 0.5)   ; height=10px, delay=500ms.
-
-;; Notes:
-;;
-;; e.g. fontsets: 'faicon 'octicon 'alltheicon
-
-;;----------------------------------------------;;
-
 (use-package all-the-icons-dired
   :disabled
 
@@ -3118,6 +3104,21 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;
 ;;   • URL `https://github.com/jtbm37/all-the-icons-dired'
 ;;
+
+;;----------------------------------------------;;
+
+;; Installation:
+;;
+;; M-: (all-the-icons-install-fonts)
+
+;; Usage:
+;;
+;; M-: (insert (all-the-icons-icon-for-file "foo.hs"))
+;; M-: (all-the-icons-insert-icons-for 'faicon 10 0.5)   ; height=10px, delay=500ms.
+
+;; Notes:
+;;
+;; e.g. fontsets: 'faicon 'octicon 'alltheicon
 
 ;;----------------------------------------------;;
 

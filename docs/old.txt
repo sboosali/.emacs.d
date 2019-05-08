@@ -4540,6 +4540,152 @@ print-builtin-symbols:
 
 
 
+==============================================
+
+
+$ ./install.sh 
++ DATA=/home/sboo/.local/share/icons-in-terminal/
++ mkdir -p /home/sboo/.fonts
++ cp ./build/icons-in-terminal.ttf /home/sboo/.fonts/
++ mkdir -p /home/sboo/.config/fontconfig/conf.d
++ ./scripts/generate_fontconfig.sh
+Fontconfig error: "/home/sboo/.config/fontconfig/conf.d/30-icons.conf", line 8: no element found
++ fc-cache -fvr --really-force /home/sboo/.fonts
+/home/sboo/.fonts: caching, new cache contents: 1 fonts, 6 dirs
+/home/sboo/.fonts/all-the-icons: caching, new cache contents: 0 fonts, 1 dirs
+/home/sboo/.fonts/all-the-icons/ttf: caching, new cache contents: 0 fonts, 0 dirs
+/home/sboo/.fonts/dejavu: caching, new cache contents: 0 fonts, 2 dirs
+/home/sboo/.fonts/dejavu/fontconfig: caching, new cache contents: 0 fonts, 0 dirs
+/home/sboo/.fonts/dejavu/ttf: caching, new cache contents: 22 fonts, 0 dirs
+/home/sboo/.fonts/iosevka: caching, new cache contents: 0 fonts, 2 dirs
+/home/sboo/.fonts/iosevka/ttf: caching, new cache contents: 27 fonts, 0 dirs
+/home/sboo/.fonts/iosevka/woff2: caching, new cache contents: 0 fonts, 0 dirs
+/home/sboo/.fonts/noto: caching, new cache contents: 0 fonts, 2 dirs
+/home/sboo/.fonts/noto/otf: caching, new cache contents: 64 fonts, 0 dirs
+/home/sboo/.fonts/noto/ttf: caching, new cache contents: 1541 fonts, 0 dirs
+/home/sboo/.fonts/quivira: caching, new cache contents: 0 fonts, 1 dirs
+/home/sboo/.fonts/quivira/otf: caching, new cache contents: 1 fonts, 0 dirs
+/home/sboo/.fonts/symbola: caching, new cache contents: 0 fonts, 1 dirs
+/home/sboo/.fonts/symbola/ttf: caching, new cache contents: 2 fonts, 0 dirs
+/var/cache/fontconfig: not cleaning unwritable cache directory
+/home/sboo/.cache/fontconfig: cleaning cache directory
+/home/sboo/.fontconfig: not cleaning non-existent cache directory
+fc-cache: succeeded
++ mkdir -p /home/sboo/.local/share/icons-in-terminal/
++ cp ./build/icons-in-terminal.el ./build/icons-in-terminal.h ./build/icons-in-terminal.ttf ./build/icons.fish ./build/icons_bash.sh ./build/icons_bash_export.sh ./build/icons_bash_without_codepoint.sh ./build/mapping.txt /home/sboo/.local/share/icons-in-terminal/
++ set +xe
+
+Recommended additional step:
+Edit ~/.config/fontconfig/conf.d/30-icons.conf
+Check that the font(s) you are using in your terminal(s) is listed and remove all the others lines
+
+Font successfully installed. Now start a new terminal and run print_icons.sh :)
+
+
+
+----------------------------------------------
+
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <!-- You are supposed to remove all the lines but the one(s) where the font is used in your terminal -->
+  <!-- Only monospaced fonts have been listed here -->
+  <!-- If your font isn't in the list, uncomment the next line and write its name -->
+  <!-- <alias><family>YOUR_TERMINAL_FONT</family><default><family>icons-in-terminal</family></default></alias> -->
+  <alias><family>Courier 10 Pitch</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>DejaVu Sans Mono</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>FreeMono</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>Liberation Mono</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>Nimbus Mono L</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>Noto Color Emoji</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>Noto Emoji</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>Noto Mono</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>Tlwg Mono</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>Tlwg Typo</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>Ubuntu Mono</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>cursor.pcf</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>deccurs.pcf</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>decsess.pcf</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>micro.pcf</family><prefer><family>icons-in-terminal</family></prefer></alias>
+  <alias><family>Monospace</family><default><family>icons-in-terminal</family></default></alias>
+</fontconfig>
+
+----------------------------------------------
+
+$ ./print_icons.sh
+
+powerline-extras (38 glyphs):
+                                                                          
+
+octicons (172 glyphs):
+                                                                                                                                                                                                                                                                                                                                                      
+
+fontawesome (679 glyphs):
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+
+material (933 glyphs):
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
+fileicons (456 glyphs):
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+
+weather (228 glyphs):
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+linux (28 glyphs):
+                                                      
+
+myicons (18 glyphs):
+                                  
+
+devicons (198 glyphs):
+                                                                                                                                                                                                                                                                                                                                                                                                          
+
+pomicons (11 glyphs):
+                    
+
+linea-arrows (136 glyphs):
+                                                                                                                                                                                                                                                                              
+
+linea-basic (135 glyphs):
+                                                                                                                                                                                                                                                                            
+
+linea-basic-elaboration (145 glyphs):
+                                                                                                                                                                                                                                                                                                
+
+linea-ecommerce (85 glyphs):
+                                                                                                                                                                        
+
+linea-music (30 glyphs):
+                                                          
+
+linea-software (100 glyphs):
+                                                                                                                                                                                                      
+
+linea-weather (85 glyphs):
+                                                                                                                                                                        
+
+mfizz (137 glyphs):
+                                                                                                                                                                                                                                                                                
+
+firacode (116 glyphs):
+                                                                                                                                                                                                                                      
+
+Total: 3730 glyphes
+
+==============================================
+
+
+
+
+
+
+
+
+
+
+
+==============================================
 
 
 

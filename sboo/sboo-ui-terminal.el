@@ -51,7 +51,7 @@
 ;;----------------------------------------------;;
 
 (use-package icons-in-terminal
-  :load-path "~/.emacs.d/submodules/icons-in-terminal"
+  :load-path "submodules/icons-in-terminal"
 
   :config
 

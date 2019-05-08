@@ -52,7 +52,7 @@
 
 (use-package all-the-icons
   :disabled
-  :load-path "~/.emacs.d/submodules/all-the-icons.el"
+  :load-path "submodules/all-the-icons"
 
   :config
 
@@ -61,6 +61,20 @@
 ;; ^ Links:
 ;;
 ;;   • URL `https://github.com/domtronn/all-the-icons.el'
+;;
+
+;;----------------------------------------------;;
+
+(use-package icons-in-terminal
+  :load-path "submodules/icons-in-terminal"
+
+  :config
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/sebastiencs/icons-in-terminal'
 ;;
 
 ;;----------------------------------------------;;
