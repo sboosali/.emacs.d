@@ -41,13 +41,14 @@
 (defun sboo-add-auto-mode-basename (BaseName MajorMode &optional Pure)
   "Associates the file `BaseName' with the `MajorMode' in `auto-mode-alist'.
 
-  If you set `Pure', this function is pure, returning the association (a cons cell),
-  without mutating the global variable `auto-mode-alist'.
+If you set `Pure', this function is pure, returning the association (a cons cell),
+without mutating the global variable `auto-mode-alist'.
 
-  e.g. 
-      M-: (sboo-add-auto-mode-basename \"README.md\" 'gfm-mode t)
-          (\"README\\.md\\'\" . 'gfm-mode)
-  "
+Examples:
+ 
+• M-: (sboo-add-auto-mode-basename \"README.md\" 'gfm-mode t)
+    ⇒ (\"README\\.md\\'\" . 'gfm-mode)
+"
 
   (let* ((Pattern
           (concat (replace-regexp-in-string "\\." "\\\\." BaseName)

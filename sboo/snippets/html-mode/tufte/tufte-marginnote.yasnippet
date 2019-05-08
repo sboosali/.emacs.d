@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+#
+# key         : mn
+# name        : [tufte.css] Margin Note
+#
+# type        : snippet
+# expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : See https://edwardtufte.github.io/tufte-css/#sidenotes
+#
+# --
+<label for="mn-${1:xyz}" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-$1" class="margin-toggle"/>
+<span class="marginnote">
+  $0
+</span>

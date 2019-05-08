@@ -352,8 +352,7 @@ Related:
 ;;----------------------------------------------;;
 ;; Variable Safety:
 
-(dolist (BINDING '( (lexical-binding . t)
-                    ))
+(dolist (BINDING '((lexical-binding . t)))
   (add-to-list 'safe-local-variable-values BINDING))
 
 ;;----------------------------------------------;;
@@ -502,6 +501,12 @@ Related:
 
 ;;----------------------------------------------;;
 
+(require 'sboo-xah nil :no-error)
+
+;; ^ by Xah Lee:
+
+;;----------------------------------------------;;
+
 (unless (require 'sboo-private "~/.emacs.d/private/sboo-private" :no-error)
   (require 'sboo-private nil :no-error))
 
@@ -581,8 +586,9 @@ Related:
 
   ;;------------------------;;
 
+  (add-to-list 'auto-mode-alist (cons (rx bos "TODO" eos) #'text-mode))
+
   (sboo-add-auto-mode-basename "LICENSE" #'text-mode)
-  (sboo-add-auto-mode-basename "TODO"    #'text-mode)
   (sboo-add-auto-mode-basename "NOTES"   #'text-mode)
 
   (sboo-add-auto-mode-basename ".gitignore"     #'conf-mode)
@@ -596,6 +602,8 @@ Related:
   ;; ^ for the « xbindkeys » program.
 
   ;;------------------------;;
+
+  (add-to-list 'auto-mode-alist (cons "\\.xpm\\'" #'c-mode))
 
   (sboo-add-auto-mode-file-extension "service"    #'conf-mode) ; e.g. « /etc/services »
   (sboo-add-auto-mode-file-extension "interfaces" #'conf-mode) ; e.g. « /etc/network/interfaces »
@@ -613,8 +621,6 @@ Related:
   ;;TODO any file that ends in `rc`, should we default to 'conf-mode or to 'sh-mode?
   ;;;(add-to-list 'auto-mode-alist ("rc\\'" . #'conf-mode))
   ;;;(add-to-list 'auto-mode-alist ("rc\\'" . #'sh-mode))
-
-  ;;---------------------------;;
 
   (sboo-add-auto-mode-file-extension "xml" #'sgml-mode)
 
@@ -834,8 +840,6 @@ Related:
   ())
 
 ;;----------------------------------------------;;
-;;; Internal Packages --------------------------;;
-;;----------------------------------------------;;
 
 (when (require 'sboo-server nil :no-error)
   (add-startup-hook! #'server-start-unless-running))
@@ -888,38 +892,42 @@ Related:
 
 ;;----------------------------------------------;;
 
-(when (require 'dired nil :no-error)
+(use-package dired
+
+  :commands (wdired-change-to-wdired-mode)
 
   ;;---------------------------;;
 
-  (bind-keys :map dired-mode-map
-             ("w" . wdired-change-to-wdired-mode) ;; Mnemonic: [w]dired.
-             )
+  :bind (:map dired-mode-map
+              ("w" . wdired-change-to-wdired-mode) ;; mnemonic: [w]dired.
+              )
 
   ;; ^ Shadows `dired-copy-filename-as-kill':
   ;;
   ;; (define-key map "w" 'dired-copy-filename-as-kill)
 
-  (setq wdired-allow-to-change-permissions t)
+  ;;---------------------------;;
 
-  ;; ^ Edit permission bits directly.
-  ;; wdired ensures you can only enter valid permission bits.
+  :custom
 
-  (setq wdired-allow-to-redirect-links t)
+  (wdired-allow-to-change-permissions t "edit Permission-Bits directly (`wdired' ensures you can only enter valid ones), by pressing « w » or « x » or « r ».")
 
-  ;; ^ Change symlinks.
+  (wdired-allow-to-redirect-links t "edit Symbolic Links (adding or removing), by pressing « s » or deleting it.")
 
-  (setq wdired-use-dired-vertical-movement 'sometimes)
-
-  ;; ^ `sometimes' means — Emacs will move the point to the beginning of filename, if the point is before it.
+  (wdired-use-dired-vertical-movement 'sometimes
+                                      "`sometimes' means — upon any Vertical Movement, emacs will move `point' to the Beginning of a Filename (if `point' is to the left of it).")
 
   ;;---------------------------;;
 
+  :config
+
   ())
 
-;; ^ WDired
+;; ^ "WDired" abbreviates "[W]riteable [DIR]ectory [ED]itor".
+
+;; ^ Links
 ;;
-;; <https://www.masteringemacs.org/article/wdired-editable-dired-buffers>
+;; • URL `https://www.masteringemacs.org/article/wdired-editable-dired-buffers' 
 ;;
 ;; 
 ;;
@@ -941,7 +949,7 @@ Related:
 
 (use-package dabbrev
 
-  :delight (abbrev-mode " A")
+  :delight (abbrev-mode " 👆")
 
   :init
 
@@ -1066,9 +1074,34 @@ Related:
 
 ;;----------------------------------------------;;
 
-(when (require 'man nil :no-error)
+(use-package flyspell
 
-  (set-face-attribute 'Man-overstrike nil :inherit font-lock-type-face    :bold t)
+  :commands (flyspell-mode flyspell-prog-mode flyspell-correct-word)
+
+  :delight (flyspell-mode " 🔤")
+
+  :config
+
+  ())
+
+;; ^ NOTES
+;;
+;;   • `flyspell-prog-mode' spell-checks comments.
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Spelling.html'
+;;   • URL `https://www.emacswiki.org/emacs/FlySpell'
+;;
+
+;;----------------------------------------------;;
+
+(use-package man
+
+  :config
+
+  (set-face-attribute 'Man-overstrike nil :inherit font-lock-type-face    :bold      t)
   (set-face-attribute 'Man-underline  nil :inherit font-lock-keyword-face :underline t)
 
   ())
@@ -1082,9 +1115,6 @@ Related:
 ;; (set-face-attribute 'Man-underline nil :inherit font-lock-keyword-face :underline t)
 
 ;;----------------------------------------------;;
-
-;; Non-Package features must be configured more because,
-;; with `with-eval-after-load', `define-key', etc.
 
 (with-eval-after-load 'comint
 
@@ -1100,13 +1130,8 @@ Related:
 
   ())
 
-;;----------------------------------------------;;
-
-;; by Xah Lee:
-
-(when (require 'sboo-xah nil :no-error)
-
-  ())
+;; Non-Package features must be configured more because,
+;; with `with-eval-after-load', `define-key', etc.
 
 ;;----------------------------------------------;;
 ;; Builtin Packages: ---------------------------;;
@@ -1155,7 +1180,7 @@ Related:
 
 (use-package elisp-mode
 
-  :delight (emacs-lisp-mode "elisp")
+  :delight (emacs-lisp-mode "Elisp")
 
   ;; ^ Shorten « Emacs-Lisp » to « elisp ».
   ;;
@@ -1205,28 +1230,13 @@ Related:
 
   :commands (eldoc-mode)
 
-  :delight (eldoc-mode)
+  :delight (eldoc-mode " 👇")
 
 ;;:custom
 
   :config
 
   ())
-
-;;----------------------------------------------;;
-
-(use-package vc
-
-  :defer t
-
-  :custom
-
-  (vc-follow-symlinks t "don't ask when visiting a symbolic link to a version-controlled file (but do warn in the echo area).")
-
-  :config
-
-  ())
-
 
 ;;----------------------------------------------;;
 
@@ -1243,9 +1253,24 @@ Related:
 
 ;;----------------------------------------------;;
 
-(use-package calendar
-
+(use-package vc
   :defer t
+
+  :custom
+
+  (vc-follow-symlinks t "don't ask when visiting a symbolic link to a version-controlled file (but do warn in the echo area).")
+
+  :config
+
+  ())
+
+
+;;----------------------------------------------;;
+
+(use-package calendar
+  :defer t
+
+  :commands (calendar)
 
   :custom
 
@@ -1256,7 +1281,7 @@ Related:
   ())
 
 ;;----------------------------------------------;;
-;; Internal Packages: Settings -----------------;;
+;;; Internal Packages: Settings ----------------;;
 ;;----------------------------------------------;;
 
 (progn
@@ -1266,17 +1291,7 @@ Related:
   ())
 
 ;;----------------------------------------------;;
-;; Internal Packages: Utilities ----------------;;
-;;----------------------------------------------;;
-
-;;(add-hook 'prog-mode-hook #'flyspell-prog-mode)
-
-;; ^ `flyspell-prog-mode' spell-checks comments.
-
-;;----------------------------------------------;;
-
-(add-to-list 'auto-mode-alist (cons "\\.xpm\\'" #'c-mode))
-
+;;; Internal Packages: Utilities ---------------;;
 ;;----------------------------------------------;;
 
 (ignore-errors
@@ -1296,7 +1311,7 @@ Related:
     ()))
 
 ;;----------------------------------------------;;
-;; External Packages: Installation -------------;;
+;;; External Packages: Installation ------------;;
 ;;----------------------------------------------;;
 
 (pcase (sboo-install-p)

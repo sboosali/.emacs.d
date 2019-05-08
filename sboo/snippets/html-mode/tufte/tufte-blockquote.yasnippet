@@ -1,16 +1,18 @@
 # -*- mode: snippet -*-
 #
 # key         : bq
-# name        : [tufte.css] Blockquote HTML Element, i.e. « <blockquote cite="..."> .
+# name        : [tufte] Blockquote HTML Element, for Tufte CSS, i.e. « <blockquote cite="..."> .
 #
-# expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
+# type        : snippet
+# condition   : 
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region t))
 #
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
-# commentary  : See https://edwardtufte.github.io/tufte-css/#blockquotes
+# commentary  : 
 #
 # --
 
 <blockquote cite="${1:https://www.example.org}">
-  $0
+  $0`yas-selected-text`
   <footer><em>${2:AUTHOR}</em>, <a href="$1"><em>${4:COLUMN-OR-THREAD}</em>, <em>${3:TITLE-OF-ARTICLE-OR-POST}</em></a>, circa ${5:2019}</footer>
 </blockquote>

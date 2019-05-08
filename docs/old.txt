@@ -4329,6 +4329,65 @@ https://github.com/danlamanna/.emacs.d/blob/master/init.el
 
 
 
+print-builtin-symbols:
+
+	$(Emacs) --eval
+
+.PHONY: print-builtin-symbols
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+🌣 🌞 ⛅ 🌤 🌥 ⛱
+⛆ 🌢 ☂ ☔ 🌂 🌦 🌧 🌨 🌩 ⛈
+❄ ❅ ❆ 🎐 ☃ ⛄ ⛇
+🌪 🌀 ☇ ☈ ☁ 🌫 🌁 🌈 🌬
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

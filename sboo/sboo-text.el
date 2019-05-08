@@ -27,7 +27,7 @@
 
 ;;; Commentary:
 
-;; Configure `text-mode' (and derived modes).
+;; Configure `text-mode' (and any `derived-mode-p's).
 ;; 
 ;; 
 
@@ -41,6 +41,21 @@
 
 (eval-when-compile 
   (require 'cl-lib))
+
+;;----------------------------------------------;;
+;; Variables -----------------------------------;;
+;;----------------------------------------------;;
+
+(defgroup sboo-text nil
+
+  "Personal `text-mode' configuration."
+
+  :prefix 'sboo
+  :group 'sboo)
+
+;;==============================================;;
+
+;; `ispell-mode'
 
 ;;----------------------------------------------;;
 ;; Functions -----------------------------------;;
