@@ -1,26 +1,58 @@
-;;; `init.el' for the `sboo' profile. -*- lexical-binding: t -*-
+;;; sboo-init.el --- `init.el' for `sboo'. -*- coding: utf-8; lexical-binding: t -*-
+
+;; Copyright © 2019 Spiros Boosalis
+
+;; Version: 0.0.0
+;; Package-Requires: ((emacs "25") pcase seq)
+;; Author:  Spiros Boosalis <samboosalis@gmail.com>
+;; Homepage: https://github.com/sboosali/.emacs.d
+;; Keywords: local
+;; Created: 07 May 2019
+;; License: GPL-3.0-or-later
+
+;; This file is not part of GNU Emacs.
+;;
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
-;;----------------------------------------------;;
-;; My `init.el' (@sboosali on github)
+;; Personal initialization (for me, “sboosali”.)
 ;;
-;; Most `use-package' statements are in this file.
+;; This file consolidates all my personal configurations.
+;; Mostly via:
+;;
+;; • `use-package' declarations.
+;; • `require'-ing « sboo-* » `featurep's.
 ;;
 ;; 
-;;
-;;----------------------------------------------;;
 
 ;;; Code:
 
 ;;----------------------------------------------;;
-;;; Imports: -----------------------------------;;
+;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
 ;; Builtins:
 
-(require 'cl-lib)
-(require 'pcase)
+(eval-when-compile 
+  (require 'pcase)
+  (require 'cl-lib))
+
+;;----------------------------------------------;;
+
+(progn
+  (require 'seq))
 
 ;;----------------------------------------------;;
 ;; Imports (Bootstrapped) ----------------------;;
@@ -390,14 +422,41 @@ Related:
 ;; • property `variable-documentation'
 ;;
 
-;;==============================================;;
-
 ;;----------------------------------------------;;
 ;; Register ------------------------------------;;
 ;;----------------------------------------------;;
 
-(add-to-load-path! sboo-root-directory)
-(add-to-load-path! sboo-lisp-directory)
+;; Register Code (c.f. `provide'):
+
+(progn
+
+  (let* ((APPEND    nil)
+         (DIRECTORY (if (bound-and-true-p sboo-root-directory)
+                        sboo-root-directory
+                      (expand-file-name "~/.emacs.d/sboo")))
+         )
+    (add-to-list 'load-path DIRECTORY APPEND))
+
+  ;; ^ prepend (to the start of `load-path'):
+  ;; 
+  ;;   • `sboo-root-directory' holds « sboo-*.el » `featurep's.
+  ;; 
+
+  (let* ((APPEND    t)
+         (DIRECTORY (if (bound-and-true-p sboo-lisp-directory)
+                        sboo-lisp-directory
+                      (expand-file-name "~/.emacs.d/sboo/lisp")))
+         )
+    (add-to-list 'load-path DIRECTORY APPEND))
+
+  ;; ^ append (to the end of `load-path'):
+  ;; 
+  ;;   • `sboo-lisp-directory' holds Vendored Packages,
+  ;;     which have lower priority than Installed Packages
+  ;;     (whether installed via program `nix' or via `package.el'.)
+  ;;
+
+  load-path)
 
 ;;----------------------------------------------;;
 ;; Groups --------------------------------------;;
@@ -433,7 +492,8 @@ Related:
 (ignore-errors (sboo-load-file! "sboo-commands.el"))
 
 ;; ^ NOTE `load' these files (rather than `require' them)
-;;        because they execute statements (rather than `provide' definitions).
+;;        because they execute statements
+;;        (rather than `provide' definitions).
 ;;
 ;;        Later configuration (i.e. `sboo-*' features) musn't depend on them
 ;;        (whether explicitly via `require' or implicitly via reference).
@@ -457,6 +517,8 @@ Related:
 ;; Themes --------------------------------------;;
 ;;----------------------------------------------;;
 
+;; Register Themes (c.f. `provide-theme'):
+
 (ignore-errors
 
   (when (>= emacs-major-version 24)
@@ -473,6 +535,8 @@ Related:
 
 ;;----------------------------------------------;;
 
+;; Register Icons:
+
 (ignore-errors
 
   (add-to-icon-path! sboo-icon-directory)
@@ -480,8 +544,10 @@ Related:
 
   ())
 
+;;; Internal Packages:
+
 ;;----------------------------------------------;;
-;; Packages (Builtins) -------------------------;;
+;; Internal Packages: --------------------------;;
 ;;----------------------------------------------;;
 
 (when (require 'sboo-toolbar nil :no-error)
@@ -542,13 +608,17 @@ Related:
   ;;---------------------------;;
 
   (sboo-add-auto-mode-file-extension "xml" #'sgml-mode)
-  ;; ^ `nxml-mode' vs `sgml-mode'.
+
+  ;; ^ `nxml-mode' vs `sgml-mode'.?
 
   ;;---------------------------;;
 
   ())
 
-;; ^ `auto-mode-alist' maps filepaths to major-modes.
+;; ^ NOTES:
+;;
+;;  • `auto-mode-alist' maps filepaths to `major-mode's.
+;;
 
 ;;----------------------------------------------;;
 
@@ -558,9 +628,12 @@ Related:
 ;;   (sboo-theme-set!)
 ;;   ())
 
-;; ^ `load-theme':
+;; ^ NOTES:
 ;;
-;; (defun load-theme (THEME &optional NO-CONFIRM NO-ENABLE)
+;;   • `load-theme''s signature:
+;;
+;;       (defun load-theme (THEME &optional NO-CONFIRM NO-ENABLE)
+;;
 
 ;;----------------------------------------------;;
 
@@ -592,6 +665,7 @@ Related:
 
 ;;----------------------------------------------;;
 
+;;TODO:
 ;; (use-package desktop
 ;;   :config
 ;;   (progn
@@ -606,6 +680,7 @@ Related:
 
 ;;----------------------------------------------;;
 
+;;TODO:
 ;; (use-package conf-mode
 
 ;;   :init
@@ -640,14 +715,6 @@ Related:
 
 ;;----------------------------------------------;;
 
-;; (use-package compile
-;;   :bind (("s-m" . compile))
-;;   :config 
-;;          
-;;                 compilation-read-command nil
-;;                 compile-command "make")
-;;  ())
-
 (when (require 'sboo-compilation nil :no-error)
 
   (sboo-compilation-init!)
@@ -656,15 +723,19 @@ Related:
 
 ;;==============================================;;
 
-;;----------------------------;;
-
 (use-package grep
+
+  ;;--------------------------;;
 
   :config
 
   (defun sboo-grep-config ()
+
     "Hook for `grep-mode'."
-    (toggle-truncate-lines 1))
+
+    (toggle-truncate-lines +1))
+
+  ;;--------------------------;;
 
   (add-hook 'grep-mode #'sboo-grep-config)
 
@@ -682,7 +753,7 @@ Related:
 
   ())
 
-;; `grep-files-aliases':
+;; ^ `grep-files-aliases', by default, holds:
 ;;
 ;;     (("all" . "* .[!.]* ..?*")
 ;;      ("el" . "*.el")
@@ -695,6 +766,8 @@ Related:
 
 (use-package ansi-color
 
+  ;;--------------------------;;
+
   :config
 
   (defun sboo-ansi-colors-apply ()
@@ -704,6 +777,8 @@ Related:
     (interactive)
 
     (ansi-color-apply-on-region (point-min) (point-max)))
+
+  ;;--------------------------;;
 
   ())
 
@@ -889,6 +964,7 @@ Related:
 ;;
 
 ;;----------------------------------------------;;
+;; Bookmarks
 
 (when (require 'sboo-bookmark nil :no-error)
 
@@ -1017,14 +1093,14 @@ Related:
 
 ;;----------------------------------------------;;
 
-;; Xah Lee functions:
+;; by Xah Lee:
 
 (when (require 'sboo-xah nil :no-error)
 
   ())
 
 ;;----------------------------------------------;;
-;; `package-builtins': -------------------------;;
+;; Builtin Packages: ---------------------------;;
 ;;----------------------------------------------;;
 
 ;; these features (below) can be configured with `use-package',
@@ -1073,7 +1149,7 @@ Related:
 
 (use-package ediff
 
-  :defer t
+  :commands (ediff-buffers ediff-current-file)
 
   :custom
 
@@ -1086,8 +1162,6 @@ Related:
 ;;----------------------------------------------;;
 
 (use-package eldoc
-
-  :defer t
 
   :commands (eldoc-mode)
 
@@ -1103,7 +1177,7 @@ Related:
 
 (use-package sql
 
-  :defer t
+  :commands (sql-postgres)
 
   :config
 
@@ -1249,6 +1323,8 @@ Related:
 ;;
 ;; Execute START-FUNC (often a lambda) in a subordinate Emacs process.
 ;; When done, the return value is passed to FINISH-FUNC.  Example:
+
+;;; External Packages:
 
 ;;----------------------------------------------;;
 ;; External Packages: Prioritized Packages -----;;

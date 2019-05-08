@@ -4015,6 +4015,78 @@ URL \``yas-selected-text`'
 
 
 
+;;----------------------------------------------;;
+;; Register ------------------------------------;;
+;;----------------------------------------------;;
+
+(let* (((APPEND nil)))                  ; prepend (to the start).
+  (add-to-list 'load-path sboo-root-directory APPEND))
+
+(let* (((APPEND t)))                    ; append (to the end).
+  (add-to-list 'load-path sboo-lisp-directory APPEND))
+
+
+
+
+(progn
+
+  (add-to-list 'load-path sboo-root-directory nil)
+
+  ;; ^ prepend (to the start of `load-path'):
+  ;; 
+  ;;   • `sboo-root-directory' holds « sboo-*.el » `featurep's.
+  ;; 
+
+  (add-to-list 'load-path sboo-lisp-directory t)
+
+  ;; ^ append (to the end of `load-path'):
+  ;; 
+  ;;   • `sboo-lisp-directory' holds Vendored Packages,
+  ;;     which have lower priority than Installed Packages
+  ;;     (whether installed via program `nix' or via `package.el'.)
+  ;;
+
+  load-path)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
