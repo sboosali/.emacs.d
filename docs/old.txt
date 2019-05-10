@@ -4753,6 +4753,134 @@ Links:
 
 
 
+      (ispell-personal-dictionary (sboo-xdg-config "sboo.txt" :subdir "ispell")
+                                  "XDG-conformant (defaults to « ~/.ispell_<DICTNAME> »).")
+
+
+
+
+
+
+
+;;----------------------------------------------;;
+
+(defvar sboo-spelling-personal-dictionary
+
+  (if sboo-spelling-aspell-p
+      (sboo-xdg-config "en.pws" :subdir "aspell")
+    (sboo-xdg-config "sboo.txt" :subdir "ispell"))
+
+  "Personal dictionary for spell-checkers.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(when (require 'sboo-auto-mode nil :no-error)
+
+  ;;------------------------;;
+
+  (add-to-list 'auto-mode-alist (cons (rx bos "TODO" eos) #'text-mode))
+
+  (sboo-add-auto-mode-basename "LICENSE" #'text-mode)
+  (sboo-add-auto-mode-basename "NOTES"   #'text-mode)
+
+  (sboo-add-auto-mode-basename ".gitignore"     #'conf-mode)
+  (sboo-add-auto-mode-basename ".gitattributes" #'conf-mode)
+
+  (sboo-add-auto-mode-basename "terminalrc" #'conf-mode)
+  ;; ^ for the « xfce4-terminal » program.
+
+  (sboo-add-auto-mode-basename ".xbindkeysrc" #'conf-mode)
+;;(sboo-add-auto-mode-basename "xbindkeysrc.scm" #'xbindkeys-scheme-mode)
+  ;; ^ for the « xbindkeys » program.
+
+  ;;------------------------;;
+
+  (add-to-list 'auto-mode-alist (cons "\\.xpm\\'" #'c-mode))
+
+  (sboo-add-auto-mode-file-extension "service"    #'conf-mode) ; e.g. « /etc/services »
+  (sboo-add-auto-mode-file-extension "interfaces" #'conf-mode) ; e.g. « /etc/network/interfaces »
+
+  (sboo-add-auto-mode-file-extension "rc" #'conf-mode)
+
+  ;; ^ Most `.rc' files (including « ~/.config/xfce4/panel/*-*.rc »),
+  ;; have the `INI' format, which `conf-mode' supports.
+
+  (sboo-add-auto-mode-file-extension "knsrc" #'conf-mode)
+
+  ;; ^ `.knsrc' files (for KDE)
+  ;; have the `INI' format, which `conf-mode' supports.
+
+  ;;TODO any file that ends in `rc`, should we default to 'conf-mode or to 'sh-mode?
+  ;;;(add-to-list 'auto-mode-alist ("rc\\'" . #'conf-mode))
+  ;;;(add-to-list 'auto-mode-alist ("rc\\'" . #'sh-mode))
+
+  (sboo-add-auto-mode-file-extension "xml" #'sgml-mode)
+
+  ;; ^ `nxml-mode' vs `sgml-mode'.?
+
+  ;;---------------------------;;
+
+  ())
+
+;; ^ NOTES:
+;;
+;;  • `auto-mode-alist' maps filepaths to `major-mode's.
+;;
+
+
+
+
+
+
+
+    (sboo-add-auto-mode-file-extension "rc"         #'conf-mode)
+
+    ;; ^ Most `.rc' files are in the INI Format (which `conf-mode' supports).
+    ;;   e.g. all « ~/.config/xfce4/panel/*-*.rc » Xfce Config-Files.
+
+    (sboo-add-auto-mode-file-extension "knsrc"      #'conf-mode)
+
+    ;; ^ `.knsrc' files (KDE Config-Files) are `.rc' files (and thus, in the INI Format).
+
+==============================================
+
+
+
+
+
+
+
+
+
+
+==============================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
