@@ -145,7 +145,7 @@ Zero-or-more function-symbols."
 
   "Major modes that are children of (or similar to) `html-mode'.
 
-A `listp' of `symbolp's."
+A `listp' of `symbolp's (`major-mode's)."
 
   :type '(repeated (choice (const nil)
                            (symbol :tag "Major Mode")))
@@ -166,7 +166,7 @@ A `listp' of `symbolp's."
 
   "Hooks for `sboo-html-modes-list' (e.g. `html-mode-hook').
 
-A `listp' of `symbolp's.
+A `listp' of `symbolp's (`sboo-hook-p's).
 
 By default:
 

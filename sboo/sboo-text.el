@@ -39,8 +39,43 @@
 
 ;; Builtins:
 
-(eval-when-compile 
+(eval-when-compile
+  (require 'rx)
   (require 'cl-lib))
+
+;;----------------------------------------------;;
+;; Macros --------------------------------------;;
+;;----------------------------------------------;;
+
+(eval-when-compile
+
+  (defmacro sboo-rx-keywords (strings)
+
+    "Return a `regexp' matching any `stringp' in STRINGS.
+
+Inputs:
+
+• STRINGS — a `listp' of `stringp's.
+
+Output:
+
+• a `regexpp'.
+
+Examples:
+
+• M-: (sboo-rx-keywords '(\"TODO\" \"NOTE\")))
+    ⇒ 
+
+Related:
+
+• `rx'"
+
+    `(rx (or ,@strings))))
+
+;; M-: (sboo-rx-keywords '("TODO" "NOTE"))
+
+;; M-: (rx (or "TODO" "NOTE"))"
+;;   ⇒ \\(?:NOTE\\|TODO\\)"
 
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
@@ -146,8 +181,8 @@ Used by:
 
 • ‘sboo-aspell-conf’"
 
-  :type '(repeated (choice (string :tag "Keyword")
-                           (regexp :tag "Keyword Regexp")
+  :type '(repeated (choice (string :tag " Keyword")
+                           (regexp :tag "Keywords")
                            ))
 
   :safe #'listp
@@ -155,7 +190,43 @@ Used by:
 
 ;;----------------------------------------------;;
 
-;; `ispell-mode'
+(defcustom sboo-conf-modes-list
+
+  '(
+    conf-mode
+   )
+
+  "Major modes that are children of (or similar to) `conf-mode'.
+
+A `listp' of `symbolp's (`major-mode's)."
+
+  :type '(repeated (choice (const nil)
+                           (symbol :tag "Major Mode")))
+
+  :safe #'listp
+  :group 'sboo-conf)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-conf-hooks
+
+  '(
+    conf-mode-hook
+   )
+
+  "Hooks for `sboo-conf-modes-list' (e.g. `conf-mode-hook').
+
+A `listp' of `symbolp's (`sboo-hook-p's)."
+
+  :type '(repeated (choice (const nil)
+                           (symbol :tag "Hook")))
+
+  :safe #'listp
+  :group 'sboo-conf)
+
+;;----------------------------------------------;;
+
+;; `ispell-mode':
 
 ;;----------------------------------------------;;
 

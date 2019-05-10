@@ -30,6 +30,82 @@
 ;; Macros --------------------------------------;;
 ;;----------------------------------------------;;
 
+(eval-when-compile
+
+  (defmacro defun-dwim (name active inactive &optional docstring)
+
+    "Declare a command named NAME, which calls ACTIVE when `use-region-p' and INACTIVE otherwise.
+
+Inputs:
+
+• NAME — (unquoted) `symbolp'.
+  the function name.
+• ACTIVE — (unquoted) `symbolp'.
+  its `symbol-value' should be a `commandp'.
+• INACTIVE — (unquoted) `symbolp'.
+  its `symbol-value' should be a `commandp'.
+• DOCSTRING — a `stringp'.
+  the function documentation.
+
+Output:
+
+• a `defun' declaration.
+
+Example:
+
+• M-: (pp-macroexpand-expression (quote (defun-dwim eval-dwim eval-region eval-last-sexp \"`eval-region' or `eval-last-sexp'.\")))
+    ⇒ (defun sboo-eval-dwim ()
+    ⇒   \"`eval-region' or `eval-last-sexp'.\"
+    ⇒   (interactive)
+    ⇒   (if (use-region-p)
+    ⇒       (call-interactively #'eval-region)
+    ⇒     (call-interactively #'eval-last-sexp)))
+
+Notes:
+
+• “DWIM” abbreviates “Do-What-I-Mean”."
+
+    (declare (indent 1) (doc-string 4))
+
+    (let* ((NAME     name)
+           (ACTIVE   active)
+           (INACTIVE inactive)
+
+           (DOCSTRING (or docstring
+                          (format "DWIM: call `%s' when `use-region-p', otherwise call `%s'." active inactive)))
+           )
+
+      `(defun ,NAME ()
+         ,DOCSTRING
+         (interactive)
+         (if (use-region-p)
+             (call-interactively (function ,ACTIVE))
+           (call-interactively (function ,INACTIVE)))))))
+
+;; e.g. `defun-dwim':
+;;
+;; M-: (pp-macroexpand-expression '(defun-dwim eval-dwim eval-region eval-last-sexp "DWIM: `eval-region' or `eval-last-sexp'."))
+;;
+;;   ⇒ (defun eval-dwim ()
+;;   ⇒   "DWIM: `eval-region' or `eval-last-sexp'."
+;;   ⇒   (interactive)
+;;   ⇒   (if (use-region-p)
+;;   ⇒       (call-interactively #'eval-region)
+;;   ⇒     (call-interactively #'eval-last-sexp)))
+;;
+;; M-: (format "DWIM: call `%s' when `use-region-p', otherwise call `%s'." #'eval-region #'eval-last-sexp)
+;;   ⇒ "DWIM: call `eval-region' when `use-region-p', otherwise call `eval-last-sexp'."
+;;
+;; 
+
+;; ^ NOTES
+;;
+;; • `use-region-p':
+;;
+;;   Return `t' if ① the region is active and ② it is appropriate to act on it.
+
+;;----------------------------------------------;;
+
 (defmacro define-graceful-command (Name ExternalCommand BuiltinCommand &optional DocString)
 
   `(defun ,Name ()
@@ -57,55 +133,15 @@
 ;;
 
 ;;----------------------------------------------;;
-
-(cl-defmacro define-graceful-boolean-command 
-
-  ( NAME
-    &key internal external doc
-  )
-
-  `(defun ,NAME (PrefixArgument)
-     
-     ,doc
-     
-     (interactive "P")
-     
-     (let ((*command* (function ,external)))
-
-        (if (commandp *command*)
-
-          (call-interactively *command*)
-
-          (call-interactively (function ,internal) PrefixArgument)))))
-
-
-;; ^ `defalias' for commands with graceful degradation.
-;;
-;; Wraps `defun' and `call-interactively'.
-;;
-;; See:
-;; 
-;; - https://stackoverflow.com/questions/37531124/emacs-how-to-use-call-interactively-with-parameter
-;; - 
-;; 
-
-;;----------------------------------------------;;
-;; Eval ----------------------------------------;;
+;; DWIM ----------------------------------------;;
 ;;----------------------------------------------;;
 
-(defun sboo-eval ()
+(ignore-errors (defun-dwim eval-dwim eval-region eval-last-sexp))
+(ignore-errors (defun-dwim kill-dwim kill-region kill-line))
 
-  "Run `eval-region' (if anything's highlighted) or `eval-last-sexp'."
-
-  (interactive)
-
-  (if (use-region-p)
-      (call-interactively 'eval-region)
-    (call-interactively 'eval-last-sexp)))
-
-;; `use-region-p':
+;; ^ TEMPLATE
 ;;
-;; Return `t' if ① the region is active and ② it is appropriate to act on it.
+;; (ignore-errors (defun-dwim $1-dwim $1-region $1-$0))
 
 ;;----------------------------------------------;;
 ;; Thing at point ------------------------------;;

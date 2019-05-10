@@ -106,7 +106,7 @@
 
 ;;----------------------------------------------;;
 
-(defalias '/e    #'sboo-eval)
+(defalias '/e    #'sboo-eval-dwim)
 (defalias '/eb   #'eval-buffer)
 (defalias '/er   #'eval-region)
 (defalias '/ed   #'eval-defun)          ; `eval-defun' resets `defvar's (unlike `eval-buffer' or `eval-region')
