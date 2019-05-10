@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
 #
 # key         : defmacro
-# name        : a verbose « defmacro » declaration.
+# name        : [sboo] a verbose « defmacro » declaration.
 # condition   : (let ((KEY "defmacro")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 2) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'auto) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
@@ -17,9 +17,9 @@
 
 Inputs:
 
-• ${2:$(upcase yas-text)} — an (unquoted) symbol.
+• ${2:$(upcase yas-text)} — a (unquoted) \`symbolp'.
 • ${3:$(upcase yas-text)} — an expression.
-• DOCSTRING — a string.
+• DOCSTRING — a \`stringp'.
 
 Output:
 
@@ -27,7 +27,7 @@ Output:
 
 Example:
 
-• M-: (pp-macroexpand-expression (sboo-$1 xyz '(1 2 3) \"\"))
+• M-: (pp-macroexpand-expression (sboo-$1 xyz '(1 2 3) \\"\\"))
     ⇒ 
 
 Related:

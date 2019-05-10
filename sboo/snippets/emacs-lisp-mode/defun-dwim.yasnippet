@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+#
+# key         : dwim
+# name        : [sboo] a « defun-dwim » declaration.
+#
+# type        : snippet
+# condition   : (let ((KEY "dwim")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+(ignore-errors (defun-dwim $1-dwim $1-region $1-$0))
