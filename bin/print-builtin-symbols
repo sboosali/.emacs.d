@@ -1,31 +1,100 @@
 #!/usr/bin/emacs --script
 
+;;; Commentary:
+
+;; .
+;; 
+;; 
+
+;;; Code:
+
+;;----------------------------------------------;;
+;; Imports -------------------------------------;;
+;;----------------------------------------------;;
+
+;; builtins:
+
+(eval-when-compile
+  (require 'cl-lib))
+
+;;----------------------------------------------;;
+
+(progn
+  (require 'seq))
+
+;;----------------------------------------------;;
+;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
 (defvar sboo-builtin-features-list
 
-  '(
-    json
-    
-    )
+  '(5x5 ada-mode add-log align allout allout-widgets ange-ftp animate ansi-color antlr-mode arc-mode array artist asm-mode auth-source auth-source-pass autoarg autoconf autoinsert autorevert avl-tree avoid bat-mode battery benchmark bib-mode bibtex bibtex-style bindat binhex blackbox bookmark browse-url bs bubbles bug-reference calc calculator calendar cc-guess cc-mode cdl cedet cfengine char-fold chart check-declare checkdoc chistory cl cl-generic cl-lib cl-print cmacexp cmuscheme color compare-w compface compile completion conf-mode cookie1 copyright cperl-mode cpp crm css-mode cua-base cursor-sensor cvs-status cwarn dabbrev dbus dcl-mode debug decipher delim-col delsel descr-text desktop dframe diary-lib diff diff-mode dig dirtrack disass display-line-numbers dissociate dns dns-mode doc-view doctor dom double dunnet ebnf2ps ebrowse ebuff-menu echistory ecomplete ede edebug ediff edmacro edt ehelp eieio eieio-core eldoc elec-pair electric elide-head elint elp emacs emacs-lock emerge enriched epa epg erc ert ert-x eshell etags eudc ewoc eww executable expand ezimage f90 face-remap feedmail ffap filecache filenotify filesets find-cmd find-dired find-file find-func find-lisp finder flow-ctrl flow-fill flymake flymake-proc flyspell foldout follow footnote format-spec forms fortran fortune frameset gamegrid gametree gdb-mi glasses gnus gnutls gomoku goto-addr gravatar grep gud handwrite hanoi hashcash help-at-pt hex-util hexl hi-lock hideif hideshow hilit-chg hippie-exp hl-line hmac-def hmac-md5 htmlfontify ibuffer icalendar icomplete icon idlwave ido ielm ietf-drums iimage image-dired image-file imap imenu inf-lisp info info-look info-xref informat inline inversion isearchb ispell jka-compr js json kermit keypad kmacro ld-script ldap less-css-mode let-alist life linum lisp-mnt loadhist locate log-edit log-view lpr m4-mode macroexp mail-parse mail-prsvr mail-utils mailabbrev mailalias mailcap mailclient mairix make-mode makeinfo makesum man mantemp map master mb-depth md4 meta-mode metamail mh-e mhtml-mode midnight minibuf-eldef misearch mixal-mode mode-local modula2 morse mouse-copy mouse-drag mpc mpuz msb mspools net-utils netrc network-stream newsticker notifications novice nroff-mode nsm ntlm nxml octave opascal org outline package page-ext paren parse-time pascal password-cache pcase pcomplete pcvs perl-mode picture plstore po pong pop3 pp printing proced profiler project prolog ps-mode ps-print pulse puny python qp quickurl radix-tree rcirc re-builder recentf refbib refer refill reftex reftex-auc reftex-cite reftex-dcr reftex-global reftex-index reftex-parse reftex-ref reftex-sel reftex-toc reftex-vars regexp-opt regi registry remember repeat reporter reposition reveal rfc2045 rfc2047 rfc2104 rfc2231 rfc2368 rfc822 ring rlogin rmail rmc rot13 rst rtree ruby-mode ruler-mode rx sasl savehist saveplace sb-image scheme scroll-all scroll-lock secrets select semantic sendmail seq server ses sgml-mode sh-script shadow shadowfile shell shr shr-color sieve sieve-manage sieve-mode simula skeleton smerge-mode smie smtpmail snake snmp-mode soap-client socks solitaire sort soundex speedbar spook sql srecode starttls strokes studly subword supercite svg syntax t-mouse table tabulated-list talk tar-mode tcl telnet tempo term testcover tetris tex-mode texinfmt texinfo texnfo-upd thingatpt thumbs thunk tildify time time-date time-stamp timeclock timezone tls tmm todo-mode tq trace tramp tree-widget two-column type-break uce underline undigest unrmail unsafep url uudecode vc vcursor vera-mode verilog-mode vhdl-mode view viper vt-control vt100-led warnings wdired webjump which-func whitespace windmove winner woman xdg xml xref xscheme xt-mouse xwidget yenc zeroconf zone)
 
-  "")
+  "All features/packages built-into Emacs (on Linux).
 
-(dolist (FEATURE sboo-builtin-features-list)
-  (require FEATURE))
+a `listp' of `symbolp's.
+
+Source: ‘package--builtins’.")
 
 ;;----------------------------------------------;;
 
 (defvar sboo-builtin-symbols-list nil
-  "")
 
-(defun sboo-register-builtin-symbols (symbol)
-  (push symbol sboo-builtin-symbols-list))
+  "All `symbolp's defined by any `featurep'.
 
-(mapatoms #'sboo-builtin-symbols-list)
+`featurep's include:
 
-;;----------------------------------------------;;
-
-(prin1 sboo-builtin-symbols-list)
+• `sboo-builtin-features-list'.
+• subroutines (e.g. from `subr-x', from « subr.el », etc)??
+• “C source code”??")
 
 ;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-register-builtin-symbol (symbol)
+  (when (or (boundp symbol) (fboundp symbol))
+    (push symbol sboo-builtin-symbols-list)))
+
+;;----------------------------------------------;;
+;; Effects -------------------------------------;;
+;;----------------------------------------------;;
+
+(progn (setq sboo-builtin-symbols-list '(boundp fboundp))
+
+  (dolist (FEATURE sboo-builtin-features-list)
+    (ignore-errors (require FEATURE)))
+
+  (mapatoms #'sboo-register-builtin-symbol)
+
+  (dolist (SYMBOL sboo-builtin-symbols-list)
+    (princ (format "%s\n" SYMBOL)))
+
+  'sboo-builtin-symbols-list)
+
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
+
+;; ‘package--builtins’:
+;;
+;; See « M-: (progn (require 'package) (describe-variable 'package--builtins)) ».
+;;
+;; Under an `emacs-version' of "26.1", there are hundreds of builtins are:
+;;
+;;     M-: (length (seq-map #'car package--builtins))
+;;       ⇒ 457
+;;
+;; the builtins, they are:
+;;
+;;     M-: (seq-map #'car package--builtins)
+;;       ⇒ '(5x5 ada-mode add-log align allout allout-widgets ange-ftp animate ansi-color antlr-mode arc-mode array artist asm-mode auth-source auth-source-pass autoarg autoconf autoinsert autorevert avl-tree avoid bat-mode battery benchmark bib-mode bibtex bibtex-style bindat binhex blackbox bookmark browse-url bs bubbles bug-reference calc calculator calendar cc-guess cc-mode cdl cedet cfengine char-fold chart check-declare checkdoc chistory cl cl-generic cl-lib cl-print cmacexp cmuscheme color compare-w compface compile completion conf-mode cookie1 copyright cperl-mode cpp crm css-mode cua-base cursor-sensor cvs-status cwarn dabbrev dbus dcl-mode debug decipher delim-col delsel descr-text desktop dframe diary-lib diff diff-mode dig dirtrack disass display-line-numbers dissociate dns dns-mode doc-view doctor dom double dunnet ebnf2ps ebrowse ebuff-menu echistory ecomplete ede edebug ediff edmacro edt ehelp eieio eieio-core eldoc elec-pair electric elide-head elint elp emacs emacs-lock emerge enriched epa epg erc ert ert-x eshell etags eudc ewoc eww executable expand ezimage f90 face-remap feedmail ffap filecache filenotify filesets find-cmd find-dired find-file find-func find-lisp finder flow-ctrl flow-fill flymake flymake-proc flyspell foldout follow footnote format-spec forms fortran fortune frameset gamegrid gametree gdb-mi glasses gnus gnutls gomoku goto-addr gravatar grep gud handwrite hanoi hashcash help-at-pt hex-util hexl hi-lock hideif hideshow hilit-chg hippie-exp hl-line hmac-def hmac-md5 htmlfontify ibuffer icalendar icomplete icon idlwave ido ielm ietf-drums iimage image-dired image-file imap imenu inf-lisp info info-look info-xref informat inline inversion isearchb ispell jka-compr js json kermit keypad kmacro ld-script ldap less-css-mode let-alist life linum lisp-mnt loadhist locate log-edit log-view lpr m4-mode macroexp mail-parse mail-prsvr mail-utils mailabbrev mailalias mailcap mailclient mairix make-mode makeinfo makesum man mantemp map master mb-depth md4 meta-mode metamail mh-e mhtml-mode midnight minibuf-eldef misearch mixal-mode mode-local modula2 morse mouse-copy mouse-drag mpc mpuz msb mspools net-utils netrc network-stream newsticker notifications novice nroff-mode nsm ntlm nxml octave opascal org outline package page-ext paren parse-time pascal password-cache pcase pcomplete pcvs perl-mode picture plstore po pong pop3 pp printing proced profiler project prolog ps-mode ps-print pulse puny python qp quickurl radix-tree rcirc re-builder recentf refbib refer refill reftex reftex-auc reftex-cite reftex-dcr reftex-global reftex-index reftex-parse reftex-ref reftex-sel reftex-toc reftex-vars regexp-opt regi registry remember repeat reporter reposition reveal rfc2045 rfc2047 rfc2104 rfc2231 rfc2368 rfc822 ring rlogin rmail rmc rot13 rst rtree ruby-mode ruler-mode rx sasl savehist saveplace sb-image scheme scroll-all scroll-lock secrets select semantic sendmail seq server ses sgml-mode sh-script shadow shadowfile shell shr shr-color sieve sieve-manage sieve-mode simula skeleton smerge-mode smie smtpmail snake snmp-mode soap-client socks solitaire sort soundex speedbar spook sql srecode starttls strokes studly subword supercite svg syntax t-mouse table tabulated-list talk tar-mode tcl telnet tempo term testcover tetris tex-mode texinfmt texinfo texnfo-upd thingatpt thumbs thunk tildify time time-date time-stamp timeclock timezone tls tmm todo-mode tq trace tramp tree-widget two-column type-break uce underline undigest unrmail unsafep url uudecode vc vcursor vera-mode verilog-mode vhdl-mode view viper vt-control vt100-led warnings wdired webjump which-func whitespace windmove winner woman xdg xml xref xscheme xt-mouse xwidget yenc zeroconf zone)
+;;
+
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
+(provide 'print-builtin-symbols)
+
+;;; print-builtin-symbols.el ends here

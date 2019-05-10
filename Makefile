@@ -139,13 +139,13 @@ cask-build:
 
 print-builtin-symbols:
 
-	./bin/print-builtin-symbols
+	@mkdir -p ./share
+
+	$(Emacs) --no-site-file --no-init-file --script ./bin/print-builtin-symbols > ./share/builtin-symbols.txt
+
+	@wc -l < ./share/builtin-symbols.txt
 
 .PHONY: print-builtin-symbols
-
-
-
-
 
 ##################################################
 # Emacs: Run / Test. #############################
