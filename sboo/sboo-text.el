@@ -264,7 +264,9 @@ Related:
 
 • ‘conf-space-keywords’"
 
-  (let* ((REGEX (sboo-aspell-conf-keywords-regexp sboo-aspell-conf-keywords))
+  (interactive)
+
+  (let* ((REGEX (sboo-aspell-conf-keywords-regexp))
          )
 
     (conf-space-keywords REGEX)))
@@ -282,20 +284,76 @@ Inputs:
 
 Output:
 
-• a `regexp'.
+• a `regexp'."
 
-Example:
-
-• M-: (sboo-aspell-conf-keywords-regexp '(\"TODO\" \"NOTE\"))
-    ⇒ 
-"
-
-  ;;(cl-assert (not (equal x y)) :show-args "the arguments must differ")
-  ;;(cl-check-type n (integer 1 *) "a positive integer")
-
-  (let* ()
-
-    ))
+  (rx (or "lang"
+          "conf"
+          "conf-dir"
+          "data-dir"
+          "dict-alias"
+          "dict-dir"
+          "encoding"
+          "filter"
+          "filter-path"
+          "mode"
+          "extra-dicts"
+          "home-dir"
+          "ignore"
+          "ignore-case"
+          "ignore-repl"
+          "keyboard"
+          "local-data-dir"
+          "master"
+          "normalize"
+          "norm-required"
+          "norm-form"
+          "norm-strict"
+          "per-conf"
+          "personal"
+          "prefix"
+          "repl"
+          "run-together"
+          "run-together-limit"
+          "run-together-min"
+          "save-repl"
+          "set-prefix"
+          "size"
+          "sug-mode"
+          "sug-edit-dist"
+          "sug-typo-analysis"
+          "sug-repl-table"
+          "sug-split-char"
+          "use-other-dicts"
+          "variety"
+          "warn"
+          "affix-compress"
+          "clean-affixes"
+          "clean-words"
+          "invisible-soundslike"
+          "partially-expand"
+          "skip-invalid-words"
+          "validate-affixes"
+          "validate-words"
+          "backup"
+          "byte-offsets"
+          "guess"
+          "keymapping"
+          "reverse"
+          "suggest"
+          "time"
+          "f-tex-check-comments"
+          "f-tex-command"
+          "f-texinfo-ignore"
+          "f-texinfo-ignore-env"
+          "f-context-delimiters"
+          "f-context-visible-first"
+          "f-email-quote"
+          "f-email-margin"
+          "f-html-check"
+          "f-html-skip"
+          "f-sgml-check"
+          "f-sgml-skip"
+          )))
 
 ;; M-: (sboo-aspell-conf-keywords-regexp '("TODO" "NOTE"))
 
