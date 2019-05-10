@@ -592,36 +592,9 @@ Related:
   (sboo-add-auto-mode-basename "LICENSE" #'text-mode)
   (sboo-add-auto-mode-basename "NOTES"   #'text-mode)
 
-  (sboo-add-auto-mode-basename ".gitignore"     #'conf-mode)
-  (sboo-add-auto-mode-basename ".gitattributes" #'conf-mode)
-
-  (sboo-add-auto-mode-basename "terminalrc" #'conf-mode)
-  ;; ^ for the « xfce4-terminal » program.
-
-  (sboo-add-auto-mode-basename ".xbindkeysrc" #'conf-mode)
-;;(sboo-add-auto-mode-basename "xbindkeysrc.scm" #'xbindkeys-scheme-mode)
-  ;; ^ for the « xbindkeys » program.
-
   ;;------------------------;;
 
   (add-to-list 'auto-mode-alist (cons "\\.xpm\\'" #'c-mode))
-
-  (sboo-add-auto-mode-file-extension "service"    #'conf-mode) ; e.g. « /etc/services »
-  (sboo-add-auto-mode-file-extension "interfaces" #'conf-mode) ; e.g. « /etc/network/interfaces »
-
-  (sboo-add-auto-mode-file-extension "rc" #'conf-mode)
-
-  ;; ^ Most `.rc' files (including « ~/.config/xfce4/panel/*-*.rc »),
-  ;; have the `INI' format, which `conf-mode' supports.
-
-  (sboo-add-auto-mode-file-extension "knsrc" #'conf-mode)
-
-  ;; ^ `.knsrc' files (for KDE)
-  ;; have the `INI' format, which `conf-mode' supports.
-
-  ;;TODO any file that ends in `rc`, should we default to 'conf-mode or to 'sh-mode?
-  ;;;(add-to-list 'auto-mode-alist ("rc\\'" . #'conf-mode))
-  ;;;(add-to-list 'auto-mode-alist ("rc\\'" . #'sh-mode))
 
   (sboo-add-auto-mode-file-extension "xml" #'sgml-mode)
 
@@ -1121,38 +1094,6 @@ Notes:
 
 ;;----------------------------------------------;;
 
-(use-package flyspell
-
-  :commands (flyspell-mode flyspell-prog-mode flyspell-auto-correct-word)
-
-  :delight (flyspell-mode " 🔤")
-
-  ;;--------------------------;;
-
-  :custom
-
-  ()
-
-  ;;--------------------------;;
-
-  :config
-
-  ())
-
-;; ^ NOTES
-;;
-;;   • `flyspell-prog-mode' spell-checks comments.
-;;
-
-;; ^ Links:
-;;
-;;   • URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Spelling.html'
-;;   • URL `https://www.emacswiki.org/emacs/FlySpell'
-;;   • URL `https://stackoverflow.com/questions/22107182/in-emacs-flyspell-mode-how-to-add-new-word-to-dictionary'
-;;
-
-;;----------------------------------------------;;
-
 (use-package man
 
   :config
@@ -1240,6 +1181,63 @@ Notes:
 
 ;;----------------------------------------------;;
 
+(use-package conf-mode
+
+  :commands (conf-mode)
+
+  :config
+
+  (when (require 'sboo-text nil :no-error)
+    (add-to-list 'conf-space-keywords-alist (cons (rx (? ".") "aspell.conf")
+                                                  (sboo-aspell-conf-keywords-regexp))))
+
+  ;; ^ `conf-space-keywords-alist':
+  ;;
+  ;; • file-name-based ‘conf-space-keywords’.
+  ;; • e.g. entry: « '("/mod\\(?:ules\\|probe\\)\\.conf" . "alias\\|in\\(?:clude\\|stall\\)\\|options\\|remove") ».
+  ;; 
+
+  (when (require 'sboo-auto-mode nil :no-error)
+
+    (sboo-add-auto-mode-basename ".gitignore"       #'conf-mode)
+    (sboo-add-auto-mode-basename ".gitattributes"   #'conf-mode)
+
+    ;; ^ for program `git'.
+
+    (sboo-add-auto-mode-basename "terminalrc"       #'conf-mode)
+
+    ;; ^ for program `xfce4-terminal'.
+
+    (sboo-add-auto-mode-basename ".xbindkeysrc"     #'conf-mode)
+
+    ;; ^ for program `xbindkeys'.
+
+    (sboo-add-auto-mode-file-extension "rc"         #'conf-mode :suffix t)
+
+    ;; ^ `.../xfce4/**.rc' files configure Xfce4 (program `xfce4-*').
+    ;;
+    ;;   e.g. all « ~/.config/xfce4/panel/*-*.rc » e Config-Files.
+
+    (sboo-add-auto-mode-file-extension "knsrc"      #'conf-mode)
+
+    ;; ^ `.knsrc' files configure KDE (program `kde*').
+
+    (sboo-add-auto-mode-file-extension "service"    #'conf-mode) ; e.g. « /etc/services »
+    (sboo-add-auto-mode-file-extension "interfaces" #'conf-mode) ; e.g. « /etc/network/interfaces »
+
+    auto-mode-alist)
+
+  ;; ^ Most `.rc' files are in the INI Format (which `conf-mode' supports).
+
+  ())
+
+;;TODO: any file that ends in `rc`, should we default to 'conf-mode or to 'sh-mode?
+;;
+;; (add-to-list 'auto-mode-alist ("rc\\'" . #'conf-mode))
+;; (add-to-list 'auto-mode-alist ("rc\\'" . #'sh-mode))
+
+;;----------------------------------------------;;
+
 (use-package elisp-mode
 
   :delight (emacs-lisp-mode "Elisp")
@@ -1254,6 +1252,9 @@ Notes:
          )
 
   :config
+
+  (when (require 'sboo-prog nil :no-error)
+    ())
 
   ())
 
@@ -1270,7 +1271,6 @@ Notes:
   ())
 
 ;; ^ URL `https://www.masteringemacs.org/article/working-multiple-files-dired'
-
 
 ;;----------------------------------------------;;
 
@@ -1326,7 +1326,6 @@ Notes:
 
   ())
 
-
 ;;----------------------------------------------;;
 
 (use-package calendar
@@ -1341,6 +1340,159 @@ Notes:
   :config
 
   ())
+
+;;----------------------------------------------;;
+;; Spell-Checking ------------------------------;;
+;;----------------------------------------------;;
+
+(defvar sboo-spelling-aspell-p
+
+  (if (or (executable-find "aspell")
+          (getenv "SBOO_EMACS_ASPELL"))
+      t
+    nil)
+
+  "Personal spell-checker.
+
+i.e. use `aspell' over `ispell'.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-spelling-personal-dictionary
+
+  (if sboo-spelling-aspell-p
+      "~/configuration/data/aspell/en.pws"
+    "~/configuration/data/ispell/")
+
+  "Personal dictionary for spell-checkers.")
+
+;;==============================================;;
+
+(defun sboo-flyspell-check-next-word ()
+
+  "Spell-Check the next misspelled word."
+
+  (interactive)
+
+  (flyspell-goto-next-error)
+  (ispell-word))
+
+;;----------------------------------------------;;
+
+;; (defun sboo-flyspell-check-prior-word ()
+
+;;   "Spell-Check the previous misspelled word."
+
+;;   (interactive)
+
+;;   (flyspell-goto-previous-error)
+;;   (ispell-word))
+
+;;----------------------------------------------;;
+
+(defun sboo-flyspell-check-first-word ()
+
+  "Spell-Check the previous misspelled word."
+
+  (interactive)
+
+  (beginning-of-buffer)
+  (flyspell-goto-next-error)
+  (ispell-word))
+
+;;----------------------------------------------;;
+
+(defun sboo-flyspell-buffer-after-pdict-save (&rest _)
+
+  "Restart `flyspell-buffer' after extending personal dictionary.
+
+Motivation:
+
+>If I add a word during a flyspell session, it’s still marked up as misspelled.
+>And flyspell-correct-previous-word tells me that it’s spelling is correct.
+> How do I run flyspell-buffer on the buffer every time the dictionary is modified?
+
+Links:
+
+• URL `https://www.emacswiki.org/emacs/FlySpell'
+• URL `https://www.reddit.com/r/emacs/comments/4oc7pg/spellcheck_flyspellmode_underlines_disappear_when/'"
+
+  (interactive)
+
+  (flyspell-buffer))
+
+;;==============================================;;
+
+(use-package ispell
+
+  :commands (ispell-word ispell-region ispell-buffer)
+
+  :custom
+
+  (ispell-program-name "aspell" "« aspell »")
+  (ispell-really-aspell t       "« aspell »")
+
+  (ispell-list-command "--list"
+                       "Because the “-l” option, which means “--list” in program `ispell', means “--lang” in program `aspell'.")
+
+  (ispell-silently-savep t "don't ask")
+
+  (ispell-personal-dictionary sboo-spelling-personal-dictionary
+                              "XDG-conformant (defaults to « ~/.aspell.en.pws »).")
+
+  :config
+
+  (setq-default ispell-program-name "aspell")
+
+  (add-to-list 'ispell-skip-region-alist '("^```" . "^```"))
+  (add-to-list 'ispell-skip-region-alist '("^#+BEGIN_SRC" . "^#+END_SRC"))
+
+  ;; ^ don't spell-check code-blocks,
+  ;;   in `markdown-mode' and `org-mode'.
+
+  (let* ((DIRECTORY (file-name-directory sboo-spelling-personal-dictionary))
+         )
+    (when (not (file-directory-p DIRECTORY))
+      (make-directory DIRECTORY :make-parent-directories)))
+
+  ;; ^ « mkdir -p ».
+
+  ())
+
+;;----------------------------------------------;;
+
+(use-package flyspell
+
+  :delight (flyspell-mode " 🔤")
+
+  :commands (flyspell-mode flyspell-prog-mode flyspell-auto-correct-word flyspell-goto-next-error flyspell-check-next-highlighted-word)
+
+  :bind (:map text-mode-map
+              ("<kp-up>"   . sboo-flyspell-check-first-word)
+              ("<kp-down>" . sboo-flyspell-check-next-word)
+              )
+
+  :hook ((text-mode     . flyspell-mode)
+         (markdown-mode . flyspell-mode)
+         )
+
+  :config
+
+  (advice-add 'ispell-pdict-save :after #'sboo-flyspell-buffer-after-pdict-save)
+
+  ())
+
+;; ^ NOTES
+;;
+;;   • `flyspell-prog-mode' spell-checks comments.
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Spelling.html'
+;;   • URL `https://www.emacswiki.org/emacs/FlySpell'
+;;   • URL `https://stackoverflow.com/questions/22107182/in-emacs-flyspell-mode-how-to-add-new-word-to-dictionary'
+;;
 
 ;;----------------------------------------------;;
 ;;; Internal Packages: Settings ----------------;;

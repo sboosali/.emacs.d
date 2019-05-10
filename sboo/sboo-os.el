@@ -215,6 +215,20 @@ Related:
 ;;     (exec-path-from-shell-copy-env "SSH_AUTH_SOCK"))
 
 ;;----------------------------------------------;;
+
+;; Other Settings...
+
+(pcase sboo-os-current-system
+
+  ;; ('linux   (sboo-linux-configure))
+
+  ('windows (sboo-windows-configure))
+
+  ;; ('macos   (sboo-macos-configure))
+
+  (_ ()))
+
+;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 

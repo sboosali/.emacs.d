@@ -2329,6 +2329,31 @@ Uses:
     (completing-read PROMPT PROGRAMS nil MUST-MATCH nil HISTORY)))
 
 ;;----------------------------------------------;;
+;; Spell-Checking ------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-flyspell-add-word ()
+
+  "Register the current word with your personal dictionary.
+
+Related:
+
+• `flyspell-do-correct'
+
+Links:
+
+• URL `https://stackoverflow.com/questions/22107182/in-emacs-flyspell-mode-how-to-add-new-word-to-dictionary'"
+
+  (interactive)
+
+  (let ((CURRENT-LOCATION (point))
+        (WORD             (flyspell-get-word))
+        )
+
+    (when (consp WORD)    
+      (flyspell-do-correct 'save nil (car word) CURRENT-LOCATION (cadr word) (caddr word) CURRENT-LOCATION))))
+
+;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 

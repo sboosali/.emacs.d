@@ -1,70 +1,162 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Utilities for `auto-mode-alist' and `interpreter-mode-alist'.
-;;
-;; in particular:
-;;
-;; - file extensions (e.g. `.hs');
-;; - basenames (e.g. `README.md')..
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; sboo-auto-mode.el --- -*- coding: utf-8; lexical-binding: t -*-
 
-(defun sboo-add-auto-mode-file-extension (FileExtension MajorMode &optional Pure)
-  "Associates the `FileExtension' with the `MajorMode' in `auto-mode-alist'.
+;; Copyright © 2019 Spiros Boosalis
 
-  If you set `Pure', this function is pure, returning the association (a cons cell),
-  without mutating the global variable `auto-mode-alist'.
+;; Version: 0.0.0
+;; Package-Requires: ((emacs "25") seq pcase)
+;; Author:  Spiros Boosalis <samboosalis@gmail.com>
+;; Homepage: https://github.com/sboosali/.emacs.d
+;; Keywords: local
+;; Created: 10 May 2019
+;; License: GPL-3.0-or-later
 
-  e.g. 
-      (sboo-add-auto-mode-file-extension \"hs\" 'haskell-mode)
-      (\"\\.hs\\'\" . 'haskell-mode)
-  "
+;; This file is not part of GNU Emacs.
+;;
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; Utilities for configuring `*-mode-alist'.
+;; 
+;; Functions:
+;;
+;; • ‘sboo-add-auto-mode-file-extension’ — registers file-extensions.
+;;   e.g. « *.conf ».
+;;
+;; • ‘sboo-add-auto-mode-basename’— registers base-names. 
+;;   e.g. « README ».
+;;
+;; Requires:
+;;
+;; • `auto-mode-alist'
+;; • `interpreter-mode-alist'
+;;
+
+;;; Code:
+
+;;----------------------------------------------;;
+;; Imports -------------------------------------;;
+;;----------------------------------------------;;
+
+;; builtins:
+
+(eval-when-compile 
+  (require 'cl-lib))
+
+;;----------------------------------------------;;
+
+(progn
+  (require 'seq))
+
+;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+(cl-defun sboo-add-auto-mode-file-extension (file-extension mode &key pure suffix)
+
+  "Associates the FILE-EXTENSION with the MODE, in `auto-mode-alist'.
+
+Inputs:
+
+• PURE — a `booleanp'.
+  Whether to perform mutation (on a global variable).
+  impure by default.
+
+• SUFFIX — a `booleanp'.
+  (Same as the « APPEND » option in `add-to-list'.)
+  prepends by default.
+
+Output:
+
+• a `consp'.
+
+Effects:
+
+• mutates `auto-mode-alist' (unless PURE is set).
+
+Examples:
+
+• M-: (sboo-add-auto-mode-file-extension \"hs\" 'haskell-mode :pure t)
+    ⇒ (\"\\.hs\\'\" . 'haskell-mode)"
 
   (let* ((Pattern
           (concat "\\."
-                  FileExtension
+                  file-extension
                   "\\'"))
 
          (Association
-          `(,Pattern . ,MajorMode)))
+          `(,Pattern . ,mode))
+         )
 
     (progn
 
-      (unless Pure
+      (unless pure
         (progn
-          (add-to-list 'auto-mode-alist Association)
+          (add-to-list 'auto-mode-alist Association suffix)
           (message "%S" Association)))
 
-      Association)))
+      (if pure
+          Association
+        nil))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
-(defun sboo-add-auto-mode-basename (BaseName MajorMode &optional Pure)
-  "Associates the file `BaseName' with the `MajorMode' in `auto-mode-alist'.
+(cl-defun sboo-add-auto-mode-basename (base-name mode &key pure suffix)
 
-If you set `Pure', this function is pure, returning the association (a cons cell),
-without mutating the global variable `auto-mode-alist'.
+  "Associates the file BASE-NAME with the MODE, in `auto-mode-alist'.
+
+Inputs:
+
+• PURE — a `booleanp'.
+  Whether to perform mutation (on a global variable).
+  impure by default.
+
+• SUFFIX — a `booleanp'.
+  (Same as the « APPEND » option in `add-to-list'.)
+  prepends by default.
+
+Output:
+
+• a `consp'.
+
+Effects:
+
+• mutates `auto-mode-alist' (unless PURE is set).
 
 Examples:
  
-• M-: (sboo-add-auto-mode-basename \"README.md\" 'gfm-mode t)
-    ⇒ (\"README\\.md\\'\" . 'gfm-mode)
-"
+• M-: (sboo-add-auto-mode-basename \"README.md\" 'gfm-mode :pure t)
+    ⇒ (\"README\\.md\\'\" . 'gfm-mode)"
 
   (let* ((Pattern
-          (concat (replace-regexp-in-string "\\." "\\\\." BaseName)
+          (concat (replace-regexp-in-string "\\." "\\\\." base-name)
                   "\\'"))
 
          (Association
-          `(,Pattern . ,MajorMode)))
+          `(,Pattern . ,mode))
+         )
 
     (progn
 
-      (unless Pure
+      (unless pure
         (progn
-          (add-to-list 'auto-mode-alist Association)
+          (add-to-list 'auto-mode-alist Association suffix)
           (message "%S" Association)))
 
-      Association)))
+      (if pure
+          Association
+        nil))))
 
 ;; ^ internals:
 ;;
@@ -78,9 +170,9 @@ Examples:
 ;;     (x . y)"
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
 
 ;; `auto-mode-alist':
 ;;
@@ -98,9 +190,14 @@ Examples:
 ;; 
 ;;
 
-;; See:
-;;     - 
-;;     - 
+;; 
+;;
+;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
 (provide 'sboo-auto-mode)
+
+;;; sboo-auto-mode.el ends here

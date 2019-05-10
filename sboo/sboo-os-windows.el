@@ -103,6 +103,20 @@ Related:
   (w32-send-sys-command 61488))
 
 ;;----------------------------------------------;;
+;; Configuration -------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-windows-configure ()
+
+  "Windows-specific configuration."
+
+  ;; « aspell » is a Spell-Checker:
+
+  (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/" :append)
+
+  ())
+
+;;----------------------------------------------;;
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
 
