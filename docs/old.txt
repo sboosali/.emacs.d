@@ -4855,7 +4855,150 @@ Links:
 
 ==============================================
 
+#!/usr/bin/emacs --script
 
+;;; Commentary:
+
+;; .
+;; 
+;; 
+
+;;; Code:
+
+;;----------------------------------------------;;
+;; Imports -------------------------------------;;
+;;----------------------------------------------;;
+
+;; builtins:
+
+(eval-when-compile
+  (require 'cl-lib))
+
+;;----------------------------------------------;;
+
+(progn
+  (require 'seq))
+
+;;----------------------------------------------;;
+;; Variables -----------------------------------;;
+;;----------------------------------------------;;
+
+(defvar sboo-builtin-features-list
+
+  (seq-map #'car package--builtins)
+
+  "")
+
+;;----------------------------------------------;;
+
+(defvar sboo-builtin-symbols-list nil
+  "")
+
+(defun sboo-register-builtin-symbols (symbol)
+  (push symbol sboo-builtin-symbols-list))
+
+(mapatoms #'sboo-builtin-symbols-list)
+
+(dolist (FEATURE sboo-builtin-features-list)
+  (require FEATURE))
+
+;;----------------------------------------------;;
+
+(prin1 sboo-builtin-symbols-list)
+
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
+
+;; ‘package--builtins’:
+;;
+;; (progn (require 'package) (describe-variable 'package--builtins))
+;;
+
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
+(provide 'print-builtin-symbols)
+
+;;; print-builtin-symbols.el ends here
+
+==============================================
+
+;;----------------------------------------------;;
+
+(cl-defmacro define-graceful-boolean-command 
+
+  ( NAME
+    &key internal external doc
+  )
+
+  `(defun ,NAME (PrefixArgument)
+     
+     ,doc
+     
+     (interactive "P")
+     
+     (let ((*command* (function ,external)))
+
+        (if (commandp *command*)
+
+          (call-interactively *command*)
+
+          (call-interactively (function ,internal) PrefixArgument)))))
+
+
+;; ^ `defalias' for commands with graceful degradation.
+;;
+;; Wraps `defun' and `call-interactively'.
+;;
+;; See:
+;; 
+;; - https://stackoverflow.com/questions/37531124/emacs-how-to-use-call-interactively-with-parameter
+;; - 
+;; 
+
+;; ^ NOTES
+;;
+;; • `use-region-p':
+;;
+;;   Return `t' if ① the region is active and ② it is appropriate to act on it.
+
+
+==============================================
+
+(use-package term
+
+  :bind (:map term-mode-map
+
+              ("<C-v>" . yank)
+              )
+              
+  (setq term-ansi-default-program "/bin/bash")
+;;(setq term-ansi-buffer-name "")
+;;(setq term-ansi-buffer-base-name "")
+
+  (define-key term-raw-map (kbd "C-v") (kbd "S-<insert>"))
+
+  (define-key term-mode-map (kbd "C-v") (term-send-raw-string (kbd "S-<insert>")))
+
+(define-key term-mode-map (kbd "C-j") 'term-char-mode)
+(define-key term-raw-map (kbd "C-j") 'term-line-mode)
+
+
+(defun sboo-term-send-shift-insert ()
+  "Send « <S-insert> » (“paste”) under `term-mode'."
+  (term-send- (kbd "S-<insert>")))
+
+
+  (define-key term-mode-map (kbd "C-v") #'sboo-term-send-shift-insert)
+
+
+
+
+==============================================
 
 
 

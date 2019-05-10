@@ -436,6 +436,11 @@ Inputs:
 ;;; Key Translations ===========================;;
 ;;==============================================;;
 
+(progn
+
+  (define-key key-translation-map (kbd "H-4") (kbd "◇")) ; WHITE DIAMOND
+
+  ())
 
 ;;==============================================;;
 ;;; Unset ======================================;;
@@ -880,12 +885,46 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
+  (define-prefix-command 'sboo-launch-keymap)
+
+;;(define-key sboo-launch-keymap (kbd "a") #')
+;;(define-key sboo-launch-keymap (kbd "b") #')
+;;(define-key sboo-launch-keymap (kbd "c") #')
+;;(define-key sboo-launch-keymap (kbd "d") #')
+;;(define-key sboo-launch-keymap (kbd "e") #')
+;;(define-key sboo-launch-keymap (kbd "f") #')
+;;(define-key sboo-launch-keymap (kbd "g") #')
+;;(define-key sboo-launch-keymap (kbd "h") #')
+;;(define-key sboo-launch-keymap (kbd "i") #')
+;;(define-key sboo-launch-keymap (kbd "j") #')
+;;(define-key sboo-launch-keymap (kbd "k") #')
+;;(define-key sboo-launch-keymap (kbd "l") #')
+;;(define-key sboo-launch-keymap (kbd "m") #')
+;;(define-key sboo-launch-keymap (kbd "n") #')
+;;(define-key sboo-launch-keymap (kbd "o") #')
+  (define-key sboo-launch-keymap (kbd "p") #'helm-top) ; to[P].
+;;(define-key sboo-launch-keymap (kbd "q") #')
+;;(define-key sboo-launch-keymap (kbd "r") #')
+  (define-key sboo-launch-keymap (kbd "s") #'shell)          ; [S]hell.
+  (define-key sboo-launch-keymap (kbd "t") #'sboo-ansi-term) ; [T]erminal.
+;;(define-key sboo-launch-keymap (kbd "u") #')
+;;(define-key sboo-launch-keymap (kbd "v") #')
+;;(define-key sboo-launch-keymap (kbd "w") #')
+;;(define-key sboo-launch-keymap (kbd "x") #')
+;;(define-key sboo-launch-keymap (kbd "y") #')
+;;(define-key sboo-launch-keymap (kbd "z") #')
+
+  #'sboo-launch-keymap)
+
+;;----------------------------------------------;;
+
+(progn
 
   (global-set-key (kbd "s-a") #'sboo-copy-buffer-contents)  ; copy [A]ll.
 ;;(global-set-key (kbd "s-b") #')
   (global-set-key (kbd "s-c") #'sboo-insert-char)           ; "Character"
   (global-set-key (kbd "s-d") #'xref-find-definitions)      ; "Definitions"
-  (global-set-key (kbd "s-e") #'sboo-eval)                  ; "Eval"
+  (global-set-key (kbd "s-e") #'eval-dwim)                  ; "Eval"
   (global-set-key (kbd "s-f") #'describe-function)          ; "Function"
 ;;(global-set-key (kbd "s-g") #')
   (global-set-key (kbd "s-h") #'helm-apropos)               ; [H]elp
@@ -898,7 +937,7 @@ Inputs:
   (global-set-key (kbd "s-o") #'find-file-at-point)         ; [O]pen file.
   (global-set-key (kbd "s-p") #'helm-show-kill-ring)        ; [P]aste from History.
 ;;(global-set-key (kbd "s-q") #')
-  (global-set-key (kbd "s-r") #'xref-find-references)       ; "References"
+  (global-set-key (kbd "s-r") #'sboo-launch-keymap)         ; "[R]un" (a.k.a "launch stuff")
   (global-set-key (kbd "s-s") #'sboo-select-keymap)         ; [S]election Commands.
   (global-set-key (kbd "s-t") #'sboo-text-keymap)           ; "Text"
 ;;(global-set-key (kbd "s-u") #')
@@ -916,6 +955,7 @@ Inputs:
 ;;(global-set-key (kbd "s-h") #'helm-command-prefix)        ; "Helm"
 ;;(global-set-key (kbd "s-i") #'imenu)
 ;;(global-set-key (kbd "s-k") #'describe-key)               ; "Key"
+;;(global-set-key (kbd "s-r") #'xref-find-references)       ; "References"
 ;;(global-set-key (kbd "s-s") #'sboo-launch-shell)          ; "Shell"
 ;;(global-set-key (kbd "s-t") #'sboo-launch-term)           ; "Terminal"
 ;;(global-set-key (kbd "s-p") #'proced)

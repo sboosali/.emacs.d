@@ -552,23 +552,7 @@ Related:
 ;;; Internal Packages:
 
 ;;----------------------------------------------;;
-;;; Internal Packages: -------------------------;;
-;;----------------------------------------------;;
-
-(use-package minibuffer
-
-  :config
-
-  (add-to-list 'completion-styles 'substring nil)
-
-  ())
-
-;;----------------------------------------------;;
-
-(when (require 'sboo-toolbar nil :no-error)
-;;(setq tool-bar-map sboo-tool-bar-map)
-  ())
-
+;;; Builtin Packages: --------------------------;;
 ;;----------------------------------------------;;
 
 (when (and (>= emacs-major-version 26)
@@ -624,7 +608,7 @@ Related:
 ;;       (defun load-theme (THEME &optional NO-CONFIRM NO-ENABLE)
 ;;
 
-;;----------------------------------------------;;
+;;==============================================;;
 
 (when (require 'sboo-desktop nil :no-error)
 
@@ -652,8 +636,6 @@ Related:
 ;; and thus need `revert-buffer`. 
 ;;
 
-;;----------------------------------------------;;
-
 ;;TODO:
 ;; (use-package desktop
 ;;   :config
@@ -667,33 +649,122 @@ Related:
 ;; ")
 ;;     ()))
 
-;;----------------------------------------------;;
+;;==============================================;;
 
-;;TODO:
-;; (use-package conf-mode
+(use-package emacs
 
-;;   :init
-;;   ()
+  :no-require t
 
-;;   :config
-;;     (defun modi/conf-quote-normal ()
-;;       "Enable `conf-quote-normal' for *.setup files."
-;;       (when-let* ((fname (buffer-file-name))
-;;                   (enable-conf-quote-normal (string-match-p "\\.setup.*" fname)))
-;;         ;; Set the syntax of ' and " to punctuation.
-;;         (conf-quote-normal nil)))
-;;     (add-hook 'conf-space-mode-hook #'modi/conf-quote-normal)
-;;   ())
+  :delight
 
-;; `conf-quote-normal':
-;;
-;; « 0 » — Set the syntax of « ' » and « " » to punctuation.
-;; « 1 » — Set the syntax of only « ' » to punctuation.
-;; « 2 » — Set the syntax of only « " » to punctuation.
-;;
-;; 
+  (visual-line-mode " VL")
+  ;; ^ Shorten `visual-line-mode'.
+
+  (auto-fill-function " AF")
+  ;; ^ Shorten `auto-fill-mode'.
+
+  (buffer-face-mode)
+  ;; ^ Hide `buffer-face-mode'.
+
+  :config
+
+  ())
 
 ;;----------------------------------------------;;
+
+(use-package autorevert
+
+  :commands (auto-revert-mode)
+
+  :delight (auto-revert-mode " 🗘")
+  ;; ^ Shorten `auto-revert-modee'.
+
+  :config
+
+  ())
+
+;;==============================================;;
+
+(defun modi/conf-quote-normal ()
+  "Enable `conf-quote-normal' for *.setup files."
+  (when-let* ((fname (buffer-file-name))
+              (enable-conf-quote-normal (string-match-p "\\.setup.*" fname)))
+    ;; Set the syntax of ' and " to punctuation.
+    (conf-quote-normal nil)))
+(add-hook 'conf-space-mode-hook #'modi/conf-quote-normal)
+
+;;----------------------------------------------;;
+
+(use-package conf-mode
+
+  :commands (conf-mode)
+
+  :config
+
+  (when (require 'sboo-text nil :no-error)
+    (add-to-list 'conf-space-keywords-alist (cons (rx (? ".") "aspell.conf")
+                                                  (sboo-aspell-conf-keywords-regexp))))
+
+  ;; ^ `conf-space-keywords-alist':
+  ;;
+  ;; • file-name-based ‘conf-space-keywords’.
+  ;; • e.g. entry: « '("/mod\\(?:ules\\|probe\\)\\.conf" . "alias\\|in\\(?:clude\\|stall\\)\\|options\\|remove") ».
+  ;; 
+
+  (when (require 'sboo-auto-mode nil :no-error)
+
+    (sboo-add-auto-mode-basename ".gitignore"       #'conf-mode)
+    (sboo-add-auto-mode-basename ".gitattributes"   #'conf-mode)
+
+    ;; ^ for program `git'.
+
+    (sboo-add-auto-mode-basename "terminalrc"       #'conf-mode)
+
+    ;; ^ for program `xfce4-terminal'.
+
+    (sboo-add-auto-mode-basename ".xbindkeysrc"     #'conf-mode)
+
+    ;; ^ for program `xbindkeys'.
+
+    (sboo-add-auto-mode-file-extension "rc"         #'conf-mode :suffix t)
+
+    ;; ^ `.../xfce4/**.rc' files configure Xfce4 (program `xfce4-*').
+    ;;
+    ;;   e.g. all « ~/.config/xfce4/panel/*-*.rc » e Config-Files.
+
+    (sboo-add-auto-mode-file-extension "knsrc"      #'conf-mode)
+
+    ;; ^ `.knsrc' files configure KDE (program `kde*').
+
+    (sboo-add-auto-mode-file-extension "service"    #'conf-mode) ; e.g. « /etc/services »
+    (sboo-add-auto-mode-file-extension "interfaces" #'conf-mode) ; e.g. « /etc/network/interfaces »
+
+    auto-mode-alist)
+
+  ;; ^ Most `.rc' files are in the INI Format (which `conf-mode' supports).
+
+  (dolist (HOOK sboo-conf-hooks)
+    (dolist (FUNCTION sboo-conf-functions)
+      (add-hook HOOK FUNCTION)))
+
+  ())
+
+;; ^ NOTES
+;;
+;; • `conf-quote-normal':
+;;
+;;     • « 0 » — Set the syntax of « ' » and « " » to punctuation.
+;;     • « 1 » — Set the syntax of only « ' » to punctuation.
+;;     • « 2 » — Set the syntax of only « " » to punctuation.
+;;
+;; • 
+
+;;TODO: any file that ends in `rc`, should we default to 'conf-mode or to 'sh-mode?
+;;
+;; (add-to-list 'auto-mode-alist ("rc\\'" . #'conf-mode))
+;; (add-to-list 'auto-mode-alist ("rc\\'" . #'sh-mode))
+
+;;==============================================;;
 
 (when (require 'sboo-lisp nil :no-error)
 
@@ -704,11 +775,35 @@ Related:
 
 ;;----------------------------------------------;;
 
+(use-package elisp-mode
+
+  :delight (emacs-lisp-mode "Elisp")
+
+  ;; ^ Shorten « Emacs-Lisp » to « elisp ».
+  ;;
+  ;; NOTE the `major-mode', unlike any `minor-mode's,
+  ;;      starts the Modeline, and thus shouldn't have leading whitespace.
+  ;;
+
+  :hook ((emacs-lisp-mode . superword-mode)
+         )
+
+  :config
+
+  (when (require 'sboo-prog nil :no-error)
+    ())
+
+  ())
+
+;;==============================================;;
+
 (when (require 'sboo-compilation nil :no-error)
 
   (sboo-compilation-init!)
 
   (add-startup-hook! #'sboo-compilation-config!))
+
+;;----------------------------------------------;;
 
 ;;==============================================;;
 
@@ -758,7 +853,7 @@ Related:
 ;;
 ;;
 
-;;----------------------------------------------;;
+;;==============================================;;
 
 (use-package ansi-color
 
@@ -826,10 +921,66 @@ Related:
 
   ())
 
+;;==============================================;;
+
+(defun sboo-ansi-term ()
+  "Call `ansi-term' with program `bash'."
+  (interactive)
+  (ansi-term "/bin/bash"))
+
 ;;----------------------------------------------;;
+
+(use-package term
+
+  :commands (ansi-term)
+
+  ;;--------------------------;;
+
+  :bind (:map term-mode-map             ; `term-line-mode':
+              ("C-j" . term-char-mode)
+              ("C-v" . nil)
+         :map term-raw-map              ; `term-char-mode':
+              ("C-j" . term-line-mode)
+              ("C-v" . nil)
+        )
+
+  ;; ^ switching between Input Modes.
+  ;;
+  ;; • URL `https://stackoverflow.com/questions/14485858/multi-term-understanding-keyboard-bindings/14492124'
+  ;; • URL `https://stackoverflow.com/questions/14484454/running-emacs-commands-from-ansi-term-in-character-mode/14491568'
+
+  ;;--------------------------;;
+
+  :config
+
+  ()
+
+  (push (cons (rx bos "*" (or "ansi-term" "terminal") "*" eos) display-buffer--same-window-action)
+        display-buffer-alist)
+
+  ())
+
+;; ^ « (kbd "<S-insert>") » pastes into Terminal-Emulators (like `ansi-term').
+;;   TODO `key-translation-map'? `raw-mode'?
+
+;;==============================================;;
 
 (when (require 'sboo-server nil :no-error)
   (add-startup-hook! #'server-start-unless-running))
+
+;;==============================================;;
+
+(use-package minibuffer
+
+  :config
+
+  (add-to-list 'completion-styles 'substring nil)
+
+  ())
+
+(when (require 'sboo-toolbar nil :no-error)
+;;(setq tool-bar-map sboo-tool-bar-map)
+  ())
 
 ;;----------------------------------------------;;
 
@@ -837,7 +988,7 @@ Related:
 ;;;  (sboo-minibuffer-config))
 ;;;  (sboo-config-fonts))
 
-;;----------------------------------------------;;
+;;==============================================;;
 
 (when (require 'sboo-make nil :no-error)
   (add-hook 'makefile-mode-hook #'sboo-show-trailing-whitespace))
@@ -1135,128 +1286,6 @@ Notes:
 ;;
 ;;   • `comint' is a Non-Package (?) Feature.
 ;;
-
-;;----------------------------------------------;;
-;; Builtin Packages: ---------------------------;;
-;;----------------------------------------------;;
-
-;; these features (below) can be configured with `use-package',
-;; because they are actual packages.
-;;
-;; See: (describe-variable 'package--builtins)
-
-;;----------------------------------------------;;
-
-(use-package emacs
-
-  :no-require t
-
-  :delight
-
-  (visual-line-mode " VL")
-  ;; ^ Shorten `visual-line-mode'.
-
-  (auto-fill-function " AF")
-  ;; ^ Shorten `auto-fill-mode'.
-
-  (buffer-face-mode)
-  ;; ^ Hide `buffer-face-mode'.
-
-  :config
-
-  ())
-
-;;----------------------------------------------;;
-
-(use-package autorevert
-
-  :commands (auto-revert-mode)
-
-  :delight (auto-revert-mode " 🗘")
-  ;; ^ Shorten `auto-revert-modee'.
-
-  :config
-
-  ())
-
-;;----------------------------------------------;;
-
-(use-package conf-mode
-
-  :commands (conf-mode)
-
-  :config
-
-  (when (require 'sboo-text nil :no-error)
-    (add-to-list 'conf-space-keywords-alist (cons (rx (? ".") "aspell.conf")
-                                                  (sboo-aspell-conf-keywords-regexp))))
-
-  ;; ^ `conf-space-keywords-alist':
-  ;;
-  ;; • file-name-based ‘conf-space-keywords’.
-  ;; • e.g. entry: « '("/mod\\(?:ules\\|probe\\)\\.conf" . "alias\\|in\\(?:clude\\|stall\\)\\|options\\|remove") ».
-  ;; 
-
-  (when (require 'sboo-auto-mode nil :no-error)
-
-    (sboo-add-auto-mode-basename ".gitignore"       #'conf-mode)
-    (sboo-add-auto-mode-basename ".gitattributes"   #'conf-mode)
-
-    ;; ^ for program `git'.
-
-    (sboo-add-auto-mode-basename "terminalrc"       #'conf-mode)
-
-    ;; ^ for program `xfce4-terminal'.
-
-    (sboo-add-auto-mode-basename ".xbindkeysrc"     #'conf-mode)
-
-    ;; ^ for program `xbindkeys'.
-
-    (sboo-add-auto-mode-file-extension "rc"         #'conf-mode :suffix t)
-
-    ;; ^ `.../xfce4/**.rc' files configure Xfce4 (program `xfce4-*').
-    ;;
-    ;;   e.g. all « ~/.config/xfce4/panel/*-*.rc » e Config-Files.
-
-    (sboo-add-auto-mode-file-extension "knsrc"      #'conf-mode)
-
-    ;; ^ `.knsrc' files configure KDE (program `kde*').
-
-    (sboo-add-auto-mode-file-extension "service"    #'conf-mode) ; e.g. « /etc/services »
-    (sboo-add-auto-mode-file-extension "interfaces" #'conf-mode) ; e.g. « /etc/network/interfaces »
-
-    auto-mode-alist)
-
-  ;; ^ Most `.rc' files are in the INI Format (which `conf-mode' supports).
-
-  ())
-
-;;TODO: any file that ends in `rc`, should we default to 'conf-mode or to 'sh-mode?
-;;
-;; (add-to-list 'auto-mode-alist ("rc\\'" . #'conf-mode))
-;; (add-to-list 'auto-mode-alist ("rc\\'" . #'sh-mode))
-
-;;----------------------------------------------;;
-
-(use-package elisp-mode
-
-  :delight (emacs-lisp-mode "Elisp")
-
-  ;; ^ Shorten « Emacs-Lisp » to « elisp ».
-  ;;
-  ;; NOTE the `major-mode', unlike any `minor-mode's,
-  ;;      starts the Modeline, and thus shouldn't have leading whitespace.
-  ;;
-
-  :hook ((emacs-lisp-mode . superword-mode)
-         )
-
-  :config
-
-  (when (require 'sboo-prog nil :no-error)
-    ())
-
-  ())
 
 ;;----------------------------------------------;;
 
