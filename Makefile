@@ -141,7 +141,7 @@ print-builtin-symbols:
 
 	@mkdir -p ./share
 
-	$(Emacs) --no-site-file --no-init-file --script ./bin/print-builtin-symbols > ./share/builtin-symbols.txt
+	$(Emacs) -batch -l ./bin/sboo-print-builtin-symbols > ./share/builtin-symbols.txt
 
 	@wc -l < ./share/builtin-symbols.txt
 

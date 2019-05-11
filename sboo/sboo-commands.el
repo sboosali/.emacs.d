@@ -2129,6 +2129,29 @@ Related:
 
       (error "(sboo-forward '%s) — %s is not a thing (for `forward-thing')" thing thing))))
 
+;;----------------------------------------------;;
+;; Buffers -------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-buffer-delete-all-blank-lines ()
+
+  "Delete all blank (i.e. whitespace-only) lines (in the ‘current-buffer’).
+
+Links:
+
+• URL `https://emacs.stackexchange.com/questions/48526/how-do-i-delete-all-blank-lines-in-a-buffer' 
+
+Related:
+
+• `flush-lines'"
+
+  (interactive)
+
+  (let* ((REGEX (rx bol (* blank) eol))
+         )
+
+    (flush-lines REGEX (point-min) (point-max))))
+
 ;;==============================================;;
 
 (defcustom sboo-font-size-default 12
