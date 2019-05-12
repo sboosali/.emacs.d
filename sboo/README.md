@@ -43,7 +43,82 @@ NOTE `use-package` is used (by `init.el`) like so:
 
 ### Vendored Dependencies
 
-- `./highlight-*`
-- ``./rainbow-*`
+several *Single-File Libraries* are vendored under `./sboo/lisp`, with demos under `./sboo/lisp/img`. 
 
-## 
+most have *Minimal Dependencies*, either:
+
+* no external dependencies
+* only *Extended Standard-Library* dependencies (e.g. `dumb-jump.el` has `Package-Requires: ((f "0.20.0") (s "1.11.0") (dash "2.9.0") (popup "0.5.3"))`, which are utility libraries that are themselves vendored).
+* only *intra-package* dependencies (e.g. `know-your-http-well.el` re-exports its `http-*.el`, which themselves are Single-File Libraries under the same Package).
+
+*Vendored Features* include:
+
+* `awesome-tab.el`
+* `color-identifiers-mode.el`
+* `dumb-jump.el` *v0.5.2*
+* `edit-indirect.el`
+* `eimp.el`
+* `elisp-docstring-mode.el`
+* `elisp-refs.el`
+* `goto-last-change.el`
+* `goto-line-preview.el`
+* `graphviz-dot-mode.el`
+* `helm-swoop.el`
+* `helpful.el`
+* `highlight-blocks.el`
+* `highlight-cl.el`
+* `highlight-defined.el`
+* `highlight-escape-sequences.el`
+* `highlight-numbers.el`
+* `highlight-quoted.el`
+* `jq-mode.el`
+* `link-hint.el`
+* `llvm-mode.el`
+* `lua-mode.el`
+* `makefile-runner.el`
+* `mediawiki.el`
+* `neotree.el`
+* `peep-dired.el`
+* `rainbow-blocks.el`
+* `rainbow-delimiters.el`
+* `rainbow-identifiers.el`
+* `rainbow-mode.el`
+* `shell-pop.el`
+* `simpleclip.el`
+* `string-edit.el`
+* `unicode-fonts.el`
+* `wrap-region.el`
+* `xmodmap-mode.el`
+* `yasnippet.el`
+
+* `pandoc-mode`:
+
+    - `pandoc-mode.el`
+    - `pandoc-mode-utils.el`
+
+*Vendored Utilities* include:
+
+* `dash.el`
+* `f.el`
+* `ht.el`
+* `memoize.el`
+* `ov.el`
+* `popup.el`
+* `s.el`
+
+Miscellaneous *Vendored Libraries* (which are useful, but used infrequently) include:
+
+* `know-your-http-well`:
+
+    - `know-your-http-well.el`
+    - `http-headers.el`
+    - `http-methods.el`
+    - `http-relations.el`
+    - `http-status-codes.el	`
+    - `media-types.el	`
+
+* `operate-on-number.el`
+* `desktop-environment.el`
+* `smartscan.el`
+
+##
