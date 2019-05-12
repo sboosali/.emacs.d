@@ -769,7 +769,7 @@ Related:
 
 ;;==============================================;;
 
-(use-package diff-mode)
+(use-package diff-mode
 
   :commands (diff-mode)
 

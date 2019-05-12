@@ -712,36 +712,38 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
-  (define-prefix-command 'sboo-text-keymap)
 
-;;(define-key sboo-text-keymap (kbd "a") #')
-;;(define-key sboo-text-keymap (kbd "b") #')
-;;(define-key sboo-text-keymap (kbd "c") #')
-;;(define-key sboo-text-keymap (kbd "d") #')
-;;(define-key sboo-text-keymap (kbd "e") #')
-;;(define-key sboo-text-keymap (kbd "f") #')
-;;(define-key sboo-text-keymap (kbd "g") #')
-;;(define-key sboo-text-keymap (kbd "h") #')
-  (define-key sboo-text-keymap (kbd "i") #'indent-region) ; [I]ndent
-;;(define-key sboo-text-keymap (kbd "j") #')
-;;(define-key sboo-text-keymap (kbd "k") #')
-;;(define-key sboo-text-keymap (kbd "l") #')
-;;(define-key sboo-text-keymap (kbd "m") #')
-;;(define-key sboo-text-keymap (kbd "n") #')
-;;(define-key sboo-text-keymap (kbd "o") #')
-;;(define-key sboo-text-keymap (kbd "p") #')
-;;(define-key sboo-text-keymap (kbd "q") #')
-;;(define-key sboo-text-keymap (kbd "r") #')
-  (define-key sboo-text-keymap (kbd "s") #'sort-lines) ; [S]ort
-;;(define-key sboo-text-keymap (kbd "t") #')
-;;(define-key sboo-text-keymap (kbd "u") #')
-;;(define-key sboo-text-keymap (kbd "v") #')
-;;(define-key sboo-text-keymap (kbd "w") #')
-;;(define-key sboo-text-keymap (kbd "x") #')
-;;(define-key sboo-text-keymap (kbd "y") #')
-;;(define-key sboo-text-keymap (kbd "z") #')
+  ;; [E]diting Functions"
+  (define-prefix-command 'sboo-edit-keymap)
 
-  #'sboo-text-keymap)
+;;(define-key sboo-edit-keymap (kbd "a") #')
+;;(define-key sboo-edit-keymap (kbd "b") #')
+;;(define-key sboo-edit-keymap (kbd "c") #')
+;;(define-key sboo-edit-keymap (kbd "d") #')
+;;(define-key sboo-edit-keymap (kbd "e") #')
+;;(define-key sboo-edit-keymap (kbd "f") #')
+;;(define-key sboo-edit-keymap (kbd "g") #')
+;;(define-key sboo-edit-keymap (kbd "h") #')
+;;(define-key sboo-edit-keymap (kbd "i") #')
+;;(define-key sboo-edit-keymap (kbd "j") #')
+;;(define-key sboo-edit-keymap (kbd "k") #')
+;;(define-key sboo-edit-keymap (kbd "l") #')
+;;(define-key sboo-edit-keymap (kbd "m") #')
+;;(define-key sboo-edit-keymap (kbd "n") #')
+;;(define-key sboo-edit-keymap (kbd "o") #')
+;;(define-key sboo-edit-keymap (kbd "p") #')
+;;(define-key sboo-edit-keymap (kbd "q") #')
+;;(define-key sboo-edit-keymap (kbd "r") #')
+;;(define-key sboo-edit-keymap (kbd "s") #')
+;;(define-key sboo-edit-keymap (kbd "t") #')
+;;(define-key sboo-edit-keymap (kbd "u") #')
+;;(define-key sboo-edit-keymap (kbd "v") #')
+;;(define-key sboo-edit-keymap (kbd "w") #')
+;;(define-key sboo-edit-keymap (kbd "x") #')
+;;(define-key sboo-edit-keymap (kbd "y") #')
+;;(define-key sboo-edit-keymap (kbd "z") #')
+
+  #'sboo-edit-keymap)
 
 ;;----------------------------------------------;;
 
@@ -924,7 +926,7 @@ Inputs:
 ;;(global-set-key (kbd "s-b") #')
   (global-set-key (kbd "s-c") #'sboo-insert-char)           ; "Character"
   (global-set-key (kbd "s-d") #'xref-find-definitions)      ; "Definitions"
-  (global-set-key (kbd "s-e") #'eval-dwim)                  ; "Eval"
+  (global-set-key (kbd "s-e") #'sboo-edit-keyamp)           ; "[E]diting Functions"
   (global-set-key (kbd "s-f") #'describe-function)          ; "Function"
 ;;(global-set-key (kbd "s-g") #')
   (global-set-key (kbd "s-h") #'helm-apropos)               ; [H]elp
@@ -947,11 +949,14 @@ Inputs:
   (global-set-key (kbd "s-y") #'sboo-yas-insert-snippet)    ; [Y]asnippet
 ;;(global-set-key (kbd "s-z") #')
 
+  (global-set-key (kbd "s-:") #'eval-dwim)                  ; c.f. « M-: »
+
   ())
 
 ;;----------------------------------------------;;
 
 ;;(global-set-key (kbd "s-d") #'dired)
+;;(global-set-key (kbd "s-e") #'eval-dwim)                  ; "Eval"
 ;;(global-set-key (kbd "s-h") #'helm-command-prefix)        ; "Helm"
 ;;(global-set-key (kbd "s-i") #'imenu)
 ;;(global-set-key (kbd "s-k") #'describe-key)               ; "Key"
