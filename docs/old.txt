@@ -5014,8 +5014,771 @@ print-builtin-symbols:
 
 ==============================================
 
+(use-package lisp-mode
+
+  :hook ((emacs-lisp-mode lisp-mode)
+         . (lambda () (add-hook 'after-save-hook 'check-parens nil t)))
+
+  :init
+  (dolist (mode '(ielm-mode
+                  inferior-emacs-lisp-mode
+                  inferior-lisp-mode
+                  lisp-interaction-mode
+                  lisp-mode
+                  emacs-lisp-mode))
+    (font-lock-add-keywords
+     mode
+     '(("(\\(lambda\\)\\>"
+        (0 (ignore
+            (compose-region (match-beginning 1)
+                            (match-end 1) ?λ))))
+       ("(\\(ert-deftest\\)\\>[         '(]*\\(setf[    ]+\\sw+\\|\\sw+\\)?"
+        (1 font-lock-keyword-face)
+        (2 font-lock-function-name-face
+           nil t))))))
+
+
+
+
+
+
+(use-package eldoc
+
+  :diminish (eldoc-mode)
+
+  :hook ((c-mode-common emacs-lisp-mode) . eldoc-mode)
+
+  )
+
+
+
+(use-package grep
+
+  :bind (("M-s n" . find-name-dired)
+         ("M-s F" . find-grep)
+         ("M-s G" . grep)
+         ("M-s d" . find-grep-dired)
+        )
+
+  :config
+
+  ())
+
+
+
+
+(use-package align
+
+  :commands align
+
+  ;; mnemonic:
+  ;; • "s-e" — personal keymap for EDITING stuff.
+  ;; • "[" — the Open-Square-Bracket looks vertical, which implies Vertical-Alignment (?)
+
+  :bind ((""s-e [ c"   . align-code)
+         ("s-e [ r" . align-regexp)
+        )
+
+  :preface
+  (defun align-code (beg end &optional arg)
+    (interactive "rP")
+    (if (null arg)
+        (align beg end)
+      (let ((end-mark (copy-marker end)))
+        (indent-region beg end-mark nil)
+        (align beg end-mark))))
+
+  :config
+
+  ())
+
+
+
+(use-package eshell
+
+  :commands (eshell eshell-command)
+
+  :preface
+
+  (defvar eshell-isearch-map
+    (let ((map (copy-keymap isearch-mode-map)))
+      (define-key map [(control ?m)] 'eshell-isearch-return)
+      (define-key map [return]       'eshell-isearch-return)
+      (define-key map [(control ?r)] 'eshell-isearch-repeat-backward)
+      (define-key map [(control ?s)] 'eshell-isearch-repeat-forward)
+      (define-key map [(control ?g)] 'eshell-isearch-abort)
+      (define-key map [backspace]    'eshell-isearch-delete-char)
+      (define-key map [delete]       'eshell-isearch-delete-char)
+      map)
+    "Keymap used in isearch in Eshell.")
+
+  :config
+
+  ())
+
+
+(use-package hl-line
+
+  :commands (hl-line-mode)
+
+  :hook (prog-mode . hl-line-mode)
+  )
+
+; "hl-line" abbreviates "[H]igh[L]ight [LINE]".
+
+
+
+(use-package image-file
+
+  :defer 5
+
+  :config
+
+  (auto-image-file-mode +1)
+
+  (add-hook 'image-mode-hook #'image-transform-reset)
+  (add-hook 'image-mode-hook #'auto-revert-mode)
+
+  ;; ^ Images are Read-Only, hence Auto-Revert them.
+
+ ())
+
+;; http://ergoemacs.org/emacs/emacs_view_images.html
+
+
+(use-package isearch
+  :no-require t
+
+  :bind (:map isearch-mode-map
+              ("C-c" . isearch-toggle-case-fold)
+              ("C-t" . isearch-toggle-regexp)
+              ("C-^" . isearch-edit-string)
+              ("C-i" . isearch-complete)
+        )
+
+  :config
+
+  ())
+
+
+
+(use-package back-button
+  :defer 5
+
+  :commands (back-button-mode)
+
+  :init
+  (setq back-button-show-toolbar-buttons t)
+
+  :config
+  (back-button-mode +1))
+
+
+
+
+
+
+
+
+
+
+
+(use-package dumb-jump
+
+  :hook ((haskell-mode) . dumb-jump-mode)
+
+  :bind (("s-g p" . dumb-jump-go)
+         ("s-g P" . dumb-jump-go-prompt))
+
+  :custom
+
+  (dumb-jump-selector 'helm "disambiguate Multiple Candidates via `helm' (not `popup').")
+  (dumb-jump-default-project "~/haskell" "the Default Project if none is found (defaults to « ~» ).")
+
+  :config
+
+  ())
+
+; https://github.com/jacktasia/dumb-jump
+
+(use-package goto-line-preview
+
+  :commands (goto-line-preview)
+
+  :config
+
+  (global-set-key [remap goto-line] #'goto-line-preview)
+
+  ())
+
+; https://github.com/elpa-host/goto-line-preview
+
+;; Inspired by Visual Studio Code goto line preset behavior.
+
+
+
+
+(use-package elint
+
+  :commands (elint-initialize elint-current-buffer)
+
+  ;; mnemonic:
+  ;; • "s-m" — personal keymap for MODE-specific stuff.
+  ;; • "l" — LINTING.
+
+  :bind (("s-m l" . sboo-elint-buffer))
+
+  :preface
+  (defun sboo-elint-buffer ()
+    (interactive)
+    (when (derived-mode-p 'emacs-lisp-mode major-mode)
+      (elint-initialize)
+      (elint-current-buffer)))
+
+  :config
+  (dolist (SYMBOL '(current-prefix-arg command-line-args-left buffer-file-coding-system emacs-major-version window-system))
+    (add-to-list 'elint-standard-variables SYMBOL))
+
+  ())
+
+(use-package elisp-docstring-mode
+
+  :commands (elisp-docstring-mode)
+
+  :config
+
+  ())
+
+; sboo-elisp-docstring-edit-indirect
+
+;; `major-mode' for editing Emacs Lisp Docstrings.
+;;
+;; Provides:
+;;
+;; • Highlighting — via `font-lock'.
+;; • Escaping — of quotes and backslashes.
+;;
+
+; https://github.com/Fuco1/elisp-docstring-mode
+
+
+
+
+(use-package helm-sys
+  :commands helm-top)
+
+(use-package helm-font
+  :commands (helm-select-xfont helm-ucs))
+
+(use-package helm-google
+  :commands helm-google)
+
+
+
+
+
+
+(use-package hi-lock
+
+  :bind (("M-o l" . highlight-lines-matching-regexp)
+         ("M-o r" . highlight-regexp)
+         ("M-o w" . highlight-phrase))
+  )
+
+
+(use-package highlight-cl
+
+  :hook (emacs-lisp-mode . highlight-cl-add-font-lock-keywords)
+
+  )
+
+; https://github.com/emacsmirror/highlight-cl
+
+
+
+
+(use-package diff-mode
+
+  :commands (diff-mode)
+
+ ;;TODO? :mode (rx "." (or "diff" "patch"))
+
+  :config
+
+  ())
+
+(use-package diff-hl
+  :commands (diff-hl-mode diff-hl-dired-mode)
+  :hook (magit-post-refresh . diff-hl-magit-post-refresh))
+
+(use-package diff-hl-flydiff
+  :commands diff-hl-flydiff-mode)
+
+(use-package dockerfile-mode
+
+  :mode "Dockerfile[a-zA-Z.-]*\\'" ; (rx bos "Dockerfile" (0+ (char ".-" alpha)) eos)
+
+  :config
+
+  ())
+
+
+
+(use-package edit-indirect
+
+  :commands (edit-indirect-region) 
+
+  ;; mnemonic:
+  ;; • "s-e" — personal keymap for EDITING stuff.
+  ;; • "i" — « edit-INDIRECT »
+
+  :bind (("s-e i" . sboo-edit-indirect-dwim))
+
+  :config
+
+(defun sboo-edit-indirect-dwim ()
+   "`edit-indirect-region'; otherwise, the current string or codeblock or quasiquote."
+    (interactive)
+
+    (let* (()
+        )
+
+  ())
+
+; sboo-mark-string
+; sboo-mark-doc
+; sboo-html-mark-codeblock
+; sboo-markdown-mark-codeblock
+; sboo-haskell-mark-quasiquote
+
+
+
+(use-package edit-rectangle
+
+  :bind ("C-x r e" . edit-rectangle)
+
+  :config
+
+  ())
+
+(use-package edit-var
+
+  :commands (edit-variable) 
+
+  :bind ("C-c e v" . edit-variable)
+
+  :config
+
+  ())
+
+
+(use-package deft
+
+  :commands (deft deft-new-file)
+
+  :bind ("C-, C-," . deft)
+
+  :config
+
+  ())
+
+
+(use-package ediff
+
+  ;; mnemonic:
+  ;; • "s-r" — personal keymap for RUNNING stuff.
+  ;; • "=" — “whether two things are EQUAL.”
+
+  :bind (("s-r = b" . ediff-buffers)
+         ("s-r = B" . ediff-buffers3)
+         ("s-r = c" . compare-windows)
+         ("s-r = =" . ediff-files)
+         ("s-r = f" . ediff-files)
+         ("s-r = F" . ediff-files3)
+         ("s-r = m" . count-matches)
+         ("s-r = r" . ediff-revision)
+         ("s-r = p" . ediff-patch-file)
+         ("s-r = P" . ediff-patch-buffer)
+         ("s-r = l" . ediff-regions-linewise)
+         ("s-r = w" . ediff-regions-wordwise))
+
+  :config
+
+  ())
+
+
+(use-package edit-server
+
+  :if (and window-system
+           (sboo-emacs-secondary-p))
+
+  :config
+  (edit-server-start)
+  ())
+
+(use-package engine-mode
+
+  :config
+
+  (defengine google "https://www.google.com/search?q=%s"
+    :keybinding "/")
+
+  (engine-mode +1))
+
+; https://github.com/hrs/engine-mode
+
+
+
+  :mode (("\\.hs\\(c\\|-boot\\)?\\'" . haskell-mode)
+         ("\\.lhs\\'" . literate-haskell-mode)
+         ("\\.cabal\\'" . haskell-cabal-mode))
+
+  ;; mnemonic:
+  ;; • "s-i" — personal keymap for INSERTING stuff.
+
+  :bind (:map haskell-mode-map
+              ("s-i u" . sboo-haskell-insert-undefined)
+             )
+
+  :preface
+  (defun sboo-haskell-insert-undefined ()
+    "`insert' « undefined » (e.g. during development.)"
+    (interactive)
+    (insert "undefined"))
+
+
+(use-package json-reformat
+  :after json-mode
+
+  :commands (json-reformat)
+
+  :config
+  ())
+
+(use-package flycheck
+  :commands (flycheck-mode
+             flycheck-next-error
+             flycheck-previous-error)
+  :init
+  (dolist (where '((emacs-lisp-mode-hook . emacs-lisp-mode-map)
+                   (haskell-mode-hook    . haskell-mode-map)
+                   (js2-mode-hook        . js2-mode-map)
+                   (c-mode-common-hook   . c-mode-base-map)))
+    (add-hook (car where)
+              `(lambda ()
+                 (bind-key "M-n" #'flycheck-next-error ,(cdr where))
+                 (bind-key "M-p" #'flycheck-previous-error ,(cdr where)))))
+
+
+
+
+
+
+(use-package graphviz-dot-mode
+
+  :commands (graphviz-dot-mode)
+
+  :mode "\\.dot\\'"
+
+  :config
+  ())
+
+; https://github.com/ppareit/graphviz-dot-mode
+
+(use-package jq-mode
+
+  :commands (jq-mode jq-interactively)
+
+  :mode "\\.jq\\'"
+
+  :config
+
+  (with-eval-after-load "json-mode"
+    (define-key json-mode-map (kbd "s-m m j q") #'jq-interactively))
+
+  ())
+
+; https://github.com/ljos/jq-mode
+
+;; « M-x `jq-interactively' »:
+;;
+;; • runs the query (which was entered into the minibuffer) iteratively over the JSON buffer.
+;;
+
+(use-package llvm-mode
+
+  :mode "\\.ll\\'"
+
+  )
+
+; https://github.com/llvm-mirror/llvm/blob/master/utils/emacs/llvm-mode.el
+
+(use-package lua-mode
+
+  :mode "\\.lua\\'"
+  :interpreter "lua"
+
+  )
+
+; https://github.com/immerrr/lua-mode
+; https://immerrr.github.io/lua-mode/
+
+(use-package makefile-runner
+
+  :commands (makefile-runner)
+
+  :config
+  ())
+
+; https://github.com/danamlund/emacs-makefile-runner
+; http://danamlund.dk/emacs/make-runner.html
+
+(use-package know-your-http-well
+
+  :commands (http-header
+             http-method
+             http-relation
+             http-status-code
+             media-type)
+
+  :config
+  ())
+
+; https://github.com/for-GET/know-your-http-well
+
+(use-package mediawiki
+
+  :commands (mediawiki-open)
+
+  :config
+  ())
+
+; https://github.com/hexmode/mediawiki-el
+
+(use-package nroff-mode
+
+  :commands (nroff-mode)
+
+  :config
+  ())
+
+; 
+
+
+
+
+
+
+
+
+(use-package magit
+  :bind (("C-x g" . magit-status)
+         ("C-x G" . magit-status-with-prefix))
+  :bind (:map magit-mode-map
+              ("U" . magit-unstage-all)
+              ("M-h") ("M-s") ("M-m") ("M-w"))
+  :bind (:map magit-file-section-map ("<C-return>"))
+  :bind (:map magit-hunk-section-map ("<C-return>"))
+  :preface
+  ;; History can be viewed with:
+  ;; git log refs/snapshots/$(git symbolic-ref HEAD)
+  (defun magit-monitor (&optional no-display)
+    "Start git-monitor in the current directory."
+    (interactive)
+    (let* ((path (file-truename
+                  (directory-file-name
+                   (expand-file-name default-directory))))
+           (name (format "*git-monitor: %s*"
+                         (file-name-nondirectory path))))
+      (unless (and (get-buffer name)
+                   (with-current-buffer (get-buffer name)
+                     (string= path (directory-file-name default-directory))))
+        (with-current-buffer (get-buffer-create name)
+          (cd path)
+          (ignore-errors
+            (start-process "*git-monitor*" (current-buffer)
+                           "git-monitor" "-d" path))))))
+
+  (defun magit-status-with-prefix ()
+    (interactive)
+    (let ((current-prefix-arg '(4)))
+      (call-interactively 'magit-status)))
+
+  (defun endless/visit-pull-request-url ()
+    "Visit the current branch's PR on Github."
+    (interactive)
+    (browse-url
+     (format "https://github.com/%s/pull/new/%s"
+             (replace-regexp-in-string
+              "\\`.+github\\.com:\\(.+?\\)\\(\\.git\\)?\\'" "\\1"
+              (magit-get "remote" (magit-get-remote) "url"))
+             (magit-get-current-branch))))
+
+  :hook (magit-mode . hl-line-mode)
+  :config
+  (use-package magit-commit
+    :config
+    (use-package git-commit))
+
+  (use-package magit-files
+    :config
+    (global-magit-file-mode))
+
+  (add-hook 'magit-status-mode-hook #'(lambda () (magit-monitor t)))
+
+  (define-key magit-mode-map "G" #'endless/visit-pull-request-url)
+
+  (eval-after-load 'magit-pull
+    '(transient-insert-suffix 'magit-pull "p"
+       '("F" "default" magit-fetch-from-upstream)))
+
+  (eval-after-load 'magit-push
+    '(transient-insert-suffix 'magit-push "p"
+       '("P" "default" magit-push-current-to-upstream))))
+
+
+
+
+
+
+(use-package latex
+
+  :after auctex
+
+  :config
+
+  (require 'preview)
+
+  (load (emacs-path "site-lisp/auctex/style/minted"))
+
+  (info-lookup-add-help :mode 'LaTeX-mode
+                        :regexp ".*"
+                        :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
+                        :doc-spec '(("(latex2e)Concept Index")
+                                    ("(latex2e)Command Index")))
+
+  ())
+
+
+(use-package link-hint
+  :defer 10
+  :bind ("C-c C-o" . link-hint-open-link)
+  :config
+  (add-hook 'eww-mode-hook
+            #'(lambda () (bind-key "f" #'link-hint-open-link eww-mode-map)))
+  (add-hook 'w3m-mode-hook
+            #'(lambda () (bind-key "f" #'link-hint-open-link w3m-mode-map))))
+
+; https://github.com/noctuid/link-hint.el
+
+(use-package mmm-mode
+
+  :commands (mmm-mode)
+
+  :config
+  ())
+
+; "mmm" abbreviates "[M]ultiple [M]ajor [M]odes".
+
+; https://github.com/purcell/mmm-mode
+
+(use-package operate-on-number
+
+  :bind ("s-e n" . operate-on-number-at-point)
+
+  :config
+  ())
+
+; https://github.com/knu/operate-on-number.el
+
+
+
+
+
+==============================================
+
+
+* dumb-jump
+* elisp-docstring-mode
+* goto-line-preview
+* graphviz-dot-mode
+* highlight-cl
+* jq-mode
+* know-your-http-well
+* link-hint
+* llvm-mode
+* lua-mode
+* makefile-runner
+* mediawiki
+* operate-on-number
+* pandoc-mode
+* selected
+* sort-words
+* string-edit
+* string-inflection
+* xah-lookup
+
+------------------------------------------------
+
+
+==============================================
+
 (flush-lines "^\\s-*$" (point-min) (point-max))
 
+------------------------------------------------
+
+*Vendored Dependencies* include:
+
+- `./highlight-*`
+- ``./rainbow-*`
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
+
+------------------------------------------------
 
 
 ==============================================
