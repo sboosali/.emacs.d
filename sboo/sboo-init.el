@@ -565,6 +565,28 @@ Related:
 
 ;;(add-startup-hook! #'sboo-autosave-config!))
 
+;;==============================================;;
+;; Builtin Packages: Primary:
+
+(use-package emacs
+
+  :no-require t
+
+  :delight
+
+  (visual-line-mode " VL")
+  ;; ^ Shorten `visual-line-mode'.
+
+  (auto-fill-function " AF")
+  ;; ^ Shorten `auto-fill-mode'.
+
+  (buffer-face-mode)
+  ;; ^ Hide `buffer-face-mode'.
+
+  :config
+
+  ())
+
 ;;----------------------------------------------;;;
 
 (when (require 'sboo-auto-mode nil :no-error)
@@ -649,27 +671,6 @@ Related:
 ;; ")
 ;;     ()))
 
-;;==============================================;;
-
-(use-package emacs
-
-  :no-require t
-
-  :delight
-
-  (visual-line-mode " VL")
-  ;; ^ Shorten `visual-line-mode'.
-
-  (auto-fill-function " AF")
-  ;; ^ Shorten `auto-fill-mode'.
-
-  (buffer-face-mode)
-  ;; ^ Hide `buffer-face-mode'.
-
-  :config
-
-  ())
-
 ;;----------------------------------------------;;
 
 (use-package autorevert
@@ -683,7 +684,9 @@ Related:
 
   ())
 
-;;==============================================;;
+;;----------------------------------------------;;
+;; Builtin Packages: Text Modes: ---------------;;
+;;----------------------------------------------;;
 
 (defun modi/conf-quote-normal ()
   "Enable `conf-quote-normal' for *.setup files."
@@ -766,6 +769,33 @@ Related:
 
 ;;==============================================;;
 
+(use-package diff-mode)
+
+  :commands (diff-mode)
+
+ ;;TODO? :mode (rx "." (or "diff" "patch"))
+
+  :config
+
+  ())
+
+;;==============================================;;
+
+(use-package nroff-mode
+  :defer t
+
+  :commands (nroff-mode)
+
+  :config
+
+  ())
+
+;; « nroff » is a format for writing « manpage » files.
+
+;;----------------------------------------------;;
+;; Builtin Packages: Prog Modes: ---------------;;
+;;----------------------------------------------;;
+
 (when (require 'sboo-lisp nil :no-error)
 
   (dolist (MODE sboo-lisp-modes)
@@ -797,19 +827,120 @@ Related:
 
 ;;==============================================;;
 
-(when (require 'sboo-compilation nil :no-error)
+(use-package image-file
 
-  (sboo-compilation-init!)
+  :defer 5
 
-  (add-startup-hook! #'sboo-compilation-config!))
+  :config
 
-;;----------------------------------------------;;
+  (auto-image-file-mode +1)
+
+  (add-hook 'image-mode-hook #'image-transform-reset)
+  (add-hook 'image-mode-hook #'auto-revert-mode)
+
+  ;; ^ Images are Read-Only, hence Auto-Revert them.
+
+ ())
+
+;; ^ Links:
+;;
+;;   • URL `http://ergoemacs.org/emacs/emacs_view_images.html'
+;;   • URL `'
+;;
+
+;;==============================================;;
+;; Builtin Packages: Editing:
+
+(use-package align
+
+  :commands (align align-regexp)
+
+  ;; mnemonic:
+  ;; • "s-e" — personal keymap for EDITING stuff.
+  ;; • "[" — the Open-Square-Bracket looks vertical, which implies Vertical-Alignment (?)
+
+  :bind (("s-e [ c" . sboo-align-code)
+         ("s-e [ r" . align-regexp)
+        )
+
+  :preface
+
+  (defun sboo-align-code (beg end &optional arg)
+    "Align"
+    (interactive "rP")
+    (if (null arg)
+        (align beg end)
+      (let ((end-mark (copy-marker end)))
+        (indent-region beg end-mark nil)
+        (align beg end-mark))))
+
+  :config
+
+  ())
+
+;;==============================================;;
+;; Builtin Packages: Viewing:
+
+(use-package hl-line
+
+  :commands (hl-line-mode)
+
+  :hook (prog-mode . hl-line-mode)
+
+  :config
+
+  ())
+
+;; "hl-line" abbreviates "[H]igh[L]ight [LINE]".
 
 ;;==============================================;;
 
+(use-package hi-lock
+
+  :bind (("M-o l" . highlight-lines-matching-regexp)
+         ("M-o r" . highlight-regexp)
+         ("M-o w" . highlight-phrase))
+
+  :config
+
+  ())
+
+;; "hi-lock" abbreviates "[HI]ghlight [LCOK]".
+
+;;==============================================;;
+;; Builtin Packages: Searching:
+
+(use-package isearch
+  :no-require t
+
+  :bind (:map isearch-mode-map
+              ("C-c" . isearch-toggle-case-fold)
+              ("C-t" . isearch-toggle-regexp)
+              ("C-^" . isearch-edit-string)
+              ("C-i" . isearch-complete)
+        )
+
+  :config
+
+  ())
+
+;;----------------------------------------------;;
+
 (use-package grep
 
-  :commands (grep grep-find)
+  :commands (grep grep-find find-grep-dired find-name-dired)
+
+  ;;--------------------------;;
+
+  ;; mnemonic:
+  ;; • "s-r" — personal keymap for RUNNING stuff.
+  ;; • "g"   — [G]rep.
+  ;; • "g g" — [G]rep (the doubled character meaning the default).
+
+  :bind (("s-r g f" . find-grep)
+         ("s-r g d" . find-grep-dired)
+         ("s-r g n" . find-name-dired)
+         ("s-r g g" . grep))
 
   ;;--------------------------;;
 
@@ -817,7 +948,7 @@ Related:
 
   ;;--------------------------;;
 
-  :config
+  :preface
 
   (defun sboo-grep-config ()
 
@@ -826,6 +957,8 @@ Related:
     (toggle-truncate-lines +1))
 
   ;;--------------------------;;
+
+  :config
 
   (setq grep-files-aliases (append '(("hs" . "*.hs")
                                 ("md" . "*.md")
@@ -855,116 +988,6 @@ Related:
 
 ;;==============================================;;
 
-(use-package ansi-color
-
-  ;;--------------------------;;
-
-  :config
-
-  (defun sboo-ansi-colors-apply ()
-
-    "`ansi-color-apply-on-region' on whole buffer."
-
-    (interactive)
-
-    (ansi-color-apply-on-region (point-min) (point-max)))
-
-  ;;--------------------------;;
-
-  ())
-
-;;----------------------------------------------;;
-
-(use-package shell
-
-  ;;--------------------------;;
-
-  :bind
-
-  ( ("<s>-s" . shell)
-  
-    :map shell-mode-map
-
-    ("<kp-prior>" . comint-previous-input)
-    ;; ^ <prior> is the page-up key.
-    ;; `comint-previous-input` is like "press down in a terminal-emulator".
-    
-    ("<kp-next>" . 'comint-next-input)
-    ;; ^ <next> is the page-down key.
-    ;; `comint-next-input` is like "press up in a terminal-emulator".
-
-    )
-
-  ;;--------------------------;;
-
-  :hook (sh-mode . flycheck-mode)
-
-  ;; ^ ShellCheck (a Bash Linter) is a builtin FlyCheck checker.
-
-  ;;--------------------------;;
-
-  :config
-
-  (push (cons (rx "*shell*") display-buffer--same-window-action)
-        display-buffer-alist)
-
-   ;; ^
-   ;;
-   ;; How To Override The Default Behavior Of  "M-x shell" Opening A New Buffer In Another Window (e.g. splitting).
-   ;;
-   ;; see:
-   ;;    https://stackoverflow.com/questions/40301732/m-x-shell-open-shell-in-other-windows
-   ;;
-   ;; >  The command `shell` uses `pop-to-buffer`.
-   ;; > If you have the Emacs source code, you can see it for yourself by running `C-h d f shell` to open the function's documentation (and then clicking the link to the function's source).
-   ;; `pop-to-buffer` can be configured via `display-buffer-alist`.
-
-  ())
-
-;;==============================================;;
-
-(defun sboo-ansi-term ()
-  "Call `ansi-term' with program `bash'."
-  (interactive)
-  (ansi-term "/bin/bash"))
-
-;;----------------------------------------------;;
-
-(use-package term
-
-  :commands (ansi-term)
-
-  ;;--------------------------;;
-
-  :bind (:map term-mode-map             ; `term-line-mode':
-              ("C-j" . term-char-mode)
-              ("C-v" . nil)
-         :map term-raw-map              ; `term-char-mode':
-              ("C-j" . term-line-mode)
-              ("C-v" . nil)
-        )
-
-  ;; ^ switching between Input Modes.
-  ;;
-  ;; • URL `https://stackoverflow.com/questions/14485858/multi-term-understanding-keyboard-bindings/14492124'
-  ;; • URL `https://stackoverflow.com/questions/14484454/running-emacs-commands-from-ansi-term-in-character-mode/14491568'
-
-  ;;--------------------------;;
-
-  :config
-
-  ()
-
-  (push (cons (rx bos "*" (or "ansi-term" "terminal") "*" eos) display-buffer--same-window-action)
-        display-buffer-alist)
-
-  ())
-
-;; ^ « (kbd "<S-insert>") » pastes into Terminal-Emulators (like `ansi-term').
-;;   TODO `key-translation-map'? `raw-mode'?
-
-;;==============================================;;
-
 (when (require 'sboo-server nil :no-error)
   (add-startup-hook! #'server-start-unless-running))
 
@@ -990,6 +1013,14 @@ Related:
 
 ;;==============================================;;
 
+(when (require 'sboo-compilation nil :no-error)
+
+  (sboo-compilation-init!)
+
+  (add-startup-hook! #'sboo-compilation-config!))
+
+;;----------------------------------------------;;
+
 (when (require 'sboo-make nil :no-error)
   (add-hook 'makefile-mode-hook #'sboo-show-trailing-whitespace))
 
@@ -1006,27 +1037,6 @@ Related:
 ;; (when (require 'sboo-text-mode nil :no-error)
 ;;   (dolist (HOOK sboo-text-mode-hooks)
 ;;     (add-hook 'text-mode-hook HOOK)))
-
-;;----------------------------------------------;;
-
-(when (require 'sboo-shell nil :no-error)
-
-  ;;---------------------------;;
-
-  (defadvice term-char-mode (after term-char-mode-fixes ())
-
-    (set (make-local-variable 'cua-mode) nil)
-    ;; ^ Disable `cua-mode' to enable `?\C-x' for escaping.
-    (set (make-local-variable 'transient-mark-mode) nil)
-    (set (make-local-variable 'global-hl-line-mode) nil)
-
-    (ad-activate 'term-char-mode)
-
-    (term-set-escape-char ?\C-x))
-
-  ;;---------------------------;;
-
-  (add-hook 'term-mode-hook #'sboo-local-unset-tab))
 
 ;;----------------------------------------------;;
 
@@ -1071,8 +1081,8 @@ Related:
 ;;
 ;;
 
-;;----------------------------------------------;;
-;; Completion
+;;==============================================;;
+;; Completion:
 
 (defvar sboo-abbrev-file
 
@@ -1307,6 +1317,23 @@ Notes:
 
   :commands (ediff-buffers ediff-current-file)
 
+  ;; mnemonic:
+  ;; • "s-r" — personal keymap for RUNNING stuff.
+  ;; • "=" — “whether two things are EQUAL.”
+
+  :bind (("s-r = B" . ediff-buffers3)
+         ("s-r = F" . ediff-files3)
+         ("s-r = P" . ediff-patch-buffer)
+         ("s-r = b" . ediff-buffers)
+         ("s-r = c" . compare-windows)
+         ("s-r = f" . ediff-files)
+         ("s-r = l" . ediff-regions-linewise)
+         ("s-r = m" . count-matches)
+         ("s-r = p" . ediff-patch-file)
+         ("s-r = r" . ediff-revision)
+         ("s-r = w" . ediff-regions-wordwise)
+         ("s-r = =" . ediff-files))
+
   :custom
 
   (ediff-window-setup-function 'ediff-setup-windows-plain "“Plain” means “no multiframe ediff”.")
@@ -1322,6 +1349,8 @@ Notes:
   :commands (eldoc-mode)
 
   :delight (eldoc-mode " 👇")
+
+  :hook ((c-mode-common emacs-lisp-mode) . eldoc-mode)
 
 ;;:custom
 
@@ -1370,8 +1399,164 @@ Notes:
 
   ())
 
+;;==============================================;;
+;; Builtin Packages: Shells / Terminals:
+
+(use-package shell
+
+  ;;--------------------------;;
+
+  :bind
+
+  ( ("<s>-s" . shell)
+  
+    :map shell-mode-map
+
+    ("<kp-prior>" . comint-previous-input)
+    ;; ^ <prior> is the page-up key.
+    ;; `comint-previous-input` is like "press down in a terminal-emulator".
+    
+    ("<kp-next>" . 'comint-next-input)
+    ;; ^ <next> is the page-down key.
+    ;; `comint-next-input` is like "press up in a terminal-emulator".
+
+    )
+
+  ;;--------------------------;;
+
+  :hook (sh-mode . flycheck-mode)
+
+  ;; ^ ShellCheck (a Bash Linter) is a builtin FlyCheck checker.
+
+  ;;--------------------------;;
+
+  :config
+
+  (push (cons (rx "*shell*") display-buffer--same-window-action)
+        display-buffer-alist)
+
+   ;; ^
+   ;;
+   ;; How To Override The Default Behavior Of  "M-x shell" Opening A New Buffer In Another Window (e.g. splitting).
+   ;;
+   ;; see:
+   ;;    https://stackoverflow.com/questions/40301732/m-x-shell-open-shell-in-other-windows
+   ;;
+   ;; >  The command `shell` uses `pop-to-buffer`.
+   ;; > If you have the Emacs source code, you can see it for yourself by running `C-h d f shell` to open the function's documentation (and then clicking the link to the function's source).
+   ;; `pop-to-buffer` can be configured via `display-buffer-alist`.
+
+  ())
+
+;;==============================================;;
+
+(use-package eshell
+
+  :commands (eshell eshell-command)
+
+  :preface
+
+  (defvar eshell-isearch-map
+    (let ((KEYMAP (copy-keymap isearch-mode-map)))
+      (define-key KEYMAP [(control ?m)] #'eshell-isearch-return)
+      (define-key KEYMAP [return]       #'eshell-isearch-return)
+      (define-key KEYMAP [(control ?r)] #'eshell-isearch-repeat-backward)
+      (define-key KEYMAP [(control ?s)] #'eshell-isearch-repeat-forward)
+      (define-key KEYMAP [(control ?g)] #'eshell-isearch-abort)
+      (define-key KEYMAP [backspace]    #'eshell-isearch-delete-char)
+      (define-key KEYMAP [delete]       #'eshell-isearch-delete-char)
+      KEYMAP)
+    "Keymap for `isearch' in Eshell.")
+
+  :config
+
+  ())
+
+;;==============================================;;
+
+(defun sboo-ansi-term ()
+  "Call `ansi-term' with program `bash'."
+  (interactive)
+  (ansi-term "/bin/bash"))
+
 ;;----------------------------------------------;;
-;; Spell-Checking ------------------------------;;
+
+(use-package term
+
+  :commands (ansi-term)
+
+  ;;--------------------------;;
+
+  :bind (:map term-mode-map             ; `term-line-mode':
+              ("C-j" . term-char-mode)
+              ("C-v" . nil)
+         :map term-raw-map              ; `term-char-mode':
+              ("C-j" . term-line-mode)
+              ("C-v" . nil)
+        )
+
+  ;; ^ switching between Input Modes.
+  ;;
+  ;; • URL `https://stackoverflow.com/questions/14485858/multi-term-understanding-keyboard-bindings/14492124'
+  ;; • URL `https://stackoverflow.com/questions/14484454/running-emacs-commands-from-ansi-term-in-character-mode/14491568'
+
+  ;;--------------------------;;
+
+  :config
+
+  ()
+
+  (push (cons (rx bos "*" (or "ansi-term" "terminal") "*" eos) display-buffer--same-window-action)
+        display-buffer-alist)
+
+  ())
+
+;; ^ « (kbd "<S-insert>") » pastes into Terminal-Emulators (like `ansi-term').
+;;   TODO `key-translation-map'? `raw-mode'?
+
+;;----------------------------------------------;;
+
+(use-package ansi-color
+
+  ;;--------------------------;;
+
+  :config
+
+  (defun sboo-ansi-colors-apply ()
+
+    "`ansi-color-apply-on-region' on whole buffer."
+
+    (interactive)
+
+    (ansi-color-apply-on-region (point-min) (point-max)))
+
+  ;;--------------------------;;
+
+  ())
+
+;;----------------------------------------------;;
+
+(when (require 'sboo-shell nil :no-error)
+
+  ;;---------------------------;;
+
+  (defadvice term-char-mode (after term-char-mode-fixes ())
+
+    (set (make-local-variable 'cua-mode) nil)
+    ;; ^ Disable `cua-mode' to enable `?\C-x' for escaping.
+    (set (make-local-variable 'transient-mark-mode) nil)
+    (set (make-local-variable 'global-hl-line-mode) nil)
+
+    (ad-activate 'term-char-mode)
+
+    (term-set-escape-char ?\C-x))
+
+  ;;---------------------------;;
+
+  (add-hook 'term-mode-hook #'sboo-local-unset-tab))
+
+;;----------------------------------------------;;
+;; Builtin Packages: Spell-Checking ------------;;
 ;;----------------------------------------------;;
 
 (defvar sboo-spelling-aspell-p
@@ -2096,20 +2281,37 @@ $0")
 
     :commands (haskell-mode)
 
+    ;;------------------------;;
+
     :interpreter (("runhaskell"  . haskell-mode)
                   ("runghc"      . haskell-mode)
                   ("cabal"       . haskell-mode)
                   ("stack"       . haskell-mode)
                   )
 
-    :mode        (("\\.hs\\'"    . haskell-mode)
-                  ("\\.lhs\\'"   . haskell-mode)
-                  ("\\.hsig\\'"  . haskell-mode)
-                  ("\\.hsc\\'"   . haskell-mode)
-                  ("\\.chs\\'"   . haskell-mode)
+    :mode        (("\\.hs\\'"      . haskell-mode)
+                  ("\\.chs\\'"     . haskell-mode)
+                  ("\\.hsig\\'"    . haskell-mode)
+                  ("\\.hsc\\'"     . haskell-mode)
+                  ("\\.hs-boot\\'" . haskell-mode)
+                  ("\\.lhs\\'"     . literate-haskell-mode)
                   )
 
+    ;;------------------------;;
+
+    ;; mnemonic:
+    ;; • "s-i" — personal keymap for INSERTING stuff.
+
+    ;;------------------------;;
+
+    :bind (:map haskell-mode-map
+                ("s-i u" . sboo-haskell-insert-undefined))
+
+    ;;------------------------;;
+
     :hook        ((haskell-mode . interactive-haskell-mode))
+
+    ;;------------------------;;
 
     :custom
     (haskell-tags-on-save                         t                              "Continuously update « TAGS » file via « hasktags ».")
@@ -2135,7 +2337,19 @@ $0")
     ;;  '(haskell-process-type '(cabal-new-repl))
     ;; )
 
+    ;;------------------------;;
+
+    :preface
+
+    (defun sboo-haskell-insert-undefined ()
+      "`insert' « undefined » (e.g. during development.)"
+      (interactive)
+      (insert "undefined"))
+
+    ;;------------------------;;
+
     :init
+
     (setq haskell-doc-current-info #'sboo-haskell-doc-current-info)
 
     ;; (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
@@ -2146,6 +2360,8 @@ $0")
     (remove-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
 
     ;; ^ See « https://wiki.haskell.org/Emacs/Inferior_Haskell_processes ».
+
+    ;;------------------------;;
 
     :config
     
@@ -2858,6 +3074,53 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
+(use-package goto-line-preview
+
+  :commands (goto-line-preview)
+
+  :config
+
+  (global-set-key [remap goto-line] #'goto-line-preview)
+
+  ())
+
+;; Inspired by Visual Studio Code, by « goto line »'s preset behavior.
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/elpa-host/goto-line-preview'
+;;
+
+;;----------------------------------------------;;
+
+(use-package dumb-jump
+
+  :hook ((haskell-mode) . dumb-jump-mode)
+
+  :bind (("s-g p" . dumb-jump-go)
+         ("s-g P" . dumb-jump-go-prompt)
+         )
+
+  :custom
+
+  (dumb-jump-selector        'helm
+                             "disambiguate Multiple Candidates via `helm' (not `popup').")
+  (dumb-jump-default-project "~/haskell"
+                             "the Default Project if none is found (defaults to « ~» ).")
+
+  :config
+
+  ())
+
+;; “Dumb Jump uses The Silver Searcher (program `ag'), ripgrep (program `rg'), or program `grep' to find potential definitions of a function or variable under `point'.”
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/jacktasia/dumb-jump'
+;;
+
+;;----------------------------------------------;;
+
 (use-package smartscan
 
   :commands (global-smartscan-mode)
@@ -3367,10 +3630,9 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;----------------------------------------------;;
 
 (use-package pdf-tools
-
+  :disabled
   :if window-system
-
-  :load-path "site-lisp/pdf-tools/lisp"
+;;:load-path "site-lisp/pdf-tools/lisp"
 
   :commands (pdf-view-mode)
 
@@ -3378,9 +3640,26 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   :config
 
-  (pdf-tools-install)
+  (dolist (PACKAGE '(pdf-annot
+                     pdf-cache
+                     pdf-dev
+                     pdf-history
+                     pdf-info
+                     pdf-isearch
+                     pdf-links
+                     pdf-misc
+                     pdf-occur
+                     pdf-outline
+                     pdf-sync
+                     pdf-util
+                     pdf-view
+                     pdf-virtual
+                     ))
+    (let ((debug-on-error nil))
+      (with-demoted-errors "[Error ‘pdf-tools’] %S"
+        (require PACKAGE))))
 
-  ())
+  (pdf-tools-install))
 
 ;; ^ Links:
 ;;
