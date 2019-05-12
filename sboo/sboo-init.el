@@ -746,9 +746,10 @@ Related:
 
   ;; ^ Most `.rc' files are in the INI Format (which `conf-mode' supports).
 
-  (dolist (HOOK sboo-conf-hooks)
-    (dolist (FUNCTION sboo-conf-functions)
-      (add-hook HOOK FUNCTION)))
+  (when (require 'sboo-text nil :no-error)
+    (dolist (HOOK sboo-conf-hooks)
+      (dolist (FUNCTION sboo-conf-functions)
+        (add-hook HOOK FUNCTION))))
 
   ())
 
@@ -855,16 +856,21 @@ Related:
 
   :commands (align align-regexp)
 
+  ;;--------------------------;;
+
   ;; mnemonic:
   ;; • "s-e" — personal keymap for EDITING stuff.
   ;; • "[" — the Open-Square-Bracket looks vertical, which implies Vertical-Alignment (?)
 
-  :bind (("s-e [ c" . sboo-align-code)
-         ("s-e [ r" . align-regexp)
-        )
+  :bind (:map sboo-edit-keymap
+              ("[ c" . sboo-align-code)
+              ("[ r" . align-regexp)
+              )
+
+  ;;--------------------------;;
 
   :preface
-
+ 
   (defun sboo-align-code (beg end &optional arg)
     "Align"
     (interactive "rP")
@@ -873,6 +879,8 @@ Related:
       (let ((end-mark (copy-marker end)))
         (indent-region beg end-mark nil)
         (align beg end-mark))))
+
+  ;;--------------------------;;
 
   :config
 
@@ -2806,6 +2814,33 @@ $0")
   ())
 
 ;;----------------------------------------------;;
+
+(use-package string-inflection
+
+  :commands (string-inflection-all-cycle
+             string-inflection-python-style-cycle
+             string-inflection-java-style-cycle
+             string-inflection-ruby-style-cycle
+             )
+
+  :bind (:map sboo-edit-keymap
+              ("`" . string-inflection-all-cycle)
+              )
+
+  :config
+
+  ())
+
+;; ^ `string-inflection' converts between Variable Casings, 
+;;   e.g. « under_score » ← « UPCASE » ← « CamelCase ».
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/akicho8/string-inflection'
+;;
+
+;;----------------------------------------------;;
 ;;; `rg': "Rust Grep".
 
 (use-package rg
@@ -4094,7 +4129,5 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;----------------------------------------------;;
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
-
-(provide 'sboo-init)
 
 ;;; sboo-init.el ends here

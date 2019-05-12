@@ -1924,7 +1924,7 @@ Related:
 
   "Custom things for `forward-thing' (besides `sboo-things-builtin')."
 
-  :type '(repeated (symbol :tag "Thing"))
+  :type '(repeat (symbol :tag "Thing"))
 
   :safe t
   :group 'sboo)

@@ -18,7 +18,7 @@
 
 Zero-or-more ${2:value}s."
 
-  :type '(repeated (choice (const nil)
+  :type '(repeat (choice (const nil)
                            (${4:string} :tag "$2")))
 
   :safe #'listp

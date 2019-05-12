@@ -115,7 +115,7 @@ any Company Backend in an earlier group).
 
 `listp' of `listp's of `symbolp's."
 
-  :type '(repeated (repeated (symbol :tag "Company Backend")))
+  :type '(repeat (repeated (symbol :tag "Company Backend")))
 
   :safe #'listp
   :group 'sboo-company)

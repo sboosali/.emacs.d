@@ -926,7 +926,7 @@ Inputs:
 ;;(global-set-key (kbd "s-b") #')
   (global-set-key (kbd "s-c") #'sboo-insert-char)           ; "Character"
   (global-set-key (kbd "s-d") #'xref-find-definitions)      ; "Definitions"
-  (global-set-key (kbd "s-e") #'sboo-edit-keyamp)           ; "[E]diting Functions"
+  (global-set-key (kbd "s-e") #'sboo-edit-keymap)           ; "[E]diting Functions"
   (global-set-key (kbd "s-f") #'describe-function)          ; "Function"
 ;;(global-set-key (kbd "s-g") #')
   (global-set-key (kbd "s-h") #'helm-apropos)               ; [H]elp

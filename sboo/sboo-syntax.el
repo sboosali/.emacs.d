@@ -225,7 +225,7 @@ M-: (sboo-syntax/char-entry-p '(?1 ?2 ?3))
 
   "Associates bracket characters with their matching character."
 
-  :type '(repeated (choice (character                :tag "Self-Bracket")
+  :type '(repeat (choice (character                :tag "Self-Bracket")
                            (cons character character :tag "    Brackets")
                            (list character character :tag "    Brackets")
                            ))

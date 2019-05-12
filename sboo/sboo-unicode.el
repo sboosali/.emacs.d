@@ -284,7 +284,7 @@ Links:
 
 • URL `http://xahlee.info/comp/unicode_computing_symbols.html'"
 
-  :type '(repeated (char))
+  :type '(repeat (char))
 
   :safe t
   :group 'sboo)

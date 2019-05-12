@@ -181,7 +181,7 @@ Used by:
 
 • ‘sboo-aspell-conf’"
 
-  :type '(repeated (choice (string :tag " Keyword")
+  :type '(repeat (choice (string :tag " Keyword")
                            (regexp :tag "Keywords")
                            ))
 
@@ -200,7 +200,7 @@ Used by:
 
 A `listp' of `symbolp's (`major-mode's)."
 
-  :type '(repeated (choice (const nil)
+  :type '(repeat (choice (const nil)
                            (symbol :tag "Major Mode")))
 
   :safe #'listp
@@ -218,8 +218,26 @@ A `listp' of `symbolp's (`major-mode's)."
 
 A `listp' of `symbolp's (`sboo-hook-p's)."
 
-  :type '(repeated (choice (const nil)
-                           (symbol :tag "Hook")))
+  :type '(repeat (choice (const nil)
+                         (symbol :tag "Hook")))
+
+  :safe #'listp
+  :group 'sboo-conf)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-conf-functions
+
+  (list #'sboo-html-set-insert-command
+        #'superword-mode
+        )
+
+  "Hooks for Major Modes in `sboo-html-modes-list'.
+
+A `listp' of `functionp's or of `symbolp's."
+
+  :type '(repeat (choice (symbol   :tag "Function")
+                         (function :tag "Function")))
 
   :safe #'listp
   :group 'sboo-conf)

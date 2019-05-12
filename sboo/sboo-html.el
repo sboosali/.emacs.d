@@ -147,7 +147,7 @@ Zero-or-more function-symbols."
 
 A `listp' of `symbolp's (`major-mode's)."
 
-  :type '(repeated (choice (const nil)
+  :type '(repeat (choice (const nil)
                            (symbol :tag "Major Mode")))
 
   :safe #'sboo-symbol-listp
@@ -175,7 +175,7 @@ By default:
 • `markdown-mode-hook'
 • `gfm-mode-hook'"
 
-  :type '(repeated (choice (const nil)
+  :type '(repeat (choice (const nil)
                            (symbol :tag "Hook")))
 
   :safe #'sboo-symbol-listp
@@ -194,7 +194,7 @@ By default:
 
 A `listp' of `symbolp's."
 
-  :type '(repeated (choice (const nil)
+  :type '(repeat (choice (const nil)
                            (symbol :tag "Major Mode")))
 
   :safe #'sboo-symbol-listp
@@ -348,7 +348,7 @@ Links:
 
 • URL `https://developer.mozilla.org/en-US/docs/Web/HTML/Element'."
 
-  :type '(repeated (choice (const nil)
+  :type '(repeat (choice (const nil)
                            (string :tag "HTML Element")))
 
   :safe #'sboo-string-listp
@@ -370,7 +370,7 @@ Links:
 
 • URL `https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#Attribute_list'."
 
-  :type '(repeated (choice (const nil)
+  :type '(repeat (choice (const nil)
                            (string :tag "HTML Attribute")))
 
   :safe #'sboo-string-listp
@@ -397,7 +397,7 @@ Associates right-wrappers with
 a(n optionally distinct) left-wrapper and 
 a(n optionally distinct) trigger-keys."
 
-  :type '(repeated (choice (character :tag "Left=Right=Key")
+  :type '(repeat (choice (character :tag "Left=Right=Key")
                            (string    :tag "Left=Right=Key")
                            (list      (string :tag "Left=Key")
                                       (string :tag "Right"))

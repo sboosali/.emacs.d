@@ -134,7 +134,7 @@ Links:
 
 • URL `https://github.com/haskell/cabal/blob/2.4/Cabal/Distribution/Compiler.hs'."
 
-  :type '(repeated (choice (string :tag "Executable")
+  :type '(repeat (choice (string :tag "Executable")
                            (cons (symbol :tag "Compiler")
                                  (string :tag "Executable"))))
 
@@ -176,7 +176,7 @@ Links:
 
 • URL `https://github.com/haskell/cabal/blob/2.4/Cabal/Distribution/System.hs'."
 
-  :type '(repeated (symbol :tag "OS"))
+  :type '(repeat (symbol :tag "OS"))
 
   :safe #'listp
   :group 'cabal)
@@ -397,7 +397,7 @@ Commands:
 
   "Known fields in a cabal file."
 
-  :type '(repeated (string))
+  :type '(repeat (string))
 
   :safe t
   :group 'cabal)
@@ -491,7 +491,7 @@ Commands:
 Comes from « $ cabal --list-options », 
 keeping only strings that start with an alphanumeric letter."
 
-  :type '(repeated (string :tag "Command"))
+  :type '(repeat (string :tag "Command"))
 
   :safe t
   :group 'cabal)
@@ -525,7 +525,7 @@ keeping only strings that start with an alphanumeric letter."
 Comes from « $ cabal --list-options », 
 keeping only strings that start with one-or-more hyphens."
 
-  :type '(repeated (string :tag "Option"))
+  :type '(repeat (string :tag "Option"))
 
   :safe t
   :group 'cabal)
@@ -692,7 +692,7 @@ keeping only strings that start with one-or-more hyphens."
 
 Comes from « $ cabal new-build --list-options »."
 
-  :type '(repeated (string :tag "Option"))
+  :type '(repeat (string :tag "Option"))
 
   :safe t
   :group 'cabal)
@@ -1120,7 +1120,7 @@ Comes from « $ cabal new-build --list-options »."
 Comes from downlading URL `http://hackage.haskell.org/packages/',
 keeping any string that has been used at least twice."
 
-  :type '(repeated (string :tag "Category"))
+  :type '(repeat (string :tag "Category"))
 
   :safe t
   :group 'cabal)
@@ -1227,7 +1227,7 @@ Completion:
 
   "Known fields in a cabal file."
 
-  :type '(repeated (string))
+  :type '(repeat (string))
 
   :safe t
   :group 'cabal)

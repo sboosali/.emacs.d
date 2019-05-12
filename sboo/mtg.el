@@ -95,7 +95,7 @@
 
   "All MTG colors."
 
-  :type '(repeated (symbol :tag "Color"))
+  :type '(repeat (symbol :tag "Color"))
 
   :safe #'listp
   :group 'mtg)
@@ -129,7 +129,7 @@ Associates characters with the colors they abbreviate."
 
    "All MTG guilds i.e. (color pairs)."
 
-  :type '(repeated (symbol :tag "Color"))
+  :type '(repeat (symbol :tag "Color"))
 
   :safe #'listp
   :group 'mtg)
@@ -198,7 +198,7 @@ White + blue + black + red = Yore (or Yore-Tiller), or Artifice, or Non-green
 
   "Known card types."
 
-  :type '(repeated (choice (const nil)
+  :type '(repeat (choice (const nil)
                            (string :tag "Card type")))
 
   :safe t
@@ -214,7 +214,7 @@ White + blue + black + red = Yore (or Yore-Tiller), or Artifice, or Non-green
 
   "Known super types."
 
-  :type '(repeated (choice (const nil)
+  :type '(repeat (choice (const nil)
                            (string :tag "Supertype")))
 
   :safe t
