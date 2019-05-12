@@ -2816,6 +2816,89 @@ $0")
 
 ;;----------------------------------------------;;
 
+(use-package selected
+  :demand t
+
+  :commands (selected-minor-mode selected-global-mode)
+
+  :delight (selected-minor-mode)
+
+  ;;--------------------------;;
+
+  :bind (:map selected-keymap
+
+           ;; ("`" . )
+           ;; ("!" . )
+           ;; ("@" . )
+           ;; ("#" . )
+           ;; ("$" . )
+           ;; ("%" . )
+           ;; ("^" . )
+           ;; ("&" . )
+           ;; ("*" . )
+           ;; ("(" . )
+           ;; (")" . )
+           ;; ("-" . )
+           ;; ("=" . )
+              ("[" . sboo-align-code)
+           ;; ("]" . )
+           ;; (":" . )
+           ;; (""" . )
+           ;; ("," . )
+           ;; ("." . )
+           ;; ("/" . )
+           ;; ("\\" . )
+
+           ;; ("a" . )
+           ;; ("b" . )
+              ("c" . capitalize-region)
+              ("d" . downcase-region)
+           ;; ("e" . )
+              ("f" . fill-region)
+           ;; ("g" . )
+           ;; ("h" . )
+           ;; ("i" . )
+           ;; ("j" . )
+           ;; ("k" . )
+           ;; ("l" . )
+              ("m" . apply-macro-to-region-lines)
+           ;; ("n" . )
+           ;; ("o" . )
+           ;; ("p" . )
+              ("q" . selected-off)
+              ("r" . reverse-region)
+              ("s" . sort-lines)
+           ;; ("t" . )
+              ("u" . upcase-region)
+           ;; ("v" . )
+              ("w" . delete-trailing-whitespace)
+           ;; ("x" . )
+           ;; ("y" . )
+           ;; ("z" . )
+
+              ("U" . unfill-region)
+              )
+
+  ;;--------------------------;;
+
+  :config
+
+  (selected-global-mode +1))
+
+;; ^ When `selected-minor-mode' is active, the keybindings in `selected-keymap'
+;;   are enabled as long as the region is active (`use-region-p').
+;;
+;;   These conditionally-concise keybindings are useful for commands
+;;   that operates on the region.
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/Kungsgeten/selected.el'
+;;
+
+;;----------------------------------------------;;
+
 (use-package wrap-region
 
   :commands (wrap-region-mode)
