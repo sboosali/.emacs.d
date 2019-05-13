@@ -54,6 +54,67 @@
 
 ;;; Code:
 
+;;----------------------------------------------;;
+;; Macros --------------------------------------;;
+;;----------------------------------------------;;
+
+(eval-when-compile
+
+  (cl-defmacro defun-dired (name directory &key doc)
+
+    "Define a command which launches `dired' at DIRECTORY.
+
+• NAME — (unquoted) `symbolp'.
+  the function name.
+• DIRECTORY — a `stringp'.
+  a directory filepath.
+• DOC — a `stringp'.
+  the function documentation.
+  (defaults to the empty string.)
+
+Output:
+
+• a `defun' declaration.
+
+Example:
+
+• M-: (pp-macroexpand-expression (defun-dired sboo-dired-emacs \"~/.emacs.d\"))
+
+     ⇒ (defun sboo-dired-emacs ()
+     ⇒   \"Launch `dired' at directory « ~/emacs.d ».\"
+     ⇒   (interactive)
+     ⇒   (dired \"~/emacs.d\"))
+
+Related:
+
+• `dired'"
+
+    (declare (indent 1) (doc-string 3))
+
+    (let* ((NAME     name)
+           (DIRECTORY directory)
+
+           (DOCSTRING (or doc
+                          (format "Launch `dired' at directory « %s »." DIRECTORY)))
+           )
+
+      `(defun ,NAME ()
+         ,DOCSTRING
+         (interactive)
+         (dired ,DIRECTORY)))))
+
+;; ^ e.g. `defun-dired':
+;;
+;; M-: (pp-macroexpand-expression '(defun-dired sboo-dired-emacs "~/emacs.d"))
+;;
+;;   ⇒ (defun sboo-dired-emacs ()
+;;   ⇒   "Launch `dired' at directory « ~/emacs.d »."
+;;   ⇒   (interactive)
+;;   ⇒   (dired "~/emacs.d"))
+;;
+
+;;----------------------------------------------;;
+
 ;; (defmacro sboo-key (keys-to-bind command-to-be-bound &optional keymap-to-bind-in)
 
 ;;   (if (fboundp #'bind-key)
@@ -712,6 +773,40 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
+  (define-prefix-command 'sboo-launch-keymap)
+
+;;(define-key sboo-launch-keymap (kbd "a") #')
+;;(define-key sboo-launch-keymap (kbd "b") #')
+;;(define-key sboo-launch-keymap (kbd "c") #')
+ (define-key sboo-launch-keymap (kbd "d") #'sboo-paths-keymap)
+;;(define-key sboo-launch-keymap (kbd "e") #')
+;;(define-key sboo-launch-keymap (kbd "f") #')
+;;(define-key sboo-launch-keymap (kbd "g") #')
+;;(define-key sboo-launch-keymap (kbd "h") #')
+;;(define-key sboo-launch-keymap (kbd "i") #')
+;;(define-key sboo-launch-keymap (kbd "j") #')
+;;(define-key sboo-launch-keymap (kbd "k") #')
+;;(define-key sboo-launch-keymap (kbd "l") #')
+;;(define-key sboo-launch-keymap (kbd "m") #')
+;;(define-key sboo-launch-keymap (kbd "n") #')
+;;(define-key sboo-launch-keymap (kbd "o") #')
+  (define-key sboo-launch-keymap (kbd "p") #'helm-top) ; to[P].
+;;(define-key sboo-launch-keymap (kbd "q") #')
+;;(define-key sboo-launch-keymap (kbd "r") #')
+  (define-key sboo-launch-keymap (kbd "s") #'shell)          ; [S]hell.
+  (define-key sboo-launch-keymap (kbd "t") #'sboo-ansi-term) ; [T]erminal.
+;;(define-key sboo-launch-keymap (kbd "u") #')
+;;(define-key sboo-launch-keymap (kbd "v") #')
+  (define-key sboo-launch-keymap (kbd "w") #'eww)
+;;(define-key sboo-launch-keymap (kbd "x") #')
+;;(define-key sboo-launch-keymap (kbd "y") #')
+;;(define-key sboo-launch-keymap (kbd "z") #')
+
+  #'sboo-launch-keymap)
+
+;;----------------------------------------------;;
+
+(progn
 
   ;; [E]diting Functions"
   (define-prefix-command 'sboo-edit-keymap)
@@ -744,76 +839,6 @@ Inputs:
 ;;(define-key sboo-edit-keymap (kbd "z") #')
 
   #'sboo-edit-keymap)
-
-;;----------------------------------------------;;
-
-(progn
-  (define-prefix-command 'sboo-paths-keymap)
-
-  ;; ^ aliases and /or keyboard shortcuts for frequently-visited files and/or directories .
-
-;;(define-key sboo-paths-keymap (kbd "a") "")
-;;(define-key sboo-paths-keymap (kbd "b") "")
-;;(define-key sboo-paths-keymap (kbd "c") "")
-;;(define-key sboo-paths-keymap (kbd "d") "")
-;;(define-key sboo-paths-keymap (kbd "e") "~/.emacs.d" )
-;;(define-key sboo-paths-keymap (kbd "f") "")
-;;(define-key sboo-paths-keymap (kbd "g") "")
-;;(define-key sboo-paths-keymap (kbd "h") "")
-;;(define-key sboo-paths-keymap (kbd "i") "")
-;;(define-key sboo-paths-keymap (kbd "j") "")
-;;(define-key sboo-paths-keymap (kbd "k") "")
-;;(define-key sboo-paths-keymap (kbd "l") "")
-;;(define-key sboo-paths-keymap (kbd "m") "")
-;;(define-key sboo-paths-keymap (kbd "n") "")
-;;(define-key sboo-paths-keymap (kbd "o") "")
-;;(define-key sboo-paths-keymap (kbd "p") "")
-;;(define-key sboo-paths-keymap (kbd "q") "")
-;;(define-key sboo-paths-keymap (kbd "r") "")
-;;(define-key sboo-paths-keymap (kbd "s") "")
-;;(define-key sboo-paths-keymap (kbd "t") "")
-;;(define-key sboo-paths-keymap (kbd "u") "")
-;;(define-key sboo-paths-keymap (kbd "v") "")
-;;(define-key sboo-paths-keymap (kbd "w") "")
-;;(define-key sboo-paths-keymap (kbd "x") "")
-;;(define-key sboo-paths-keymap (kbd "y") "")
-;;(define-key sboo-paths-keymap (kbd "z") "")
-
-  'sboo-paths-keymap)
-
-;;----------------------------------------------;;
-
-(progn
-  (define-prefix-command 'sboo-mode-keymap)
-
-;;(define-key sboo-mode-keymap (kbd "a") #')
-;;(define-key sboo-mode-keymap (kbd "b") #')
-;;(define-key sboo-mode-keymap (kbd "c") #')
-;;(define-key sboo-mode-keymap (kbd "d") #')
-;;(define-key sboo-mode-keymap (kbd "e") #')
-;;(define-key sboo-mode-keymap (kbd "f") #')
-;;(define-key sboo-mode-keymap (kbd "g") #')
-;;(define-key sboo-mode-keymap (kbd "h") #')
-;;(define-key sboo-mode-keymap (kbd "i") #')
-;;(define-key sboo-mode-keymap (kbd "j") #')
-;;(define-key sboo-mode-keymap (kbd "k") #')
-;;(define-key sboo-mode-keymap (kbd "l") #')
-;;(define-key sboo-mode-keymap (kbd "m") #')
-  (define-key sboo-mode-keymap (kbd "n") #'sboo-prog-new)
-;;(define-key sboo-mode-keymap (kbd "o") #')
-;;(define-key sboo-mode-keymap (kbd "p") #')
-;;(define-key sboo-mode-keymap (kbd "q") #')
-;;(define-key sboo-mode-keymap (kbd "r") #')
-;;(define-key sboo-mode-keymap (kbd "s") #')
-;;(define-key sboo-mode-keymap (kbd "t") #')
-;;(define-key sboo-mode-keymap (kbd "u") #')
-;;(define-key sboo-mode-keymap (kbd "v") #')
-;;(define-key sboo-mode-keymap (kbd "w") #')
-;;(define-key sboo-mode-keymap (kbd "x") #')
-;;(define-key sboo-mode-keymap (kbd "y") #')
-;;(define-key sboo-mode-keymap (kbd "z") #')
-
-  #'sboo-mode-keymap)
 
 ;;----------------------------------------------;;
 
@@ -887,44 +912,120 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
-  (define-prefix-command 'sboo-launch-keymap)
 
-;;(define-key sboo-launch-keymap (kbd "a") #')
-;;(define-key sboo-launch-keymap (kbd "b") #')
-;;(define-key sboo-launch-keymap (kbd "c") #')
-;;(define-key sboo-launch-keymap (kbd "d") #')
-;;(define-key sboo-launch-keymap (kbd "e") #')
-;;(define-key sboo-launch-keymap (kbd "f") #')
-;;(define-key sboo-launch-keymap (kbd "g") #')
-;;(define-key sboo-launch-keymap (kbd "h") #')
-;;(define-key sboo-launch-keymap (kbd "i") #')
-;;(define-key sboo-launch-keymap (kbd "j") #')
-;;(define-key sboo-launch-keymap (kbd "k") #')
-;;(define-key sboo-launch-keymap (kbd "l") #')
-;;(define-key sboo-launch-keymap (kbd "m") #')
-;;(define-key sboo-launch-keymap (kbd "n") #')
-;;(define-key sboo-launch-keymap (kbd "o") #')
-  (define-key sboo-launch-keymap (kbd "p") #'helm-top) ; to[P].
-;;(define-key sboo-launch-keymap (kbd "q") #')
-;;(define-key sboo-launch-keymap (kbd "r") #')
-  (define-key sboo-launch-keymap (kbd "s") #'shell)          ; [S]hell.
-  (define-key sboo-launch-keymap (kbd "t") #'sboo-ansi-term) ; [T]erminal.
-;;(define-key sboo-launch-keymap (kbd "u") #')
-;;(define-key sboo-launch-keymap (kbd "v") #')
-;;(define-key sboo-launch-keymap (kbd "w") #')
-;;(define-key sboo-launch-keymap (kbd "x") #')
-;;(define-key sboo-launch-keymap (kbd "y") #')
-;;(define-key sboo-launch-keymap (kbd "z") #')
+  ;; [B]uffer (& File) Functions"
+  (define-prefix-command 'sboo-buffer-keymap)
 
-  #'sboo-launch-keymap)
+;;(define-key sboo-buffer-keymap (kbd "a") #')
+;;(define-key sboo-buffer-keymap (kbd "b") #')
+;;(define-key sboo-buffer-keymap (kbd "c") #')
+;;(define-key sboo-buffer-keymap (kbd "d") #')
+;;(define-key sboo-buffer-keymap (kbd "e") #')
+;;(define-key sboo-buffer-keymap (kbd "f") #')
+;;(define-key sboo-buffer-keymap (kbd "g") #')
+;;(define-key sboo-buffer-keymap (kbd "h") #')
+;;(define-key sboo-buffer-keymap (kbd "i") #')
+;;(define-key sboo-buffer-keymap (kbd "j") #')
+;;(define-key sboo-buffer-keymap (kbd "k") #')
+;;(define-key sboo-buffer-keymap (kbd "l") #')
+;;(define-key sboo-buffer-keymap (kbd "m") #')
+;;(define-key sboo-buffer-keymap (kbd "n") #')
+;;(define-key sboo-buffer-keymap (kbd "o") #')
+;;(define-key sboo-buffer-keymap (kbd "p") #')
+;;(define-key sboo-buffer-keymap (kbd "q") #')
+  (define-key sboo-buffer-keymap (kbd "r") #'rename-file)
+;;(define-key sboo-buffer-keymap (kbd "s") #')
+;;(define-key sboo-buffer-keymap (kbd "t") #')
+;;(define-key sboo-buffer-keymap (kbd "u") #')
+;;(define-key sboo-buffer-keymap (kbd "v") #')
+;;(define-key sboo-buffer-keymap (kbd "w") #')
+;;(define-key sboo-buffer-keymap (kbd "x") #')
+;;(define-key sboo-buffer-keymap (kbd "y") #')
+;;(define-key sboo-buffer-keymap (kbd "z") #')
+
+  #'sboo-buffer-keymap)
+
+;;----------------------------------------------;;
+
+(progn
+  (define-prefix-command 'sboo-paths-keymap)
+
+  ;; ^ aliases and /or keyboard shortcuts for frequently-visited files and/or directories .
+
+  (defun-dired sboo-dired-emacs         "~/.emacs.d")
+  (defun-dired sboo-dired-haskell       "~/haskell")
+  (defun-dired sboo-dired-configuration "~/configuration")
+
+;;(define-key sboo-paths-keymap (kbd "a") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "b") #'sboo-dired-)
+  (define-key sboo-paths-keymap (kbd "c") #'sboo-dired-configuration)
+;;(define-key sboo-paths-keymap (kbd "d") #'sboo-dired-)
+  (define-key sboo-paths-keymap (kbd "e") #'sboo-dired-emacs)
+;;(define-key sboo-paths-keymap (kbd "f") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "g") #'sboo-dired-)
+  (define-key sboo-paths-keymap (kbd "h") #'sboo-dired-haskell)
+;;(define-key sboo-paths-keymap (kbd "i") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "j") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "k") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "l") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "m") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "n") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "o") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "p") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "q") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "r") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "s") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "t") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "u") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "v") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "w") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "x") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "y") #'sboo-dired-)
+;;(define-key sboo-paths-keymap (kbd "z") #'sboo-dired-)
+
+  #'sboo-paths-keymap)
+
+;;----------------------------------------------;;
+
+(progn
+  (define-prefix-command 'sboo-mode-keymap)
+
+;;(define-key sboo-mode-keymap (kbd "a") #')
+;;(define-key sboo-mode-keymap (kbd "b") #')
+;;(define-key sboo-mode-keymap (kbd "c") #')
+;;(define-key sboo-mode-keymap (kbd "d") #')
+;;(define-key sboo-mode-keymap (kbd "e") #')
+;;(define-key sboo-mode-keymap (kbd "f") #')
+;;(define-key sboo-mode-keymap (kbd "g") #')
+;;(define-key sboo-mode-keymap (kbd "h") #')
+;;(define-key sboo-mode-keymap (kbd "i") #')
+;;(define-key sboo-mode-keymap (kbd "j") #')
+;;(define-key sboo-mode-keymap (kbd "k") #')
+;;(define-key sboo-mode-keymap (kbd "l") #')
+;;(define-key sboo-mode-keymap (kbd "m") #')
+  (define-key sboo-mode-keymap (kbd "n") #'sboo-prog-new)
+;;(define-key sboo-mode-keymap (kbd "o") #')
+;;(define-key sboo-mode-keymap (kbd "p") #')
+;;(define-key sboo-mode-keymap (kbd "q") #')
+;;(define-key sboo-mode-keymap (kbd "r") #')
+;;(define-key sboo-mode-keymap (kbd "s") #')
+;;(define-key sboo-mode-keymap (kbd "t") #')
+;;(define-key sboo-mode-keymap (kbd "u") #')
+;;(define-key sboo-mode-keymap (kbd "v") #')
+;;(define-key sboo-mode-keymap (kbd "w") #')
+;;(define-key sboo-mode-keymap (kbd "x") #')
+;;(define-key sboo-mode-keymap (kbd "y") #')
+;;(define-key sboo-mode-keymap (kbd "z") #')
+
+  #'sboo-mode-keymap)
 
 ;;----------------------------------------------;;
 
 (progn
 
   (global-set-key (kbd "s-a") #'sboo-copy-buffer-contents)  ; copy [A]ll.
-;;(global-set-key (kbd "s-b") #')
-  (global-set-key (kbd "s-c") #'sboo-insert-char)           ; "Character"
+  (global-set-key (kbd "s-b") #'sboo-buffer-keymap)         ; "[B]uffer(/file) Functions"
+  (global-set-key (kbd "s-c") #'helm-ucs)                   ; U[C]S (Unicode Character Set)
   (global-set-key (kbd "s-d") #'xref-find-definitions)      ; "Definitions"
   (global-set-key (kbd "s-e") #'sboo-edit-keymap)           ; "[E]diting Functions"
   (global-set-key (kbd "s-f") #'describe-function)          ; "Function"
@@ -955,6 +1056,7 @@ Inputs:
 
 ;;----------------------------------------------;;
 
+;;(global-set-key (kbd "s-c") #'sboo-insert-char)           ; "Character"
 ;;(global-set-key (kbd "s-d") #'dired)
 ;;(global-set-key (kbd "s-e") #'eval-dwim)                  ; "Eval"
 ;;(global-set-key (kbd "s-h") #'helm-command-prefix)        ; "Helm"

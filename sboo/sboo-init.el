@@ -1947,6 +1947,14 @@ Links:
 
 ;;----------------------------------------------;;
 
+(use-package helm-font
+
+  :commands (helm-ucs helm-select-xfont)
+
+  )
+
+;;----------------------------------------------;;
+
 (use-package helm-sys
 
   :commands (helm-top)
@@ -1960,6 +1968,11 @@ Links:
   :commands (helm-dabbrev)
 
   )
+
+;;----------------------------------------------;;
+
+(use-package helm-google
+  :commands helm-google)
 
 ;;----------------------------------------------;;
 
@@ -2623,6 +2636,35 @@ $0")
   ())
 
 ;;----------------------------------------------;;
+
+(use-package llvm-mode
+
+  :mode "\\.ll\\'"
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/llvm-mirror/llvm/blob/master/utils/emacs/llvm-mode.el'
+;;   • URL `'
+;;
+
+;;----------------------------------------------;;
+
+(use-package lua-mode
+
+  :mode "\\.lua\\'"
+  :interpreter "lua"
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/immerrr/lua-mode'
+;;   • URL `https://immerrr.github.io/lua-mode/'
+;;
+
+;;----------------------------------------------;;
 ;; External Packages: Formats ------------------;;
 ;;----------------------------------------------;;
 
@@ -2715,6 +2757,21 @@ $0")
 
 ;;----------------------------------------------;;
 
+(use-package json-reformat
+  :after json-mode
+
+  :commands (json-reformat)
+
+  :config
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `'
+;;
+
+;;----------------------------------------------;;
+
 (use-package yaml-mode
 
   :mode (("\\.yaml\\'" . yaml-mode)
@@ -2727,6 +2784,25 @@ $0")
   (add-hook 'yaml-mode-hook #'sboo-set-font-to-iosevka)
 
   ())
+
+;; ^ Links:
+;;
+;;   • URL `'
+;;
+
+;;----------------------------------------------;;
+
+(use-package makefile-runner
+
+  :commands (makefile-runner)
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/danamlund/emacs-makefile-runner'
+;;   • URL `http://danamlund.dk/emacs/make-runner.html'
+;;
 
 ;;----------------------------------------------;;
 
@@ -2774,11 +2850,82 @@ $0")
 
 ;;----------------------------------------------;;
 
+(use-package graphviz-dot-mode
+
+  :commands (graphviz-dot-mode)
+
+  :mode "\\.dot\\'"
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/ppareit/graphviz-dot-mode'
+;;   • URL `'
+;;
+
+;;----------------------------------------------;;
+
 ;; (use-package xpm
 ;;   :commands (xpm-grok xpm-finish xpm-raster xpm-as-xpm xpm-put-points xpm-generate-buffer)
 ;;   :mode (("\\.xpm\\'" . c-mode))
 ;;   ; :mode (("\\.xpm\\'" . xpm-mode))
 ;;   ())
+
+;;----------------------------------------------;;
+
+(use-package mediawiki
+
+  :commands (mediawiki-open)
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/hexmode/mediawiki-el'
+;;
+
+;;----------------------------------------------;;
+
+(use-package dockerfile-mode
+
+  :mode "Dockerfile[a-zA-Z.-]*\\'" ; (rx bos "Dockerfile" (0+ (char ".-" alpha)) eos)
+
+  :config
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `'
+;;
+
+;;----------------------------------------------;;
+;; External Packages: Tools --------------------;;
+;;----------------------------------------------;;
+
+(use-package jq-mode
+
+  :commands (jq-mode jq-interactively)
+
+  :mode "\\.jq\\'"
+
+  :config
+
+  (with-eval-after-load "json-mode"
+    (define-key json-mode-map (kbd "s-m m j q") #'jq-interactively))
+
+  ())
+
+;; « M-x `jq-interactively' »:
+;;
+;; • runs the query (which was entered into the minibuffer) iteratively over the JSON buffer.
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/ljos/jq-mode'
+;;
 
 ;;----------------------------------------------;;
 ;; External Packages: Editing ------------------;;
@@ -3093,16 +3240,17 @@ $0")
 
 (use-package expand-region
 
-  :delight (expand-region-mode " ")
+  :delight (expand-region-mode "")
 
-  :config
+  :bind (:map sboo-mark-keymap
+              ("e" . expand-region)
+              )
 
-  ())
+  :config ())
 
 ;; ^ Links:
 ;;
 ;;   • URL `https://github.com/magnars/expand-region.el'
-;;   • URL `'
 ;;
 
 ;;----------------------------------------------;;
@@ -3155,6 +3303,69 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;   • URL `https://github.com/Fanael/edit-indirect'
 ;;
 
+;;----------------------------------------------;;
+
+(use-package edit-var
+
+  :commands (edit-variable) 
+
+  :bind ("C-c e v" . edit-variable)
+
+  :config ())
+
+;;----------------------------------------------;;
+
+(use-package edit-rectangle
+
+  :bind ("C-x r e" . edit-rectangle)
+
+  :config ())
+
+;;----------------------------------------------;;
+
+(use-package typo
+
+  :commands (typo-mode)
+
+  :delight (typo-mode)
+
+  :hook (text-mode . typo-mode)
+
+  :config
+
+  ;;(setq-default typo-language )
+
+  (typo-global-mode +4))
+
+;; ^ `typo-mode' binds keys of *printable characters* (e.g. « e » or « - ») to insert related *typographic unicode characters" (e.g. « é » or « — »).
+;; 
+;; its keybindings include:
+;; 
+;; • « . » is « . » (single-press) or « … » (triple-press).
+;; • « - » is « - » (single-press) or « – » (double-press) or « — » (triple-press).
+;; • « ' » is « ' » or « ‘ » or « ’ ».
+;; • « " » is « " » or « “ » or « ” ».
+;; 
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/jorgenschaefer/typoel'
+;;
+
+;;----------------------------------------------;;
+
+(use-package operate-on-number
+
+  :bind (:map sboo-edit-keymap
+              ("n" . operate-on-number-at-point)
+              )
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/knu/operate-on-number.el'
+;;
 
 ;;----------------------------------------------;;
 ;; External Packages: Navigation ---------------;;
@@ -3286,6 +3497,29 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;
 
 ;;----------------------------------------------;;
+
+(use-package link-hint
+  :defer 5
+
+  :bind (("s-n l o" . link-hint-open-link)
+         ("s-n l c" . link-hint-copy-link)
+         )
+
+  :config
+
+  (add-hook 'eww-mode-hook (lambda ()
+                             (bind-key "f" #'link-hint-open-link eww-mode-map)))
+  (add-hook 'w3m-mode-hook (lambda ()
+                             (bind-key "f" #'link-hint-open-link w3m-mode-map)))
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/noctuid/link-hint.el'
+;;
+
+;;----------------------------------------------;;
 ;; External Packages: Filesystem ---------------;;
 ;;----------------------------------------------;;
 
@@ -3312,11 +3546,66 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 (use-package neotree
   :disabled
 
-  :config
-
-  ())
+  :config ())
 
 ;; ^  URL `https://github.com/jaypei/emacs-neotree'
+
+;;----------------------------------------------;;
+;; Web -----------------------------------------;;
+;;----------------------------------------------;;
+
+(use-package eww
+  :disabled
+
+  :bind (:map sboo-launch-keymap
+              ("w" . eww)
+              )
+
+  :custom
+
+  (browse-url-browser-function #'eww-browse-url "internal (emacs) Web Browser.")
+
+  (url-configuration-directory (sboo-xdg-data "eww" :subdir "emacs") "XDG-conformant")
+
+  :commands (eww eww-open-file eww-browse-with-external-browser)
+
+  :config ())
+
+;; ^ `eww' is the Emacs Web Browser.
+;;
+;; "eww" abbreviates "[E]macs [W]eb Bro[W]ser".
+;;
+;; Keybindings include:
+;;
+;; • 【p】 `eww-previous-url'
+;; • 【r】 `eww-forward-url'
+;; • 【&】 `eww-browse-with-external-browser'
+;; • 【g】 `eww-reload'
+;; • 【w】 `eww-copy-page-url'
+;; • 【v】 `eww-view-source'
+;;
+
+;; ^ Links:
+;;
+;;   • URL `'
+;;   • URL `http://ergoemacs.org/emacs/emacs_eww_web_browser.html'
+;;
+
+;;----------------------------------------------;;
+
+(use-package w3m
+  :disabled
+
+  :commands (w3m-browse-url w3m-find-file)
+
+  :config ())
+
+;; ^ 
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/emacs-w3m/emacs-w3m'
+;;
 
 ;;----------------------------------------------;;
 ;; External Packages: Highlighting -------------;;
@@ -3837,6 +4126,23 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;
 
 ;;----------------------------------------------;;
+
+(use-package know-your-http-well
+
+  :commands (http-header
+             http-method
+             http-relation
+             http-status-code
+             media-type)
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/for-GET/know-your-http-well'
+;;
+
+;;----------------------------------------------;;
 ;; External Packages: Miscellaneous ------------;;
 ;;----------------------------------------------;;
 
@@ -3906,11 +4212,13 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 (use-package deft
 
-  :commands (deft-new-file deft-new-file-named)
+  :commands (deft deft-new-file deft-new-file-named)
 
-  :config
+  :bind (:map sboo-launch-keymap
+              ("," . deft)
+              )
 
-  ())
+  :config ())
 
 ;; ^ Deft is an Emacs mode for quickly browsing, filtering, and editing
 ;;   directories of plain text notes, inspired by Notational Velocity.
@@ -3936,6 +4244,20 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;; ;; “It's useful to be able to restart emacs from inside emacs.”
 ;; (use-package restart-emacs)
+
+;;----------------------------------------------;;
+
+;; (use-package mmm-mode
+;;   :commands (mmm-mode)
+;;   :config ())
+
+;; ^ "mmm" abbreviates "[M]ultiple [M]ajor [M]odes".
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/purcell/mmm-mode'
+;;   • URL `'
+;;
 
 ;;----------------------------------------------;;
 ;; Conditional Configuration -------------------;;
