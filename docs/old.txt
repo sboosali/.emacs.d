@@ -5720,6 +5720,63 @@ print-builtin-symbols:
 
 ------------------------------------------------
 
+;; (defmacro sboo-key (keys-to-bind command-to-be-bound &optional keymap-to-bind-in)
+
+;;   (if (fboundp #'bind-key)
+
+;;       (bind-key keys-to-bind command-to-be-bound keymap-to-bind-in)
+
+;;     (if keymap-to-bind-in
+
+;;         `(define-key keymap-to-bind-in ,(kbd keys-to-bind) ,(function command-to-be-bound))
+
+;;       `(global-set-key ,(kbd keys-to-bind) ,(function command-to-be-bound)))
+
+;;     ;;(define-key (current-global-map)
+
+;;     (define-key keymap-to-bind-in (kbd keys-to-bind) (function command-to-be-bound))
+
+;;     (global-set-key (kbd keys-to-bind) (function command-to-be-bound))))
+
+;; M-: (sboo-key "<s>-c" sboo-insert-char)
+
+==============================================
+
+(use-package latex
+
+  :after auctex
+
+  :config
+
+  (require 'preview)
+
+  (load (emacs-path "site-lisp/auctex/style/minted"))
+
+  (info-lookup-add-help :mode 'LaTeX-mode
+                        :regexp ".*"
+                        :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
+                        :doc-spec '(("(latex2e)Concept Index")
+                                    ("(latex2e)Command Index")))
+
+  ())
+
+(use-package link-hint
+  :defer 10
+
+  :bind (:map sboo-navigation-keymap
+              ("C-c l o" . link-hint-open-link)
+              ("C-c l c" . link-hint-copy-link)
+         )
+
+  :config
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/noctuid/link-hint.el'
+;;
+
 
 ==============================================
 
