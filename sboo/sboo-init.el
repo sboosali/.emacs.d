@@ -905,15 +905,18 @@ Related:
 
 (use-package hi-lock
 
-  :bind (("M-o l" . highlight-lines-matching-regexp)
-         ("M-o r" . highlight-regexp)
-         ("M-o w" . highlight-phrase))
+  :commands (highlight-regexp highlight-phrase highlight-lines-matching-regexp)
 
-  :config
+  :bind (("C-@ r" . highlight-regexp)
+         ("C-@ p" . highlight-phrase)
+         ("C-@ l" . highlight-lines-matching-regexp)
+         )
 
-  ())
+  :preface (unbind-key "C-@")
 
-;; "hi-lock" abbreviates "[HI]ghlight [LCOK]".
+  :config ())
+
+;; ^ "hi-lock" abbreviates "[HI]ghlight [LOCK]".
 
 ;;==============================================;;
 ;; Builtin Packages: Searching:
@@ -3305,6 +3308,29 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
+(use-package undo-propose
+
+  :commands (undo-propose)
+
+  :bind ("s-z" . undo-propose)
+
+  :config ())
+
+;; ^ `undo-propose' provides navigating through your undo history in a temporary buffer.
+;;
+;; Features include:
+;;
+;; • If you get lost, you can cancel the whole series of undo’s, without modifying the original buffer or undo history.
+;; • You can search through your undo history for old snippets, copy and paste them back in manually, then discard the rest of the undo’s.
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/jackkamm/undo-propose-el'
+;;
+
+;;----------------------------------------------;;
+
 (use-package edit-var
 
   :commands (edit-variable) 
@@ -3517,6 +3543,36 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; ^ Links:
 ;;
 ;;   • URL `https://github.com/noctuid/link-hint.el'
+;;
+
+;;----------------------------------------------;;
+
+(use-package google-this
+
+  :commands (google-this google-this-search google-this-word google-this-symbol google-this-line google-this-region google-this-noconfirm)
+
+  ;; ^ with Prefix Argument, any `google-*' command is wrapped in quotes
+  ;;  (see `google-wrap-in-quotes').
+
+  :bind (:map google-this-mode-submap
+              ("g" . google-this)
+              ;; ^ e.g. press « s-s g g »
+         )
+
+  :config 
+
+  (define-key sboo-search-keymap (kbd "g") #'google-this-mode-submap)
+
+  (google-this-mode +1))
+
+;; ^ `google-this' provides commands for googling Text Objects.
+;;
+;; Features include:
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/Malabarba/emacs-google-this'
 ;;
 
 ;;----------------------------------------------;;

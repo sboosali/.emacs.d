@@ -601,19 +601,23 @@ Inputs:
 (global-set-key (kbd "<f12>") #'execute-extended-command)
 
 ;;==============================================;;
+
 ;;; Meta Keybindings (`M-')...
+
 ;;==============================================;;
 
 (global-set-key (kbd "M-a") #'mark-whole-buffer)
 
-(global-set-key (kbd "M-r")   #'query-replace-regexp) ; Find/Replace with Regex Queries.
-(global-set-key (kbd "M-S-r") #'query-replace)        ; Find/Replace with Fixed Strings.
+(global-set-key (kbd "M-o") #'projectile-find-file-dwim)
 
 (global-set-key (kbd "M-g") #'goto-line)
 
 (global-set-key (kbd "M-l") #'downcase-dwim)   ; Shadows: `downcase-word'.
 (global-set-key (kbd "M-c") #'capitalize-dwim) ; Shadows: `capitalize-word'.
 (global-set-key (kbd "M-u") #'upcase-dwim)     ; Shadows: `upcase-word'.
+
+(global-set-key (kbd "M-r")   #'query-replace-regexp) ; Find/Replace with Regex Queries.
+(global-set-key (kbd "M-S-r") #'query-replace)        ; Find/Replace with Fixed Strings.
 
 (global-set-key (kbd "M-`") #'sboo-switch-to-previous-buffer)
 (global-set-key (kbd "M-~") #'sboo-switch-to-previous-buffer)
@@ -637,7 +641,7 @@ Inputs:
 
 ;;==============================================;;
 
-(global-set-key (kbd "C-o") #'other-window)
+(global-set-key (kbd "C-o") #'find-file-at-point)
 (global-set-key (kbd "C-;") #'comment-region)
 
 (progn
@@ -649,13 +653,17 @@ Inputs:
   (global-set-key (kbd "<C-down>") #'forward-paragraph))
 
 ;;==============================================;;
+
 ;;; Control+Meta (`C-M-') Keybindings...
+
 ;;==============================================;;
 
 (global-set-key (kbd "C-M-m") #'maximize-frame)
 
 ;;==============================================;;
+
 ;;; KeyPad (`kp-') Keybindings...
+
 ;;==============================================;;
 
 (global-set-key (kbd "<kp-left>")  #'previous-buffer)
@@ -765,15 +773,16 @@ Inputs:
 
 ;; `sboo-*-keymap's
 ;;
-;; URL `http://pragmaticemacs.com/emacs/use-your-digits-and-a-personal-key-map-for-super-shortcuts/'
-;; URL `https://bendersteed.gitlab.io/post/rediscovering-vanilla-emacs-text-editing/'
+;; Links:
 ;;
+;;   • URL `http://pragmaticemacs.com/emacs/use-your-digits-and-a-personal-key-map-for-super-shortcuts/'
+;;   • URL `https://bendersteed.gitlab.io/post/rediscovering-vanilla-emacs-text-editing/'
 ;;
 
 ;;----------------------------------------------;;
 
 (progn
-  (define-prefix-command 'sboo-launch-keymap)
+  (define-prefix-command 'sboo-launch-keymap nil "Σ Run")
 
 ;;(define-key sboo-launch-keymap (kbd "a") #')
 ;;(define-key sboo-launch-keymap (kbd "b") #')
@@ -809,7 +818,7 @@ Inputs:
 (progn
 
   ;; [E]diting Functions"
-  (define-prefix-command 'sboo-edit-keymap)
+  (define-prefix-command 'sboo-edit-keymap nil "Σ Edit")
 
 ;;(define-key sboo-edit-keymap (kbd "a") #')
 ;;(define-key sboo-edit-keymap (kbd "b") #')
@@ -843,7 +852,7 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
-  (define-prefix-command 'sboo-navigation-keymap)
+  (define-prefix-command 'sboo-navigation-keymap nil "Σ Nav")
 
 ;;(define-key sboo-navigation-keymap (kbd "a") #')
 ;;(define-key sboo-navigation-keymap (kbd "b") #')
@@ -878,7 +887,41 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
-  (define-prefix-command 'sboo-mark-keymap)
+  (define-prefix-command 'sboo-search-keymap nil "Σ Search")
+
+;;(define-key sboo-search-keymap (kbd "a") #')
+;;(define-key sboo-search-keymap (kbd "b") #')
+;;(define-key sboo-search-keymap (kbd "c") #')
+;;(define-key sboo-search-keymap (kbd "d") #')
+;;(define-key sboo-search-keymap (kbd "e") #')
+;;(define-key sboo-search-keymap (kbd "f") #')
+;;(define-key sboo-search-keymap (kbd "g") #')
+;;(define-key sboo-search-keymap (kbd "h") #')
+;;(define-key sboo-search-keymap (kbd "i") #')
+;;(define-key sboo-search-keymap (kbd "j") #')
+;;(define-key sboo-search-keymap (kbd "k") #')
+;;(define-key sboo-search-keymap (kbd "l") #')
+;;(define-key sboo-search-keymap (kbd "m") #')
+;;(define-key sboo-search-keymap (kbd "n") #')
+;;(define-key sboo-search-keymap (kbd "o") #')
+;;(define-key sboo-search-keymap (kbd "p") #')
+;;(define-key sboo-search-keymap (kbd "q") #')
+;;(define-key sboo-search-keymap (kbd "r") #')
+;;(define-key sboo-search-keymap (kbd "s") #')
+;;(define-key sboo-search-keymap (kbd "t") #')
+;;(define-key sboo-search-keymap (kbd "u") #')
+;;(define-key sboo-search-keymap (kbd "v") #')
+;;(define-key sboo-search-keymap (kbd "w") #')
+;;(define-key sboo-search-keymap (kbd "x") #')
+;;(define-key sboo-search-keymap (kbd "y") #')
+;;(define-key sboo-search-keymap (kbd "z") #')
+
+  #'sboo-search-keymap)
+
+;;----------------------------------------------;;
+
+(progn
+  (define-prefix-command 'sboo-mark-keymap nil "Σ Mark")
 
   (define-key sboo-mark-keymap (kbd "a") #'mark-beginning-of-buffer)
   (define-key sboo-mark-keymap (kbd "b") #'mark-whole-buffer)
@@ -914,7 +957,7 @@ Inputs:
 (progn
 
   ;; [B]uffer (& File) Functions"
-  (define-prefix-command 'sboo-buffer-keymap)
+  (define-prefix-command 'sboo-buffer-keymap nil "Σ Buffer")
 
 ;;(define-key sboo-buffer-keymap (kbd "a") #')
 ;;(define-key sboo-buffer-keymap (kbd "b") #')
@@ -948,7 +991,7 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
-  (define-prefix-command 'sboo-paths-keymap)
+  (define-prefix-command 'sboo-paths-keymap nil "Σ Paths")
 
   ;; ^ aliases and /or keyboard shortcuts for frequently-visited files and/or directories .
 
@@ -988,7 +1031,7 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
-  (define-prefix-command 'sboo-mode-keymap)
+  (define-prefix-command 'sboo-mode-keymap nil "Σ Mode-Specific")
 
 ;;(define-key sboo-mode-keymap (kbd "a") #')
 ;;(define-key sboo-mode-keymap (kbd "b") #')
@@ -1041,7 +1084,7 @@ Inputs:
   (global-set-key (kbd "s-p") #'helm-show-kill-ring)        ; [P]aste from History.
 ;;(global-set-key (kbd "s-q") #')
   (global-set-key (kbd "s-r") #'sboo-launch-keymap)         ; "[R]un" (a.k.a "launch stuff")
-  (global-set-key (kbd "s-s") #'sboo-select-keymap)         ; [S]election Commands.
+  (global-set-key (kbd "s-s") #'sboo-search-keymap)         ; [S]earch Commands.
   (global-set-key (kbd "s-t") #'sboo-text-keymap)           ; "Text"
 ;;(global-set-key (kbd "s-u") #')
   (global-set-key (kbd "s-v") #'describe-variable)          ; "Variable"
