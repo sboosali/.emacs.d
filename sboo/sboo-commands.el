@@ -2413,6 +2413,50 @@ Links:
       (flyspell-do-correct 'save nil (car word) CURRENT-LOCATION (cadr word) (caddr word) CURRENT-LOCATION))))
 
 ;;----------------------------------------------;;
+;; Web -----------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-browse-uri-chrome (&optional uri)
+
+   "Open URI in a Google-Chrome.
+
+Inputs:
+
+• URI — a `stringp'."
+
+   (interactive)
+
+
+   (let* ((URI     (or uri (read-string "URI: ")))
+          (BROWSER (executable-find "google-chrome"))
+
+          (browse-url-generic-program BROWSER)
+          )
+
+     (browse-url-generic URI)))
+
+;;----------------------------------------------;;
+
+;;TODO:
+
+;; (defun sboo-browse-uri-dwim (&optional uri)
+
+;;    "Open URI in a browser.
+
+;; Inputs:
+
+;; • URI — a `stringp'."
+
+;;    (interactive)
+
+;;    (let* ((URI (or uri
+;;                    ()
+;;                    (read-string "URI: ")))
+;;           )
+
+;;      URI))
+
+;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 

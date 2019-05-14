@@ -3010,6 +3010,12 @@ $0")
 
   ;;--------------------------;;
 
+  ;; NOTE! `selected' and `wrap-region':
+  ;;
+  ;;       many punctuation characters (in particular, bracket characters)
+  ;;       are keybindings for `wrap-region' (in most Major Modes).
+  ;;
+
   :bind (:map selected-keymap
 
            ;; ("`" . )
@@ -3025,22 +3031,27 @@ $0")
            ;; (")" . )
            ;; ("-" . )
            ;; ("=" . )
-              ("[" . sboo-align-code)
+           ;; ("[" . )
            ;; ("]" . )
-           ;; (":" . )
+              (":" . comment-region)
            ;; (""" . )
            ;; ("," . )
            ;; ("." . )
            ;; ("/" . )
            ;; ("\\" . )
 
-           ;; ("a" . )
+              ("<up>"   . move-text-up)   ; from `move-text'.
+              ("<down>" . move-text-down) ; from `move-text'.
+           ;; ("<left>"  . )
+           ;; ("<right>" . )
+
+              ("a" . align-regexp)
            ;; ("b" . )
               ("c" . capitalize-region)
               ("d" . downcase-region)
            ;; ("e" . )
               ("f" . fill-region)
-           ;; ("g" . )
+              ("g" . google-this-region)  ; from `google-this' . 
            ;; ("h" . )
            ;; ("i" . )
            ;; ("j" . )
@@ -3050,7 +3061,7 @@ $0")
            ;; ("n" . )
            ;; ("o" . )
            ;; ("p" . )
-              ("q" . selected-off)
+              ("q" . selected-off)        ; from `selected'          . 
               ("r" . reverse-region)
               ("s" . sort-lines)
            ;; ("t" . )
@@ -3331,21 +3342,21 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
-(use-package edit-var
+(use-package move-text
 
-  :commands (edit-variable) 
+  :commands (move-text-up move-text-down)
 
-  :bind ("C-c e v" . edit-variable)
-
-  :config ())
-
-;;----------------------------------------------;;
-
-(use-package edit-rectangle
-
-  :bind ("C-x r e" . edit-rectangle)
+  :bind (:map sboo-edit-keymap
+              ("<up>"   . move-text-up)
+              ("<down>" . move-text-down)
+         )
 
   :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://www.emacswiki.org/emacs/move-text.el'
+;;
 
 ;;----------------------------------------------;;
 
@@ -3361,7 +3372,7 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
   ;;(setq-default typo-language )
 
-  (typo-global-mode +4))
+  (typo-global-mode +1))
 
 ;; ^ `typo-mode' binds keys of *printable characters* (e.g. « e » or « - ») to insert related *typographic unicode characters" (e.g. « é » or « — »).
 ;; 
@@ -3377,6 +3388,50 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;
 ;;   • URL `https://github.com/jorgenschaefer/typoel'
 ;;
+
+;;----------------------------------------------;;
+
+(use-package sort-words
+
+  :commands (sort-words)
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/dotemacs/sort-words.el'
+;;
+
+;;----------------------------------------------;;
+
+(use-package string-edit
+
+  :bind ("C-c C-'" . string-edit-at-point)
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/magnars/string-edit.el'
+;;
+
+;;----------------------------------------------;;
+
+(use-package edit-var
+
+  :commands (edit-variable) 
+
+  :bind ("C-c e v" . edit-variable)
+
+  :config ())
+
+;;----------------------------------------------;;
+
+(use-package edit-rectangle
+
+  :bind ("C-x r e" . edit-rectangle)
+
+  :config ())
 
 ;;----------------------------------------------;;
 
@@ -3477,12 +3532,20 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;----------------------------------------------;;
 
 (use-package smartscan
+  :defer 5
 
   :commands (global-smartscan-mode)
 
+  :bind (("M-p" . smartscan-symbol-go-backward)
+         ("M-n" . smartscan-symbol-go-forward)
+         :map smartscan-map
+              ("C->" . smartscan-symbol-go-forward)
+              ("C-<" . smartscan-symbol-go-backward)
+              )
+
   :config
 
-  ;;(global-smartscan-mode +1)
+  (global-smartscan-mode +1)
 
   ())
 
@@ -3558,6 +3621,12 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
               ("g" . google-this)
               ;; ^ e.g. press « s-s g g »
          )
+
+  :custom
+
+  (google-this-browse-url-function #'sboo-browse-uri-chrome "open with Google Chrome.")
+
+  ;; ^ Options: `browse-url', `browse-url-generic',`browse-url-emacs', `eww-browse-url'."
 
   :config 
 
@@ -4196,6 +4265,23 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; ^ Links:
 ;;
 ;;   • URL `https://github.com/for-GET/know-your-http-well'
+;;
+
+;;----------------------------------------------;;
+
+(use-package x86-lookup
+
+  :bind ("C-h X" . x86-lookup)
+
+  :config ())
+
+;;TODO
+;; pdftotext command line program from Poppler. On Linux, this program is probably already installed.
+;; Intel 64 and IA-32 Architecture Software Developer Manual. Any PDF that contains the full instruction set reference will work, though volume 2 is the best choice for x86-lookup.
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/skeeto/x86-lookup'
 ;;
 
 ;;----------------------------------------------;;
