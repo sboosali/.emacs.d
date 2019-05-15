@@ -398,3 +398,13 @@ See:
 (setq custom-file "~/.emacs.d/custom.el")
 (if (file-exists-p custom-file)
     (load custom-file))
+
+
+
+
+
+;;TODO "Support for menus on text-mode terminals." http://endlessparentheses.com/sweet-new-features-in-24-4.html
+
+
+
+

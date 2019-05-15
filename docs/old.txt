@@ -5763,7 +5763,7 @@ print-builtin-symbols:
 (use-package link-hint
   :defer 10
 
-  :bind (:map sboo-navigation-keymap
+  :bind (:map sboo-navigate-keymap
               ("C-c l o" . link-hint-open-link)
               ("C-c l c" . link-hint-copy-link)
          )
@@ -5778,6 +5778,23 @@ print-builtin-symbols:
 ;;
 
 
+;;----------------------------------------------;;
+;; Thing at point ------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-indent-defun-or-buffer ()
+
+  "Indent the `defun' currently-surrounding `point', or the `current-buffer'."
+
+  (interactive)
+
+  (let* ((BOUNDS (bounds-of-thing-at-point 'defun))
+         )
+
+    (if BOUNDS
+        (indent-region (car BOUNDS) (cdr BOUNDS))
+      (indent-region (point-min) (point-max)))))
+      
 ==============================================
 
 (flush-lines "^\\s-*$" (point-min) (point-max))
