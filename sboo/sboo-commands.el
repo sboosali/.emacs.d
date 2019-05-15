@@ -61,6 +61,10 @@ Example:
     ⇒       (call-interactively #'eval-region)
     ⇒     (call-interactively #'eval-last-sexp)))
 
+Links:
+
+• URL `https://www.emacswiki.org/emacs/DoWhatIMean'
+
 Notes:
 
 • “DWIM” abbreviates “Do-What-I-Mean”."
@@ -136,22 +140,50 @@ Notes:
 ;; DWIM ----------------------------------------;;
 ;;----------------------------------------------;;
 
-(ignore-errors (defun-dwim eval-dwim eval-region eval-last-sexp))
-(ignore-errors (defun-dwim kill-dwim kill-region kill-line))
-
-;; ^ TEMPLATE
-;;
-;; (ignore-errors (defun-dwim $1-dwim $1-region $1-$0))
+(ignore-errors (defun-dwim eval-dwim   eval-region   eval-last-sexp))
+(ignore-errors (defun-dwim kill-dwim   kill-region   kill-line))
+(ignore-errors (defun-dwim fill-dwim   fill-region   fill-paragraph))
+(ignore-errors (defun-dwim indent-dwim indent-region sboo-indent-defun-or-buffer))
 
 ;;----------------------------------------------;;
 ;; Thing at point ------------------------------;;
 ;;----------------------------------------------;;
 
+(defun sboo-indent-defun-or-buffer ()
+
+  "Indent the `defun' currently-surrounding `point', or the `current-buffer'."
+
+  (interactive)
+
+  (let* ((BOUNDS (bounds-of-thing-at-point 'defun))
+         )
+
+    (if BOUNDS
+        (indent-region (car BOUNDS) (cdr BOUNDS))
+      (indent-region (point-min) (point-max)))))
+
+;;----------------------------------------------;;
+
 (defun sboo-kill-thing-at-point (thing)
 
-  "Kill the `thing-at-point' for the specified kind of THING."
+  "Kill the `thing-at-point' (for the given kind of THING).
 
-  (let ((BOUNDS (bounds-of-thing-at-point thing)))
+Inputs:
+
+• THING — a `symbolp'.
+
+Effects:
+
+• CLipboard — modify the `kill-ring'."
+
+  (interactive (list
+                (sboo-read-thing :prompt "Thing")
+                ))
+
+  (cl-check-type thing symbol "a “thing”, a `symbolp'.")
+
+  (let* ((BOUNDS (bounds-of-thing-at-point thing))
+         )
 
     (if BOUNDS
         (kill-region (car BOUNDS) (cdr BOUNDS))
@@ -424,7 +456,7 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 
     ()))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 ;; Filesystem Navigation.
 ;;----------------------------------------------;;
 
@@ -446,7 +478,6 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 ;;----------------------------------------------;;
 ;; Text Navigation.
 ;;----------------------------------------------;;
-
 
 (defun xah-search-current-word ()
 
@@ -1981,6 +2012,32 @@ Related:
 
 ;;----------------------------------------------;;
 
+(cl-defun sboo-read-thing (&key (fast t) prompt (must-match t))
+
+  "Read a thing (c.f. `thingatpt').
+
+Related:
+
+• `sboo-things'"
+
+  (interactive (list :fast       (if current-prefix-arg t nil)
+                     :prompt     nil
+                     :must-match t
+                ))
+
+  (let*  ((PROMPT        (format "%s: " (or prompt "Thing")))
+          (REQUIRE-MATCH must-match)
+          (CANDIDATES    (sboo-things :fast fast))
+          )
+
+         (let* ((STRING (completing-read PROMPT CANDIDATES nil REQUIRE-MATCH nil))
+                (SYMBOL (intern-soft STRING))
+                )
+
+           SYMBOL)))
+
+;;----------------------------------------------;;
+
 (cl-defun sboo-forward-ops (&key)
 
   "List all known things for `forward-thing'.
@@ -2455,6 +2512,18 @@ Inputs:
 ;;           )
 
 ;;      URI))
+
+;;----------------------------------------------;;
+;; Shell ---------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sanityinc/shell-command-in-view-mode (start end command &optional output-buffer replace &rest other-args)
+  "Put \"*Shell Command Output*\" buffers into view-mode."
+  (unless (or output-buffer replace)
+    (with-current-buffer "*Shell Command Output*"
+      (view-mode 1))))
+
+(advice-add 'shell-command-on-region :after 'sanityinc/shell-command-in-view-mode)
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

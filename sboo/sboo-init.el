@@ -484,6 +484,13 @@ Related:
   (setq custom-file sboo-custom-file))
 
 ;;----------------------------------------------;;
+;; Configure Loading-Settings before calling `load-file':
+
+(setq load-prefer-newer t) 
+
+;; ^ never accidentally `load' outdated (byte-compiled) files.
+
+;;----------------------------------------------;;
 
 (ignore-errors (sboo-load-file! "sboo-settings.el"))
 (ignore-errors (sboo-load-file! "sboo-keybindings.el"))
@@ -597,6 +604,10 @@ Related:
 
   (sboo-add-auto-mode-basename "LICENSE" #'text-mode)
   (sboo-add-auto-mode-basename "NOTES"   #'text-mode)
+
+  (sboo-add-auto-mode-basename "^Procfile\\'" #'conf-mode)
+
+  (sboo-add-auto-mode-basename "^Portfile\\'" #'tcl-mode)
 
   ;;------------------------;;
 
@@ -1058,7 +1069,7 @@ Related:
   ;;---------------------------;;
 
   :bind (:map dired-mode-map
-              ("w" . wdired-change-to-wdired-mode) ;; mnemonic: [w]dired.
+              ("w" . wdired-change-to-wdired-mode) ; mnemonic: [w]dired.
               )
 
   ;; ^ Shadows `dired-copy-filename-as-kill':
@@ -1068,6 +1079,8 @@ Related:
   ;;---------------------------;;
 
   :custom
+
+  (dired-recursive-deletes 'top "`top' means: ask for each directory at the TOP level, but delete subdirectories without asking.")
 
   (wdired-allow-to-change-permissions t "edit Permission-Bits directly (`wdired' ensures you can only enter valid ones), by pressing « w » or « x » or « r ».")
 
@@ -1080,14 +1093,31 @@ Related:
 
   :config
 
+  (setq-default dired-dwim-target t)
+  
+  ;; ^ if `dired-dwim-target' is non-nil,
+  ;;   `dired-mode' guesses targets for commands like copy and move (guesses the default, but the user still confirms).
+  ;;
+  ;; e.g. if you have your Frame split into two Dired Windows,
+  ;;      then Dired will assume that you want to copy/move the file from the one into the other.
+  ;;
+  ;; 
+
+  (define-key dired-mode-map [mouse-2] #'dired-find-file)
+
   ())
 
 ;; ^ "WDired" abbreviates "[W]riteable [DIR]ectory [ED]itor".
 
+;; ^ Dired Keybindings include:
+;;
+;; « ( » binds `dired-hide-details-mode'
+;;
+
 ;; ^ Links
 ;;
+;; • URL `http://ergoemacs.org/emacs/emacs_dired_tips.html' 
 ;; • URL `https://www.masteringemacs.org/article/wdired-editable-dired-buffers' 
-;;
 ;; 
 ;;
 ;;
@@ -1720,6 +1750,28 @@ Links:
 ;;
 
 ;;----------------------------------------------;;
+;;; Internal Packages: Help --------------------;;
+;;----------------------------------------------;;
+
+(use-package re-builder
+
+  :commands (re-builder)
+
+  :bind (:map reb-mode-map 
+              ("C-c C-k" . reb-quit)
+              ;; ^ more idiomatic quit binding.
+              )
+
+;;:custom (reb-re-syntax 'rx) (reb-re-syntax 'string)
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://www.masteringemacs.org/article/re-builder-interactive-regexp-builder'
+;;
+
+;;----------------------------------------------;;
 ;;; Internal Packages: Settings ----------------;;
 ;;----------------------------------------------;;
 
@@ -2293,6 +2345,45 @@ $0")
   ())
 
 ;;----------------------------------------------;;
+;; External Packages: Lisp ---------------------;;
+;;----------------------------------------------;;
+
+(use-package package-lint
+
+  :commands (package-lint-current-buffer)
+
+  :config ())
+
+;; ^ `package-lint' provides a Linter (via `package-lint-current-buffer') 
+;;    for Emacs-LISP, checking a « *.el » file's Library Headers.
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/purcell/package-lint'
+;;
+
+;;----------------------------------------------;;
+
+(use-package flycheck-package
+  :demand t
+
+  :config
+
+  (with-eval-after-load 'flycheck
+    (flycheck-package-setup))
+
+  ())
+
+;; ^ `flycheck-package' provides feedback (via `flycheck') about issues with an elisp file's package metadata a.k.a. its library headers (activated only if a Package-Requires or Package-Version header is present).
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/purcell/flycheck-package'
+;;
+
+;;----------------------------------------------;;
 ;; External Packages: Haskell ------------------;;
 ;;----------------------------------------------;;
 
@@ -2853,6 +2944,28 @@ $0")
 
 ;;----------------------------------------------;;
 
+(use-package csv-mode
+
+  :commands (csv-mode)
+
+  :mode ("\\.[Cc][Ss][Vv]\\'" . csv-mode)
+
+  :custom
+
+  (csv-separators '("," ";" "|" " "))
+
+  :config ())
+
+;; ^ “CSV” abbreviates “[C]haracter-[S]eparated [V]alues”.
+
+;; ^ Links:
+;;
+;;   • URL `https://www.emacswiki.org/emacs/CsvMode'
+;;   • URL `https://elpa.gnu.org/packages/csv-mode.html'
+;;
+
+;;----------------------------------------------;;
+
 (use-package graphviz-dot-mode
 
   :commands (graphviz-dot-mode)
@@ -2879,7 +2992,7 @@ $0")
 
 (use-package mediawiki
 
-  :commands (mediawiki-open)
+  :commands (mediawiki-site mediawiki-open)
 
   :config ())
 
@@ -3019,7 +3132,7 @@ $0")
   :bind (:map selected-keymap
 
            ;; ("`" . )
-           ;; ("!" . )
+              ("!" . shell-command-on-region)
            ;; ("@" . )
            ;; ("#" . )
            ;; ("$" . )
@@ -3047,13 +3160,13 @@ $0")
 
               ("a" . align-regexp)
            ;; ("b" . )
-              ("c" . capitalize-region)
+              ("c" . cua-copy-region)
               ("d" . downcase-region)
            ;; ("e" . )
               ("f" . fill-region)
-              ("g" . google-this-region)  ; from `google-this' . 
+              ("g" . google-this-region)  ; from `google-this'.
            ;; ("h" . )
-           ;; ("i" . )
+              ("i" . indent-region)
            ;; ("j" . )
            ;; ("k" . )
            ;; ("l" . )
@@ -3061,19 +3174,25 @@ $0")
            ;; ("n" . )
            ;; ("o" . )
            ;; ("p" . )
-              ("q" . selected-off)        ; from `selected'          . 
+              ("q" . selected-off)        ; from `selected'.
               ("r" . reverse-region)
               ("s" . sort-lines)
            ;; ("t" . )
               ("u" . upcase-region)
            ;; ("v" . )
-              ("w" . delete-trailing-whitespace)
-           ;; ("x" . )
+
+              ("x" . cua-cut-region)
            ;; ("y" . )
            ;; ("z" . )
 
               ("U" . unfill-region)
+
               )
+
+              ;; ("c" . capitalize-region)
+              ;; ("r" . reverse-region)
+              ;; ("s" . sort-lines)
+              ;; ("w" . delete-trailing-whitespace)
 
   ;;--------------------------;;
 
@@ -3534,24 +3653,29 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 (use-package smartscan
   :defer 5
 
-  :commands (global-smartscan-mode)
+  :commands (smartscan-mode
+             global-smartscan-mode
+             smartscan-symbol-go-backward
+             smartscan-symbol-go-forward
+             smartscan-symbol-replace
+             )
 
   :bind (("M-p" . smartscan-symbol-go-backward)
          ("M-n" . smartscan-symbol-go-forward)
          :map smartscan-map
-              ("C->" . smartscan-symbol-go-forward)
-              ("C-<" . smartscan-symbol-go-backward)
-              )
+         )
 
   :config
 
-  (global-smartscan-mode +1)
+  (global-smartscan-mode +1))
 
-  ())
+;; ^ Bind « M-n » and « M-p » to look for `symbol-at-point'.
+;;
 
-;; ^ Make « M-n » and « M-p » look for the `symbol-at-point'.
+;; ^ Links:
 ;;
 ;;   • URL `https://github.com/mickeynp/smart-scan'
+;;   • URL `https://www.masteringemacs.org/article/effective-editing-movement' 
 ;;   • URL `https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el'
 ;;
 
@@ -3617,6 +3741,8 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
   ;; ^ with Prefix Argument, any `google-*' command is wrapped in quotes
   ;;  (see `google-wrap-in-quotes').
 
+  :delight (google-this-mode)
+
   :bind (:map google-this-mode-submap
               ("g" . google-this)
               ;; ^ e.g. press « s-s g g »
@@ -3642,6 +3768,33 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; ^ Links:
 ;;
 ;;   • URL `https://github.com/Malabarba/emacs-google-this'
+;;
+
+;;----------------------------------------------;;
+
+(use-package engine-mode
+
+  :commands (engine-mode)
+
+  :delight (engine-mode)
+
+  :bind  (:map sboo-search-keymap
+               ("/" . engine-mode-prefixed-map)
+          )
+
+  :config
+
+  (defengine google "https://www.google.com/search?q=%s"
+    :browser    #'sboo-browse-uri-chrome
+    :keybinding "/")
+
+  ;; ^ e.g. press « s-s / / » for `engine/search-google'.
+
+  (engine-mode t))
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/hrs/engine-mode'
 ;;
 
 ;;----------------------------------------------;;
@@ -4202,6 +4355,19 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 (use-package vlf
 
+  :commands (vlf)
+
+  :preface
+
+  (defun sboo-vlf-ffap (&optional file)
+    "Find a large file at `point' or FILE (with `vlf')."
+    (interactive "fFile (large): ")
+    (let* ((FILE (or file (ffap-file-at-point)))
+           )
+      (unless (file-exists-p FILE)
+        (error "File does not exist: %s" FILE))
+      (vlf FILE)))
+
   :config
 
   (require 'vlf-setup)
@@ -4425,11 +4591,15 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;;----------------------------------------------;;
 
 ;; (use-package edit-server
-;;   :if window-system
+;;   :if (and window-system (not (sboo-emacs-secondary-p)))
 ;;   :init
 ;;   (add-hook 'after-init-hook 'server-start t)
 ;;   (add-hook 'after-init-hook 'edit-server-start t)
 ;;   ())
+
+;;----------------------------------------------;;
+
+;; TODO https://www.emacswiki.org/emacs/SpreadSheet
 
 ;;----------------------------------------------;;
 ;; Finalization --------------------------------;;

@@ -28,14 +28,14 @@
 ;;; Commentary:
 
 ;; Personal settings.
-;; 
+;;
 ;; Settings should be both **fast** and **safe**,
 ;; Like « (use-package :init ...) », they are eager.
-;; 
+;;
 ;; Most settings are literally set-statements.
 ;; (`sboo-custom-set', `custom-set-variables', `setq', etc)
 ;;
-;; 
+;;
 
 ;;; Code:
 
@@ -45,7 +45,7 @@
 
 ;; Builtins:
 
-(eval-when-compile 
+(eval-when-compile
   (require 'cl-lib))
 
 ;;----------------------------------------------;;
@@ -146,7 +146,7 @@
 
 ;; ^ always show Column Numbers in the Modeline (by default, only Row Numbers are shown).
 
-(global-font-lock-mode +1) 
+(global-font-lock-mode +1)
 
 ;; ^ Syntax Highlighting, by default.
 
@@ -169,7 +169,7 @@
 ;; ^ with `y-or-n-p', you press just one key for boolean prompts.
 ;;   (i.e. the single character "y", instead of typing out the phrase "yes".)
 ;;
-;; e.g. in `dired-mode': 
+;; e.g. in `dired-mode':
 ;; when deleting a file, you are prompted by `y-or-n-p';
 ;; but when deleting a directory, you are prompted by (the more verbose) `yes-or-no-p'.
 ;;
@@ -209,7 +209,7 @@
 ;(set-background-color "#f4f4f4")
 
  ;; ^
- ;; i.e. R=xF4 G=xF4 B=xF4 
+ ;; i.e. R=xF4 G=xF4 B=xF4
  ;; i.e. rgb(244, 244, 244)
  ;; i.e. faint gray (near-white)
  ;;
@@ -223,7 +223,7 @@
 ;; Settings: Toolbar ---------------------------;;
 ;;----------------------------------------------;;
 
-(sboo-custom-set tool-bar-position left 
+(sboo-custom-set tool-bar-position left
   "the Tool Bar is on the left.")
 
 (sboo-custom-set auto-resize-tool-bars t
@@ -267,6 +267,66 @@
 ;; ^ URL `http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html'
 
 ;;----------------------------------------------;;
+;; Settings: Mouse -----------------------------;;
+;;----------------------------------------------;;
+
+(sboo-custom-set mouse-yank-at-point t
+  "don't move `point' when pasting with the mouse.")
+
+;;----------------------------------------------;;
+;; Settings: Keyboard --------------------------;;
+;;----------------------------------------------;;
+
+;; (sboo-custom-set  "")
+
+;;----------------------------------------------;;
+;; Settings: Viewing ---------------------------;;
+;;----------------------------------------------;;
+
+(sboo-custom-set view-read-only t
+  "`t' means: always launch read-only buffers/files with `view-mode'.")
+
+;;----------------------------------------------;;
+;; Settings: Highlighting ----------------------;;
+;;----------------------------------------------;;
+
+(sboo-custom-set set-mark-command-repeat-pop t
+  "If you set set-mark-command-repeat-pop to non- nil , then immediately after you type C-u C-<SPC> , you can type C-<SPC> instead of C-u C-<SPC> to cycle through the mark ring.")
+
+;;----------------------------------------------;;
+;; Settings: Scrolling -------------------------;;
+;;----------------------------------------------;;
+
+(sboo-custom-set scroll-step                     1
+  "")
+(sboo-custom-set scroll-preserve-screen-position always
+  "`t' means that Emacs adjusts point to keep the cursor at the same screen position whenever a scroll command moves it off-window, rather than moving it to the topmost or bottommost line.")
+
+;; (sboo-custom-set scroll-margin 10
+;;   "")
+;; (sboo-custom-set scroll-conservatively 10000
+;;   "")
+
+(sboo-custom-set redisplay-dont-pause t
+  "“Peeking” behavior when scrolling.")
+
+;;TODO
+;; URL `https://superuser.com/questions/527356/dont-change-the-cursor-position-when-scrolling-in-emacs'
+
+;;----------------------------------------------;;
+
+(sboo-custom-set visible-bell t
+  "flash a Black Square onto the screen on User Errors (instead of honking loudly through the speakers).")
+
+(sboo-custom-set ring-bell-function ignore
+  "disable Blinking and Flashing.")
+
+;;----------------------------------------------;;
+
+(sboo-custom-set inhibit-splash-screen     t "fewer Startup Buffers.")
+(sboo-custom-set initial-scratch-message nil "fewer Startup Buffers.")
+
+;;----------------------------------------------;;
 ;; Settings: Backups ---------------------------;;
 ;;----------------------------------------------;;
 
@@ -303,37 +363,12 @@
   "highlight the Parenthesized Expression, unless the Matching Parenthesis is visible (not just the Parenthesis).")
 
 ;;----------------------------------------------;;
-;; Settings: Scrolling -------------------------;;
+;; Buffers -------------------------------------;;
 ;;----------------------------------------------;;
 
-(sboo-custom-set scroll-step                     1
-  "")
-(sboo-custom-set scroll-preserve-screen-position 1
-  "")
-
-;; (sboo-custom-set scroll-margin 10
-;;   "")
-;; (sboo-custom-set scroll-conservatively 10000
-;;   "")
-
-(sboo-custom-set redisplay-dont-pause t
-  "“Peeking” behavior when scrolling.")
-
-;;TODO
-;; URL `https://superuser.com/questions/527356/dont-change-the-cursor-position-when-scrolling-in-emacs'
-
 ;;----------------------------------------------;;
-
-(sboo-custom-set visible-bell t
-  "flash a Black Square onto the screen on User Errors (instead of honking loudly through the speakers).")
-
-(sboo-custom-set ring-bell-function 'ignore 
-  "disable Blinking and Flashing.")
-
+;; Files ---------------------------------------;;
 ;;----------------------------------------------;;
-
-(sboo-custom-set inhibit-splash-screen     t "fewer Startup Buffers.")
-(sboo-custom-set initial-scratch-message nil "fewer Startup Buffers.")
 
 ;;----------------------------------------------;;
 ;; Settings ------------------------------------;;
@@ -372,7 +407,7 @@
 (sboo-custom-set use-dialog-box nil
   "`nil' replaces Dialog Boxes with `yes-or-no' prompts.")
 
-;; ^ 
+;; ^
 ;;
 ;; i.e. minibuffer prompts, which use the echo area and keyboard input.
 ;;
@@ -406,6 +441,9 @@
 ;;----------------------------------------------;;
 ;; Minibuffer:
 
+(add-hook 'eval-expression-minibuffer-setup-hook #'eldoc-mode)
+
+;; ^ `eldoc-mode', in `minibuffer-*-mode', displays signatures in the Mode-Line.
 
 ;;----------------------------------------------;;
 ;; Echo Area:
@@ -437,7 +475,7 @@
 ;; echo area, if nothing else is already displayed there, or after a
 ;; quit.  If both ‘kbd-help’ and ‘help-echo’ produce help strings,
 ;; ‘kbd-help’ is used.
-;; 
+;;
 
 (sboo-custom-set echo-keystrokes 1
   "Wait this many seconds, then echo the currently-pressed key sub-sequence.")
@@ -533,8 +571,8 @@
 
 ;; See: URL `https://stackoverflow.com/questions/28915372/change-the-default-find-grep-command-in-emacs'
 
-;; « C-h f `grep-find-template' »: 
-;; 
+;; « C-h f `grep-find-template' »:
+;;
 ;; Placeholders (mandatory):
 ;;
 ;;  <D> - base directory for find
@@ -546,13 +584,13 @@
 ;; For custom placeholders, extend `grep-expand-keywords'.
 ;;
 
-;; « C-h f `grep-apply-setting' »: 
-;; 
-;; 
+;; « C-h f `grep-apply-setting' »:
+;;
+;;
 ;;
 
-;; M-: « (`grep-compute-defaults') »: 
-;; 
+;; M-: « (`grep-compute-defaults') »:
+;;
 ;;     '((localhost (grep-command "grep --color -nH --null -e ")
 ;;                  (grep-template "grep <X> <C> -nH --null -e <R> <F>")
 ;;                  (grep-use-null-device nil)
@@ -571,8 +609,8 @@
 ;;            (grep-find-use-xargs nil)
 ;;            (grep-highlight-matches auto-detect))
 ;;       )
-;; 
-;; 
+;;
+;;
 
 ;; `grep-history':
 ;;
@@ -604,7 +642,7 @@
              '(lexical-binding . t))
 
 ;; ^ `safe-local-variable-values':
-;; 
+;;
 
 ;;----------------------------------------------;;
 
@@ -630,7 +668,7 @@
 ;; common Minibuffers include:
 ;;
 ;; - `minibuffer-inactive-mode': the search prompt.
-;; - 
+;; -
 ;; -
 ;;
 ;;
@@ -639,20 +677,20 @@
 ;;
 ;; `setq-default' sets a values **only in** buffers that don't already have their own (i.e. `buffer-local') values for the variable.
 ;;
-;; `setq-default' vs `setq': 
+;; `setq-default' vs `setq':
 ;;
 
 ;;; `undo'
 ;;
 ;; the "internal" undo behavior is:
 ;;
-;; - To redo, just Press Ctrl+g first then undo. further undo will be redo. 
+;; - To redo, just Press Ctrl+g first then undo. further undo will be redo.
 ;; - Press Ctrl+g again to reverse direction. ("If you are careful, one can avoid the undo/redo roller-coaster confusion.")
 ;;
 ;; > all external undo-packages have corruption problems.
 
 ;;; e.g. Mode Discovery
-;; 
+;;
 ;; [1] open a mini-buffer (e.g. `C-s` for the search mini-buffer, a.k.a `minibuffer-inactive-mode');
 ;; [2] then, focused on the minibuffer, run `describe-mode` (i.e. `C-h m`).
 ;;
@@ -661,15 +699,15 @@
 ;;
 ;; <>
 ;;
-;; 
+;;
 
 ;;; `proced':
 ;;
 ;; <https://www.masteringemacs.org/article/displaying-interacting-processes-proced>
-;; 
+;;
 ;; `proced` abbreviates "PROCess EDitor".
-;; 
-;; 
+;;
+;;
 
 ;;; `simple':
 ;;
