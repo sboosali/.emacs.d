@@ -157,7 +157,7 @@ Related:
       `(defun ,NAME ()
          ,DOCSTRING
          (interactive)
-         (insert-char ,CHAR-VALUE))))
+         (insert-char ,CHAR-VALUE)))))
 
 ;; ^ e.g. `defun-insert-char':
 ;;
