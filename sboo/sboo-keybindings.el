@@ -72,7 +72,7 @@
 
 Output:
 
-• a `defun' declaration.
+• an `interactive' `defun' declaration.
 
 Example:
 
@@ -113,25 +113,61 @@ Related:
 
 ;;----------------------------------------------;;
 
-;; (defmacro sboo-key (keys-to-bind command-to-be-bound &optional keymap-to-bind-in)
+(eval-when-compile
 
-;;   (if (fboundp #'bind-key)
+  (cl-defmacro defun-insert-char (name char &key doc)
 
-;;       (bind-key keys-to-bind command-to-be-bound keymap-to-bind-in)
+    "Define a command which `insert-char's (Unicode Character) CHAR.
 
-;;     (if keymap-to-bind-in
+• NAME — (unquoted) `symbolp'.
+  the function name.
+• CHAR — a `characterp'.
+  a Unicode Character.
+• DOC — a `stringp'.
+  the function documentation.
+  (defaults to the empty string.)
 
-;;         `(define-key keymap-to-bind-in ,(kbd keys-to-bind) ,(function command-to-be-bound))
+Output:
 
-;;       `(global-set-key ,(kbd keys-to-bind) ,(function command-to-be-bound)))
+• an `interactive' `defun' declaration.
 
-;;     ;;(define-key (current-global-map)
+Example:
 
-;;     (define-key keymap-to-bind-in (kbd keys-to-bind) (function command-to-be-bound))
+• M-: (pp-macroexpand-expression '(defun-insert-char sboo-insert-❶ ?❶))
 
-;;     (global-set-key (kbd keys-to-bind) (function command-to-be-bound))))
+   ⇒ (defun sboo-insert-❶ ()
+   ⇒   \"Insert « ❶ » (a.k.a. “INVERSE CIRCLED DIGIT ONE”).\"
+   ⇒   (interactive)
+   ⇒   (insert-char ?❶))
 
-;; M-: (sboo-key "<s>-c" sboo-insert-char)
+Related:
+
+• `insert-char'"
+
+    (declare (indent 1) (doc-string 3))
+
+    (let* ((NAME       name)
+           (CHAR-VALUE char)
+           (CHAR-NAME  (get-char-code-property CHAR-VALUE 'name))
+
+           (DOCSTRING (or doc
+                          (format "Insert « %c » (a.k.a. “%s”)." CHAR-VALUE CHAR-NAME)))
+           )
+
+      `(defun ,NAME ()
+         ,DOCSTRING
+         (interactive)
+         (insert-char ,CHAR-VALUE))))
+
+;; ^ e.g. `defun-insert-char':
+;;
+;; M-: (pp-macroexpand-expression '(defun-insert-char sboo-insert-❶ ?❶))
+;;
+;;   ⇒ (defun sboo-insert-❶ ()
+;;   ⇒   "Insert « ❶ » (a.k.a. “INVERSE CIRCLED DIGIT ONE”)."
+;;   ⇒   (interactive)
+;;   ⇒   (insert-char ?❶))
+;;
 
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
@@ -572,7 +608,9 @@ Inputs:
 ;;(global-set-key (kbd "<delete>") #'sboo-undefined)
 
 ;;==============================================;;
+
 ;;; Function-Key Keybindings (`<f_>')...
+
 ;;==============================================;;
 
 (unless (eq #'dabbrev-completion (global-key-binding (kbd "<f1>")))
@@ -606,22 +644,42 @@ Inputs:
 
 ;;==============================================;;
 
-;;; Meta Keybindings (`M-')...
+;;; Meta Keybindings (`M-*')...
 
 ;;==============================================;;
 
-(global-set-key (kbd "M-a") #'mark-whole-buffer)
+(progn
 
-(global-set-key (kbd "M-o") #'projectile-find-file-dwim)
+  (global-set-key (kbd "M-a") #'mark-whole-buffer)          ; Select [A]ll.
+;;(global-set-key (kbd "M-b") #')
+  (global-set-key (kbd "M-c") #'capitalize-dwim)            ; Shadows: `capitalize-word'.
+;;(global-set-key (kbd "M-d") #')
+;;(global-set-key (kbd "M-e") #')
+;;(global-set-key (kbd "M-f") #')
+  (global-set-key (kbd "M-g") #'goto-line)                  ; [G]o to Line.
+;;(global-set-key (kbd "M-h") #')
+;;(global-set-key (kbd "M-i") #')
+;;(global-set-key (kbd "M-j") #')
+;;(global-set-key (kbd "M-k") #')
+  (global-set-key (kbd "M-l") #'downcase-dwim)              ; Shadows: `downcase-word'.
+;;(global-set-key (kbd "M-m") #')
+;;(global-set-key (kbd "M-n") #')
+;;(global-set-key (kbd "M-o") #')
+  (global-set-key (kbd "M-p") #'projectile-find-file-dwim)  ; [P]roject Search.
+;;(global-set-key (kbd "M-q") #')
+  (global-set-key (kbd "M-r") #'query-replace-regexp)       ; [R]eplace (Find/Replace with Regex Queries).
+;;(global-set-key (kbd "M-s") #')
+;;(global-set-key (kbd "M-t") #')
+  (global-set-key (kbd "M-u") #'upcase-dwim)                ; Shadows: `upcase-word'.
+;;(global-set-key (kbd "M-v") #')
+;;(global-set-key (kbd "M-w") #')
+;;(global-set-key (kbd "M-x") #')
+;;(global-set-key (kbd "M-y") #')
+;;(global-set-key (kbd "M-z") #')
 
-(global-set-key (kbd "M-g") #'goto-line)
+  ())
 
-(global-set-key (kbd "M-l") #'downcase-dwim)   ; Shadows: `downcase-word'.
-(global-set-key (kbd "M-c") #'capitalize-dwim) ; Shadows: `capitalize-word'.
-(global-set-key (kbd "M-u") #'upcase-dwim)     ; Shadows: `upcase-word'.
-
-(global-set-key (kbd "M-r")   #'query-replace-regexp) ; Find/Replace with Regex Queries.
-(global-set-key (kbd "M-S-r") #'query-replace)        ; Find/Replace with Fixed Strings.
+(global-set-key (kbd "M-S-r") #'query-replace)        ; [R]eplace (Find/Replace with Regex Strings).
 
 (global-set-key (kbd "M-`") #'sboo-switch-to-previous-buffer)
 (global-set-key (kbd "M-~") #'sboo-switch-to-previous-buffer)
@@ -639,14 +697,57 @@ Inputs:
 (global-set-key (kbd "<M-prior>") #'xah-backward-block)
 (global-set-key (kbd "<M-next>")  #'xah-forward-block)
 
+;;----------------------------------------------;;
+
+(global-set-key (kbd "M-=") #'count-words)
+
+;; ^ `count-words' is like “count-words-dwim” w.r.t. `count-words-region'.
+;;
+;;   • URL `http://pragmaticemacs.com/emacs/count-words-in-region-or-buffer'
+;;
+
 ;;==============================================;;
 
-;;; Control (`C-') Keybindings...
+;;; Control (`C-*') Keybindings...
 
 ;;==============================================;;
 
-(global-set-key (kbd "C-o") #'find-file-at-point)
-(global-set-key (kbd "C-;") #'comment-region)
+(progn
+
+;;(global-set-key (kbd "C-a") #')
+;;(global-set-key (kbd "C-b") #')
+;;(global-set-key (kbd "C-c") #')
+;;(global-set-key (kbd "C-d") #')
+;;(global-set-key (kbd "C-e") #')
+;;(global-set-key (kbd "C-f") #')
+;;(global-set-key (kbd "C-g") #')
+;;(global-set-key (kbd "C-h") #')
+;;(global-set-key (kbd "C-i") #')
+;;(global-set-key (kbd "C-j") #')
+;;(global-set-key (kbd "C-k") #')
+;;(global-set-key (kbd "C-l") #')
+;;(global-set-key (kbd "C-m") #')
+;;(global-set-key (kbd "C-n") #')
+  (global-set-key (kbd "C-o") #'find-file-at-point) ; [O]pen File.
+;;(global-set-key (kbd "C-p") #')
+;;(global-set-key (kbd "C-q") #')
+;;(global-set-key (kbd "C-r") #')
+;;(global-set-key (kbd "C-s") #')
+;;(global-set-key (kbd "C-t") #')
+;;(global-set-key (kbd "C-u") #')
+;;(global-set-key (kbd "C-v") #')
+;;(global-set-key (kbd "C-w") #')
+;;(global-set-key (kbd "C-x") #')
+;;(global-set-key (kbd "C-y") #')
+;;(global-set-key (kbd "C-z") #')
+
+  ())
+
+(progn
+
+  (global-set-key (kbd "C-;") #'comment-region)
+
+  ())
 
 (progn
   (global-set-key (kbd "<C-prior>") #'sboo-page-backward) ; Overrides: `scroll-right'.
@@ -658,17 +759,44 @@ Inputs:
 
 ;;==============================================;;
 
-;;; Control+Meta (`C-M-') Keybindings...
+;;; Control+Meta (`C-M-*') Keybindings...
 
 ;;==============================================;;
 
-(global-set-key (kbd "C-M-m") #'maximize-frame)
+(progn
 
-(global-set-key (kbd "C-M-z") #'zap-up-to-char)
+;;(global-set-key (kbd "C-M-a") #'sboo-)
+;;(global-set-key (kbd "C-M-b") #'sboo-)
+;;(global-set-key (kbd "C-M-c") #'sboo-)
+;;(global-set-key (kbd "C-M-d") #'sboo-)
+;;(global-set-key (kbd "C-M-e") #'sboo-)
+;;(global-set-key (kbd "C-M-f") #'sboo-)
+;;(global-set-key (kbd "C-M-g") #'sboo-)
+;;(global-set-key (kbd "C-M-h") #'sboo-)
+;;(global-set-key (kbd "C-M-i") #'sboo-)
+;;(global-set-key (kbd "C-M-j") #'sboo-)
+;;(global-set-key (kbd "C-M-k") #'sboo-)
+;;(global-set-key (kbd "C-M-l") #'sboo-)
+  (global-set-key (kbd "C-M-m") #'maximize-frame)
+;;(global-set-key (kbd "C-M-n") #'sboo-)
+;;(global-set-key (kbd "C-M-o") #'sboo-)
+;;(global-set-key (kbd "C-M-p") #'sboo-)
+;;(global-set-key (kbd "C-M-q") #'sboo-)
+;;(global-set-key (kbd "C-M-r") #'sboo-)
+;;(global-set-key (kbd "C-M-s") #'sboo-)
+;;(global-set-key (kbd "C-M-t") #'sboo-)
+;;(global-set-key (kbd "C-M-u") #'sboo-)
+;;(global-set-key (kbd "C-M-v") #'sboo-)
+;;(global-set-key (kbd "C-M-w") #'sboo-)
+;;(global-set-key (kbd "C-M-x") #'sboo-)
+;;(global-set-key (kbd "C-M-y") #'sboo-)
+  (global-set-key (kbd "C-M-z") #'zap-up-to-char)
+
+  ())
 
 ;;==============================================;;
 
-;;; KeyPad (`kp-') Keybindings...
+;;; KeyPad (`kp-*') Keybindings...
 
 ;;==============================================;;
 
@@ -698,8 +826,26 @@ Inputs:
 ;;(global-set-key (kbd "<kp-")   #')
 
 ;;==============================================;;
-;;; Hyper (`H-') Keybindings...
+
+;;; Hyper (`H-*') Keybindings...
+      
 ;;==============================================;;
+
+(progn
+
+  (defun-insert-char sboo-insert-❶ ?❶)
+  (defun-insert-char sboo-insert-❷ ?❷)
+  (defun-insert-char sboo-insert-❸ ?❸)
+  (defun-insert-char sboo-insert-❹ ?❹)
+  (defun-insert-char sboo-insert-❺ ?❺)
+  (defun-insert-char sboo-insert-❻ ?❻)
+  (defun-insert-char sboo-insert-❼ ?❼)
+  (defun-insert-char sboo-insert-❽ ?❽)
+  (defun-insert-char sboo-insert-❾ ?❾)
+
+  ())
+
+;;----------------------------------------------;;
 
 (progn
   ;; Insert Unicode Characters...
@@ -730,7 +876,9 @@ Inputs:
   ())
 
 ;;==============================================;;
-;;; Super (`s-') Keybindings...
+
+;;; Super (`s-*') Keybindings...
+
 ;;==============================================;;
 
 ;;==============================================;;
@@ -844,7 +992,6 @@ its “Prefix Command” is bound to « \\[sboo-edit-keymap] ».
 
 \\{sboo-edit-keymap}")
 
-  
   ;; [E]diting Functions"
   (define-prefix-command 'sboo-edit-keymap nil "Σ Edit")
 
@@ -852,7 +999,7 @@ its “Prefix Command” is bound to « \\[sboo-edit-keymap] ».
 ;;(define-key sboo-edit-keymap (kbd "b") #')
 ;;(define-key sboo-edit-keymap (kbd "c") #')
 ;;(define-key sboo-edit-keymap (kbd "d") #')
-;;(define-key sboo-edit-keymap (kbd "e") #')
+  (define-key sboo-edit-keymap (kbd "e") #'sboo-edit-indirect-dwim)
   (define-key sboo-edit-keymap (kbd "f") #'fill-dwim)
 ;;(define-key sboo-edit-keymap (kbd "g") #')
 ;;(define-key sboo-edit-keymap (kbd "h") #')
