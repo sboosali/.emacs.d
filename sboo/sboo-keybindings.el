@@ -47,12 +47,10 @@
 ;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
-;; Builtins:
+;; builtins:
 
 (eval-when-compile 
   (require 'cl-lib))
-
-;;; Code:
 
 ;;----------------------------------------------;;
 ;; Macros --------------------------------------;;
@@ -144,6 +142,13 @@ Related:
   (kbd "<print>")
 
   "Key to invoke `compile'.")
+
+;;----------------------------------------------;;
+;; Autoloads -----------------------------------;;
+;;----------------------------------------------;;
+
+(autoload 'zap-up-to-char "misc"
+  "Kill up to (but not including) the ARG-th occurrence of CHAR.")
 
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
@@ -431,7 +436,6 @@ Returns:
 
                                         ;sboo-yas-insert-snippet
 
-
 ;;==============================================;;
 ;; DWIM Editing
 
@@ -660,6 +664,8 @@ Inputs:
 
 (global-set-key (kbd "C-M-m") #'maximize-frame)
 
+(global-set-key (kbd "C-M-z") #'zap-up-to-char)
+
 ;;==============================================;;
 
 ;;; KeyPad (`kp-') Keybindings...
@@ -782,6 +788,17 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
+
+  (defvar sboo-launch-keymap
+
+    (make-sparse-keymap)
+
+    "Personal `keymapp' for launchning applications/programs.
+
+its “Prefix Command” is bound to « \\[sboo-launch-keymap] ».
+
+\\{sboo-launch-keymap}")   
+                           
   (define-prefix-command 'sboo-launch-keymap nil "Σ Run")
 
 ;;(define-key sboo-launch-keymap (kbd "a") #')
@@ -817,6 +834,17 @@ Inputs:
 
 (progn
 
+  (defvar sboo-edit-keymap
+
+    (make-sparse-keymap)
+
+    "Personal `keymapp' for editing/manipulating text.
+
+its “Prefix Command” is bound to « \\[sboo-edit-keymap] ».
+
+\\{sboo-edit-keymap}")
+
+  
   ;; [E]diting Functions"
   (define-prefix-command 'sboo-edit-keymap nil "Σ Edit")
 
@@ -825,10 +853,10 @@ Inputs:
 ;;(define-key sboo-edit-keymap (kbd "c") #')
 ;;(define-key sboo-edit-keymap (kbd "d") #')
 ;;(define-key sboo-edit-keymap (kbd "e") #')
-;;(define-key sboo-edit-keymap (kbd "f") #')
+  (define-key sboo-edit-keymap (kbd "f") #'fill-dwim)
 ;;(define-key sboo-edit-keymap (kbd "g") #')
 ;;(define-key sboo-edit-keymap (kbd "h") #')
-;;(define-key sboo-edit-keymap (kbd "i") #')
+  (define-key sboo-edit-keymap (kbd "i") #'indent-dwim)
 ;;(define-key sboo-edit-keymap (kbd "j") #')
 ;;(define-key sboo-edit-keymap (kbd "k") #')
 ;;(define-key sboo-edit-keymap (kbd "l") #')
@@ -852,41 +880,63 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
-  (define-prefix-command 'sboo-navigation-keymap nil "Σ Nav")
 
-;;(define-key sboo-navigation-keymap (kbd "a") #')
-;;(define-key sboo-navigation-keymap (kbd "b") #')
-;;(define-key sboo-navigation-keymap (kbd "c") #')
-;;(define-key sboo-navigation-keymap (kbd "d") #')
-;;(define-key sboo-navigation-keymap (kbd "e") #')
-;;(define-key sboo-navigation-keymap (kbd "f") #')
-;;(define-key sboo-navigation-keymap (kbd "g") #')
-;;(define-key sboo-navigation-keymap (kbd "h") #')
-;;(define-key sboo-navigation-keymap (kbd "i") #')
-;;(define-key sboo-navigation-keymap (kbd "j") #')
-;;(define-key sboo-navigation-keymap (kbd "k") #')
-;;(define-key sboo-navigation-keymap (kbd "l") #')
-;;(define-key sboo-navigation-keymap (kbd "m") #')
-;;(define-key sboo-navigation-keymap (kbd "n") #')
-;;(define-key sboo-navigation-keymap (kbd "o") #')
-  (define-key sboo-navigation-keymap (kbd "p <up>")   #'sboo-page-backward) ; [P]age-Breaks. (c.f.`page-delimiter').
-  (define-key sboo-navigation-keymap (kbd "p <down>") #'sboo-page-forward)  ; [P]age-Breaks. (c.f.`page-delimiter').
-;;(define-key sboo-navigation-keymap (kbd "q") #')
-;;(define-key sboo-navigation-keymap (kbd "r") #')
-;;(define-key sboo-navigation-keymap (kbd "s") #')
-;;(define-key sboo-navigation-keymap (kbd "t") #')
-;;(define-key sboo-navigation-keymap (kbd "u") #')
-;;(define-key sboo-navigation-keymap (kbd "v") #')
-;;(define-key sboo-navigation-keymap (kbd "w") #')
-;;(define-key sboo-navigation-keymap (kbd "x") #')
-;;(define-key sboo-navigation-keymap (kbd "y") #')
-;;(define-key sboo-navigation-keymap (kbd "z") #')
+  (defvar sboo-navigate-keymap
 
-  #'sboo-navigation-keymap)
+    (make-sparse-keymap)
+
+    "Personal `keymapp' for navigation.
+
+its “Prefix Command” is bound to « \\[sboo-navigate-keymap] ».
+
+\\{sboo-navigate-keymap}")
+
+  (define-prefix-command 'sboo-navigate-keymap nil "Σ Nav")
+
+;;(define-key sboo-navigate-keymap (kbd "a") #')
+;;(define-key sboo-navigate-keymap (kbd "b") #')
+;;(define-key sboo-navigate-keymap (kbd "c") #')
+;;(define-key sboo-navigate-keymap (kbd "d") #')
+;;(define-key sboo-navigate-keymap (kbd "e") #')
+;;(define-key sboo-navigate-keymap (kbd "f") #')
+;;(define-key sboo-navigate-keymap (kbd "g") #')
+;;(define-key sboo-navigate-keymap (kbd "h") #')
+;;(define-key sboo-navigate-keymap (kbd "i") #')
+;;(define-key sboo-navigate-keymap (kbd "j") #')
+;;(define-key sboo-navigate-keymap (kbd "k") #')
+;;(define-key sboo-navigate-keymap (kbd "l") #')
+;;(define-key sboo-navigate-keymap (kbd "m") #')
+;;(define-key sboo-navigate-keymap (kbd "n") #')
+;;(define-key sboo-navigate-keymap (kbd "o") #')
+  (define-key sboo-navigate-keymap (kbd "p <up>")   #'sboo-page-backward) ; [P]age-Breaks. (c.f.`page-delimiter').
+  (define-key sboo-navigate-keymap (kbd "p <down>") #'sboo-page-forward)  ; [P]age-Breaks. (c.f.`page-delimiter').
+;;(define-key sboo-navigate-keymap (kbd "q") #')
+;;(define-key sboo-navigate-keymap (kbd "r") #')
+;;(define-key sboo-navigate-keymap (kbd "s") #')
+;;(define-key sboo-navigate-keymap (kbd "t") #')
+;;(define-key sboo-navigate-keymap (kbd "u") #')
+;;(define-key sboo-navigate-keymap (kbd "v") #')
+;;(define-key sboo-navigate-keymap (kbd "w") #')
+;;(define-key sboo-navigate-keymap (kbd "x") #')
+;;(define-key sboo-navigate-keymap (kbd "y") #')
+;;(define-key sboo-navigate-keymap (kbd "z") #')
+
+  #'sboo-navigate-keymap)
 
 ;;----------------------------------------------;;
 
 (progn
+
+  (defvar sboo-search-keymap
+
+    (make-sparse-keymap)
+
+    "Personal `keymapp' for editor/browser search.
+
+its “Prefix Command” is bound to « \\[sboo-search-keymap] ».
+
+\\{sboo-search-keymap}")
+
   (define-prefix-command 'sboo-search-keymap nil "Σ Search")
 
 ;;(define-key sboo-search-keymap (kbd "a") #')
@@ -904,7 +954,7 @@ Inputs:
 ;;(define-key sboo-search-keymap (kbd "m") #')
 ;;(define-key sboo-search-keymap (kbd "n") #')
 ;;(define-key sboo-search-keymap (kbd "o") #')
-;;(define-key sboo-search-keymap (kbd "p") #')
+  (define-key sboo-search-keymap (kbd "p") #'projectile-grep)
 ;;(define-key sboo-search-keymap (kbd "q") #')
 ;;(define-key sboo-search-keymap (kbd "r") #')
 ;;(define-key sboo-search-keymap (kbd "s") #')
@@ -921,6 +971,18 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
+
+  (defvar sboo-mark-keymap
+
+    (make-sparse-keymap)
+
+    "Personal `keymapp' for marking/selecting/highlighting text.
+
+its “Prefix Command” is bound to « \\[sboo-mark-keymap] ».
+
+\\{sboo-mark-keymap}")
+
+
   (define-prefix-command 'sboo-mark-keymap nil "Σ Mark")
 
   (define-key sboo-mark-keymap (kbd "a") #'mark-beginning-of-buffer)
@@ -955,6 +1017,16 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
+
+  (defvar sboo-buffer-keymap
+
+    (make-sparse-keymap)
+
+    "Personal `keymapp' for buffer & file operations.
+
+its “Prefix Command” is bound to « \\[sboo-buffer-keymap] ».
+
+\\{sboo-buffer-keymap}")
 
   ;; [B]uffer (& File) Functions"
   (define-prefix-command 'sboo-buffer-keymap nil "Σ Buffer")
@@ -991,6 +1063,17 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
+
+  (defvar sboo-paths-keymap
+
+    (make-sparse-keymap)
+
+    "Personal `keymapp' for frequently-visited filepaths.
+
+its “Prefix Command” is bound to « \\[sboo-paths-keymap] ».
+
+\\{sboo-paths-keymap}")
+
   (define-prefix-command 'sboo-paths-keymap nil "Σ Paths")
 
   ;; ^ aliases and /or keyboard shortcuts for frequently-visited files and/or directories .
@@ -1031,6 +1114,17 @@ Inputs:
 ;;----------------------------------------------;;
 
 (progn
+
+  (defvar sboo-mode-keymap
+
+    (make-sparse-keymap)
+
+    "Personal `keymapp' for mode-specific commands.
+
+its “Prefix Command” is bound to « \\[sboo-mode-keymap] ».
+
+\\{sboo-mode-keymap}")
+
   (define-prefix-command 'sboo-mode-keymap nil "Σ Mode-Specific")
 
 ;;(define-key sboo-mode-keymap (kbd "a") #')
@@ -1079,13 +1173,13 @@ Inputs:
   (global-set-key (kbd "s-k") #'sboo-mark-keymap)           ; Mar[K] Commands (i.e. « mar[K]-* »).
   (global-set-key (kbd "s-l") #'align-regexp)               ; a[L]ign
   (global-set-key (kbd "s-m") #'sboo-mode-keymap)           ; [M]ode-specific commands.
-  (global-set-key (kbd "s-n") #'sboo-navigation-keymap)     ; [N]avigation Commands.
+  (global-set-key (kbd "s-n") #'sboo-navigate-keymap)       ; [N]avigation Commands.
   (global-set-key (kbd "s-o") #'find-file-at-point)         ; [O]pen file.
   (global-set-key (kbd "s-p") #'helm-show-kill-ring)        ; [P]aste from History.
 ;;(global-set-key (kbd "s-q") #')
   (global-set-key (kbd "s-r") #'sboo-launch-keymap)         ; "[R]un" (a.k.a "launch stuff")
   (global-set-key (kbd "s-s") #'sboo-search-keymap)         ; [S]earch Commands.
-  (global-set-key (kbd "s-t") #'sboo-text-keymap)           ; "Text"
+  (global-set-key (kbd "s-t") #'sboo-edit-keymap)           ; [T]ext Editing.
 ;;(global-set-key (kbd "s-u") #')
   (global-set-key (kbd "s-v") #'describe-variable)          ; "Variable"
   (global-set-key (kbd "s-w") #'list-flycheck-errors)       ; "Warnings & errors"
