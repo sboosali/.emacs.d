@@ -5808,15 +5808,156 @@ print-builtin-symbols:
 
 ------------------------------------------------
 
-------------------------------------------------
+
+  ;;--------------------------;;
+
+  :preface
+
+  (defun sboo-selected-global-mode (&optional argument)
+
+    "Conditional `selected-global-mode'.
+
+Inputs:
+
+• ARGUMENT — a `booleanp' or `integerp'.
+  whether to enable `selected-minor-mode' (nil or `positivep')
+  or to disable it (0 or `negativep')."
+
+    (let* (
+           )
+
+      ))
+
+  ;;--------------------------;;
+
+  :config
+
+  (sboo-selected-global-mode +1))
 
 ------------------------------------------------
 
-------------------------------------------------
+(defun sboo-edit-indirect-region (beg end)
+
+  "Edit region from BEG to END.
+
+Related:
+
+• `edit-indirect-region'
+• `markdown-edit-code-block'"
+
+  (interactive "r")
+
+  (let* (
+         )
+
+    (cond
+
+     ((derived-mode-p 'markdown-mode)
+      (sboo-markdown-edit-code-block))
+
+     (t
+      (edit-indirect-region beg end)))))
+
+
+;;----------------------------------------------;;
+
+(defun sboo-markdown-edit-code-block ()
+
+  "Edit Markdown code block in an indirect buffer."
+
+  (interactive)
+
+  (save-excursion
+    (if (fboundp 'edit-indirect-region)
+        (let* ((bounds (markdown-get-enclosing-fenced-block-construct))
+               (begin (and bounds (goto-char (nth 0 bounds)) (point-at-bol 2)))
+               (end (and bounds (goto-char (nth 1 bounds)) (point-at-bol 1))))
+          (if (and begin end)
+              (let* ((lang (markdown-code-block-lang))
+                     (mode (or (and lang (markdown-get-lang-mode lang))
+                               markdown-edit-code-block-default-mode))
+                     (edit-indirect-guess-mode-function
+                      (lambda (_parent-buffer _beg _end)
+                        (funcall mode))))
+                (edit-indirect-region begin end 'display-buffer))
+            (user-error "Not inside a GFM or tilde fenced code block")))
+      (when (y-or-n-p "Package edit-indirect needed to edit code blocks. Install it now? ")
+        (progn (package-refresh-contents)
+               (package-install 'edit-indirect)
+               (markdown-edit-code-block))))))
 
 ------------------------------------------------
 
+(progn
+
+;;(global-set-key (kbd "C-M-a") #')
+;;(global-set-key (kbd "C-M-b") #')
+;;(global-set-key (kbd "C-M-c") #')
+;;(global-set-key (kbd "C-M-d") #')
+;;(global-set-key (kbd "C-M-e") #')
+;;(global-set-key (kbd "C-M-f") #')
+;;(global-set-key (kbd "C-M-g") #')
+;;(global-set-key (kbd "C-M-h") #')
+;;(global-set-key (kbd "C-M-i") #')
+;;(global-set-key (kbd "C-M-j") #')
+;;(global-set-key (kbd "C-M-k") #')
+;;(global-set-key (kbd "C-M-l") #')
+;;(global-set-key (kbd "C-M-m") #')
+;;(global-set-key (kbd "C-M-n") #')
+;;(global-set-key (kbd "C-M-o") #')
+;;(global-set-key (kbd "C-M-p") #')
+;;(global-set-key (kbd "C-M-q") #')
+;;(global-set-key (kbd "C-M-r") #')
+;;(global-set-key (kbd "C-M-s") #')
+;;(global-set-key (kbd "C-M-t") #')
+;;(global-set-key (kbd "C-M-u") #')
+;;(global-set-key (kbd "C-M-v") #')
+;;(global-set-key (kbd "C-M-w") #')
+;;(global-set-key (kbd "C-M-x") #')
+;;(global-set-key (kbd "C-M-y") #')
+;;(global-set-key (kbd "C-M-z") #')
+
+  ())
+
 ------------------------------------------------
+
+  (cl-defmacro defun-unicode (name char-value char-name &key doc)
+
+    "Define a command which `insert's a unicode character.
+
+• NAME — (unquoted) `symbolp'.
+  the function name.
+• CHAR-VALUE — a `characterp'.
+  a Unicode Character.
+• CHAR-NAME — a `stringp'.
+  a Unicode Character Name.
+• DOC — a `stringp'.
+  the function documentation.
+  (defaults to the empty string.)
+  
+------------------------------------------------
+
+;; (defmacro sboo-key (keys-to-bind command-to-be-bound &optional keymap-to-bind-in)
+
+;;   (if (fboundp #'bind-key)
+
+;;       (bind-key keys-to-bind command-to-be-bound keymap-to-bind-in)
+
+;;     (if keymap-to-bind-in
+
+;;         `(define-key keymap-to-bind-in ,(kbd keys-to-bind) ,(function command-to-be-bound))
+
+;;       `(global-set-key ,(kbd keys-to-bind) ,(function command-to-be-bound)))
+
+;;     ;;(define-key (current-global-map)
+
+;;     (define-key keymap-to-bind-in (kbd keys-to-bind) (function command-to-be-bound))
+
+;;     (global-set-key (kbd keys-to-bind) (function command-to-be-bound))))
+
+;; M-: (sboo-key "<s>-c" sboo-insert-char)
+------------------------------------------------
+
 
 ------------------------------------------------
 

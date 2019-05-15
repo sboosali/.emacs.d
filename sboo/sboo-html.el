@@ -115,6 +115,19 @@ Links:
   :group 'sboo
   :group 'html)
 
+;;----------------------------------------------;;
+
+(defgroup sboo-markdown
+
+  nil
+
+  "Personal Markdown customization."
+
+  :prefix 'markdown
+
+  :group 'sboo-html
+  :group 'markdown)
+
 ;;==============================================;;
 
 (defcustom sboo-html-functions
@@ -131,6 +144,22 @@ Zero-or-more function-symbols."
 
   :safe #'listp
   :group 'sboo-html)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-markdown-functions
+
+  (list #'imenu-add-menubar-index
+        )
+
+  "Hooks for Major Modes in `sboo-markdown-modes-list'.
+
+Zero-or-more function-symbols."
+
+  :type '(repeat (function))
+
+  :safe #'listp
+  :group 'sboo-markdown)
 
 ;;----------------------------------------------;;
 
@@ -198,7 +227,33 @@ A `listp' of `symbolp's."
                            (symbol :tag "Major Mode")))
 
   :safe #'sboo-symbol-listp
-  :group 'sboo-html)
+  :group 'sboo-markdown)
+
+
+;;----------------------------------------------;;
+
+(defcustom sboo-markdown-hooks
+
+  '(
+    markdown-mode-hook
+    gfm-mode-hook
+   )
+
+
+  "Hooks for `sboo-markdown-modes-list' (e.g. `markdown-mode-hook').
+
+A `listp' of `symbolp's (`sboo-hook-p's).
+
+By default:
+
+• `markdown-mode-hook'
+• `gfm-mode-hook'"
+
+  :type '(repeat (choice (const nil)
+                           (symbol :tag "Hook")))
+
+  :safe #'listp
+  :group 'sboo-markdown)
 
 ;;----------------------------------------------;;
 
@@ -410,11 +465,66 @@ a(n optionally distinct) trigger-keys."
   :group 'sboo-html)
 
 ;;----------------------------------------------;;
-;; Variables -----------------------------------;;
+;; Accessors -----------------------------------;;
 ;;----------------------------------------------;;
 
+(defun sboo-html-modes ()
+
+  "Accessor for variable `sboo-html-modes-list'."
+
+  sboo-html-modes-list)
+
 ;;----------------------------------------------;;
-;; Accessors -----------------------------------;;
+
+(defun sboo-markdown-modes ()
+
+  "Accessor for variable `sboo-markdown-modes-list'.
+
+Merges:
+
+• `sboo-markdown-modes-list'
+• `sboo-html-modes-list'"
+
+  (let* ((MODES-HTML (sboo-html-modes))
+         (MODES-MD   sboo-markdown-modes-list)
+         (MODES      (append MODES-MD MODES-HTML))
+         )
+
+    (cl-delete-duplicates MODES)))
+
+;; ^ e.g. (sboo-markdown-modes)
+
+;;----------------------------------------------;;
+
+(defun sboo-html-hooks ()
+
+  "Accessor for variable `sboo-html-hooks'."
+
+  (let* ((HOOKS sboo-html-hooks)
+         )
+
+    (cl-delete-duplicates HOOKS)))
+
+;;----------------------------------------------;;
+
+(defun sboo-markdown-hooks ()
+
+  "Accessor for variable `sboo-markdown-hooks'.
+
+Merges:
+
+• `sboo-markdown-hooks'
+• `sboo-html-hooks'"
+
+  (let* ((HOOKS-HTML (sboo-html-hooks))
+         (HOOKS-MD   sboo-markdown-hooks)
+         (HOOKS      (append HOOKS-MD HOOKS-HTML))
+         )
+
+    (cl-delete-duplicates HOOKS)))
+
+;; ^ e.g. (sboo-markdown-hooks)
+
 ;;----------------------------------------------;;
 
 (defun sboo-html-elements ()

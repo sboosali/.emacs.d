@@ -2762,40 +2762,49 @@ $0")
 ;; External Packages: Formats ------------------;;
 ;;----------------------------------------------;;
 
-(when (require 'sboo-html nil :no-error)
+(use-package markdown-mode
 
-  (use-package markdown-mode
+  :commands (markdown-mode gfm-mode markdown-edit-code-block)
 
-    :commands (markdown-mode gfm-mode markdown-edit-code-block)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'"       . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode)
+         )
 
-    :mode (("README\\.md\\'" . gfm-mode)
-           ("\\.md\\'"       . markdown-mode)
-           ("\\.markdown\\'" . markdown-mode)
-           )
+  :bind (:map markdown-mode-map
+              ("TAB" . dabbrev-expand)
+         :map gfm-mode-map
+              ("TAB" . dabbrev-expand)
+         )
 
-    :bind (:map markdown-mode-map
-                ("TAB" . dabbrev-expand)
-                :map gfm-mode-map
-                ("TAB" . dabbrev-expand)
-                )
+  :custom
 
-    :custom
+  (markdown-command "multimarkdown" "")  ;; TODO `pandoc'
+  (imenu-auto-rescan t "non-`nil' means: Imenu always rescans the (file-)buffer.")
 
-    (markdown-command "markdown" "")  ;; TODO `pandoc'
+  :config
 
-    :config
+  (if (require 'sboo-html nil :no-error)
+    (dolist (HOOK (sboo-markdown-hooks))
+      (dolist (FUNCTION sboo-markdown-functions)
+        (add-hook HOOK FUNCTION)))
+    ;; ^ Register custom commands and with Mode-Inheritance.
+    (progn
+      (add-hook 'markdown-mode-hook #'imenu-add-menubar-index)
+      ;; ^ [Gracefully-Degrade] Register builtin functions.
+      ()))
 
+  (when (require 'sboo-html nil :no-error)
     (dolist (HOOK sboo-html-hooks)
       (dolist (FUNCTION sboo-html-functions)
-        (add-hook HOOK FUNCTION)))
-
-    ())
+        (add-hook HOOK FUNCTION))))
 
   ())
 
 ;; ^ Links:
 ;;
 ;;   • URL `https://github.com/jrblevin/markdown-mode'
+;;   • URL `https://jblevins.org/log/markdown-imenu'
 ;;
 
 ;; ^ NOTE:
@@ -3153,29 +3162,29 @@ $0")
            ;; ("/" . )
            ;; ("\\" . )
 
-              ("<up>"   . move-text-up)   ; from `move-text'.
-              ("<down>" . move-text-down) ; from `move-text'.
-           ;; ("<left>"  . )
-           ;; ("<right>" . )
+           ;; ("<home>"  . )
+           ;; ("<end>"   . )
+              ("<prior>" . move-text-up)     ; from `move-text'.
+              ("<next>"  . move-text-down)   ; from `move-text'.
 
-              ("a" . align-regexp)
+              ("a" . sboo-register-append)
            ;; ("b" . )
               ("c" . cua-copy-region)
               ("d" . downcase-region)
-           ;; ("e" . )
+              ("e" . sboo-edit-indirect-region)  ; from `edit-indirect' (via `sboo-commands').
               ("f" . fill-region)
-              ("g" . google-this-region)  ; from `google-this'.
+              ("g" . google-this-region)    ; from `google-this'.
            ;; ("h" . )
               ("i" . indent-region)
            ;; ("j" . )
            ;; ("k" . )
-           ;; ("l" . )
+              ("l" . align-regexp)
               ("m" . apply-macro-to-region-lines)
            ;; ("n" . )
            ;; ("o" . )
            ;; ("p" . )
-              ("q" . selected-off)        ; from `selected'.
-              ("r" . reverse-region)
+              ("q" . selected-off)          ; from `selected'.
+              ("r" . query-replace-regexp)
               ("s" . sort-lines)
            ;; ("t" . )
               ("u" . upcase-region)
@@ -3191,14 +3200,47 @@ $0")
 
               ;; ("c" . capitalize-region)
               ;; ("r" . reverse-region)
+  ;;--------------------------;;
               ;; ("s" . sort-lines)
               ;; ("w" . delete-trailing-whitespace)
+
+
+  :hook ((prog-mode . sboo-selected-mode)
+         (text-mode . sboo-selected-mode)
+         )
+
+  ;;--------------------------;;
+
+  :preface
+
+  (defun sboo-selected-mode (&optional argument)
+
+    "Conditional `selected-minor-mode'.
+
+Conditions:
+
+• buffer must be Read-Only.
+• buffer must be a File-Buffer.
+
+Inputs:
+
+• ARGUMENT — a `booleanp' or `integerp'.
+  whether to enable `selected-minor-mode' (nil or `positivep')
+  or to disable it (0 or `negativep')."
+
+    (interactive "P")
+
+    (let* ((BUFFER-READ-ONLY-P (and buffer-file-read-only buffer-file-name))
+           )
+
+      (unless BUFFER-READ-ONLY-P
+        (selected-minor-mode argument))))
 
   ;;--------------------------;;
 
   :config
 
-  (selected-global-mode +1))
+  ())
 
 ;; ^ When `selected-minor-mode' is active, the keybindings in `selected-keymap'
 ;;   are enabled as long as the region is active (`use-region-p').
@@ -3415,19 +3457,36 @@ $0")
 
   (edit-indirect-guess-mode-function #'sboo-edit-indirect-guess-mode "Override `edit-indirect-default-guess-mode'.")
 
-  :config
-
   ;;--------------------------;;
+
+  :preface
 
   (defun sboo-edit-indirect-guess-mode (parent-buffer parent-region-begin parent-region-end)
 
     "Guess the major mode for an edit-indirect buffer.
-Calls `set-auto-mode', which parses the « mode » file-local (special) variable 
-(i.e. « -*- mode: ... -*- »)."
 
-    (set-auto-mode t))
+Calls `set-auto-mode', which parses the « mode » file-local (special) variable 
+(i.e. « -*- mode: ... -*- »).
+
+Within `markdown-mode' (including Derived Modes like `gfm-mode'),
+search (upwards) for a named Code-Block. For example, 
+
+    \`\`\` elisp
+    (list 1 t ?3)
+    \`\`\`
+
+❶ extract “elisp”, and
+❷ associate it with `emacs-lisp-mode' (via `TODO')."
+
+    (if (derived-mode-p 'markdown-mode)
+
+        (set-auto-mode t)               ;TODO 
+
+      (set-auto-mode t)))
 
   ;;--------------------------;;
+
+  :config
 
   ())
 
@@ -3711,6 +3770,34 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 
 ;;----------------------------------------------;;
 
+(use-package imenu-list
+
+  :commands (imenu-list-minor-mode imenu-list-smart-toggle)
+
+  :bind (:map sboo-navigate-keymap
+              ("`" . imenu-list-smart-toggle) ; opens the `imenu-list-major-mode' window or closes it.
+              )
+
+  :custom
+
+  (imenu-list-position               'left
+                                     "where the ‘imenu-list-major-mode’ window opens; either ‘left’ or ‘right’ maximize vertical space.")
+  (imenu-list-focus-after-activation t
+                                     "automatically focus on the ‘imenu-list-major-mode’ window.")
+  (imenu-list-auto-resize            nil
+                                     "don't autoresize.")
+
+  :config
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/bmag/imenu-list'
+;;
+
+;;----------------------------------------------;;
+
 (use-package link-hint
   :defer 5
 
@@ -3795,6 +3882,55 @@ Calls `set-auto-mode', which parses the « mode » file-local (special) variable
 ;; ^ Links:
 ;;
 ;;   • URL `https://github.com/hrs/engine-mode'
+;;
+
+;;----------------------------------------------;;
+;; External Packages: Prose --------------------;;
+;;----------------------------------------------;;
+
+(use-package wc-mode
+
+  :commands (wc-mode)
+
+  :bind ("C-c \"" . wc-mode)
+
+  :config ())
+
+;; ^ “wc-mode” abbreviates “[W]ord-[C]ount [MODE]”
+;;
+;; Configuration:
+;;
+;; ** Modline string
+;;
+;;    The default string displayed in the mode line can be changed to
+;;    suit your needs. It can be defined through the variable
+;;    customizaton interface.
+;;
+;;    The setting itself is simply a string with a few special characters
+;;    to represent the available statistics. These character strings are
+;;    listed in the follow table.
+;;
+;;    | Format String | Meaning                      |
+;;    |---------------+------------------------------|
+;;    | %C            | Original character count     |
+;;    | %W            | Original word count          |
+;;    | %L            | Original line count          |
+;;    | %c            | Change (delta) in characters |
+;;    | %w            | Change (delta) in words      |
+;;    | %l            | change (delta) in lines      |
+;;    | %gc           | Character change goal        |
+;;    | %gw           | Word change goal             |
+;;    | %gl           | Line change goal             |
+;;    | %tc           | Total number of characters   |
+;;    | %tw           | Total number of words        |
+;;    | %tl           | Total number of lines        |
+;;
+;; 
+
+;; ^ Links:
+;;
+;;   • URL `https://www.emacswiki.org/emacs/WordCount'
+;;   • URL `http://bnbeckwith.com/code/word-count-mode.html'
 ;;
 
 ;;----------------------------------------------;;
