@@ -2766,10 +2766,14 @@ $0")
 
   :commands (markdown-mode gfm-mode markdown-edit-code-block)
 
+  ;;--------------------------;;
+
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'"       . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)
          )
+
+  ;;--------------------------;;
 
   :bind (:map markdown-mode-map
               ("TAB" . dabbrev-expand)
@@ -2777,12 +2781,42 @@ $0")
               ("TAB" . dabbrev-expand)
          )
 
+  ;;--------------------------;;
+
   :custom
 
   (markdown-command "multimarkdown" "")  ;; TODO `pandoc'
   (imenu-auto-rescan t "non-`nil' means: Imenu always rescans the (file-)buffer.")
 
+  ;;--------------------------;;
+
   :config
+
+  (dolist (ASSOCIATION '(("lisp"   . lisp-mode)
+                         ("scheme" . scheme-mode)
+                         ("guile"  . scheme-mode)
+
+                         ("sh"    . shell-script-mode)
+                         ("shell" . shell-script-mode)
+                         ("bash"  . shell-script-mode)
+
+                         ("sql"        . sql-mode)
+                         ("postgresql" . sql-mode)
+
+                         ("haskell" . haskell-mode)
+                         ("cabal"   . haskell-cabal-mode)
+
+                         ("xml"        . xml-mode)
+                         ("html"       . html-mode)
+                         ("css"        . css-mode)
+                         ("js"         . javascript-mode)
+                         ("javascript" . javascript-mode)
+                         ("json"       . json-mode)
+                         ("markdown"   . markdown-mode)
+
+                         ("dot" . graphviz-dot-mode)))
+
+    (add-to-list 'markdown-code-lang-modes ASSOCIATION))
 
   (if (require 'sboo-html nil :no-error)
     (dolist (HOOK (sboo-markdown-hooks))
@@ -3050,6 +3084,54 @@ $0")
 ;; ^ Links:
 ;;
 ;;   • URL `https://github.com/ljos/jq-mode'
+;;
+
+;;----------------------------------------------;;
+
+(use-package pandoc-mode
+
+  :commands (pandoc-mode)
+
+  :hook ((pandoc-mode   . pandoc-load-default-settings)
+         (markdown-mode . pandoc-mode)
+         )
+
+  :config ())
+
+;; ^ `pandoc-mode' is a Minor Mode interacting with Pandoc:
+;;
+;;   • set the various options that Pandoc accepts.
+;;   • run Pandoc on the `current-buffer' (as input filw).
+;;
+;;    `pandoc-mode' can be activated alongside the Major Mode for any of Pandoc's supported input formats
+;;   (e.g. `markdown-mode').
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/joostkremers/pandoc-mode'
+;;   • URL `http://joostkremers.github.io/pandoc-mode/'
+;;
+
+;;----------------------------------------------;;
+
+(use-package pass
+
+  :commands (pass pass-view-mode)
+
+  :mode (".*\\.gpg\\'" . pass-view-mode)
+
+  :preface
+
+  (defun sboo-insert-password ()
+    (interactive)
+    (shell-command "apg -m24 -x24 -a1 -n1" t))
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/NicolasPetton/pass'
 ;;
 
 ;;----------------------------------------------;;
