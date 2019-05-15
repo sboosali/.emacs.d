@@ -769,16 +769,37 @@ Links:
 
   "`require' feature FEATURE.
 
-Interactive `use-package'
+Inputs:
+
+• FEATURE — a `symbolp'.
+  When invoked interactively, FEATURE comes from `sboo-read-feature'.
+  By default, a personal feature (i.e. named `sboo-*')."
+
+  (interactive (list
+                (sboo-read-feature :require-match nil
+                                   :initial-input "sboo-"
+                                   )))
+
+  (require feature nil :no-error))
+
+
+;;----------------------------------------------;;
+
+(defun sboo-require-builtin (feature)
+
+  "`require' builtin feature FEATURE.
 
 Inputs:
 
-FEATURE — a symbol.
-          When invoked interactively, FEATURE comes from `sboo-read-feature'.
-          By default, a personal feature (i.e. named `sboo-*')."
+• FEATURE — a `symbolp'.
+  When invoked interactively, FEATURE comes from `sboo-read-feature'.
+  By default, a personal feature (i.e. named `sboo-*')."
 
   (interactive (list
-                (sboo-read-feature :require-match nil)))
+                (sboo-read-feature :only-builtins t
+                                   :prompt        "Feature (builtin)"
+                                   :require-match t
+                                   )))
 
   (require feature nil :no-error))
 
@@ -786,8 +807,7 @@ FEATURE — a symbol.
 
 (defun keyword-to-symbol (keyword)
 
-  "Convert `keywordP' KEYWORD to a `symbolp'.
-
+  "Convert `keywordp' KEYWORD to a `symbolp'.
 
 Examples:
 

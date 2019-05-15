@@ -1510,9 +1510,30 @@ Links:
 
 ;;----------------------------------------------;;
 
-(cl-defun sboo-read-feature (&key prompt require-match initial-input)
+(cl-defun sboo-read-feature (&key prompt require-match initial-input only-builtins)
 
   "Read a `featurep' symbol.
+
+Inputs:
+
+• ONLY-BUILTINS — a `booleanp'.
+  whether to restrict the output (and completion)
+  to features from Builtin Package (i.e. features
+  which are distributed with the official Emacs distribution,
+  as of `emacs-version' ≥25).
+
+Inputs (pass-thru):
+
+• PROMPT        — c.f. `completing-read'.
+• REQUIRE-MATCH — c.f. `completing-read'.
+• INITIAL-INPUT — c.f. `completing-read'.
+             
+Output:      
+             
+• a `symbolp'
+  a `featurep' (which can be `require'd).
+  if ONLY-BUILTINS is non-nil, returns a
+  Builtin Package.
 
 Related:
 
@@ -1524,8 +1545,14 @@ Related:
                         (or prompt "Feature")))
 
         (REQUIRE-MATCH (or require-match t))
-        (INITIAL-INPUT (or initial-input "sboo-"))
-        (CANDIDATES features)
+        (INITIAL-INPUT initial-input)
+        (CANDIDATES    (if only-builtins
+
+                           (progn
+                             (require 'package)
+                             (mapcar #'car package--builtins))
+
+                         features))
         )
 
     (let* ((STRING (completing-read PROMPT CANDIDATES nil REQUIRE-MATCH INITIAL-INPUT))
@@ -1656,6 +1683,178 @@ Related:
 ;;----------------------------------------------;;
 ;; Clipboard -----------------------------------;;
 ;;----------------------------------------------;;
+
+(defcustom sboo-register-char
+
+  ?a
+
+  "Text-Register for appending Clipboard-Contents.
+
+a `characterp'.
+
+Users:
+
+• `sboo-register-append'
+• `sboo-register-yank'"
+
+  :type '(character :tag "Register")
+
+  :safe #'characterp
+  :group 'sboo)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-register-separator
+
+  "\n"
+
+  "Separator for `sboo-register-append'.
+
+a `stringp' 
+(c.f. `register-separator', which is a `characterp')."
+
+  :type '(string :tag "Separator")
+
+  :safe #'stringp
+  :group 'sboo)
+
+;;==============================================;;
+
+(defun sboo-register-append-dwim (&optional no-message)
+
+  "DWIM: Append region or line to `sboo-register-char'.
+
+Each invocation of `sboo-register-append'
+is separated by `sboo-register-separator'.
+
+Inputs (passthru):
+
+• NO-MESSAGE — a `booleanp' (see `sboo-register-append-region').
+
+See:
+
+• `sboo-register-yank'
+
+Wraps:
+
+• `append-to-register'.
+
+Links:
+
+• Info Node `(emacs) Text Registers'
+• URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Text-Registers.html'
+• URL `http://ergoemacs.org/emacs/emacs_using_register.html'
+• URL `http://ergoemacs.org/emacs/emacs_copy_append.html'"
+
+  (interactive)
+
+  (let* ((BEG (if (region-active-p)
+                  (region-beginning)
+                (line-beginning-position)))
+
+         (END (if (region-active-p)
+                  (region-end)
+                (line-end-position)))
+         )
+
+    (sboo-register-append-region BEG END)))
+
+;;----------------------------------------------;;
+
+(defun sboo-register-append-region (beg end &optional no-message)
+
+  "Append region to contents of Text-Register `sboo-register-char'.
+
+Each invocation of `sboo-register-append'
+is separated by `sboo-register-separator'.
+
+Inputs:
+
+• BEG — an `integerp' or `markerp'.
+  the BEGinning of a region.
+• END — an `integerp' or `markerp'.
+  the ENDing of a region.
+• NO-MESSAGE — a `booleanp' (optional).
+  whether to not `message' what text was appended.
+
+See:
+
+• `sboo-register-yank'
+
+Wraps:
+
+• `append-to-register'."
+
+  (interactive "r")
+
+  (let* ((register-separator ?\n)
+         ;; ^ NOTE `register-separator' is a Register (not a String), with the newline beingg a mnemonic.
+         ;;  The actual separator is `sboo-register-separator'.
+         )
+
+    (set-register register-separator sboo-register-separator)
+
+    (append-to-register sboo-register-char beg end)
+
+    (when (and (called-interactively-p 'any) (not no-message))
+      (message "Appended: 「%s」" (buffer-substring beg end)))
+
+    ()))
+
+;;----------------------------------------------;;
+
+(defun sboo-register-prepend (beg end)
+
+  "Prepend region to contents of Text-Register `sboo-register-char'.
+
+Each invocation of `sboo-register-prepend' 
+is separated by `sboo-register-separator'.
+
+See:
+
+• `sboo-register-yank'
+
+Wraps:
+
+• `prepend-to-register'."
+
+  (interactive "r")
+
+  (let* ((register-separator ?\n)
+         )
+
+    (set-register register-separator sboo-register-separator)
+
+    (prepend-to-register sboo-register-char beg end)))
+
+;;----------------------------------------------;;
+      
+(defun sboo-register-yank (&optional keep-register)
+
+  "Paste contents of Text-Register `sboo-register-char'.
+
+Inputs:
+
+• KEEP-REGISTER — a `booleanp'.
+  Text-Register `sboo-register-char' is cleared,
+  *unless* KEEP-REGISTER is non-nil.
+
+See:  
+
+• `sboo-register-append'
+
+Wraps:
+
+• `insert-register'."
+
+  (interactive "P")
+
+  (insert-register sboo-register-char)
+
+  (unless keep-register
+    (set-register sboo-register-char "")))
+
+;;==============================================;;
 
 (defun sboo-copy-buffer-filepath-to-clipboard ()
 
@@ -2524,6 +2723,68 @@ Inputs:
       (view-mode 1))))
 
 (advice-add 'shell-command-on-region :after 'sanityinc/shell-command-in-view-mode)
+
+;;----------------------------------------------;;
+;; `edit-indirect' -----------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-edit-indirect-dwim ()
+                      
+  "DWIM: `edit-indirect' either the region or a (guessed) code block.
+
+Customize:
+
+• `markdown-code-lang-modes' — how `markdown-edit-code-block' dispatches the `major-mode'.
+
+IMPLEMENTATION
+
+Related:
+
+• `edit-indirect-region' — from feature `edit-indirect'.
+• `string-edit-at-point' — from feature `string-edit'.
+• `markdown-edit-code-block' — from feature `markdown-mode'.
+
+KEYBINDINGS
+
+If `sboo-edit-indirect-dwim' succeeds, the following keybindings are active...
+
+Commands:
+
+• `edit-indirect-commit' — « \\[edit-indirect-commit] »
+• `edit-indirect-abort'  — « \\[edit-indirect-abort] »
+
+Keymap:
+
+\\{edit-indirect-mode-map}"
+
+  (interactive)
+
+  (let* (
+         )
+
+    (if (use-region-p)
+
+        (call-interactively #'edit-indirect-region)
+
+      (cond
+
+       ((derived-mode-p 'markdown-mode)
+        (markdown-edit-code-block))
+
+       ;;TODO:
+       ;; ((derived-mode-p 'emacs-lisp-mode)
+       ;;  ())
+
+       ;;TODO:
+       ;; ((derived-mode-p 'haskell-mode)
+       ;;  (haddock-edit-docstring))
+
+       ((and (derived-mode-p 'prog-mode)
+             (featurep 'string-edit))
+        (call-interactively #'string-edit-at-point))
+
+       (t
+        (user-error "[‘sboo-edit-indirect-dwim’] Not within a code-block or docstring or string"))))))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
