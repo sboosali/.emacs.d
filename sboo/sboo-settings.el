@@ -142,10 +142,6 @@
 
 ;; ^ show Line-Number Sidebar (`linum-mode' is fast, written in C)/
 
-(column-number-mode +1)
-
-;; ^ always show Column Numbers in the Modeline (by default, only Row Numbers are shown).
-
 (global-font-lock-mode +1)
 
 ;; ^ Syntax Highlighting, by default.
@@ -182,6 +178,16 @@
 
 (sboo-custom-set user-full-name    "Spiros Boosalis"       "")
 (sboo-custom-set user-mail-address "SamBoosalis@gmail.com" "")
+
+;;----------------------------------------------;;
+;; Settings: Modeline --------------------------;;
+;;----------------------------------------------;;
+
+(sboo-custom-set column-number-mode t
+  "show Column Numbers in the Modeline (by default, only Row Numbers are shown).")
+
+(sboo-custom-set size-indication-mode t
+  "show Buffer Size in the Modeline.")
 
 ;;----------------------------------------------;;
 ;; Settings: Faces -----------------------------;;
@@ -243,6 +249,28 @@
   "maximize Undo History.")
 
 ;;----------------------------------------------;;
+;; Settings: Keyboard --------------------------;;
+;;----------------------------------------------;;
+
+;; (sboo-custom-set  "")
+
+;;----------------------------------------------;;
+;; Settings: Mouse -----------------------------;;
+;;----------------------------------------------;;
+
+(sboo-custom-set mouse-wheel-mode t
+  "enable the Mouse-Wheel.") 
+
+(sboo-custom-set mouse-yank-at-point t
+  "don't move `point' when pasting with the mouse.")
+
+(custom-set-variables
+ '(mouse-wheel-scroll-amount '(1 ((shift) . 5)) t nil "`1' means: Mouse-Wheel scrolls one line per flick (by default, it's 5)."))
+
+(sboo-custom-set mouse-wheel-follow-mouse t
+  "scroll Window under Mouse (by default, scroll `selected-window' always).")
+
+;;----------------------------------------------;;
 ;; Settings: Clipboard -------------------------;;
 ;;----------------------------------------------;;
 
@@ -267,19 +295,6 @@
 ;; ^ URL `http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html'
 
 ;;----------------------------------------------;;
-;; Settings: Mouse -----------------------------;;
-;;----------------------------------------------;;
-
-(sboo-custom-set mouse-yank-at-point t
-  "don't move `point' when pasting with the mouse.")
-
-;;----------------------------------------------;;
-;; Settings: Keyboard --------------------------;;
-;;----------------------------------------------;;
-
-;; (sboo-custom-set  "")
-
-;;----------------------------------------------;;
 ;; Settings: Viewing ---------------------------;;
 ;;----------------------------------------------;;
 
@@ -297,21 +312,35 @@
 ;; Settings: Scrolling -------------------------;;
 ;;----------------------------------------------;;
 
-(sboo-custom-set scroll-step                     1
+(sboo-custom-set scroll-step 1
   "")
-(sboo-custom-set scroll-preserve-screen-position always
-  "`t' means that Emacs adjusts point to keep the cursor at the same screen position whenever a scroll command moves it off-window, rather than moving it to the topmost or bottommost line.")
 
-;; (sboo-custom-set scroll-margin 10
-;;   "")
-;; (sboo-custom-set scroll-conservatively 10000
-;;   "")
+(sboo-custom-set next-screen-context-lines 0
+  "")
+
+(progn
+
+  ;; Scroll Smoothly:
+
+  (sboo-custom-set scroll-margin 0
+    "Scroll smoothly.")
+
+  (sboo-custom-set scroll-conservatively 10000
+    "Scroll smoothly.")
+
+  (sboo-custom-set scroll-preserve-screen-position always
+    "`t' means that Emacs adjusts point to keep the cursor at the same screen position whenever a scroll command moves it off-window, rather than moving it to the topmost or bottommost line.")
+
+  ())
 
 (sboo-custom-set redisplay-dont-pause t
   "“Peeking” behavior when scrolling.")
 
 ;;TODO
 ;; URL `https://superuser.com/questions/527356/dont-change-the-cursor-position-when-scrolling-in-emacs'
+
+;;TODO
+;;(sboo-custom-set auto-window-vscroll nil "")
 
 ;;----------------------------------------------;;
 
@@ -363,15 +392,15 @@
   "highlight the Parenthesized Expression, unless the Matching Parenthesis is visible (not just the Parenthesis).")
 
 ;;----------------------------------------------;;
-;; Buffers -------------------------------------;;
+;; Settings: Buffers ---------------------------;;
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
-;; Files ---------------------------------------;;
+;; Settings: Files -----------------------------;;
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
-;; Settings ------------------------------------;;
+;; Settings: Settings --------------------------;;
 ;;----------------------------------------------;;
 
 ;; (sboo-custom-set t
@@ -524,18 +553,6 @@
 ;;                ))
 
 ;; (custom-set-variables ... t nil ".")
-
-
-;;----------------------------------------------;;
-;; Scrolling: Scroll Smoothly.
-
-(progn
-
-  (setq scroll-margin 0)
-  (setq scroll-conservatively 10000)
-  (setq scroll-preserve-screen-position t)
-
-  ())
 
 ;;----------------------------------------------;;
 ;; Compilation:

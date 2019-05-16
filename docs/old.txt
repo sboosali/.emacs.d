@@ -6139,11 +6139,40 @@ Related:
      (t
       (string-inflection-lower-camelcase-function word))))
 
-------------------------------------------------
+
+;;----------------------------------------------;;
+
+(use-package typo
+
+  :commands (typo-mode)
+
+  :delight (typo-mode)
+
+  :hook (text-mode . typo-mode)
+
+  :config
+
+  ;;(setq-default typo-language )
+
+  (typo-global-mode +1))
 
 ------------------------------------------------
 
+* `flycheck.el`               — `;; Package-Requires: ((dash "2.12.1") (let-alist "1.0.4"))`
+
 ------------------------------------------------
+(use-package diff-hl
+  :commands (diff-hl-mode diff-hl-dired-mode)
+  :hook (magit-post-refresh . diff-hl-magit-post-refresh))
+
+(use-package diff-hl-flydiff
+  :commands diff-hl-flydiff-mode)
+
+------------------------------------------------
+
+(column-number-mode +1)
+
+;; ^ always show Column Numbers in the Modeline (by default, only Row Numbers are shown).
 
 ------------------------------------------------
 

@@ -77,6 +77,26 @@
                #'company-tern))
 
 ;;----------------------------------------------;;
+;; Company Frontends ---------------------------;;
+;;----------------------------------------------;;
+
+(defcustom sboo-company-frontends
+
+  '(company-pseudo-tooltip-unless-just-one-frontend
+    company-echo-metadata-frontend
+    company-preview-frontend
+    )
+
+  "Personal Company Frontends.
+
+a `listp' of `functionp's."
+
+  :type '(repeat (function :tag "Company Frontend"))
+
+  :safe #'listp
+  :group 'sboo)
+
+;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 

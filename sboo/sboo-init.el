@@ -2338,15 +2338,15 @@ $0")
          :map emacs-lisp-mode-map
               (("<kp-prior>" . flycheck-previous-error)
                ("<kp-next>"  . flycheck-next-error))
-         :map js-mode-map
-              (("<kp-prior>" . flycheck-previous-error)
-               ("<kp-next>"  . flycheck-next-error))
-         :map c-mode-base-map
-              (("<kp-prior>" . flycheck-previous-error)
-               ("<kp-next>"  . flycheck-next-error))
-         :map haskell-mode-map
-              (("<kp-prior>" . flycheck-previous-error)
-               ("<kp-next>"  . flycheck-next-error))
+         ;; :map js-mode-map
+         ;;      (("<kp-prior>" . flycheck-previous-error)
+         ;;       ("<kp-next>"  . flycheck-next-error))
+         ;; :map c-mode-base-map
+         ;;      (("<kp-prior>" . flycheck-previous-error)
+         ;;       ("<kp-next>"  . flycheck-next-error))
+         ;; :map haskell-mode-map
+         ;;      (("<kp-prior>" . flycheck-previous-error)
+         ;;       ("<kp-next>"  . flycheck-next-error))
          )
 
   :config
@@ -2469,7 +2469,7 @@ $0")
 ;;
 ;;   • URL `https://github.com/purcell/package-lint'
 ;;
-
+  
 ;;----------------------------------------------;;
 
 (use-package flycheck-package
@@ -3301,11 +3301,7 @@ $0")
 
   ;;--------------------------;;
 
-  :commands (string-inflection-all-cycle
-             string-inflection-python-style-cycle
-             string-inflection-java-style-cycle
-             string-inflection-ruby-style-cycle
-             )
+  :commands (string-inflection-all-cycle)
 
   ;;--------------------------;;
 
@@ -3860,13 +3856,13 @@ search (upwards) for a named Code-Block. For example,
 
   :delight (typo-mode)
 
-  :hook (text-mode . typo-mode)
+;;:hook (text-mode . typo-mode)
 
   :config
 
-  ;;(setq-default typo-language )
+;;(typo-global-mode +1)
 
-  (typo-global-mode +1))
+  ())
 
 ;; ^ `typo-mode' binds keys of *printable characters* (e.g. « e » or « - ») to insert related *typographic unicode characters" (e.g. « é » or « — »).
 ;; 

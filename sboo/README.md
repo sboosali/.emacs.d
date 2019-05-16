@@ -54,12 +54,13 @@ most have *Minimal Dependencies*, either:
 *Vendored Features* include:
 
 * `awesome-tab.el`
-* `color-identifiers-mode.el`
-* `dumb-jump.el` *v0.5.2*
+* `color-identifiers-mode.el` — 
+* `dumb-jump.el`              — *v0.5.2*
 * `edit-indirect.el`
 * `eimp.el`
 * `elisp-docstring-mode.el`
-* `elisp-refs.el`
+* `elisp-refs.el`                  
+* `flycheck-package.el`       — `;; Package-Requires: ((flycheck "0.22") (package-lint "0.2"))`
 * `goto-last-change.el`
 * `goto-line-preview.el`
 * `graphviz-dot-mode.el`
@@ -78,6 +79,7 @@ most have *Minimal Dependencies*, either:
 * `makefile-runner.el`
 * `mediawiki.el`
 * `neotree.el`
+* `package-lint.el`
 * `peep-dired.el`
 * `rainbow-blocks.el`
 * `rainbow-delimiters.el`

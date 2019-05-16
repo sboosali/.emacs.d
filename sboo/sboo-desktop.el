@@ -430,7 +430,7 @@ See URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c
 
     ;; ^ Enable globally.
 
-    sboo-desktop-enable-p))
+    (sboo-desktop-enable-p)))
 
 ;;----------------------------------------------;;
 
