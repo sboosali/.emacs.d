@@ -59,7 +59,7 @@ most have *Minimal Dependencies*, either:
 * `edit-indirect.el`
 * `eimp.el`
 * `elisp-docstring-mode.el`
-* `elisp-refs.el`                  
+* `elisp-refs.el`
 * `flycheck-package.el`       — `;; Package-Requires: ((flycheck "0.22") (package-lint "0.2"))`
 * `goto-last-change.el`
 * `goto-line-preview.el`
@@ -85,6 +85,7 @@ most have *Minimal Dependencies*, either:
 * `rainbow-delimiters.el`
 * `rainbow-identifiers.el`
 * `rainbow-mode.el`
+* `refine.el`                 — `;; Package-Requires: ((s "1.11.0") (dash "2.12.0") (list-utils "0.4.4") (loop "1.2"))`
 * `shell-pop.el`
 * `simpleclip.el`
 * `string-edit.el`
@@ -100,13 +101,15 @@ most have *Minimal Dependencies*, either:
 
 *Vendored Utilities* include:
 
-* `dash.el`
-* `f.el`
-* `ht.el`
-* `memoize.el`
-* `ov.el`
-* `popup.el`
-* `s.el`
+* `s.el`          — *v1.12.0*
+* `dash.el`       — *v2.15.0*
+* `f.el`          — *v0.20.0*
+* `ht.el`         — *v2.3*
+* `popup.el`      — *v0.5.3*
+* `ov.el`         — *v*
+* `loop.el`       — *v1.3*
+* `list-utils.el` — *v0.4.4*
+* `memoize.el`    — *v*
 
 Miscellaneous *Vendored Libraries* (which are useful, but used infrequently) include:
 

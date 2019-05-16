@@ -1973,6 +1973,30 @@ Links:
 ;; ^ URL `https://github.com/ShingoFukuyama/ov.el'
 
 ;;----------------------------------------------;;
+
+(use-package popup)
+
+;; ^ URL `https://github.com/auto-complete/popup-el'
+
+;;----------------------------------------------;;
+
+(use-package list-utils)
+
+;; ^ URL `https://github.com/rolandwalker/list-utils'
+
+;;----------------------------------------------;;
+
+(use-package loop)
+
+;; ^ URL `https://github.com/Wilfred/loop.el'
+
+;;----------------------------------------------;;
+
+(use-package memoize)
+
+;; ^ URL `https://github.com/skeeto/emacs-memoize'
+
+;;----------------------------------------------;;
 ;; External Packages: Completion ---------------;;
 ;;----------------------------------------------;;
 
@@ -5069,6 +5093,25 @@ search (upwards) for a named Code-Block. For example,
 
 ;;----------------------------------------------;;
 ;; External Packages: Miscellaneous ------------;;
+;;----------------------------------------------;;
+
+(use-package refine
+
+  :commands (refine)
+
+  :config ())
+
+;; ^ `refine' — a TUI for editing Elisp variables
+;;   (particularly Lists, like Hooks).
+;;
+;; e.g. call `refine' on `prog-mode-hook'.
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/Wilfred/refine'
+;;
+
 ;;----------------------------------------------;;
 
 (use-package desktop-environment
