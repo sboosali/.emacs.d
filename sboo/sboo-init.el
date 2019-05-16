@@ -2428,7 +2428,13 @@ $0")
     :commands (magit-status)
 
     :bind (("s-g s" . magit-status)
+           ("s-g S" . sboo-magit-status-with-prefix)
            )
+    :bind (:map magit-mode-map
+                (("U" . magit-unstage-all) 
+                 ("M-h") ("M-s") ("M-m") ("M-w")))
+    :bind (:map magit-file-section-map ("<C-return>"))
+    :bind (:map magit-hunk-section-map ("<C-return>"))
 
     :hook ((magit-mode . hl-line-mode)
            )
@@ -2437,11 +2443,60 @@ $0")
 
     (magit-save-repository-buffers 'dontask "don't ask (just save).")
 
-    :config
+  :preface
+
+  (defun sboo-magit-status-with-prefix ()
+    "`magit-status' with `current-prefix-arg' of `4'."
+    (interactive)                   
+    (let* ((current-prefix-arg '(4))
+          )
+      (call-interactively #'magit-status)))
+
+  (defun endless/visit-pull-request-url ()
+    "Visit the current branch's PR on Github."
+    (interactive)
+    (browse-url
+     (format "https://github.com/%s/pull/new/%s"
+             (replace-regexp-in-string
+              "\\`.+github\\.com:\\(.+?\\)\\(\\.git\\)?\\'" "\\1"
+              (magit-get "remote" (magit-get-remote) "url"))
+             (magit-get-current-branch))))
+
+  :config
 
   ;;TODO (define-key magit-mode-map "G" #'endless/visit-pull-request-url)
 
+;;  (eval-after-load 'magit-pull
+;;    '(transient-insert-suffix 'magit-pull "p"
+;;       '("F" "default" magit-fetch-from-upstream)))
+
+;;  (eval-after-load 'magit-push
+;;    '(transient-insert-suffix 'magit-push "p"
+;;       '("P" "default" magit-push-current-to-upstream))))
+
     ())
+
+  ;;--------------------------;;
+
+;;  (use-package magit-commit
+;;    :after (magit)
+;;
+;;    :config
+;;
+;;    (use-package git-commit)
+;;
+;;    ())
+
+  ;;--------------------------;;
+
+;;  (use-package magit-files
+;;    :after (magit)
+;;
+;;    :config
+;;
+;; ;; (global-magit-file-mode)
+;;
+;;    ())
 
   ;;--------------------------;;
 

@@ -6176,7 +6176,60 @@ Related:
 
 ------------------------------------------------
 
+(defun sboo-english-words (&optional force)
+
+  "Accessor for variable `sboo-english-words'.
+
+Inputs:
+
+• FORCE — a `booleanp'.
+  whether to force reloading the dictionary (via `sboo-load-dictionary-words')
+  and reinitializing the cache variable `sboo-english-words'.
+
+Output:
+
+• a `listp' of `stringp's."
+
+  (if (and sboo-english-words (not force))
+      sboo-english-words
+
+    (let* ((WORDS-DEFAULT (sboo-load-dictionary-words))
+           (WORDS-EXTRA   sboo-english-extra-words)
+           (WORDS (append ))
+           )
+
+      (setq sboo-english-words WORDS)
+
+      WORDS)))
 ------------------------------------------------
+(defun sboo-english-words-completion-at-point ()
+
+  "`completion-at-point' for `sboo-english-words'.
+
+Links:
+
+• URL `https://emacs.stackexchange.com/questions/15276/how-do-i-write-a-simple-completion-at-point-functions-function'"
+
+  (interactive)
+
+  (when-let* ((BOUNDS (bounds-of-thing-at-point 'word))
+              (BEG (car BOUNDS))
+              (END (cdr BOUNDS))
+              )
+
+    (list BEG
+          END
+          (sboo-english-words)
+
+          :exclusive 'no
+
+          :company-docsig #'identity
+          :company-doc-buffer (lambda (CANDIDATE)
+                                (company-doc-buffer (format "« %s » is defined in « %s »'" CANDIDATE sboo-english-dictionary-file)))
+          :company-location (lambda (CANDIDATE)
+                              (with-current-buffer (find-file-noselect sboo-english-dictionary-file)
+                                (goto-char (point-min))
+                                (cons (current-buffer) (search-forward CANDIDATE nil t)))))))
 
 ------------------------------------------------
 
