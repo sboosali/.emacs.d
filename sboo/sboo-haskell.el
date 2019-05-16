@@ -72,6 +72,17 @@
   :group 'sboo
   :group 'haskell)
 
+;;----------------------------------------------;;
+
+(defgroup sboo-coq nil
+
+  "Personal Coq customization."
+
+  :prefix 'coq
+
+  :group 'sboo
+  :group 'coq)
+
 ;;==============================================;;
 
 (defcustom sboo-haskell-compile-command-default
@@ -132,12 +143,62 @@ Links:
 
 • URL `http://xahlee.info/comp/unicode_arrows.html'"
 
-  :type '(alist :key-type   (string    :tag "String to match")
-                :value-type (character :tag "Char to show")
+  :type '(alist :key-type   (string    :tag "String (to match)")
+                :value-type (character :tag "Char   (to show) ")
                 )
 
-  :safe t
+  :safe #'listp
   :group 'sboo-haskell)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-coq-prettify-symbols-alist
+
+  '(("|-"     . ?⊢)
+    ("True"   . ?⊤)
+    ("False"  . ?⊥)
+    ("->"     . ?→)
+    ("-->"    . ?⟶)
+    ("<-"     . ?←)
+    ("<--"    . ?⟵)
+    ("<->"    . ?↔)
+    ("<-->"   . ?⟷)
+    ("==>"    . ?⟹)
+    ("<=="    . ?⟸)
+    ("++>"    . ?⟿)
+    ("<++"    . ?⬳)
+    ("fun"    . ?λ)
+    ("forall" . ?∀)
+    ("exists" . ?∃)
+    ("/\\"    . ?∧)
+    ("\\/"    . ?∨)
+    ("~"      . ?¬)
+    ("+-"     . ?±)
+    ("<="     . ?≤)
+    (">="     . ?≥)
+    ("<>"     . ?≠)
+    ("*"      . ?×)
+    ;;
+    ("++"     . ?⧺)
+    ("nat"    . ?𝓝)
+    ("Z"      . ?ℤ)
+    ("N"      . ?ℕ)
+    ("Q"      . ?ℚ)
+    ("Real"   . ?ℝ)
+    ("bool"   . ?𝔹)
+    ("Prop"   . ?𝓟)
+    )
+
+  "`prettify-symbols-alist' for Coq.
+
+Extends `coq-font-lock-symbols-alist'."
+
+  :type '(alist :key-type   (string    :tag "String (to match)")
+                :value-type (character :tag "Char   (to show) ")
+                )
+
+  :safe #'listp
+  :group 'sboo-coq)
 
 ;;----------------------------------------------;;
 

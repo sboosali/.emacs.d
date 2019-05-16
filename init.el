@@ -38,3 +38,4 @@
 ;; Customization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (put 'scroll-left 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)

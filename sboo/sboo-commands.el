@@ -2730,7 +2730,14 @@ Inputs:
 
 (defun sboo-edit-indirect-dwim ()
                       
-  "DWIM: `edit-indirect' either the region or a (guessed) code block.
+  "DWIM: `edit-indirect' either the region or a block.
+
+When `region-active-p', edit via `edit-indirect-region'.
+Otherwise, edits the current “block”, one of:
+
+• String     — in most `prog-mode's.
+• Codeblock  — in `html-mode's and `markdown-mode's.
+• Quasiquote — in `haskell-mode'.
 
 Customize:
 
@@ -2785,6 +2792,13 @@ Keymap:
 
        (t
         (user-error "[‘sboo-edit-indirect-dwim’] Not within a code-block or docstring or string"))))))
+
+;;TODO:
+;; sboo-mark-string
+;; sboo-mark-doc
+;; sboo-html-mark-codeblock
+;; sboo-markdown-mark-codeblock
+;; sboo-haskell-mark-quasiquote
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

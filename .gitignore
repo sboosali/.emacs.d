@@ -64,6 +64,11 @@ ido.last
 bookmarks
 
 ########################################
+# `eww`
+
+url/
+
+########################################
 # `YASnippet`
 .yas-compiled-snippets.el
 
