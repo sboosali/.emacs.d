@@ -602,12 +602,14 @@ Related:
 
   (add-to-list 'auto-mode-alist (cons (rx bos "TODO" eos) #'text-mode))
 
-  (sboo-add-auto-mode-basename "LICENSE" #'text-mode)
-  (sboo-add-auto-mode-basename "NOTES"   #'text-mode)
+  (sboo-add-auto-mode-basename "LICENSE"         #'text-mode)
+  (sboo-add-auto-mode-basename "NOTES"           #'text-mode)
 
-  (sboo-add-auto-mode-basename "^Procfile\\'" #'conf-mode)
+  (sboo-add-auto-mode-basename "^Procfile\\'"    #'conf-mode)
 
-  (sboo-add-auto-mode-basename "^Portfile\\'" #'tcl-mode)
+  (sboo-add-auto-mode-basename "^\\.jshintrc\\'" #'json-mode)
+
+  (sboo-add-auto-mode-basename "^Portfile\\'"    #'tcl-mode)
 
   ;;------------------------;;
 
@@ -817,6 +819,28 @@ Related:
 
 ;;----------------------------------------------;;
 
+(use-package lisp-mode
+
+  :commands (check-parens)
+
+  :config
+
+  (dolist (MODE '(lisp-mode
+                  emacs-lisp-mode
+                  inferior-emacs-lisp-mode
+                  inferior-lisp-mode
+                  lisp-interaction-mode))
+
+    (font-lock-add-keywords MODE
+     '(("(\\(lambda\\)\\>"
+        (0 (ignore
+            (compose-region (match-beginning 1) (match-end 1) ?λ))))
+       )))
+
+    ())
+
+;;----------------------------------------------;;
+
 (use-package elisp-mode
 
   :delight (emacs-lisp-mode "Elisp")
@@ -836,6 +860,44 @@ Related:
     ())
 
   ())
+
+;;----------------------------------------------;;
+
+(use-package elint
+
+  :commands (elint-initialize elint-current-buffer)
+
+  ;; mnemonic:
+  ;; • "s-m" — personal keymap for MODE-specific stuff.
+  ;; • "l" — LINTING.
+
+  :bind (("s-m l" . sboo-elint-buffer)
+         )
+
+  :preface
+
+  (defun sboo-elint-buffer ()
+    "`elint-current-buffer'"
+    (interactive)
+    (when (derived-mode-p 'emacs-lisp-mode major-mode)
+      (elint-initialize)
+      (elint-current-buffer)))
+                
+  :config       
+
+  (dolist (SYMBOL '(current-prefix-arg
+                    command-line-args-left
+                    buffer-file-coding-system
+                    emacs-major-version window-system
+                    ))
+    (add-to-list 'elint-standard-variables SYMBOL))
+
+  ())
+
+;; ^ Links:
+;;
+;;   • Info Node `(emacs) Elint'
+;;
 
 ;;==============================================;;
 
@@ -950,7 +1012,11 @@ Related:
 
 (use-package grep
 
-  :commands (grep grep-find find-grep-dired find-name-dired)
+  :commands (grep
+             grep-find
+             find-grep-dired
+             find-name-dired
+             )
 
   ;;--------------------------;;
 
@@ -2259,25 +2325,44 @@ $0")
 ;;----------------------------------------------;;
 
 (use-package flycheck
-
   :defer t
 
+  :commands (flycheck-mode
+             flycheck-next-error
+             flycheck-previous-error
+             )
+
   :delight (flycheck-mode " 🛸")
+
+  :bind (
+         :map emacs-lisp-mode-map
+              (("<kp-prior>" . flycheck-previous-error)
+               ("<kp-next>"  . flycheck-next-error))
+         :map js-mode-map
+              (("<kp-prior>" . flycheck-previous-error)
+               ("<kp-next>"  . flycheck-next-error))
+         :map c-mode-base-map
+              (("<kp-prior>" . flycheck-previous-error)
+               ("<kp-next>"  . flycheck-next-error))
+         :map haskell-mode-map
+              (("<kp-prior>" . flycheck-previous-error)
+               ("<kp-next>"  . flycheck-next-error))
+         )
 
   :config
 
   (add-hook 'flycheck-error-list-mode-hook #'visual-line-mode)
 
   (when (require 'sboo-flycheck nil :no-error)
-
     (bind-key "<kp-divide>" #'sboo-flycheck)
-
     (add-to-list 'display-buffer-alist sboo-flycheck-display-buffer))
 
   ())
 
 ;; ^ Links:
 ;;
+;;   • URL `https://www.flycheck.org/'
+;;   • URL `https://github.com/flycheck/flycheck'
 ;;   • URL `https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-flycheck.el'
 ;;
 
@@ -2301,9 +2386,16 @@ $0")
 
     :delight '(:eval (concat " " (projectile-project-name)))
 
-    ;; ^
-    ;; [1] Hide the mode name for projectile-mode;
-    ;; [2] Show the project name instead.
+    ;; ^ ❶ Hide the mode name for projectile-mode.
+    ;;   ❷ Show the project name instead.
+
+    :bind-keymap ("C-c p" . projectile-command-map)
+
+    :preface
+
+    (defun sboo-projectile-invalidate-cache (&rest _)
+      "(`projectile-invalidate-cache' which ignores the args to `magit-checkout'.)"
+      (projectile-invalidate-cache nil))
 
     :config
 
@@ -2316,6 +2408,12 @@ $0")
     (sboo-append-to-list! projectile-globally-ignored-file-suffixes
                           sboo-excluded-file-extensions)
 
+    (with-eval-after-load 'magit-branch
+      (advice-add 'magit-checkout
+                  :after #'sboo-projectile-invalidate-cache)
+      (advice-add 'magit-branch-and-checkout
+                  :after #'sboo-projectile-invalidate-cache))
+
     ()))
 
 ;;----------------------------------------------;;
@@ -2323,9 +2421,16 @@ $0")
 
 (progn
 
+  ;;--------------------------;;
+
   (use-package magit
 
+    :commands (magit-status)
+
     :bind (("s-g s" . magit-status)
+           )
+
+    :hook ((magit-mode . hl-line-mode)
            )
 
     :custom
@@ -2334,13 +2439,15 @@ $0")
 
     :config
 
+  ;;TODO (define-key magit-mode-map "G" #'endless/visit-pull-request-url)
+
     ())
 
   ;;--------------------------;;
 
-  ;; (use-package magithub
-  ;;FIXME crashes magit
-  ;;   )
+  ;; (use-package magithub) ;FIXME" magithub crashes magit.
+
+  ;;--------------------------;;
 
   ())
 
@@ -2786,7 +2893,7 @@ $0")
   :custom
 
   (markdown-command "multimarkdown" "")  ;; TODO `pandoc'
-  (imenu-auto-rescan t "non-`nil' means: Imenu always rescans the (file-)buffer.")
+  (imenu-auto-rescan nil "non-`nil' means: Imenu always rescans the (file-)buffer.")
 
   ;;--------------------------;;
 
@@ -2924,7 +3031,7 @@ $0")
 
 ;; ^ Links:
 ;;
-;;   • URL `'
+;;   • URL `https://github.com/yoshiki/yaml-mode'
 ;;
 
 ;;----------------------------------------------;;
@@ -2933,7 +3040,28 @@ $0")
 
   :commands (makefile-runner)
 
+  :bind ((("s-<Scroll_Lock>" . makefile-runner)
+          )
+         :map sboo-launch-keymap
+              (("m" . makefile-runner)
+               )
+         )
+
+  ;; ^ mnemonics:
+  ;;
+  ;; • "<Scroll_Lock>" — personal keybinding for `compile-command'.
+  ;;
+  ;; • "s-r" — personal keymap for [R]UNNING stuff.
+  ;; • "m" — run « [m]ake ».
+  ;;
+
   :config ())
+
+;; ^ Command `makefile-runner':
+;;
+;; ❶ locates a « Makefile ».
+;; ❷ parses the Makefile Targets (for `completing-read').
+;;
 
 ;; ^ Links:
 ;;
@@ -3171,22 +3299,128 @@ $0")
 
 (use-package string-inflection
 
+  ;;--------------------------;;
+
   :commands (string-inflection-all-cycle
              string-inflection-python-style-cycle
              string-inflection-java-style-cycle
              string-inflection-ruby-style-cycle
              )
 
-  :bind (:map sboo-edit-keymap
-              ("`" . string-inflection-all-cycle)
-              )
+  ;;--------------------------;;
+
+  :bind ((("C--" . string-inflection-all-cycle)
+          )
+         :map sboo-edit-keymap
+              ("-" . string-inflection-all-cycle)
+         :map java-mode-map
+              ("C--" . string-inflection-java-style-cycle)
+         :map python-mode-map
+              ("C--" . string-inflection-python-style-cycle)
+         :map ruby-mode-map
+              ("C--" . string-inflection-ruby-style-cycle)
+         :map haskell-mode-map
+              ("C--" . sboo-string-inflection-haskell-style-cycle)
+        )
+
+  ;;--------------------------;;
+
+  :preface
+
+  (defun sboo-string-inflection-haskell-style-cycle-function (word)
+    "Cycle WORD between « fooBar ⇒ FooBar ⇒ foo_bar ⇒ FOO_BAR ⇒ ... ».
+
+Inputs:
+
+• WORD — a `stringp'.
+
+Output:
+
+• a `stringp'.
+  defaults to camel-casing (i.e. `string-inflection-lower-camelcase-function').
+
+Laws:
+
+• “4-potent” — the fourth invocation is equivalent to no invocation,
+  modulo `point' (see « Effects »).
+
+Effects:
+
+• `point' — may move `point' to `end-of-word'.
+
+Notes (naming conventions in the Haskell programming language):
+
+• camel-case  (e.g. « fooBar »)  — Haskell functions (conventional).
+• class-case  (e.g. « FooBar »)  — Haskell types and constructors (conventional).
+• snake-case  (e.g. « foo_bar ») — Haskell « foregin import »s (unconventional).
+• const-case  (e.g. « FOO_BAR ») — Haskell constants (unconventional).
+
+Related:
+
+• « * ⇒ fooBar »  — via `string-inflection-lower-camelcase'
+• « * ⇒ FooBar »  — via `string-inflection-camelcase'
+• « * ⇒ foo_bar » — via `string-inflection-underscore'
+• « * ⇒ FOO_BAR » — via `string-inflection-underscore' + `string-inflection-upcase'
+• « * ⇒ Foo_Bar » — via `string-inflection-capital-underscore'
+
+Links:
+
+• URL `https://wiki.haskell.org/Programming_guidelines#Naming_Conventions'
+• URL `https://en.wikipedia.org/wiki/Naming_convention_(programming)'"
+
+    (cond
+
+     ;; « fooBar ⇒ FooBar »:
+
+     ((string-inflection-camelcase-p word)
+      (string-inflection-pascal-case-function word))
+
+     ;; « FooBar ⇒ foo_bar »:
+
+     ((string-inflection-pascal-case-p word)
+      (string-inflection-underscore-function word))
+
+     ;; « foo_bar ⇒ FOO_BAR »:
+
+     ((string-inflection-underscore-p    word)
+      (string-inflection-upcase-function word))
+
+     ;; « * ⇒ fooBar »:
+
+     (t
+      (string-inflection-lower-camelcase-function word))))
+
+  (defun sboo-string-inflection-haskell-style-cycle ()
+    "`string-inflection-all-cycle' for Haskell (identifiers & constructors).
+
+Related:
+
+• Calls `sboo-string-inflection-haskell-style-cycle-function'"
+
+    (interactive)
+    (string-inflection-insert
+     (sboo-string-inflection-haskell-style-cycle-function
+      (string-inflection-get-current-word))))
+
+  ;;--------------------------;;
 
   :config
 
   ())
 
-;; ^ `string-inflection' converts between Variable Casings, 
-;;   e.g. « under_score » ← « UPCASE » ← « CamelCase ».
+;; ^ `string-inflection' converts between Variable Casings,
+;;   like « under_score » ← « UPCASE » ← « CamelCase ».
+;;
+;; e.g. repeatedly invoking `string-inflection-all-cycle',
+;;      when `point' is at “two-words”:
+;;
+;;   • “two-words” — 0x
+;;   • “Two_Words” — once
+;;   • “two_words” — twice
+;;   • “TWO_WORDS” — thrice
+;;   • “TwoWords”  — 4x
+;;   • “twoWords”  — 5x
+;;   • “two-words” — 6x (same as 0x)
 ;;
 
 ;; ^ Links:
@@ -3233,7 +3467,7 @@ $0")
            ;; ("*" . )
            ;; ("(" . )
            ;; (")" . )
-           ;; ("-" . )
+              ("-" . string-inflection-all-cycle)
            ;; ("=" . )
            ;; ("[" . )
            ;; ("]" . )
@@ -3677,6 +3911,31 @@ search (upwards) for a named Code-Block. For example,
 
 ;;----------------------------------------------;;
 
+(use-package elisp-docstring-mode
+
+  :commands (elisp-docstring-mode)
+
+  :config
+
+  ;;TODO sboo-elisp-docstring-edit-indirect
+
+  ())
+
+;; `major-mode' for editing Emacs Lisp Docstrings.
+;;
+;; Provides:
+;;
+;; • Highlighting — via `font-lock'.
+;; • Escaping — of quotes and backslashes.
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/Fuco1/elisp-docstring-mode'
+;;
+
+;;----------------------------------------------;;
+
 (use-package edit-var
 
   :commands (edit-variable) 
@@ -3937,6 +4196,41 @@ search (upwards) for a named Code-Block. For example,
 ;; ^ Links:
 ;;
 ;;   • URL `https://github.com/Malabarba/emacs-google-this'
+;;
+
+;;----------------------------------------------;;
+
+(use-package xah-lookup
+
+  :commands (xah-lookup-word-on-internet
+             xah-lookup-web
+             xah-lookup-wikipedia
+             xah-lookup-word-definition
+             xah-lookup-word-dict-org
+             xah-lookup-wiktionary
+             xah-lookup-etymology
+             )
+
+  :init
+
+  (setq xah-lookup-browser-function #'eww) 
+
+  ;; ^ `xah-lookup-browser-function' must be set *before* loading `xah-lookup'.
+
+  :config ())
+
+;; ^ Xah Lookup provides “lookup commands” via:
+;;
+;; • Google
+;; • Wikipedia
+;; • Dictionaries
+;; • programing reference sites
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/xahlee/lookup-word-on-internet'
+;;   • URL `http://ergoemacs.org/emacs/xah-lookup.html'
 ;;
 
 ;;----------------------------------------------;;
@@ -4318,6 +4612,24 @@ search (upwards) for a named Code-Block. For example,
 ;; ^ URL `https://github.com/Fanael/highlight-blocks'
 
 ;;----------------------------------------------;;
+
+(use-package highlight-cl
+
+  :commands (highlight-cl-add-font-lock-keywords)
+
+  :hook ((emacs-lisp-mode . highlight-cl-add-font-lock-keywords)
+         )
+
+  :config ())
+
+;; ^ `highlight-cl': highlights `cl-*' (i.e. Common Lisp) symbols.
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/emacsmirror/highlight-cl'
+;;
+
+;;----------------------------------------------;;
 ;; External Packages: Windows/Buffers ----------;;
 ;;----------------------------------------------;;
 
@@ -4392,6 +4704,21 @@ search (upwards) for a named Code-Block. For example,
 
 ;;----------------------------------------------;;
 ;; External Packages: Appearence ---------------;;
+;;----------------------------------------------;;
+
+(use-package diredfl
+
+  :commands (diredfl-global-mode)
+
+  :hook (dired-mode . diredfl-mode)
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/purcell/diredfl'
+;;
+
 ;;----------------------------------------------;;
 
 (use-package telephone-line
@@ -4489,6 +4816,21 @@ search (upwards) for a named Code-Block. For example,
 ;;
 ;;   • URL `https://github.com/seagle0128/doom-modeline'
 ;;
+
+;;----------------------------------------------;;
+
+(use-package back-button
+  :defer 5
+
+  :commands (back-button-mode)
+
+  :init
+
+  (setq back-button-show-toolbar-buttons t)
+
+  :config
+
+  (back-button-mode +1))
 
 ;;----------------------------------------------;;
 ;; External Packages: Clipboard ----------------;;
