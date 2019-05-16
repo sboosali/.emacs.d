@@ -2489,14 +2489,21 @@ $0")
 
   ;;--------------------------;;
 
-;;  (use-package magit-files
-;;    :after (magit)
-;;
-;;    :config
-;;
-;; ;; (global-magit-file-mode)
-;;
-;;    ())
+ (use-package magit-files
+   :after (magit)
+
+   :commands (magit-diff
+              magit-log
+              magit-stage-file
+              magit-unstage-file
+              magit-commit
+              )
+
+   :config
+
+   (global-magit-file-mode +1)
+
+   ())
 
   ;;--------------------------;;
 
@@ -3056,21 +3063,6 @@ $0")
 
 ;;----------------------------------------------;;
 
-(use-package json-reformat
-  :after json-mode
-
-  :commands (json-reformat)
-
-  :config
-  ())
-
-;; ^ Links:
-;;
-;;   • URL `'
-;;
-
-;;----------------------------------------------;;
-
 (use-package yaml-mode
 
   :mode (("\\.yaml\\'" . yaml-mode)
@@ -3213,6 +3205,20 @@ $0")
 ;;   :mode (("\\.xpm\\'" . c-mode))
 ;;   ; :mode (("\\.xpm\\'" . xpm-mode))
 ;;   ())
+
+
+;;----------------------------------------------;;
+
+(use-package cask-mode
+
+  :commands (cask-mode)
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/Wilfred/cask-mode'
+;;
 
 ;;----------------------------------------------;;
 

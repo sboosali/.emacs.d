@@ -27,7 +27,7 @@
 
 ;;; Commentary:
 
-;; Configure `text-mode' (and any `derived-mode-p's).
+;; Configure `text-mode' (and any `derived-mode-p's, like `conf-mode').
 ;; 
 ;; 
 
@@ -181,9 +181,8 @@ Used by:
 
 • ‘sboo-aspell-conf’"
 
-  :type '(repeat (choice (string :tag " Keyword")
-                           (regexp :tag "Keywords")
-                           ))
+  :type '(repeat (choice (string :tag "Keyword ")
+                         (regexp :tag "Keywords")))
 
   :safe #'listp
   :group 'sboo-conf)
@@ -304,74 +303,7 @@ Output:
 
 • a `regexp'."
 
-  (rx (or "lang"
-          "conf"
-          "conf-dir"
-          "data-dir"
-          "dict-alias"
-          "dict-dir"
-          "encoding"
-          "filter"
-          "filter-path"
-          "mode"
-          "extra-dicts"
-          "home-dir"
-          "ignore"
-          "ignore-case"
-          "ignore-repl"
-          "keyboard"
-          "local-data-dir"
-          "master"
-          "normalize"
-          "norm-required"
-          "norm-form"
-          "norm-strict"
-          "per-conf"
-          "personal"
-          "prefix"
-          "repl"
-          "run-together"
-          "run-together-limit"
-          "run-together-min"
-          "save-repl"
-          "set-prefix"
-          "size"
-          "sug-mode"
-          "sug-edit-dist"
-          "sug-typo-analysis"
-          "sug-repl-table"
-          "sug-split-char"
-          "use-other-dicts"
-          "variety"
-          "warn"
-          "affix-compress"
-          "clean-affixes"
-          "clean-words"
-          "invisible-soundslike"
-          "partially-expand"
-          "skip-invalid-words"
-          "validate-affixes"
-          "validate-words"
-          "backup"
-          "byte-offsets"
-          "guess"
-          "keymapping"
-          "reverse"
-          "suggest"
-          "time"
-          "f-tex-check-comments"
-          "f-tex-command"
-          "f-texinfo-ignore"
-          "f-texinfo-ignore-env"
-          "f-context-delimiters"
-          "f-context-visible-first"
-          "f-email-quote"
-          "f-email-margin"
-          "f-html-check"
-          "f-html-skip"
-          "f-sgml-check"
-          "f-sgml-skip"
-          )))
+  (regexp-opt sboo-aspell-conf-keywords 'symbols))
 
 ;; M-: (sboo-aspell-conf-keywords-regexp '("TODO" "NOTE"))
 
