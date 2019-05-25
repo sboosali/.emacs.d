@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
 #
 # key         : defvar
-# name        : a « defvar » declaration.
+# name        : [sboo] Declare a « defvar ».
 # condition   : (let ((KEY "defvar")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail> 
@@ -9,8 +9,10 @@
 # --
 ;;----------------------------------------------;;
 
-(defvar sboo-${1:name}
+(defvar ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}
 
-  ${2:nil}
+  ${3:nil}
 
-  "$0.")
+  "$0.
+
+a `${4:symbol}p'.")

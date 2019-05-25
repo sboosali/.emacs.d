@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
 #
 # key         : sc
-# name        : [sboo-syntax] Declare « (defconst sboo-syntax-class-* ...) ».
+# name        : [sboo-syntax] Declare « (defconst *-syntax-class-* ...) ».
 #
 # type        : snippet
 # condition   : (let ((FILE "sboo-syntax")) (string-prefix-p FILE (file-name-base (buffer-file-name)) :ignore-case))
@@ -12,7 +12,7 @@
 #
 # --
 
-(defconst sboo-syntax-class-${1:the-syntax-class} ?\\$2
+(defconst ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-syntax-class-${1:the-syntax-class} ?\\$2
 
   "Syntax Class for ${1:$(string-join (split-string (capitalize yas-text) "[-]+" :omit-nulls) " ")} characters.")
 

@@ -10,7 +10,7 @@
 ;;----------------------------------------------;;
 
 (defun sboo-insert-${1:$(string-join (split-string (downcase yas-text)) "-")} ()
-  "`insert' ?${1:$(ignore-errors (format "%c" (gethash yas-text (ucs-names))))}, the \\"${1:$$(progn (require 'mule) (require 'subr-x) (let ((CHAR-NAME (yas-choose-value (hash-table-keys (ucs-names))))) CHAR-NAME))}\\" Unicode character."
+  "`insert' ?${1:$(with-demoted-errors "[YASnippet] %s" (format "%c" (gethash yas-text (ucs-names))))}, the \\"${1:$$(progn (require 'mule) (require 'subr-x) (let ((CHAR-NAME (yas-choose-value (hash-table-keys (ucs-names))))) CHAR-NAME))}\\" Unicode character."
   (interactive)
-  (insert-char ?${1:$(ignore-errors (format "%c" (gethash yas-text (ucs-names))))}))
+  (insert-char ?${1:$(with-demoted-errors "[YASnippet] %s" (format "%c" (gethash yas-text (ucs-names))))}))
 $0

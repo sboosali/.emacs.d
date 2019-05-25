@@ -8,5 +8,5 @@
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
-import qualified "${1:egg}" ${1:$(ignore-errors (require 'subr-x) (with-temp-buffer (insert yas-text) (goto-char (point-min)) (while (< (point) (point-max)) (capitalize-word +1)) (string-trim (buffer-substring-no-properties (point-min) (point-max)))))} as ${1:$(ignore-errors (require 'subr-x) (with-temp-buffer (insert yas-text) (goto-char (point-min)) (while (< (point) (point-max)) (capitalize-word +1)) (string-trim (buffer-substring-no-properties (point-min) (point-max)))))}
+import qualified "${1:egg}" ${1:$(with-demoted-errors "[YASnippet] %s" (require 'subr-x) (with-temp-buffer (insert yas-text) (goto-char (point-min)) (while (< (point) (point-max)) (capitalize-word +1)) (string-trim (buffer-substring-no-properties (point-min) (point-max)))))} as ${1:$(with-demoted-errors "[YASnippet] %s" (require 'subr-x) (with-temp-buffer (insert yas-text) (goto-char (point-min)) (while (< (point) (point-max)) (capitalize-word +1)) (string-trim (buffer-substring-no-properties (point-min) (point-max)))))}
 $0

@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+#
+# key         : locals
+# name        : [sboo] an Emacs « Local Variables: ... » commented declaration.
+#
+# type        : snippet
+# condition   : (let ((KEY "locals")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+$0
+
+<!-- Local Variables: -->
+<!-- compile-command: "mkdir -p ../out  &&  pandoc --standalone --from=markdown --to=html --highlight-style=kate --syntax-definition=../data/mtg.xml --syntax-definition=../data/elisp.xml --table-of-contents --toc-depth=2 --css=../css/tufte.css --css=../css/post.css --metadata pagetitle='$1' ./${1:`(sboo-yas-get-basemame)`}.md   >  ../out/$1.html   &&   $BROWSER ../out/$1.html" -->
+<!-- End: -->

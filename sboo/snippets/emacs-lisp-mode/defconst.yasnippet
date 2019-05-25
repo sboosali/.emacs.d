@@ -11,5 +11,7 @@
 # commentary  : 
 #
 # --
-(defconst ${1:const-name} ($0)
+
+(defconst ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name} ($0)
+
   "")

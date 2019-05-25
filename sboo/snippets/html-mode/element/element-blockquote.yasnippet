@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+#
+# key         : bq
+# name        : [sboo] « <blockquote>... » HTML Element.
+#
+# type        : snippet
+# condition   : t
+# expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+<div>
+ <blockquote cite="${1:https://}">
+   <p>$0</p>
+ </blockquote>
+ <cite><a href="$1">${2:source}</a></cite>
+<div>

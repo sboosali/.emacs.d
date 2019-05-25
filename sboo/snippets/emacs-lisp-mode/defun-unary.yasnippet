@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 #
-# key         : defun
+# key         : defunary
 # name        : [sboo] Declare a (verbose) function, via « defun ».
-# condition   : (let ((KEY "defun")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
+# condition   : (let ((KEY "defunary")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-wrap-around-region t))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
@@ -15,11 +15,27 @@
 
 Inputs:
 
-• ${3:$(upcase yas-text)} — a \`${4:symbol}p'.
+• ${3:$(upcase yas-text)} — a \`${23:symbol}p'.
+  Defaults to ${13:nil}.
 
 Output:
 
 • a \`${9:boolean}p'."
+
+Example:
+
+• M-: ($2-$1 $13)
+    ⇒ 
+
+Links:
+
+• URL \`'
+
+Related:
+
+• \`'"
+
+  (cl-check-type $3 $23 "")
 
   (let* ()
 

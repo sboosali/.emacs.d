@@ -1,16 +1,17 @@
 # -*- mode: snippet -*-
 #
-# key         : bq-tufte
-# name        : [tufte.css] Blockquote HTML Element, i.e. « <blockquote cite="..."> .
+# key         : epigraph
+# name        : [tufte.css] Tufte Epigrpah (a Blockquote HTML Element, i.e. « <blockquote cite="..."> ).
 #
 # expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
 #
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
-# commentary  : See https://edwardtufte.github.io/tufte-css/#blockquotes
+# commentary  : See https://edwardtufte.github.io/tufte-css/#epigraph
 #
 # --
-
-<blockquote cite="${1:https://www.example.org}">
-  $0
+<div class="epigraph">
+ <blockquote cite="${1:https://www.}">
+  <p>$0</p>
   <footer><em>${2:AUTHOR}</em>, <a href="$1"><em>${4:COLUMN-OR-THREAD}</em>, <em>${3:TITLE-OF-ARTICLE-OR-POST}</em></a>, circa ${5:2019}</footer>
-</blockquote>
+ </blockquote>
+</div>

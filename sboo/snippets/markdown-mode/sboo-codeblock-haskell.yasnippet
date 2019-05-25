@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
 #
-# key         : hs
-# name        : [sboo] a « haskell » codeblock, in a « ghci » interpreter.
+# key         : haskell
+# name        : [sboo] a « haskell » codeblock.
 #
 # type        : snippet
 # condition   : (let ((KEY "hs")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
@@ -12,7 +12,5 @@
 #
 # --
 \`\`\` haskell
->>> $0
-    
+$0
 \`\`\`
-

@@ -42,6 +42,87 @@
   (require 'seq))
 
 ;;----------------------------------------------;;
+;; Utilities -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-yas-get-basemame (&optional name)
+
+  "Extract the namespace of an elisp file named NAME.
+
+Imput:
+
+• NAME — a `stringp'.
+  defaults to `buffer-file-name' or `buffer-name'.
+  a file's basename. 
+  leading directories and/or trailing file extensions are stripped.
+
+Output:
+
+• a `stringp'.
+
+Examples:
+
+• M-: (sboo-yas-get-basemame)
+     → \"sboo-yasnippets\")"
+
+  (let* ((FILENAME (or name (buffer-file-name) (buffer-name)))
+         (BASENAME (file-name-base FILENAME))
+         )
+
+    BASENAME))
+
+;; ^ e.g.:
+;;
+;; • M-: (sboo-yas-get-basemame)
+;;     → "sboo-yasnippets"
+;;
+
+;;----------------------------------------------;;
+
+(defun sboo-yas-get-elisp-namespace (&optional name)
+
+  "Extract the namespace of an elisp file named NAME.
+
+Imput:
+
+• NAME — a `stringp'.
+  defaults to `buffer-file-name' or `buffer-name'.
+  a file's basename. 
+  leading directories and/or trailing file extensions are stripped.
+  heuristically, “-mode” is stripped.
+
+Output:
+
+• a `stringp'.
+
+Examples:
+
+• M-: (sboo-yas-get-elisp-namespace)
+     → \"sboo-yasnippets\")
+• M-: (sboo-yas-get-elisp-namespace \"xyz.el\")
+     → \"xyz\")
+• M-: (sboo-yas-get-elisp-namespace \"~/xyz-mode\")
+     → \"xyz\")
+"
+
+  (let* ((FILENAME (or name (buffer-file-name) (buffer-name)))
+         (BASENAME (file-name-base FILENAME))
+         (NAME     (string-trim BASENAME nil "-mode"))
+         )
+
+    NAME))
+
+;; ^ e.g.:
+;;
+;; • M-: (sboo-yas-get-elisp-namespace)
+;;     → "sboo-yasnippets"
+;; • M-: (sboo-yas-get-elisp-namespace "xyz.el")
+;;     → "xyz"
+;; • M-: (sboo-yas-get-elisp-namespace "~/xyz-mode")
+;;     → "xyz"
+;;
+
+;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 

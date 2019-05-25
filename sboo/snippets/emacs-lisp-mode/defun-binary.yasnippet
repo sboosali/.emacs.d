@@ -1,0 +1,46 @@
+# -*- mode: snippet -*-
+#
+# key         : defbinary
+# name        : [sboo] Declare a (verbose) function, via « defun ».
+# condition   : (let ((KEY "defbinary")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-wrap-around-region t))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(defun ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name} (${3:x} ${4:y})
+
+  ".
+
+Inputs:
+
+• ${3:$(upcase yas-text)} — a \`${23:symbol}p'.
+  Defaults to ${13:nil}.
+
+• ${4:$(upcase yas-text)} — a \`${24:string}p'.
+  Defaults to ${24:\\"\\"}.
+
+Output:
+
+• a \`${9:boolean}p'."
+
+Example:
+
+• M-: ($2-$1 $13 $14)
+    ⇒ 
+
+Links:
+
+• URL \`'
+
+Related:
+
+• \`'"
+
+  (cl-check-type $3 $23 "")
+  (cl-check-type $4 $24 "")
+
+  (let* ()
+
+    `yas-selected-text`$0))

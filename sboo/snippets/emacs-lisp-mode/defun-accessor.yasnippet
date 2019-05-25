@@ -1,0 +1,20 @@
+# -*- mode: snippet -*-
+#
+# key         : defaccess
+# name        : [sboo] Declare an accessor for some variable, via « defun ».
+# condition   : (let ((KEY "defaccess")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-wrap-around-region nil) (yas-indent-line 'auto))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(defun ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:variable} ()
+
+  "Accessor for \`$2-$1'."
+
+  (let* ()
+
+    $2-$1))
+
+$0

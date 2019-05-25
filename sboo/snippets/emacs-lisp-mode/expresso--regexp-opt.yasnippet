@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+#
+# key         : x-regexp-opt
+# name        : [sboo] Declare a « defun » which wraps « regexp-opt ».
+#
+# type        : snippet
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  :
+#
+# --
+
+#------------------------------------------------#
+
+(defun expresso-${1:type}-regex ()
+
+  "Return a `regexp' matching any Expresso $1.
+
+Customize:
+
+• Variable `expresso-$1s'"
+
+  (expresso--regexp-opt expresso-$1s))
+
+$0
