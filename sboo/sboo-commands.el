@@ -140,10 +140,10 @@ Notes:
 ;; DWIM ----------------------------------------;;
 ;;----------------------------------------------;;
 
-(ignore-errors (defun-dwim eval-dwim   eval-region   eval-last-sexp))
-(ignore-errors (defun-dwim kill-dwim   kill-region   kill-line))
-(ignore-errors (defun-dwim fill-dwim   fill-region   fill-paragraph))
-(ignore-errors (defun-dwim indent-dwim indent-region sboo-indent-defun-or-buffer))
+(with-demoted-errors "[Warning] %s" (defun-dwim eval-dwim   eval-region   eval-last-sexp))
+(with-demoted-errors "[Warning] %s" (defun-dwim kill-dwim   kill-region   kill-line))
+(with-demoted-errors "[Warning] %s" (defun-dwim fill-dwim   fill-region   fill-paragraph))
+(with-demoted-errors "[Warning] %s" (defun-dwim indent-dwim indent-region sboo-indent-defun-or-buffer))
 
 ;;----------------------------------------------;;
 ;; Thing at point ------------------------------;;
@@ -1019,7 +1019,7 @@ Note:
 ;; M-: (widget-choose "Browser" '(("Firefox" . firefox) ("Google Chrome" . google-chrome)))
 ;;
 
-(ignore-errors
+(with-demoted-errors "[Warning] %s"
 
   (widget)
 
@@ -2799,6 +2799,87 @@ Keymap:
 ;; sboo-html-mark-codeblock
 ;; sboo-markdown-mark-codeblock
 ;; sboo-haskell-mark-quasiquote
+
+;;----------------------------------------------;;
+;; Munging -------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-blockquote-toggle-region (beg end)
+
+  "Prefix each line between BEG and END with “>” (i.e. GREATER_THAN_SIGN).
+
+Inputs:
+
+• BEG — an `integerp'.
+  Region beginning.
+  e.g. `mark', `region-beginning', `point-min'.
+  Defaults to `region-beginning'.
+• END — an `integerp'.
+  Region ending.
+  e.g. `point', `region-end', `point-max'.
+  Defaults to `region-end'.
+
+Output:
+
+• a `stringp'.
+
+Effects:
+
+• Modifies `current-buffer'.
+
+Related:
+
+• Calls `string-insert-rectangle'.
+• Unlike `comment-region', `string-insert-rectangle':
+
+    ❶ doesn't indent the comment starter.
+    ❷ does fill interstitial blank lines.
+
+Links:
+
+• Info Node `(efaq) Inserting text at the beginning of each line'"
+
+  (interactive "r")
+
+  (let* ((POINT-BEG (or beg (region-beginning)))
+         (POINT-END (or end (region-end)))
+
+         (DELIMETER "> ")
+         )
+
+    (string-insert-rectangle POINT-BEG POINT-END DELIMETER)))
+
+;;----------------------------------------------;;
+;; Selection -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-extend-selection-leftward ()
+
+  "Extend the `region-beginning' (leftwards/upwards).
+
+Related:
+
+• `sboo-extend-selection-rightward'"
+
+  ())
+
+;;----------------------------------------------;;
+
+(defun sboo-extend-selection-rightward ()
+
+  "Extend the `region-end' (rightwards/downwards).
+
+Notes:
+
+• Unlike `forward-char' under `shift-select-mode',
+  `sboo-extend-selection-rightward' is invariant 
+  w.r.t. where the `point' and `mark' are.
+
+Related:
+
+• `sboo-extend-selection-leftward'"
+
+  ())
 
 ;;----------------------------------------------;;
 ;; Completion ----------------------------------;;

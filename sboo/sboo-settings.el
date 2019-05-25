@@ -59,7 +59,7 @@
     (defmacro sboo-custom-set (variable expression &optional comment requirements)
       "`custom-set-variables' wrapper."
       (declare (indent 2) (doc-string 3))
-      `(ignore-errors
+      `(with-demoted-errors "[Warning] %s"
          (custom-set-variables
           (list (quote ,variable) ,expression t ,requirements ,comment))))))
 
@@ -200,7 +200,7 @@
 ;; Settings: Themes ----------------------------;;
 ;;----------------------------------------------;;
 
-(ignore-errors
+(with-demoted-errors "[Warning] %s"
 
   (let ((THEME-DIRECTORY
          (if (bound-and-true-p sboo-theme-directory)

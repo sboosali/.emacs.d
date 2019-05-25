@@ -583,7 +583,29 @@ Related:
 
 ;;----------------------------------------------;;
 
-(defun sboo-comment-insert-header (text)
+(defun sboo-comment-insert-h3 ()
+
+  "Insert a (« <h3> »-style) comment dividor.
+
+Related:
+
+• `sboo-comment-h3-alist'
+• `sboo-comment-h3-default'"
+
+  (interactive)
+
+  (let* ((COMMENT (sboo-comment-alist-get sboo-comment-h3-alist :mode major-mode))
+        )
+
+    (if COMMENT
+        (insert COMMENT)
+      (insert sboo-comment-h3-default))
+
+    (insert "\n")))
+
+;;----------------------------------------------;;
+
+(defun sboo-comment-insert-header (text) ;TODO if not at `bolp', newline (no indent).
 
   "Insert a comment section header labeled TEXT.
 

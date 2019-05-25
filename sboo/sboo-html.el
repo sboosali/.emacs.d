@@ -149,12 +149,13 @@ Zero-or-more function-symbols."
 
 (defcustom sboo-markdown-functions
 
-  (list #'imenu-add-menubar-index
+  (list #'sboo-markdown-setup
+        #'imenu-add-menubar-index
         )
 
   "Hooks for Major Modes in `sboo-markdown-modes-list'.
 
-Zero-or-more function-symbols."
+a `listp' of `functionp's."
 
   :type '(repeat (function))
 
@@ -542,7 +543,23 @@ Merges:
   sboo-html-attribute-list)
 
 ;;----------------------------------------------;;
-;; Functions -----------------------------------;;
+;; Functions: Setup ----------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-markdown-setup ()
+
+  "Setup `markdown-mode'."
+
+  (interactive)
+
+  (let* ()
+
+    (define-key selected-keymap (kbd ">") #'sboo-blockquote-toggle-region)
+
+    ()))
+
+;;----------------------------------------------;;
+;; Functions: `compile' ------------------------;;
 ;;----------------------------------------------;;
 
 (defun sboo-html-set-insert-command ()

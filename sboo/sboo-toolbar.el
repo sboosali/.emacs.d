@@ -80,7 +80,7 @@ Related:
     (declare (indent 2))
 
     (let* ()
-      `(ignore-errors
+      `(with-demoted-errors "[Warning] %s"
 
          (list ,menu-items ,toolbar-map)))))
 

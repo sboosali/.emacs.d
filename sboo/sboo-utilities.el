@@ -1016,7 +1016,19 @@ URL `https://explog.in/notes/poet.html'."
 
 ;;==============================================;;
 
-(require 'sboo-dwim)
+(defun sboo-word-dwim ()
+
+  "Return the current region or word.
+
+Output:
+
+• a `stringp'."
+
+  (if (use-region-p)
+
+      (buffer-substring-no-properties (region-beginning) (region-end))
+
+    (current-word)))
 
 ;;==============================================;;
 
@@ -1025,6 +1037,12 @@ URL `https://explog.in/notes/poet.html'."
   'action      #'help-button-action
 
   'follow-link t)
+
+;;----------------------------------------------;;
+;;; Re-Exports: --------------------------------;;
+;;----------------------------------------------;;
+
+(require 'sboo-dwim)
 
 ;;----------------------------------------------;;
 ;;; Notes: -------------------------------------;;

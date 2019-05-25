@@ -591,7 +591,7 @@ Inputs:
 ;;; Single-Character Keybindings...
 ;;==============================================;;
 
-(global-set-key (kbd "TAB") #'dabbrev-expand)
+(global-set-key (kbd "TAB") #'dabbrev-expand) ; Shadows `indent-according-to-mode'.
 ;(global-set-key (kbd "TAB") #'dabbrev-completion)
 
 (global-set-key (kbd "<backtab>") #'dabbrev-completion)
@@ -764,6 +764,9 @@ Inputs:
 ;;==============================================;;
 
 (progn
+
+  (global-set-key (kbd "C-M-<tab>")   #'indent-relative)          ; Because we've shadowed it, by binding « TAB » to Tab-Completion.
+  (global-set-key (kbd "C-M-S-<tab>") #'indent-according-to-mode) ;
 
 ;;(global-set-key (kbd "C-M-a") #'sboo-)
 ;;(global-set-key (kbd "C-M-b") #'sboo-)
@@ -1165,6 +1168,59 @@ its “Prefix Command” is bound to « \\[sboo-mark-keymap] ».
 
 (progn
 
+  (defvar sboo-insert-keymap
+
+    (make-sparse-keymap)
+
+    "Personal `keymapp' for inserting snippets/characters.
+
+its “Prefix Command” is bound to « \\[sboo-insert-keymap] ».
+
+\\{sboo-insert-keymap}")
+
+  (define-prefix-command 'sboo-insert-keymap nil "Σ Insert")
+
+;;(define-key sboo-insert-keymap (kbd "a") #')
+;;(define-key sboo-insert-keymap (kbd "b") #')
+
+  (define-key sboo-insert-keymap (kbd "c h") #'sboo-comment-insert-header)
+  (define-key sboo-insert-keymap (kbd "c 1") #'sboo-comment-insert-h1)
+  (define-key sboo-insert-keymap (kbd "c 2") #'sboo-comment-insert-h2)
+  (define-key sboo-insert-keymap (kbd "c 3") #'sboo-comment-insert-h3)
+  (define-key sboo-insert-keymap (kbd "c !") #'sboo-comment-insert-h1)
+  (define-key sboo-insert-keymap (kbd "c @") #'sboo-comment-insert-h2)
+  (define-key sboo-insert-keymap (kbd "c #") #'sboo-comment-insert-h3)
+
+;;(define-key sboo-insert-keymap (kbd "d") #')
+;;(define-key sboo-insert-keymap (kbd "e") #')
+;;(define-key sboo-insert-keymap (kbd "f") #')
+;;(define-key sboo-insert-keymap (kbd "g") #')
+;;(define-key sboo-insert-keymap (kbd "h") #')
+;;(define-key sboo-insert-keymap (kbd "i") #')
+;;(define-key sboo-insert-keymap (kbd "j") #')
+;;(define-key sboo-insert-keymap (kbd "k") #')
+;;(define-key sboo-insert-keymap (kbd "l") #')
+;;(define-key sboo-insert-keymap (kbd "m") #')
+;;(define-key sboo-insert-keymap (kbd "n") #')
+;;(define-key sboo-insert-keymap (kbd "o") #')
+;;(define-key sboo-insert-keymap (kbd "p") #')
+;;(define-key sboo-insert-keymap (kbd "q") #')
+;;(define-key sboo-insert-keymap (kbd "r") #')
+;;(define-key sboo-insert-keymap (kbd "s") #')
+;;(define-key sboo-insert-keymap (kbd "t") #')
+;;(define-key sboo-insert-keymap (kbd "u") #')
+;;(define-key sboo-insert-keymap (kbd "v") #')
+;;(define-key sboo-insert-keymap (kbd "w") #')
+;;(define-key sboo-insert-keymap (kbd "x") #')
+  (define-key sboo-insert-keymap (kbd "y") #'sboo-yas-insert-snippet)
+;;(define-key sboo-insert-keymap (kbd "z") #')
+
+  #'sboo-insert-keymap)
+
+;;----------------------------------------------;;
+
+(progn
+
   (defvar sboo-buffer-keymap
 
     (make-sparse-keymap)
@@ -1315,7 +1371,7 @@ its “Prefix Command” is bound to « \\[sboo-mode-keymap] ».
   (global-set-key (kbd "s-f") #'describe-function)          ; "Function"
 ;;(global-set-key (kbd "s-g") #')
   (global-set-key (kbd "s-h") #'helm-apropos)               ; [H]elp
-  (global-set-key (kbd "s-i") #'sboo-insert)                ; [I]nsert
+  (global-set-key (kbd "s-i") #'sboo-insert-keymap)         ; [I]nsertion Commands.
 ;;(global-set-key (kbd "s-j") #')
   (global-set-key (kbd "s-k") #'sboo-mark-keymap)           ; Mar[K] Commands (i.e. « mar[K]-* »).
   (global-set-key (kbd "s-l") #'align-regexp)               ; a[L]ign
@@ -1344,6 +1400,7 @@ its “Prefix Command” is bound to « \\[sboo-mode-keymap] ».
 ;;(global-set-key (kbd "s-d") #'dired)
 ;;(global-set-key (kbd "s-e") #'eval-dwim)                  ; "Eval"
 ;;(global-set-key (kbd "s-h") #'helm-command-prefix)        ; "Helm"
+;;(global-set-key (kbd "s-i") #'sboo-insert)                ; [I]nsert
 ;;(global-set-key (kbd "s-i") #'imenu)
 ;;(global-set-key (kbd "s-k") #'describe-key)               ; "Key"
 ;;(global-set-key (kbd "s-r") #'xref-find-references)       ; "References"

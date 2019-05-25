@@ -110,7 +110,7 @@
 ;; Settings (early) ----------------------------;;
 ;;----------------------------------------------;;
 
-(ignore-errors
+(with-demoted-errors "[Warning] %s"
   (custom-set-variables
 
    '(enable-local-variables :safe :eager nil "set only Safe Variables (don't query for unsafe ones).")
@@ -145,7 +145,7 @@
     
     (declare (indent 2) (doc-string 3))
 
-    `(ignore-errors
+    `(with-demoted-errors "[Warning] %s"
        (custom-set-variables
         (list (quote ,variable) ,expression :eager nil ,comment)))) ;TODO handle variables, not just symbols
 
@@ -480,7 +480,7 @@ Related:
 ;; Settings ------------------------------------;;
 ;;----------------------------------------------;;
 
-(ignore-errors
+(with-demoted-errors "[Warning] %s"
   (setq custom-file sboo-custom-file))
 
 ;;----------------------------------------------;;
@@ -492,10 +492,10 @@ Related:
 
 ;;----------------------------------------------;;
 
-(ignore-errors (sboo-load-file! "sboo-settings.el"))
-(ignore-errors (sboo-load-file! "sboo-keybindings.el"))
-(ignore-errors (sboo-load-file! "sboo-aliases.el"))
-(ignore-errors (sboo-load-file! "sboo-commands.el"))
+(with-demoted-errors "[Warning] %s" (sboo-load-file! "sboo-settings.el"))
+(with-demoted-errors "[Warning] %s" (sboo-load-file! "sboo-keybindings.el"))
+(with-demoted-errors "[Warning] %s" (sboo-load-file! "sboo-aliases.el"))
+(with-demoted-errors "[Warning] %s" (sboo-load-file! "sboo-commands.el"))
 
 ;; ^ NOTE `load' these files (rather than `require' them)
 ;;        because they execute statements
@@ -531,7 +531,7 @@ Related:
 
 ;; Register Themes (c.f. `provide-theme'):
 
-(ignore-errors
+(with-demoted-errors "[Warning] %s"
 
   (when (>= emacs-major-version 24)
 
@@ -549,7 +549,7 @@ Related:
 
 ;; Register Icons:
 
-(ignore-errors
+(with-demoted-errors "[Warning] %s"
 
   (add-to-icon-path! sboo-icon-directory)
   (add-to-icon-path! (emacs-subdir "icons"))
@@ -780,6 +780,17 @@ Related:
 ;;
 ;; (add-to-list 'auto-mode-alist ("rc\\'" . #'conf-mode))
 ;; (add-to-list 'auto-mode-alist ("rc\\'" . #'sh-mode))
+
+;;==============================================;;
+
+(use-package help
+
+  :bind (:map help-mode-map
+              (("/" . isearch-forward)
+               )
+         )
+
+  :config ())
 
 ;;==============================================;;
 
@@ -1087,7 +1098,14 @@ Related:
 
   (add-to-list 'completion-styles 'substring nil)
 
+  (dolist (COMPLETER '(elisp-completion-at-point comint-dynamic-complete-filename))
+    (add-to-list 'completion-at-point-functions COMPLETER nil))
+
   ())
+
+;; ^ « C-M-i » binds `complete-symbol', which tries `completion-at-point-functions'.
+
+;;----------------------------------------------;;
 
 (when (require 'sboo-toolbar nil :no-error)
 ;;(setq tool-bar-map sboo-tool-bar-map)
@@ -1851,7 +1869,7 @@ Links:
 ;;; Internal Packages: Utilities ---------------;;
 ;;----------------------------------------------;;
 
-(ignore-errors
+(with-demoted-errors "[Warning] %s"
 
   (when (require 'sboo-unicode nil :no-error)
 
@@ -1861,7 +1879,7 @@ Links:
 
 ;;----------------------------------------------;;
 
-(ignore-errors
+(with-demoted-errors "[Warning] %s"
 
   (when (require 'sboo-comment nil :no-error)
 
@@ -1995,6 +2013,24 @@ Links:
 (use-package memoize)
 
 ;; ^ URL `https://github.com/skeeto/emacs-memoize'
+
+;;----------------------------------------------;;
+
+(use-package htmlize
+
+  :commands (htmlize-region htmlize-buffer htmlize-file)
+
+  :config ())
+
+;; ^ `htmlize-buffer':
+;;
+;; “To use it, just switch to the buffer you want HTML-ized and type M-x htmlize-buffer. You will be switched to a new buffer that contains the resulting HTML code. You can edit and inspect this buffer, or you can just save it with C-x C-w. M-x htmlize-file will find a file, fontify it, and save the HTML version in FILE.html, without any additional intervention.”
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/hniksic/emacs-htmlize'
+;;
 
 ;;----------------------------------------------;;
 ;; External Packages: Completion ---------------;;
@@ -2690,6 +2726,8 @@ $0")
         (cl-pushnew OPTION
                     haskell-ghc-supported-options
                     :test #'equal)))
+
+    (sboo-haskell-modify-syntax-entries)
 
     ())
 
@@ -3538,11 +3576,11 @@ Related:
   :bind (:map selected-keymap
 
            ;; ("`" . )
-              ("!" . shell-command-on-region)
+              ("!" . shell-command-on-region)      ; mnemonic is « M-! ».
            ;; ("@" . )
            ;; ("#" . )
            ;; ("$" . )
-           ;; ("%" . )
+              ("%" . query-replace)                ; mnemonic is « M-% ».
            ;; ("^" . )
            ;; ("&" . )
            ;; ("*" . )
@@ -3552,41 +3590,44 @@ Related:
            ;; ("=" . )
            ;; ("[" . )
            ;; ("]" . )
-              (":" . comment-region)
+              (":" . comment-or-uncomment-region)
            ;; (""" . )
            ;; ("," . )
            ;; ("." . )
            ;; ("/" . )
            ;; ("\\" . )
 
+              ("<left>"  . sboo-extend-selection-leftward)
+              ("<right>" . sboo-extend-selection-rightward)
+
            ;; ("<home>"  . )
            ;; ("<end>"   . )
-              ("<prior>" . move-text-up)     ; from `move-text'.
-              ("<next>"  . move-text-down)   ; from `move-text'.
+              ("<prior>" . move-text-up)           ; from `move-text'.
+              ("<next>"  . move-text-down)         ; from `move-text'.
 
               ("a" . sboo-register-append)
            ;; ("b" . )
-              ("c" . cua-copy-region)
+              ("c" . capitalize-region)
               ("d" . downcase-region)
-              ("e" . sboo-edit-indirect-region)  ; from `edit-indirect' (via `sboo-commands').
+              ("e" . sboo-edit-indirect-region)    ; from `edit-indirect' (via `sboo-commands').
               ("f" . fill-region)
-              ("g" . google-this-region)    ; from `google-this'.
+              ("g" . google-this-region)           ; from `google-this'.
            ;; ("h" . )
-              ("i" . indent-region)
+              ("i" . indent-region)                ; mnemonic is “[I]ndent”.
            ;; ("j" . )
            ;; ("k" . )
               ("l" . align-regexp)
-              ("m" . apply-macro-to-region-lines)
+              ("m" . apply-macro-to-region-lines)  ; mnemonic is “[M]acro”.
            ;; ("n" . )
            ;; ("o" . )
            ;; ("p" . )
-              ("q" . selected-off)          ; from `selected'.
+              ("q" . selected-off)                 ; from `selected'.
               ("r" . query-replace-regexp)
               ("s" . sort-lines)
            ;; ("t" . )
               ("u" . upcase-region)
-           ;; ("v" . )
-
+              ("v" . eval-region)                  ; mnemonic is “e[V]al”.
+              ("w" . delete-trailing-whitespace)   ; mnemonic is “[W]hitespace”.
               ("x" . cua-cut-region)
            ;; ("y" . )
            ;; ("z" . )
@@ -3595,12 +3636,13 @@ Related:
 
               )
 
-              ;; ("c" . capitalize-region)
-              ;; ("r" . reverse-region)
-  ;;--------------------------;;
-              ;; ("s" . sort-lines)
-              ;; ("w" . delete-trailing-whitespace)
+  ;; ("c" . cua-copy-region)
+  ;; ("c" . capitalize-region)
+  ;; ("r" . reverse-region)
+  ;; ("s" . sort-lines)
+  ;; ("w" . delete-trailing-whitespace)
 
+  ;;--------------------------;;
 
   :hook ((prog-mode . sboo-selected-mode)
          (text-mode . sboo-selected-mode)
@@ -3635,9 +3677,7 @@ Inputs:
 
   ;;--------------------------;;
 
-  :config
-
-  ())
+  :config ())
 
 ;; ^ When `selected-minor-mode' is active, the keybindings in `selected-keymap'
 ;;   are enabled as long as the region is active (`use-region-p').
@@ -4428,6 +4468,8 @@ search (upwards) for a named Code-Block. For example,
 (use-package eww
   :disabled
 
+  :commands (eww eww-open-file eww-browse-with-external-browser)
+
   :bind (:map sboo-launch-keymap
               ("w" . eww)
               )
@@ -4438,8 +4480,6 @@ search (upwards) for a named Code-Block. For example,
 
   (url-configuration-directory (sboo-xdg-data "eww" :subdir "emacs") "XDG-conformant")
 
-  :commands (eww eww-open-file eww-browse-with-external-browser)
-
   :config ())
 
 ;; ^ `eww' is the Emacs Web Browser.
@@ -4448,12 +4488,14 @@ search (upwards) for a named Code-Block. For example,
 ;;
 ;; Keybindings include:
 ;;
-;; • 【p】 `eww-previous-url'
-;; • 【r】 `eww-forward-url'
 ;; • 【&】 `eww-browse-with-external-browser'
+;; • 【R】 `eww-readable'
+;; • 【d】 `eww-download'
 ;; • 【g】 `eww-reload'
+;; • 【p】 `eww-previous-url'
+;; • 【q】 `eww-quit'
+;; • 【r】 `eww-forward-url'
 ;; • 【w】 `eww-copy-page-url'
-;; • 【v】 `eww-view-source'
 ;;
 
 ;; ^ Links:
@@ -4929,6 +4971,19 @@ search (upwards) for a named Code-Block. For example,
 ;; ^ Links:
 ;;
 ;; ^ URL `https://github.com/rolandwalker/simpleclip'
+;;
+
+;;----------------------------------------------;;
+
+(use-package highlight2clipboard
+
+  :commands (htmlize-)
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/Lindydancer/highlight2clipboard'
 ;;
 
 ;;----------------------------------------------;;
