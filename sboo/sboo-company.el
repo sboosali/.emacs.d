@@ -40,16 +40,90 @@
 ;; Builtins:
 
 (eval-when-compile 
+  (require 'pcase)
   (require 'cl-lib))
 
 (progn
-  (require 'pcase)
   (require 'seq))
+
+;;----------------------------------------------;;
+;; Variables -----------------------------------;;
+;;----------------------------------------------;;
+
+(defgroup sboo-company nil
+
+  "Personal `company' customization."
+
+  :prefix 'sboo
+  :group 'sboo)
+
+;;==============================================;;
+
+(defcustom sboo-company-backends
+
+  '(
+
+    (
+     company-capf      ; `completion-at-point' Functions.
+     )
+
+    (
+     company-keywords  ; `prog-mode' Keywords.
+     company-etags     ; `prog-mode' TAGS.
+     )
+
+    (
+     company-files     ; Filepaths.
+     )
+
+    (
+     company-yasnippet ; `yasnippet'.
+     company-abbrev    ; Abbreviations.
+     company-dabbrev   ; Dynamic Abbreviations.
+     )
+
+    (
+     company-ispell    ; Spell-Checking.
+     )
+
+    )
+
+  "Company Backends, ordered by priority.
+
+each Company Backend in a group has a higher priority than
+any Company Backend in a later group (and a lower priority than
+any Company Backend in an earlier group).
+
+`listp' of `listp's of `symbolp's."
+
+  :type '(repeat (function :tag "Company Backend"))
+
+  :safe #'listp
+  :group 'sboo-company)
+
+;; ^ Default (/ Global) `company-backends':
+
+;;----------------------------------------------;;
+
+(defcustom sboo-company-frontends
+
+  '(company-pseudo-tooltip-unless-just-one-frontend
+    company-echo-metadata-frontend
+    company-preview-frontend
+    )
+
+  "Personal Company Frontends.
+
+a `listp' of `functionp's."
+
+  :type '(repeat (function :tag "Company Frontend"))
+
+  :safe #'listp
+  :group 'sboo)
 
 ;;----------------------------------------------;;
 ;; Company Backends ----------------------------;;
 ;;----------------------------------------------;;
-
 ;; Mode-specific `company-backends': Haskell
 
 ;;----------------------------------------------;;
@@ -79,68 +153,6 @@
 ;;----------------------------------------------;;
 ;; Company Frontends ---------------------------;;
 ;;----------------------------------------------;;
-
-(defcustom sboo-company-frontends
-
-  '(company-pseudo-tooltip-unless-just-one-frontend
-    company-echo-metadata-frontend
-    company-preview-frontend
-    )
-
-  "Personal Company Frontends.
-
-a `listp' of `functionp's."
-
-  :type '(repeat (function :tag "Company Frontend"))
-
-  :safe #'listp
-  :group 'sboo)
-
-;;----------------------------------------------;;
-;; Variables -----------------------------------;;
-;;----------------------------------------------;;
-
-(defgroup sboo-company nil
-
-  "Personal `company' customization."
-
-  :prefix 'sboo
-  :group 'sboo)
-
-;;==============================================;;
-
-(defcustom sboo-company-backends
-
-  '(
-
-    (
-     company-files     ; Files (& Directories).
-     company-keywords  ; Keywords.
-     company-capf      ; Completion-At-Point Functions.
-     company-yasnippet ;
-     )
-
-    (
-     company-abbrev    ; Abbreviations
-     company-dabbrev   ; Dynamic Abbreviations
-     )
-
-    )
-
-  "Company Backends, ordered by priority.
-
-each Company Backend in a group has a higher priority than
-any Company Backend in a later group (and a lower priority than
-any Company Backend in an earlier group).
-
-`listp' of `listp's of `symbolp's."
-
-  :type '(repeat (repeated (symbol :tag "Company Backend")))
-
-  :safe #'listp
-  :group 'sboo-company)
-
-;; ^ Default (/ Global) `company-backends':
 
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
