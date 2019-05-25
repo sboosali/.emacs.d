@@ -132,10 +132,14 @@ a `stringp'."
     ;;(""     . ?)
     )
 
-  "`prettify-symbols-alist' for Haskell.
+  "`prettify-symbols-alist' for `haskell-mode'.
 
-Prettify some Applicative methods 
+Prettifies:
+
+• some Arithmetic/Logical operations.
+• some Applicative methods
 (á la Applicative Programming with Effects).
+• some other identifiers.
 
 Extends `haskell-font-lock-symbols-alist'.
 
@@ -149,6 +153,47 @@ Links:
 
   :safe #'listp
   :group 'sboo-haskell)
+
+;; (defcustom haskell-font-lock-symbols-alist
+;;   '(("\\" . "λ")
+;;     ("not" . "¬")
+;;     ("->" . "→")
+;;     ("<-" . "←")
+;;     ("=>" . "⇒")
+;;     ("()" . "∅")
+;;     ("==" . "≡")
+;;     ("/=" . "≢")
+;;     (">=" . "≥")
+;;     ("<=" . "≤")
+;;     ("!!" . "‼")
+;;     ("&&" . "∧")
+;;     ("||" . "∨")
+;;     ("sqrt" . "√")
+;;     ("undefined" . "⊥")
+;;     ("pi" . "π")
+;;     ("~>" . "⇝") ;; Omega language
+;;     ;; ("~>" "↝") ;; less desirable
+;;     ("-<" . "↢") ;; Paterson's arrow syntax
+;;     ;; ("-<" "⤙") ;; nicer but uncommon
+;;     ("::" . "∷")
+;;     ("." "∘" ; "○"
+;;      ;; Need a predicate here to distinguish the . used by
+;;      ;; forall <foo> . <bar>.
+;;      haskell-font-lock-dot-is-not-composition)
+;;     ("forall" . "∀"))
+;;   "Alist mapping Haskell symbols to chars.
+
+;; Each element has the form (STRING . COMPONENTS) or (STRING
+;; COMPONENTS PREDICATE).
+
+;; STRING is the Haskell symbol.
+;; COMPONENTS is a representation specification suitable as an argument to
+;; `compose-region'.
+;; PREDICATE if present is a function of one argument (the start position
+;; of the symbol) which should return non-nil if this mapping should
+;; be disabled at that position."
+;;   :type '(alist string string)
+;;   :group 'haskell-appearance)
 
 ;;----------------------------------------------;;
 
@@ -639,12 +684,16 @@ Implementation:
 
   (interactive)
 
-  (if prettify-symbols-mode
+  (progn
 
-      (prettify-symbols-mode 0)
+    (setq-local prettify-symbols-alist sboo-haskell-prettify-symbols-alist)
+      ;; (setq prettify-symbols-unprettify-at-point t)
 
-    (progn
-      (setq-local prettify-symbols-alist sboo-haskell-prettify-symbols-alist)
+    ;; toggle Prettify-Symbols:
+
+    (if prettify-symbols-mode
+  
+        (prettify-symbols-mode 0)
 
       (prettify-symbols-mode +1))))
 
@@ -794,6 +843,29 @@ Related:
           (dante-mode 1))
 
         t))))
+
+;;----------------------------------------------;;
+;; Functions: `syntax-table' -------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-haskell-modify-syntax-entries ()
+
+  "Modify `haskell-mode-syntax-table'.
+
+Effects:
+
+• the apostrophe should have:
+
+    • the ”Symbol” Syntax-Category — « ' »  can be within Haskell-Identifiers.
+      e.g. « doCheck » and « don'tCheck ».
+    • the ”Prefix-Character” Syntax-Flag — « ' » is the Quote-Operator in « -XTemplateHaskellQuotes » (like LISP).
+      e.g. « makeLenses ''Point »."
+
+  (progn
+
+    (modify-syntax-entry ?\' "_ p" haskell-mode-syntax-table)
+
+    haskell-mode-syntax-table))
 
 ;;----------------------------------------------;;
 ;; Functions -----------------------------------;;

@@ -27,7 +27,7 @@
 
   (progn
     (setq custom-file SbooCustom)       ; redirect custom file early.
-    (ignore-errors (find-file SbooFile))
+    (with-demoted-errors "[Warning] %s" (find-file SbooFile))
     (load SbooFile nil nil t t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
