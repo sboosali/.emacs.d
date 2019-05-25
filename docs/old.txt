@@ -1,3 +1,309 @@
+========================================================================
+
+(comint-run "expresso")
+
+(make-comint-in-buffer "ipython" (get-buffer "*ipython*") "python" nil "-i")
+
+========================================================================
+
+https://www.modernemacs.com/post/
+
+
+
+https://github.com/emacs-helm/helm-navi
+https://github.com/alphapapa/navi
+https://github.com/alphapapa/outshine
+
+
+
+# Outline
+
+Outline-mode is a general framework for headers. Org-mode itself uses outline-mode.
+
+Headers are demarcated by the current major-mode's comment syntax, typically with levels determined by the proceeding number of *.
+
+Python: # * is a level 1 header, # ** a level 2 header...
+Haskell: --* --**
+Clojure: ;; * ;; **
+Emacs lisp uses ;;;, ;;;;, ... for compatibility with the many packages that use the original, not asterisk-based, outline format.
+
+;; Enables outline-minor-mode for *ALL* programming buffers
+(add-hook 'prog-mode-hook 'outline-minor-mode)
+
+(let ((kmap outline-minor-mode-map))
+  (define-key kmap (kbd "M-RET") 'outshine-insert-heading)
+  (define-key kmap (kbd "<backtab>") 'outshine-cycle-buffer)
+
+ 
+I recommend setting both the :background and :height face attributes to highlight and make obvious the different sections.
+
+This can be done by updating the outline-1/2/3... faces. Org mode header faces can set separately using the org-level-1/2/3... faces.
+
+(setq my-black "#1b1b1e")
+
+(custom-theme-set-faces
+ 'solarized-dark
+ `(outline-1 ((t (:height 1.25 :background "#268bd2"
+                          :foreground ,my-black :weight bold))))
+ `(outline-2 ((t (:height 1.15 :background "#2aa198"
+                          :foreground ,my-black :weight bold))))
+ `(outline-3 ((t (:height 1.05 :background "#b58900"
+                          :foreground ,my-black :weight bold)))))
+
+
+Bullets
+Now these outlines will be displayed with the comment syntax, there is no mirror of org-bullets-bullet-list for setting icons to replace the eg. ';;;'.
+
+We need to use compose-region to manually replace the headers with our custom bullets. Here is an image of my org-bullets replicated for outlines.
+
+(defun -add-font-lock-kwds (FONT-LOCK-ALIST)
+  (font-lock-add-keywords
+   nil (--map (-let (((rgx uni-point) it))
+                `(,rgx (0 (progn
+                            (compose-region (match-beginning 1) (match-end 1)
+                                            ,(concat "\t" (list uni-point)))
+                            nil))))
+              FONT-LOCK-ALIST)))
+
+(defmacro add-font-locks (FONT-LOCK-HOOKS-ALIST)
+  `(--each ,FONT-LOCK-HOOKS-ALIST
+     (-let (((font-locks . mode-hooks) it))
+       (--each mode-hooks
+         (add-hook it (-partial '-add-font-lock-kwds
+                                (symbol-value font-locks)))))))
+
+(defconst emacs-outlines-font-lock-alist
+  ;; Outlines
+  '(("\\(^;;;\\) "          ?■)
+    ("\\(^;;;;\\) "         ?○)
+    ("\\(^;;;;;\\) "        ?✸)
+    ("\\(^;;;;;;\\) "       ?✿)))
+
+(defconst lisp-outlines-font-lock-alist
+  ;; Outlines
+  '(("\\(^;; \\*\\) "          ?■)
+    ("\\(^;; \\*\\*\\) "       ?○)
+    ("\\(^;; \\*\\*\\*\\) "    ?✸)
+    ("\\(^;; \\*\\*\\*\\*\\) " ?✿)))
+
+(defconst python-outlines-font-lock-alist
+  '(("\\(^# \\*\\) "          ?■)
+    ("\\(^# \\*\\*\\) "       ?○)
+    ("\\(^# \\*\\*\\*\\) "    ?✸)
+    ("\\(^# \\*\\*\\*\\*\\) " ?✿)))
+
+(add-font-locks
+ '((emacs-outlines-font-lock-alist emacs-lisp-mode-hook)
+   (lisp-outlines-font-lock-alist clojure-mode-hook hy-mode-hook)
+   (python-outlines-font-lock-alist python-mode-hook)))
+
+
+
+(defvar outline-display-table (make-display-table))
+(set-display-table-slot outline-display-table 'selective-display
+                        (vector (make-glyph-code ?▼ 'escape-glyph)))
+(defun set-outline-display-table ()
+  (setf buffer-display-table outline-display-table))
+
+(add-hook 'outline-mode-hook 'set-outline-display-table)
+(add-hook 'outline-minor-mode-hook 'set-outline-display-table)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+docs: buffer-style vs eldoc-style
+
+s-matched-positions-all
+add-face-text-property
+
+(defun hy--mode-setup-eldoc ()
+  (make-local-variable 'eldoc-documentation-function)
+  (setq-local eldoc-documentation-function 'hy-eldoc-documentation-function)
+  (eldoc-mode +1))
+
+(defun hy--docs-for-thing-at-point ()
+  "Mirrors `hy-eldoc-documentation-function' formatted for a buffer, not a msg."
+  (-> (thing-at-point 'symbol)
+     (hy--eldoc-get-docs t)
+     hy--format-docs-for-buffer))
+
+
+(defun hy--fontify-text (text regexp &rest faces)
+  "Fontify portions of TEXT matching REGEXP with FACES."
+  (when text
+    (-each
+        (s-matched-positions-all regexp text)
+      (-lambda ((beg . end))
+        (--each faces
+          (add-face-text-property beg end it nil text))))))
+
+(defun hy--eldoc-fontify-text (text)
+  "Fontify eldoc TEXT."
+  (let ((kwd-rx
+         (rx string-start (1+ (not (any space ":"))) ":"))
+        (kwargs-rx
+         (rx symbol-start "&" (1+ word)))
+        (quoted-args-rx
+         (rx "`" (1+ (not space)) "`")))
+    (hy--fontify-text
+     text kwd-rx 'font-lock-keyword-face)
+    (hy--fontify-text
+     text kwargs-rx 'font-lock-type-face)
+    (hy--fontify-text
+     text quoted-args-rx 'font-lock-constant-face 'bold-italic))
+  text)
+
+
+
+Programming Types: Types found in all Lisp systems.
+Editing Types: Types specific to Emacs
+
+https://www.gnu.org/software/emacs/manual/html_node/elisp/Editing-Types.html
+
+Buffer Type: The basic object of editing.
+Marker Type: A position in a buffer.
+Window Type: Buffers are displayed in windows.
+Frame Type: Windows subdivide frames.
+Terminal Type: A terminal device displays frames.
+Window Configuration Type: Recording the way a frame is subdivided.
+Frame Configuration Type: Recording the status of all frames.
+
+<https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Region.html>
+
+use-region-p
+This function returns t if Transient Mark mode is enabled, the mark is active, and there is a valid region in the buffer. 
+
+region-active-p is similar to use-region-p, but considers all regions as valid. In most cases, you should not use region-active-p, since if the region is empty it is often more appropriate to operate on point.
+
+<https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Mark.html>
+
+<https://www.gnu.org/software/emacs/manual/html_node/elisp/Markers.html>
+
+A marker denotes a position in a specific buffer. Markers therefore have two components: one for the buffer, and one for the position. Changes in the buffer's text automatically relocate the position value as necessary to ensure that the marker always points between the same two characters in the buffer.
+
+Markers have no read syntax. They print in hash notation, giving the current character position and the name of the buffer.
+
+     (point-marker)
+          ⇒ #<marker at 10779 in objects.texi>
+
+point-marker
+This function returns a new marker that points to the present position of point in the current buffer
+
+
+Each buffer has a special marker, which is designated the mark.
+When a buffer is newly created, this marker exists but does not point anywhere; 
+
+mark &optional force
+This function returns the current buffer's mark position as an integer, or nil if no mark has ever been set in this buffer.
+
+
+push-mark &optional position nomsg activate
+This function sets the current buffer's mark to position, and pushes a copy of the previous mark onto mark-ring. If position is nil, then the value of point is used.
+The function push-mark normally does not activate the mark. To do that, specify t for the argument activate.
+
+A ‘Mark set’ message is displayed unless nomsg is non-nil.
+
+— Function: pop-mark
+This function pops off the top element of mark-ring and makes that mark become the buffer's actual mark. This does not move point in the buffer, and it does nothing if mark-ring is empty. It deactivates the mark.
+
+Variable: mark-ring
+The value of this buffer-local variable is the list of saved former marks of the current buffer, most recent first.
+
+          mark-ring
+          ⇒ (#<marker at 11050 in markers.texi>
+              #<marker at 10832 in markers.texi>
+              ...)
+
+
+
+
+many arithmetic functions that work with both markers and integers.
+
+markerp object
+This function returns t if object is a marker, nil otherwise. Note that integers are not markers, even though many functions will accept either a marker or an integer.
+
+— Function: integer-or-marker-p object
+This function returns t if object is an integer or a marker, nil otherwise.
+
+— Function: number-or-marker-p object
+This function returns
+
+### `number-or-marker-p`
+
+(number-or-marker-p )
+
+marker (a special object representing a buffer position).
+
+`+`
+
+
+
+Lastly we need to create, switch-to, and insert the retrieved docs as hy-describe-thing-at-point.
+
+(defun hy-describe-thing-at-point ()
+  "Implement shift-k docs lookup for `spacemacs/evil-smart-doc-lookup'."
+  (interactive)
+  (-when-let* ((text (hy--docs-for-thing-at-point))
+               (doc-buffer "*Hyconda*"))
+    (with-current-buffer (get-buffer-create doc-buffer)
+      (erase-buffer)
+      (switch-to-buffer-other-window doc-buffer)
+
+      (insert text)
+      (goto-char (point-min))
+      (forward-line)
+
+      (insert "------\n")
+      (fill-region (point) (point-max))
+
+      ;; Eventually make hyconda-view-minor-mode, atm this is sufficient
+      (local-set-key "q" 'quit-window)
+      (when (fboundp 'evil-local-set-key)
+        (evil-local-set-key 'normal "q" 'quit-window)))))
+
+
+
+
+
+
+
+# filling
+
+Filling text means breaking it up into lines that fit a specified width.
+
+<https://www.gnu.org/software/emacs/manual/html_node/emacs/Filling.html>
+<https://www.gnu.org/software/emacs/manual/html_node/emacs/Fill-Prefix.html>
+
+## examples
+
+For example, if fill-column is 40 and you set the fill prefix to ‘;; ’, then M-q in the following text
+
+     ;; This is an
+     ;; example of a paragraph
+     ;; inside a Lisp-style comment.
+
+produces this:
+
+     ;; This is an example of a paragraph
+     ;; inside a Lisp-style comment.
+
+
+
+========================================================================
+
 ;;; -*- lexical-binding: t -*-
 
 ;;==============================================;;
@@ -6262,16 +6568,170 @@ Links:
 <!-- markdown-toc end -->
 
 ------------------------------------------------
+sboo-comment-toggle-region
+------------------------------------------------
+(rx "-mode" eos)
 
 ------------------------------------------------
 
-------------------------------------------------
+‘(syntax SYNTAX)’
+     matches a character with syntax SYNTAX.  SYNTAX must be one
+     of the following symbols, or a symbol corresponding to the syntax
+     character, e.g. ‘\.’ for ‘\s.’.
+
+     ‘whitespace’		(\s- in string notation)
+     ‘punctuation’		(\s.)
+     ‘word’			(\sw)
+     ‘symbol’			(\s_)
+     ‘open-parenthesis’		(\s()
+     ‘close-parenthesis’	(\s))
+     ‘expression-prefix’	(\s’)
+     ‘string-quote’		(\s")
+     ‘paired-delimiter’		(\s$)
+     ‘escape’			(\s\)
+     ‘character-quote’		(\s/)
+     ‘comment-start’		(\s<)
+     ‘comment-end’		(\s>)
+     ‘string-delimiter’		(\s|)
+     ‘comment-delimiter’	(\s!)
 
 ------------------------------------------------
 
+
+(defconst expresso-mode-mode-syntax-table
+
+
+  (let ((TABLE (make-syntax-table)))
+
+
+    ;; « " » delimits string literals,
+    ;; « ' » delimits character literals:
+
+    (modify-syntax-entry ?\" "\"" TABLE)
+    (modify-syntax-entry ?\' "\"" TABLE)
+
+    ;; « - » is punctuation, but 
+    ;; « -- » is a comment starter:
+
+    (modify-syntax-entry ?- ". 12" TABLE)
+
+
+    ;; « \n » is a comment ender:
+
+    (modify-syntax-entry ?\n ">" TABLE)
+
+
+    ;; Identifiers can have « _ » and « ' »,
+    ;; but « ' » already has a Syntax Class (see above):
+
+    (modify-syntax-entry ?\_ "_" TABLE)
+ ;; (modify-syntax-entry ?\' "_" TABLE)
+
+
+    ;; « . » is an operator:
+
+    (modify-syntax-entry ?. "" TABLE)
+
+    ;; ‘()’, ‘[]’, ‘{}’ — are Bracket Character-Pairs:
+
+    (modify-syntax-entry ?\( "()" TABLE)
+    (modify-syntax-entry ?\) ")(" TABLE)
+
+    (modify-syntax-entry ?\{ "(}" TABLE)
+    (modify-syntax-entry ?\} "){" TABLE)
+
+    (modify-syntax-entry ?\[ "(]" TABLE)
+    (modify-syntax-entry ?\] ")[" TABLE)
+
+    ;; « » is a :
+
+    (modify-syntax-entry ? "" TABLE)
+
+
+    ;; « » is a :
+
+    (modify-syntax-entry ? "" TABLE)
+
+
+    ;; « » is a :
+
+    (modify-syntax-entry ? "" TABLE)
+
+
+    ;; « » is a :
+
+    (modify-syntax-entry ? "" TABLE)
+
+
+    ;; « » is a :
+
+    (modify-syntax-entry ? "" TABLE)
+
+
+    ;; « » is a :
+
+    (modify-syntax-entry ? "" TABLE)
+
+
+    ;; « » is a :
+
+    (modify-syntax-entry ? "" TABLE)
+
+
+    ;; « » is a :
+
+    (modify-syntax-entry ? "" TABLE)
+
+
+    ;; « » is a :
+
+    (modify-syntax-entry ? "" TABLE)
+
+    TABLE))
+
 ------------------------------------------------
 
+(cl-defun expresso-find-file (&key directory (recursive t) prompt)
 
+  "Find an Expresso file (with completion).
+
+Inputs:
+
+• DIRECTORY — a `stringp'.
+  A directory filepath.
+  Defaults to `default-directory'.
+
+• RECURSIVE — a `booleanp'.
+  Whether to search DIRECTORY's subdirectories (i.e. recursively),
+  or just its files (i.e. non-recursively).
+  Defaults to `t' (i.e. recursively).
+
+• PROMPT — a `stringp'.
+  A prompt for the user (without a trailing colon & space).
+
+Users:
+
+• the « import » statement (in an Expresso file).
+• the « :load » subcommand (in the Expresso REPL)."
+
+  (interactive)
+
+  ;;(cl-check-type directory (or string nil))
+  ;;(cl-check-type recursive boolean)
+
+  (let* ((PROMPT (format "%s: " (or prompt
+                                    "Expresso File")))
+         (FILES-INCLUSIVE (expresso-list-files :directory directory :recursive recursive))
+         (FILE-CURRENT (buffer-file-name))
+         (FILES-EXCLUSIVE
+                                        ; exclude the current files (i.e. no recursive imports).
+          (if FILE-CURRENT
+              (seq-remove (lambda (s) (equal s FILE-CURRENT))
+                          FILES-INCLUSIVE)
+            FILES-INCLUSIVE))
+         )
+
+    (completing-read PROMPT FILES-EXCLUSIVE)))
 ==============================================
 
 
@@ -6475,7 +6935,576 @@ Links:
 
 ##################################################
 
+========================================================================
+
+;; Configuration:
+;;
+;;     (use-package expresso-mode :commands (expresso-mode run-expresso expresso-eval-dwim) :auto ("\\.x\\'" . expresso-minor-mode) :interpreter ("expresso" . expresso-minor-mode))
+;; 
+
 ;;----------------------------------------------;;
+;; Major mode for editing Expresso files (« .x » extension).
+
+;;----------------------------------------------;;
+
+    ;; Font Lock:
+
+    (set-syntax-table expresso-mode-syntax-table)
+
+    (setq font-lock-defaults (list nil nil))
+
+    (font-lock-fontify-buffer)
+
+    (setq-local syntax-propertize-function #'expresso-syntax-propertize)
+    
+;;----------------------------------------------;;
+(cl-defun expresso-complete-symbol-at-point ()
+
+  "Completion for `expresso-mode'.
+
+Behavior:
+
+• « import \" » completes with filenames of the proper extension."
+
+  ())
+
+;;----------------------------------------------;;
+## Completion Variables
+
+## Customization: Completion
+
+`completion-styles` — type: keys of `completion-styles-alist`. 
+
+`completion-styles-alist` — type: list of `(symbol function function string)`; each entry is labeled as `(style try-completion all-completions doc)`. 
+
+a Completion Style is — a set of rules for generating completions.
+
+e.g. `completion-styles-alist` entry:
+
+```elisp
+(add-to-list 'completion-styles-alist
+
+  (list ' #' #' ""))
+```
+
+### `y-or-n-p`
+
+```elisp
+(y-or-n-p PROMPT)
+```
+
+>This function asks the user a question, expecting input in the echo area. It returns t if the user types y, nil if the user types n. This function also accepts <SPC> to mean yes and <DEL> to mean no. It accepts C-] to quit, like C-g, because the question might look like a minibuffer and for that reason the user might try to use C-] to get out. The answer is a single character, with no <RET> needed to terminate it. Upper and lower case are equivalent.
+
+`completion-extra-properties`:
+
+* `:annotation-function`
+* `:exit-function`
+
+> This variable is used to specify extra properties of the current completion command. It is intended to be let-bound by specialized completion commands. Its value should be a list of property and value pairs. The following properties are supported:
+
+>:annotation-function — The value should be a function to add annotations in the completions buffer. This function must accept one argument, a completion, and should either return nil or a string to be displayed next to the completion.
+
+> :exit-function — The value should be a function to run after performing completion. The function should accept two arguments, string and status, where string is the text to which the field was completed, and status indicates what kind of operation happened: finished if text is now complete, sole if the text cannot be further completed but completion is not finished, or exact if the text is a valid completion but may be further completed.
+
+;;----------------------------------------------;;
+
+  (let* ((STRING (buffer-substring-no-properties (region-beginning) (region-end)))
+        )
+
+;;----------------------------------------------;;
+
+(defun sboo-blockquote-region (beg end)
+
+  "Prefix each line between BEG and END with “>” (i.e. GREATER_THAN_SIGN).
+
+Inputs:
+
+• BEG — an `integerp'.
+  Region beginning.
+  e.g. `mark', `region-beginning', `point-min'.
+• END — an `integerp'.
+  Region ending.
+  e.g. `point', `region-end', `point-max'.
+
+Output:
+
+• a `stringp'.
+
+Effects:
+
+• Modifies `current-buffer'."
+
+  (interactive "r")
+
+  (let* ((STRING (buffer-substring-no-properties beg end))
+        )
+
+    ( STRING)))
+
+;;----------------------------------------------;;
+
+(defun sboo-blockquote-region (beg end)
+
+  "Prefix each line between BEG and END with “>” (i.e. GREATER_THAN_SIGN).
+
+Inputs:
+
+• BEG — an `integerp'.
+  Region beginning.
+  e.g. `mark', `region-beginning', `point-min'.
+  Defaults to `region-beginning'.
+• END — an `integerp'.
+  Region ending.
+  e.g. `point', `region-end', `point-max'.
+  Defaults to `region-end'.
+
+Output:
+
+• a `stringp'.
+
+Effects:
+
+• Modifies `current-buffer'.
+
+Related:
+
+• `comment-region'
+
+Links:
+
+• Info Node `(efaq) Inserting text at the beginning of each line'
+• URL `https://www.gnu.org/software/emacs/manual/html_node/efaq/Inserting-text-at-the-beginning-of-each-line.html'"
+
+  (interactive "r")
+
+  (let* ((POINT-BEG (or beg (region-beginning)))
+         (POINT-END (or end (region-end)))
+
+         (DELIMETER ">")
+
+         (comment-start   DELIMETER)
+         (comment-padding 1)
+         )
+
+    (comment-region POINT-BEG POINT-END)))
+
+;;----------------------------------------------;;
+
+              ;; ("c" . capitalize-region)
+              ;; ("r" . reverse-region)
+              ;; ("s" . sort-lines)
+              ;; ("w" . delete-trailing-whitespace)
+
+
+;;----------------------------------------------;;
+``` elisp
+M-: (kbd "C-c C-c")
+  ⇒ 
+```
+
+;;----------------------------------------------;;
+Inputs:
+
+* `KEYMAP` — a *Keymmap*, of type `keymapp`. 
+
+* `KEY` — a *Keysequence*, of (either) type: 
+
+    - `stringp`, where:
+    
+        * `"..."` — a sequence of keystrokes. Keysequences with only *ASCII Characters* __CAN__ be represented as a `stringp` (ASCII Strings are equivalent to (Packed) Byte-Vectors).
+
+    - a `vectorp` of `symbolp`s and/or `stringp`s, where:
+    
+        * `[t]` — the *Default Definition* for any *Event* with no other *Definition* in `KEYMAP`.
+        * `[remap COMMAND]` — `COMMAND` has type `commandp`. remaps any *Keybinding(s)* for `COMMAND` to `DEF`.
+        * `[...]` — a sequence of keystrokes (e.g. keys, e.g. modifiers) and other events (e.g. mouse clicks).
+          most Keysequences with *Non-ASCII Characters* __MUST__ be represented as a `vectorp`.
+
+* `DEF` — can be: 
+
+    - `nil` — meaning `KEY` is *Undefined* in `KEYMAP`.
+
+    - a `commandp` — an *Interactive Function*. meaning pressing `KEY` executes `DEF` (c.f. `call-interactively`). `KEY` is *Defined*.
+
+    - a `stringp` — `KEY` is a *Keyboard Macro*. `KEY` is *Defined*.
+
+    - a `keymapp` — a *Sub-Keymap*. meaning `KEY` is a *Prefix Key*. `KEY` is *Defined*.
+
+    - a `p` — meaning . `KEY` is *Defined*.
+
+    - a `p` — meaning . `KEY` is *Defined*.
+
+    - a `p` — meaning . `KEY` is *Defined*.
+
+;;----------------------------------------------;;
+
+* `(defvar *-hook '( _ ... ))` — a *Standard Hook*; a `listp` of `functionp`s (like `*-functions`).
+* `(defvar *-function _)` — a `functionp` (i.e. `#'...` or `(lambda (...) ...)`)
+* `(defvar *-functions '( _ ... ))` — a `listp` of `functionp`s.
+* `(defvar *-form _)`
+* `(defvar *-forms '( _ ... ))`
+* `(defvar *-program "_")` — a *Program Name*; a `stringp`. e.g. `"cabal"`.
+* `(defvar *-command '( "_" ... ))` — a *Program Invocation*; a `stringp`, or a `listp` of `stringp`s. e.g. `"cabal -v new-build all --project-file=./cabal-ghcsjs.project"` or `'("cabal" "-v" "new-build" "all" "--project-file=./cabal-ghcsjs.project")`.
+* `(defvar *-switches '( "_" ... ))` — some *Program Options*; a `listp` of `stringp`s. e.g. `'("-v" "--project-file" "./cabal-ghcsjs.project")`.
+* `(defvar *-internal )` —  `*-internal` is used internally and is *defined in C code*.
+* `(defvar <feature>--* ...)` — `<feature>--*` is used internally to `<feature>.el` (a `featurep`).
+
+;;----------------------------------------------;;
+
+${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}
+
+;;----------------------------------------------;;
+
+(defcustom expresso-keywords
+
+  '(
+ "import"
+  "forall" "type"
+  "let" "in" "case" "of" "override"
+  "if" "then" "else" 
+
+ "Int"
+ "Double"
+ "Bool"
+ "Char"
+ "Text"
+
+ "Eq" "Ord" "Num"
+  "_"
+  "fix" 
+  "True" "False"
+
+   "error"
+   "show"
+   "not"
+   "uncons"
+   "fix"
+   "double"
+   "floor"
+   "ceiling"
+   "abs"
+   "mod"
+   "absurd"
+   "pack"
+   "unpack"
+  )
+
+  "Expresso keywords.
+
+a `listp' of `stringp's.
+
+Links:
+
+• URL `https://github.com/willtim/Expresso/blob/master/src/Expresso/Parser.hs'."
+
+  :type '(repeated (string :tag "Keyword"))
+
+  :safe #'listp
+  :group 'expresso)
+
+;;----------------------------------------------;;
+
+(defvar expresso-font-lock-keywords
+
+  `(
+    (,(expresso-mode-keyword-regexp) . expresso-keyword-face)
+
+    )
+
+  "`font-lock-defaults' for `expresso-mode'.
+
+a `listp' associating `regexpp's with `facep's.
+
+For Keyword-based Syntax Highlighting.")
+
+;;----------------------------------------------;;
+
+(defcustom expresso-file-regexps
+
+  '("\\.x\\'"
+   )
+
+  "Match a `expresso-mode' file.
+
+a `listp' of `regexp's.
+
+Filename Patterns, in particular, can be File Extensions.
+See `auto-mode-alist' for the syntax."
+
+  :type '(repeated (regexp :tag "File Pattern"))
+
+  :safe #'listp
+  :group 'expresso)
+
+(defcustom expresso-filename-extensions
+
+  '( "x" "expresso" )
+
+  "File extensions for Expresso files."
+
+  :type '(repeat (string :tag "File Extension"))
+
+  :safe #'listp
+  :group 'expresso)
+
+
+(defconst expresso-filepath-regexp
+
+  (rx (or ".x" ".expresso") eos)
+
+  "Match an Expresso file.
+
+a `regexpp's.
+
+(Filename Patterns, in particular, can be File Extensions.
+See `auto-mode-alist' for the syntax.)"
+
+;;----------------------------------------------;;
+
+  (list (cons (expresso-keyword-regexp) 'expresso-keyword-face)
+
+    ("^#.*"      . font-lock-comment-face)       ; 
+    ("<dgn.*?>"  . font-lock-builtin-face)       ;
+    ("^<.*?>"    . font-lock-function-name-face) ;
+    ("<.*?>"     . font-lock-variable-name-face) ;
+    ("{.*?}"     . font-lock-variable-name-face) ;
+    ("="         . font-lock-builtin-face)       ;
+    (";"         . font-lock-builtin-face)       ;
+    ("\|"        . font-lock-keyword-face)       ;
+    ("\+"        . font-lock-keyword-face)       ;
+    ("\["        . font-lock-keyword-face)       ;
+    ("\]"        . font-lock-keyword-face)       ;
+    )
+;;----------------------------------------------;;
+(defcustom expresso-builtin-operators
+
+  '(
+    ;; Unary/Postfix “Syntax”:
+
+    "{..}"
+
+    ;; Unary/Prefix Functions:
+
+    "-"
+
+    ;; Binary “Syntax”:
+
+    ":"
+    "\\"
+    "=>"
+    "->"
+    
+    ","
+    ";"
+    
+    "="
+    ":="
+    "|"
+    "."
+    ":"
+    
+    ;; Binary Functions:
+
+    ">>"
+    "<<"
+    
+    "=="
+    "/="
+    
+    ">"
+    "<"
+    ">="
+    "<="
+    
+    "+"
+    "-"
+    "*"
+    "/" 
+
+    "&&"
+    "||" 
+
+    "++" 
+    "<>" 
+
+    )
+
+  "Names of operators built-into Expresso.
+
+a `listp' of `stringp's.
+
+See URL `https://github.com/willtim/Expresso/blob/master/src/Expresso/Parser.hs'.")
+;;----------------------------------------------;;
+;;----------------------------------------------;;
+
+(defvar expresso-prelude-bindings
+
+  (let* ((TEST #'equal)
+         (TABLE (make-hash-table :test TEST))
+         )
+
+    (puthash "all" "all : forall a. (a -> Bool) -> [a] -> Bool"                                                                                                          TABLE)
+    (puthash "and" "and : [Bool] -> Bool"                                                                                                                                TABLE)
+    (puthash "any" "any : forall a. (a -> Bool) -> [a] -> Bool"                                                                                                          TABLE)
+    (puthash "catMaybes" "catMaybes : forall a. [Maybe a] -> [a]"                                                                                                        TABLE)
+    (puthash "concat" "concat : forall a. [[a]] -> [a]"                                                                                                                  TABLE)
+    (puthash "const" "const : forall a b. b -> a -> b"                                                                                                                   TABLE)
+    (puthash "either" "either : forall a a1 b. (a1 -> b) -> (a -> b) -> Either a1 a -> b"                                                                                TABLE)
+    (puthash "elem" "elem : forall a. (Eq a) => a -> [a] -> Bool"                                                                                                        TABLE)
+    (puthash "filter" "filter : forall a. (a -> Bool) -> [a] -> [a] -> [a]"                                                                                              TABLE)
+    (puthash "foldl" "foldl : forall a b. (b -> a -> b) -> b -> [a] -> b"                                                                                                TABLE)
+    (puthash "foldr" "foldr : forall a b. (a -> b -> b) -> b -> [a] -> b"                                                                                                TABLE)
+    (puthash "fromMaybe" "fromMaybe : forall b. b -> Maybe b -> b"                                                                                                       TABLE)
+    (puthash "id" "id : forall b. b -> b"                                                                                                                                TABLE)
+    (puthash "isJust" "isJust : forall a. Maybe a -> Bool"                                                                                                               TABLE)
+    (puthash "isNothing" "isNothing : forall a. Maybe a -> Bool"                                                                                                         TABLE)
+    (puthash "just" "just : forall a. a -> Maybe a"                                                                                                                      TABLE)
+    (puthash "left" "left : forall a b. a -> Either a b"                                                                                                                 TABLE)
+    (puthash "length" "length : forall a. [a] -> Int"                                                                                                                    TABLE)
+    (puthash "listToMaybe" "listToMaybe : forall a. [a] -> Maybe a"                                                                                                      TABLE)
+    (puthash "map" "map : forall a a1. (a -> a1) -> [a] -> [a1]"                                                                                                         TABLE)
+    (puthash "mapMaybe" "mapMaybe : forall a a1. (a -> a1) -> Maybe a -> Maybe a1"                                                                                       TABLE)
+    (puthash "maybe" "maybe : forall a b. b -> (a -> b) -> Maybe a -> b"                                                                                                 TABLE)
+    (puthash "maybeToList" "maybeToList : forall a. Maybe a -> [a]"                                                                                                      TABLE)
+    (puthash "mkOverridable" "mkOverridable : forall b r. (r\override_) => ({r} -> {r}) -> {override_ : ({r} -> b) -> {r} -> b | r}"                                     TABLE)
+    (puthash "notElem" "notElem : forall a. (Eq a) => a -> [a] -> Bool"                                                                                                  TABLE)
+    (puthash "nothing" "nothing : forall a. Maybe a"                                                                                                                     TABLE)
+    (puthash "null" "null : forall a. [a] -> Bool"                                                                                                                       TABLE)
+    (puthash "or" "or : [Bool] -> Bool"                                                                                                                                  TABLE)
+    (puthash "override" "override : forall a b r r1. (r\override_, r1\override_) => {override_ : a -> {r} -> {r} | r1} -> a -> {override_ : ({r} -> b) -> {r} -> b | r}" TABLE)
+    (puthash "right" "right : forall a b. b -> Either a b"                                                                                                               TABLE)
+    (puthash "" "" TABLE)
+
+    TABLE)
+
+  "Associate types and functions with signatures.
+
+a `hash-table-p':
+
+• whose keys are `stringp's.
+• whose values are `stringp's.")
+
+;;----------------------------------------------;;
+(defvar expresso-types-table
+
+  (let* ((TEST #'equal)
+         (TABLE (make-hash-table :test TEST))
+         )
+
+    (puthash "all"            "all            : forall a. (a -> Bool) -> [a] -> Bool"                                                                                                  TABLE)
+    (puthash "and"            "and            : [Bool] -> Bool"                                                                                                                        TABLE)
+    (puthash "any"            "any            : forall a. (a -> Bool) -> [a] -> Bool"                                                                                                  TABLE)
+    (puthash "catMaybes"      "catMaybes      : forall a. [Maybe a] -> [a]"                                                                                                            TABLE)
+    (puthash "concat"         "concat         : forall a. [[a]] -> [a]"                                                                                                                TABLE)
+    (puthash "const"          "const          : forall a b. b -> a -> b"                                                                                                               TABLE)
+    (puthash "either"         "either         : forall a a1 b. (a1 -> b) -> (a -> b) -> Either a1 a -> b"                                                                              TABLE)
+    (puthash "elem"           "elem           : forall a. (Eq a) => a -> [a] -> Bool"                                                                                                  TABLE)
+    (puthash "filter"         "filter         : forall a. (a -> Bool) -> [a] -> [a] -> [a]"                                                                                            TABLE)
+    (puthash "foldl"          "foldl          : forall a b. (b -> a -> b) -> b -> [a] -> b"                                                                                            TABLE)
+    (puthash "foldr"          "foldr          : forall a b. (a -> b -> b) -> b -> [a] -> b"                                                                                            TABLE)
+    (puthash "fromMaybe"      "fromMaybe      : forall b. b -> Maybe b -> b"                                                                                                           TABLE)
+    (puthash "id"             "id             : forall b. b -> b"                                                                                                                      TABLE)
+    (puthash "isJust"         "isJust         : forall a. Maybe a -> Bool"                                                                                                             TABLE)
+    (puthash "isNothing"      "isNothing      : forall a. Maybe a -> Bool"                                                                                                             TABLE)
+    (puthash "just"           "just           : forall a. a -> Maybe a"                                                                                                                TABLE)
+    (puthash "left"           "left           : forall a b. a -> Either a b"                                                                                                           TABLE)
+    (puthash "length"         "length         : forall a. [a] -> Int"                                                                                                                  TABLE)
+    (puthash "listToMaybe"    "listToMaybe    : forall a. [a] -> Maybe a"                                                                                                              TABLE)
+    (puthash "map"            "map            : forall a a1. (a -> a1) -> [a] -> [a1]"                                                                                                 TABLE)
+    (puthash "mapMaybe"       "mapMaybe       : forall a a1. (a -> a1) -> Maybe a -> Maybe a1"                                                                                         TABLE)
+    (puthash "maybe"          "maybe          : forall a b. b -> (a -> b) -> Maybe a -> b"                                                                                             TABLE)
+    (puthash "maybeToList"    "maybeToList    : forall a. Maybe a -> [a]"                                                                                                              TABLE)
+    (puthash "mkOverridable"  "mkOverridable  : forall b r. (r\\override_) => ({r} -> {r}) -> {override_ : ({r} -> b) -> {r} -> b | r}"                                                TABLE)
+    (puthash "notElem"        "notElem        : forall a. (Eq a) => a -> [a] -> Bool"                                                                                                  TABLE)
+    (puthash "nothing"        "nothing        : forall a. Maybe a"                                                                                                                     TABLE)
+    (puthash "null"           "null           : forall a. [a] -> Bool"                                                                                                                 TABLE)
+    (puthash "or"             "or             : [Bool] -> Bool"                                                                                                                        TABLE)
+    (puthash "override"       "override       : forall a b r r1. (r\\override_, r1\\override_) => {override_ : a -> {r} -> {r} | r1} -> a -> {override_ : ({r} -> b) -> {r} -> b | r}" TABLE)
+    (puthash "right"          "right          : forall a b. b -> Either a b"                                                                                                           TABLE)
+
+    TABLE)
+
+  "Associate types and functions with signatures.
+
+a `hash-table-p':
+
+• whose keys are `stringp's.
+• whose values are `stringp's.
+
+Customization:
+
+• Customize with Widgets —
+
+  ❶ Evaluate « M=: (customize-variable 'expresso-types-table) »,
+  ❷ Execute « M-x `customize-variable' » (which provides completion for all `defcustom' variables).
+
+• Customize in Elisp   — 
+
+  ❶ Register new bindings via `puthash'. For example:
+
+         (puthash \"increment\" \"Int -> Int\" expresso-types-table)
+
+  ❷ Remove bindings via `remhash'. For example:
+
+         (remhash \"fix\" expresso-types-table)
+
+Links:
+
+• URL `https://github.com/willtim/Expresso/blob/0.1.2.0/lib/Prelude.x'")
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+;; ElDoc ---------------------------------------;;
+;;----------------------------------------------;;
+
+(defvar expresso-doc-table expresso-types-table
+
+  "Associate types and functions with signatures or with documentation.
+
+Type is a `hash-table-p':
+
+• whose keys are `stringp's.
+• whose values are `stringp's.")
+;;----------------------------------------------;;
+selected
+left extends (the beginning of the) selection leftwards, right extends (the ending of the) selection rightwards.
+
+region-end
+
+URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Shift-Selection.html'
+
+*Shift-Selection* is enabled by the *Global Minor Mode* `shift-select-mode`.
+
+
+
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+;; Selection -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-extend-selection-leftward ()
+
+  "Extend the `region-beginning' (leftwards/upwards).
+  
+URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Shift-Selection.html'"
+
+  ())
+
+;;----------------------------------------------;;
+
+(defun sboo-extend-selection-rightward ()
+
+  "Extend the `region-end' (rightwards/downwards).
+  
+URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Shift-Selection.html'"
+
+  ())
+
+;;----------------------------------------------;;
+
+;; "," is a symbol in Hy, namely the tuple constructor
+(modify-syntax-entry ?\, "_ p" table)
 
 ;;----------------------------------------------;;
 
@@ -6513,47 +7542,4 @@ Links:
 
 ;;----------------------------------------------;;
 
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
-;;----------------------------------------------;;
-
+========================================================================

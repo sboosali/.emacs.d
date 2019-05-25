@@ -61,6 +61,7 @@ most have *Minimal Dependencies*, either:
 * `elisp-docstring-mode.el`
 * `elisp-refs.el`
 * `flycheck-package.el`       — `;; Package-Requires: ((flycheck "0.22") (package-lint "0.2"))`
+* `find-file-in-project.el` *v5.7.4*
 * `goto-last-change.el`
 * `goto-line-preview.el`
 * `graphviz-dot-mode.el`
@@ -93,6 +94,11 @@ most have *Minimal Dependencies*, either:
 * `wrap-region.el`
 * `xmodmap-mode.el`
 * `yasnippet.el`
+* `auto-highlight-symbol.el`  — *v1.53*. automatically highlight the current symbol (c.f. *Eclipse*).
+* `highlight2clipboard.el`    — `;; Package-Requires: ((htmlize "1.47"))`
+* `syntax-subword.el` — like `subword-mode` but finer.
+* `helm-navi.el` `;; Package-Requires: ((helm "1.9.4") (navi-mode "2.0") ...)`
+* `navi-mode.el` *v2.0*
 
 * `pandoc-mode`:
 
@@ -110,6 +116,7 @@ most have *Minimal Dependencies*, either:
 * `loop.el`       — *v1.3*
 * `list-utils.el` — *v0.4.4*
 * `memoize.el`    — *v*
+* `htmlize.el` — *v1.55*
 
 Miscellaneous *Vendored Libraries* (which are useful, but used infrequently) include:
 

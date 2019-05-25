@@ -169,7 +169,7 @@ Effects:
   (interactive)
 
   (dolist (FEATURE sboo-builtin-features-list)
-    (ignore-errors (require FEATURE)))
+    (with-demoted-errors "[Warning] %s" (require FEATURE)))
 
   ())
 
