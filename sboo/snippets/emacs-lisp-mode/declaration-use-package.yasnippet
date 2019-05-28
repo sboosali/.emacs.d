@@ -5,7 +5,7 @@
 #
 # type        : snippet
 # condition   : (let ((KEY "up")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
-# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
 #
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 # commentary  : 
@@ -15,12 +15,12 @@
 
   :commands ($1-mode)
 
-  :delight ($1-mode) " ?")
+  :delight ($1-mode . " ?")
 
 ;; :custom ($1- t "")
 
   :config
-
+  $0
   ())
 
 ;; ^ Links:

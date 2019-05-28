@@ -1,0 +1,21 @@
+# -*- mode: snippet -*-
+#
+# key         : defsvg
+# name        : [sboo] Declare an SVG « defimage ».
+#
+# type        : snippet
+# condition   : (let ((KEY "defsvg")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+;;----------------------------------------------;;
+
+(defimage ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}-image
+
+  ((:type svg :data "$0"))
+
+  "Image Specification for ${1:$(string-join (mapcar #'capitalize (split-string yas-text "-")) " ")}.")
+
