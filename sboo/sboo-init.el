@@ -1426,15 +1426,25 @@ Notes:
 
 (use-package find-dired
 
+  :commands (find-dired)
+
   :custom
 
   (find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld") "“By default Emacs will pass -exec to find and that makes it very slow. It is better to collate the matches and then use xargs to run the command.”")
 
-  :config
-
-  ())
+  :config ())
 
 ;; ^ URL `https://www.masteringemacs.org/article/working-multiple-files-dired'
+
+;;----------------------------------------------;;
+
+(use-package image-dired
+
+  :commands (image-dired)
+
+  :config ())
+
+;; ^ 
 
 ;;----------------------------------------------;;
 
@@ -1508,6 +1518,13 @@ Notes:
   :config
 
   ())
+
+;;----------------------------------------------;;
+
+(use-package outline
+  :defer t
+
+  :config ())
 
 ;;----------------------------------------------;;
 
@@ -4382,6 +4399,45 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
+
+(use-package outshine)
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/alphapapa/outshine'
+;;
+
+;;----------------------------------------------;;
+
+(use-package navi
+
+  :commands (navi-mode)
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/alphapapa/navi'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-navi
+
+  :commands (helm-navi)
+
+  :delight (helm-navi-mode)
+
+  :preface (require 'outline)
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/emacs-helm/helm-navi'
+;;
+
+;;----------------------------------------------;;
 ;; External Packages: Prose --------------------;;
 ;;----------------------------------------------;;
 
@@ -5250,6 +5306,25 @@ search (upwards) for a named Code-Block. For example,
 ;;
 ;;   • URL `http://jblevins.org/projects/deft'
 ;;   • URL `https://github.com/jrblevin/deft'
+;;
+
+;;----------------------------------------------;;
+
+(use-package olivetti
+
+  :commands (olivetti-mode)
+
+  ;; :custom (olivetti- t "")
+
+  :config
+
+  
+
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/rnkn/olivetti'
 ;;
 
 ;;----------------------------------------------;;

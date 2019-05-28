@@ -99,6 +99,9 @@ most have *Minimal Dependencies*, either:
 * `syntax-subword.el` — like `subword-mode` but finer.
 * `helm-navi.el` `;; Package-Requires: ((helm "1.9.4") (navi-mode "2.0") ...)`
 * `navi-mode.el` *v2.0*
+* `visual-fill-column.el`
+* `writeroom-mode.el` — `;; Package-Requires: ((visual-fill-column "1.9"))` — `;; Version: 3.8`
+* `olivetti.el` — `;; Version: 1.7.1`
 
 * `pandoc-mode`:
 
