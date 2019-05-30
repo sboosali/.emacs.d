@@ -46,7 +46,7 @@
 
 (defvar sboo-private-password
 
-  (read-passwd "Password (sboo): ")
+  nil ;;(read-passwd "Password (sboo): ")
 
   "Password for...")
 

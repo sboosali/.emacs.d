@@ -2055,6 +2055,8 @@ Links:
 
 (use-package helm-config
 
+  :load-path ("submodules/helm" "submodules/async")
+
   :custom
 
   (helm-command-prefix-key "M-q" "the Default (« C-x c ») is too similar to `kill-emacs's keybinding.")
