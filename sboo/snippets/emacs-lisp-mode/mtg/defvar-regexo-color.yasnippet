@@ -1,0 +1,25 @@
+# -*- mode: snippet -*-
+#
+# key         : mtgdrc
+# name        : [sboo,mtg] a « mtg-color-*-regexp ».
+#
+# type        : snippet
+# condition   : t
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+
+;;----------------------------------------------;;
+
+(defvar mtg-color-$1-regexp
+
+  (rx (or (and (any "${1:$(char-to-string (upcase (string-to-char yas-text)))}${1:$(char-to-string (downcase (string-to-char yas-text)))}") "$1")
+          (and "{" (any  "${1:$(char-to-string (upcase (string-to-char yas-text)))}${1:$(char-to-string (downcase (string-to-char yas-text)))}") "}")
+          "$2"))
+
+  "Match a word/symbol associated with the color $1.
+
+a `regexpp'.")

@@ -8030,6 +8030,1045 @@ emacs "defimage" ":data" "data:image/svg+xml;base64"
 
 ========================================================================
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(defun mtg-forward-card-name (&optional count)
+
+  "Move across MTG Card Names.
+
+Inputs:
+
+ • COUNT — an optional `numberp'.
+  the Prefix-Argument. 
+  If:
+
+      ° positive — Move forwards to (the end of) the next card name.
+      ° negative — Move backwards to (the end of) the prior card name.
+
+Effects:
+
+• Moves `point'.
+
+Metadata:
+
+• Implements the property `forward-op'
+  for the “thing” symbol `mtg-card-name'.
+
+Examples:
+
+• M-: (thing-at-point 'mtg-card-name)
+
+Notes:
+
+• Card Names:
+
+    ° May have commas and/or `downcase'd words.
+    ° Must end with (and should start with) a `capitalize'd word."
+
+  (interactive "P")
+
+  (let* ((COUNT (or count +1))
+  )
+
+  ()))
+
+(put 'mtg-card-name 'forward-op #'mtg-forward-card-name)
+
+
+
+
+(defun markdown-eldoc-function ()
+  "Return a helpful string when appropriate based on context.
+* Report URL when point is at a hidden URL.
+* Report language name when point is a code block with hidden markup."
+  (cond
+   ;; Hidden URL or reference for inline link
+   ((and (or (thing-at-point-looking-at markdown-regex-link-inline)
+             (thing-at-point-looking-at markdown-regex-link-reference))
+         (or markdown-hide-urls markdown-hide-markup))
+    (let* ((imagep (string-equal (match-string 1) "!"))
+           (edit-keys (markdown--substitute-command-keys
+                       (if imagep
+                           "\\[markdown-insert-image]"
+                         "\\[markdown-insert-link]")))
+           (edit-str (propertize edit-keys 'face 'font-lock-constant-face))
+           (referencep (string-equal (match-string 5) "["))
+           (object (if referencep "reference" "URL")))
+      (format "Hidden %s (%s to edit): %s" object edit-str
+              (if referencep
+                  (concat
+                   (propertize "[" 'face 'markdown-markup-face)
+                   (propertize (match-string-no-properties 6)
+                               'face 'markdown-reference-face)
+                   (propertize "]" 'face 'markdown-markup-face))
+                (propertize (match-string-no-properties 6)
+                            'face 'markdown-url-face)))))
+   ;; Hidden language name for fenced code blocks
+   ((and (markdown-code-block-at-point-p)
+         (not (get-text-property (point) 'markdown-pre))
+         markdown-hide-markup)
+    (let ((lang (save-excursion (markdown-code-block-lang))))
+      (unless lang (setq lang "[unspecified]"))
+      (format "Hidden code block language: %s (%s to toggle markup)"
+              (propertize lang 'face 'markdown-language-keyword-face)
+              (markdown--substitute-command-keys
+               "\\[markdown-toggle-markup-hiding]"))))))
+
+
+
+(defun mtg-toggle-inline-images (&optional force)
+
+  "
+
+Inputs:
+
+ • FORCE — a `booleanp'.
+  the Prefix-Argument.
+
+Effects:
+
+• Toggles `iimage-mode'."
+
+  (interactive "P")
+
+  ())
+
+
+
+
+(defvar markdown-mode-mouse-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map [follow-link] 'mouse-face)
+    (define-key map [mouse-2] 'markdown-follow-link-at-point)
+    map)
+  "Keymap for following links with mouse.")
+
+
+
+
+
+
+(defun markdown--command-map-prompt ()
+  "Return prompt for Markdown buffer-wide commands."
+  (when markdown-enable-prefix-prompts
+    (concat
+     "Command: "
+     (propertize "m" 'face 'markdown-bold-face) "arkdown, "
+     (propertize "p" 'face 'markdown-bold-face) "review, "
+     (propertize "o" 'face 'markdown-bold-face) "pen, "
+     (propertize "e" 'face 'markdown-bold-face) "xport, "
+     "export & pre" (propertize "v" 'face 'markdown-bold-face) "iew, "
+     (propertize "c" 'face 'markdown-bold-face) "heck refs, "
+     "C-h = more")))
+
+
+
+(defun markdown-complete-dwim ()
+
+  "Complete in `region' or near `point'.
+
+Handle all objects in `markdown-complete-alist', in order.
+
+See `markdown-complete-at-point' and `markdown-complete-region'."
+
+  (interactive "*")
+
+  (if (markdown-use-region-p)
+      (markdown-complete-region (region-beginning) (region-end))
+    (markdown-complete-at-point)))
+
+
+
+
+
+(defun markdown-enter-key ()
+  "Handle RET according to value of `markdown-indent-on-enter'.
+When it is nil, simply call `newline'.  Otherwise, indent the next line
+following RET using `markdown-indent-line'.  Furthermore, when it
+is set to 'indent-and-new-item and the point is in a list item,
+start a new item with the same indentation. If the point is in an
+empty list item, remove it (so that pressing RET twice when in a
+list simply adds a blank line)."
+  (interactive)
+  (if (not markdown-indent-on-enter)
+      (newline)
+    (let (bounds)
+      (if (and (memq markdown-indent-on-enter '(indent-and-new-item))
+               (setq bounds (markdown-cur-list-item-bounds)))
+          (let ((beg (cl-first bounds))
+                (end (cl-second bounds))
+                (length (cl-fourth bounds)))
+            ;; Point is in a list item
+            (if (= (- end beg) length)
+                ;; Delete blank list
+                (progn
+                  (delete-region beg end)
+                  (newline)
+                  (markdown-indent-line))
+              (call-interactively #'markdown-insert-list-item)))
+        ;; Point is not in a list
+        (newline)
+        (markdown-indent-line)))))
+
+
+
+
+
+
+
+
+(defun markdown-insert-italic ()
+  "Insert markup to make a region or word italic.
+If there is an active region, make the region italic.  If the point
+is at a non-italic word, make the word italic.  If the point is at an
+italic word or phrase, remove the italic markup.  Otherwise, simply
+insert italic delimiters and place the cursor in between them."
+  (interactive)
+  (let ((delim (if markdown-italic-underscore "_" "*")))
+    (if (markdown-use-region-p)
+        ;; Active region
+        (let ((bounds (markdown-unwrap-things-in-region
+                       (region-beginning) (region-end)
+                       markdown-regex-italic 1 3)))
+          (markdown-wrap-or-insert delim delim nil (car bounds) (cdr bounds)))
+      ;; Italic markup removal, italic word at point, or empty markup insertion
+      (if (thing-at-point-looking-at markdown-regex-italic)
+          (markdown-unwrap-thing-at-point nil 1 3)
+        (markdown-wrap-or-insert delim delim 'word nil nil)))))
+
+
+
+
+
+(defun markdown-match-bold (last)
+  "Match inline bold from the point to LAST."
+  (when (markdown-match-inline-generic markdown-regex-bold last)
+    (let ((begin (match-beginning 2))
+          (end (match-end 2)))
+      (if (or (markdown-inline-code-at-pos-p begin)
+              (markdown-inline-code-at-pos-p end)
+              (markdown-in-comment-p)
+              (markdown-range-property-any
+               begin begin 'face '(markdown-url-face
+                                   markdown-plain-url-face))
+              (markdown-range-property-any
+               begin end 'face '(markdown-inline-code-face
+                                 markdown-math-face)))
+          (progn (goto-char (min (1+ begin) last))
+                 (when (< (point) last)
+                   (markdown-match-italic last)))
+        (set-match-data (list (match-beginning 2) (match-end 2)
+                              (match-beginning 3) (match-end 3)
+                              (match-beginning 4) (match-end 4)
+                              (match-beginning 5) (match-end 5)))
+        t))))
+
+
+
+
+;;; Python specialized rx
+
+(eval-when-compile
+  (defconst python-rx-constituents
+    `((block-start          . ,(rx symbol-start
+                                   (or "def" "class" "if" "elif" "else" "try"
+                                       "except" "finally" "for" "while" "with")
+                                   symbol-end))
+      (decorator            . ,(rx line-start (* space) ?@ (any letter ?_)
+                                   (* (any word ?_))))
+      (defun                . ,(rx symbol-start (or "def" "class") symbol-end))
+      (if-name-main         . ,(rx line-start "if" (+ space) "__name__"
+                                   (+ space) "==" (+ space)
+                                   (any ?' ?\") "__main__" (any ?' ?\")
+                                   (* space) ?:))
+      (symbol-name          . ,(rx (any letter ?_) (* (any word ?_))))
+      (open-paren           . ,(rx (or "{" "[" "(")))
+      (close-paren          . ,(rx (or "}" "]" ")")))
+      (simple-operator      . ,(rx (any ?+ ?- ?/ ?& ?^ ?~ ?| ?* ?< ?> ?= ?%)))
+      ;; FIXME: rx should support (not simple-operator).
+      (not-simple-operator  . ,(rx
+                                (not
+                                 (any ?+ ?- ?/ ?& ?^ ?~ ?| ?* ?< ?> ?= ?%))))
+      ;; FIXME: Use regexp-opt.
+      (operator             . ,(rx (or "+" "-" "/" "&" "^" "~" "|" "*" "<" ">"
+                                       "=" "%" "**" "//" "<<" ">>" "<=" "!="
+                                       "==" ">=" "is" "not")))
+      ;; FIXME: Use regexp-opt.
+      (assignment-operator  . ,(rx (or "=" "+=" "-=" "*=" "/=" "//=" "%=" "**="
+                                       ">>=" "<<=" "&=" "^=" "|=")))
+      (string-delimiter . ,(rx (and
+                                ;; Match even number of backslashes.
+                                (or (not (any ?\\ ?\' ?\")) point
+                                    ;; Quotes might be preceded by a escaped quote.
+                                    (and (or (not (any ?\\)) point) ?\\
+                                         (* ?\\ ?\\) (any ?\' ?\")))
+                                (* ?\\ ?\\)
+                                ;; Match single or triple quotes of any kind.
+                                (group (or  "\"" "\"\"\"" "'" "'''"))))))
+    "Additional Python specific sexps for `python-rx'")
+
+  (defmacro python-rx (&rest regexps)
+    "Python mode specialized rx macro.
+This variant of `rx' supports common python named REGEXPS."
+    (let ((rx-constituents (append python-rx-constituents rx-constituents)))
+      (cond ((null regexps)
+             (error "No regexp"))
+            ((cdr regexps)
+             (rx-to-string `(and ,@regexps) t))
+            (t
+             (rx-to-string (car regexps) t))))))
+
+
+
+
+
+(declare-function eww-open-file "eww")
+
+(defconst mtg-block-separator-regexp
+
+  (rx newline (0+ whitespace) newline)  ; "\n[\n\t\f ]*\n"
+
+  "Regular expression for matching block boundaries.")
+
+(defcustom mtg-dash-display-char
+
+  (cond ((char-displayable-p ?─) ?─)
+        ((char-displayable-p ?━) ?━)
+        (t ?-))
+
+  "Character for displaying a dash.
+
+e.g. « Choose one — »."
+
+  :type '(character)
+
+  :safe #'characterp
+  :group 'mtg)
+
+(defsubst mtg-in-comment-p (&optional position)
+
+  "Return non-nil if POSITION is in a comment.
+If POSITION is not given, use point instead."
+
+  (nth 4 (syntax-ppss position)))
+
+(defvar markdown-italic-face 'markdown-italic
+  "Face name for italic text.")
+
+(defvar markdown-bold-face 'markdown-bold
+  "Face name for bold text.")
+
+(defvar markdown-strike-through-face 'markdown-strike-through
+  "Face name for strike-through text.")
+
+(defvar mtg-italic-face 'mtg-italic
+  "Face name for italic text.")
+
+(defvar mtg-bold-face 'mtg-bold
+  "Face name for bold text.")
+
+(defvar mtg-strike-through-face 'mtg-strike-through
+  "Face name for strike-through text.")
+
+;;
+
+(defvar mtg-card-name-face 'mtg-card-name
+  "Face name for card names.")
+
+(defvar mtg-card-typeline-face 'mtg-cardline-type
+  "Face name for the typeline.")
+
+(defvar mtg-card-supertype-face 'mtg-card-supertype
+  "Face name for card supertypes.")
+
+(defvar mtg-card-card-type-face 'mtg-card-card-type
+  "Face name for card types.")
+
+(defvar mtg-card-subtype-face 'mtg-card-subtype
+  "Face name for card subtypes (including creature types).")
+
+(defvar mtg-card-rarity-face 'mtg-card-rarity
+  "Face name for rarities.")
+
+(defvar mtg-card-rules-text-face 'mtg-card-rules-text
+  "Face name for rules text (a.k.a. Oracle text).")
+
+(defvar mtg-card-activation-cost-face 'mtg-card-activation-cost
+  "Face name for the cost of an activated ability.
+
+i.e. The sentence to the left of a colon.")
+
+(defvar mtg-card-activation-effect-face 'mtg-card-activation-effect
+  "Face name for the effect of an activated ability.
+
+i.e. The paragraph to the right of a colon.")
+
+(defvar mtg-card-reminder-text-face reminder
+  "Face name for reminder text.")
+
+(defvar mtg-card-flavor-text-face 'mtg-card-flavor-text
+  "Face name for flavor text.")
+
+(defvar mtg-card-number-face 'mtg-card-number
+  "Face name for power/toughness/loyalty.")
+
+(defvar mtg-card-artist-name-face 'mtg-card-artist-name
+  "Face name for artists' names.")
+
+(defvar mtg-card-keyword-face 'mtg-card-keyword
+  "Face name for keywords.
+
+See `mtg-card-keywords-list'.")
+
+(defvar mtg-card-ability-words-face 'mtg-card-ability-words
+  "Face name for ability words.
+
+See `mtg-card-ability-words-list'.")
+
+(defvar mtg-card-rules-namesake-face 'mtg-card-rules-namesakes
+  "Face name for a card's namesake within rules text (e.g. « ~ », the tilde).")
+
+(defvar mtg-card-rules-card-names-face 'mtg-card-rules-card-names
+  "Face name for card names within rules text.")
+
+(defvar mtg-card-rules-types-face 'mtg-card-rules-types
+  "Face name for types within rules text.")
+
+(defcustom markdown-header-scaling-values
+  '(2.0 1.7 1.4 1.1 1.0 1.0)
+  "List of scaling values for headers of level one through six.
+Used when `markdown-header-scaling' is non-nil."
+  :type 'list
+  :initialize 'custom-initialize-default
+  :set (lambda (symbol value)
+         (set-default symbol value)
+         (markdown-update-header-faces markdown-header-scaling value))
+  :group 'markdown-faces)
+
+;; Images
+
+(defimage mtg-two-generic-mana-image
+            ((:type svg :data "TODO")))
+
+;; Faces
+
+(defgroup markdown-faces nil
+  "Faces used in Markdown Mode"
+  :group 'markdown
+  :group 'faces)
+
+(defface markdown-italic
+  '((t (:inherit italic)))
+  "Face for italic text."
+  :group 'markdown-faces)
+
+(defface markdown-bold
+  '((t (:inherit bold)))
+  "Face for bold text."
+  :group 'markdown-faces)
+
+(defface markdown-strike-through
+  '((t (:strike-through t)))
+  "Face for strike-through text."
+  :group 'markdown-faces)
+
+shadow
+For dimmed-out text. For example, it is used for the ignored part of a filename in the minibuffer.
+
+(defface markdown-pre-face
+  '((t (:inherit (markdown-code-face font-lock-constant-face))))
+  "Face for preformatted text."
+  :group 'markdown-faces)
+
+(defface markdown-language-keyword-face
+  '((t (:inherit font-lock-type-face)))
+  "Face for programming language identifiers."
+  :group 'markdown-faces)
+
+(defface markdown-language-info-face
+  '((t (:inherit font-lock-string-face)))
+  "Face for programming language info strings."
+  :group 'markdown-faces)
+
+(defface markdown-link-face
+  '((t (:inherit link)))
+  "Face for links."
+  :group 'markdown-faces)
+
+(defface markdown-missing-link-face
+  '((t (:inherit font-lock-warning-face)))
+  "Face for missing links."
+  :group 'markdown-faces)
+
+(defface markdown-gfm-checkbox-face
+  '((t (:inherit font-lock-builtin-face)))
+  "Face for GFM checkboxes."
+  :group 'markdown-faces)
+
+;; 
+
+(defun markdown-current-line-blank-p ()
+
+  "Return t if the current line is blank and nil otherwise."
+
+  (save-excursion
+    (beginning-of-line)
+    (let ((regexp "^\\s *$"))
+      (looking-at-p regexp)))
+
+(defun markdown-prev-line-blank-p ()
+
+  "Return t if the previous line is blank and nil otherwise.
+
+If we are at the first line, then consider the previous line to be blank."
+
+  (or (= (line-beginning-position) (point-min))
+
+      (save-excursion
+        (forward-line -1)
+        (markdown-current-line-blank-p))))
+
+(defun markdown-next-line-blank-p ()
+
+  "Return t if the next line is blank and nil otherwise.
+
+If we are at the last line, then consider the next line to be blank."
+
+  (or (= (line-end-position) (point-max))
+
+      (save-excursion
+        (forward-line +1)
+        (markdown-current-line-blank-p))))
+
+;; 
+
+(defun markdown-get-used-uris ()
+  "Return a list of all used URIs in the buffer."
+  (save-excursion
+    (goto-char (point-min))
+    (let (uris)
+      (while (re-search-forward
+              (concat "\\(?:" markdown-regex-link-inline
+                      "\\|" markdown-regex-angle-uri
+                      "\\|" markdown-regex-uri
+                      "\\|" markdown-regex-email
+                      "\\)")
+              nil t)
+        (unless (or (markdown-inline-code-at-point-p)
+                    (markdown-code-block-at-point-p))
+          (cl-pushnew (or (match-string-no-properties 6)
+                          (match-string-no-properties 10)
+                          (match-string-no-properties 12)
+                          (match-string-no-properties 13))
+                      uris :test #'equal)))
+      (reverse uris))))
+
+
+
+
+
+(defvar mtg-card--face 'mtg-card-
+  "Face name for .")
+
+(defvar mtg--regexp
+
+  (rx word-start word-end)
+
+  "Match 
+
+a `regexpp'."
+
+
+
+
+REGEXPS
+
+(defvar mtg-card-namesake-regexp
+
+  (rx (or (and word-start "~" word-end))
+          (and word-start (or ?t ?T) "his creature" word-end)))
+
+  "Match namesakes of the current card.
+
+a `regexpp'."
+
+(defvar mtg-card-name-reference-regexp
+
+  (mtgrx word-start "named" word-end mtg-card-name)
+
+  "Match a reference to a known card name.
+
+a `regexpp'."
+
+(defvar mtg-quotation-regexp
+
+  (rx (or ?“ ?") (not (or ?“ ?” ?")) (or ?” ?"))
+
+  "Match 
+
+a `regexpp'.
+
+Examples:
+
+• Llanowar Mentor says
+  « Create a 1/1 green Elf Druid creature token named Llanowar Elves. It has “{T}: Add {G}.” »."
+ 
+(defvar mtg--regexp
+
+  (rx word-start word-end)
+
+  "Match 
+
+a `regexpp'."
+
+
+
+SYNTAX
+
+, 
+—
+“”
+{}
+
+TESTS
+
+Llanowar Mentor {G}
+https://img.scryfall.com/cards/large/en/fut/131.jpg
+Creature — Elf Spellshaper
+{G}, {T}, Discard a card: Create a 1/1 green Elf Druid creature token named Llanowar Elves. It has “{T}: Add {G}.”
+1/1
+
+
+
+
+
+(defvar mtg-card--text-face 'mtg-card--text
+  "Face name for text.")
+
+
+
+'local-map make-mode-line-mouse-map 'mouse-1
+
+
+
+
+
+(defun expresso-propertize-symbol (text)
+
+  "Propertize TEXT (an Expresso symbol) as hoverable and clickable.
+
+Inputs:
+
+• TEXT — a `stringp'.
+
+Output:
+
+• a `stringp'.
+
+Properties:
+
+• on hover — Echo the Expresso symbol's
+  signature (type signature or kind signature).
+
+• on click — Popup a buffer with the Expresso symbol's
+  signature, definition, and (if available) documentation."
+
+  (let* ((DOC)
+       (FACE)
+        (TYPE)
+        )
+
+      (propertize (format "%s" text)
+                  'face FACE
+                  'help-echo TYPE
+                  'display '(raise 0.2)
+                  'mouse-face '(:box 1)
+                  'local-map (make-mode-line-mouse-map 'mouse-1 #'expresso-visit-symbol))))
+
+
+
+(defun expresso-visit-symbol (event)
+
+  ""
+
+  (interactive)
+
+  ())
+
+
+
+`(:height 0.9 :foreground ,(face-attribute 'font-lock-comment-face :foreground)))
+               (t '(:height 0.9 :inherit)))))
+
+      (propertize (format "%s" text)
+                  'face f
+                  'help-echo "Show Flycheck Errors"
+                  'display '(raise 0.2)
+                  'mouse-face '(:box 1)
+                  'local-map (make-mode-line-mouse-map 'mouse-1 #'visit-link
+
+
+
+
+(defvar expresso-type-variable-face 'expresso-type-variable
+  "Face `expresso-type-variable'.")
+
+(defvar expresso-function-variable-face 'expresso-function-variable
+  "Face `expresso-function-variable'.")
+
+
+
+
+(defvar expresso-reserved-symbol-regexp
+
+  (rx (or "->" "=" "-" "*" "/" "+"
+                          "++" "::" "|" "," "." "\\"
+                          "{|" "|}" ":=" "{..}"
+                          "==" "/=" ">" ">=" "<" "<="
+                          "&&" "||" ":" "=>"
+                         ))
+
+  "Lexeme RegExp for 
+
+a `regexpp'.")
+
+(defvar expresso-reserved-word-regexp
+
+  (rx (or "let" "in" "if" "then" "else" "case" "of"
+                          "True" "False" "forall" "Eq" "Ord" "Num"
+                          "type"
+                         ))
+
+  "Lexeme RegExp for 
+
+a `regexpp'.")
+
+
+
+
+
+(defun expresso-font-lock-keyword-reserved-operator ()
+
+  "Return a `font-lock-keywords' for reserved Expresso operators.
+
+Output:
+
+• a `listp' (a `font-lock-keywords' member).
+
+Style any `expresso-reserved-symbol-regexp'
+with face `expresso-builtin-operator-face'"
+
+  (list expresso-reserved-symbol-regexp 'expresso-builtin-operator-face nil nil))
+
+
+
+
+
+
+• Expresso keywords
+• Expresso types
+• Expresso functions
+• Expresso constructors
+
+
+
+(defvar expresso-font-lock-reserved
+
+  (rx (or "let" "in" "if" "then" "else" "case" "of"
+                          "True" "False" "forall" "Eq" "Ord" "Num"
+                          "type"
+                         ))
+
+  "`font-lock-keywords' for reserved Expresso .
+
+a `listp' (selon each `font-lock-keywords' member).
+
+Includes:
+
+• Expresso keywords
+• Expresso types
+• Expresso functions
+• Expresso constructors")
+
+
+
+
+
+
+
+
+
+
+expresso-identifier-regexp
+(rx (any alpha) (+1 (any alnum "_'"))
+
+expresso-identifier-type-regexp
+(rx (any lower) (+1 (any alnum "_'"))
+
+expresso-identifier-value-regexp
+(rx (any upper) (+1 (any alnum "_'"))
+
+
+
+
+<p class="mtg-card-"></p>
+
+
+
+
+(defvar expresso-font-lock-keywords-attribute
+
+  (let ((IDENTIFIER (expresso-identifier-regexp))
+)
+
+  (list
+
+   (rx-to-string
+
+    `((or "{" ",")
+        (group-n 1 ,IDENTIFIER)
+        (1+ space)
+        "=")
+        (1+ space)
+        (group-n 2 ,EXPRESSION)
+        (1+ space)
+        ","))
+
+   '(1 font-lock-variable-name-face nil t)
+   '(2 )))
+
+  "
+
+e.g. « {x = 1, y = True} »"
+
+
+
+
+(defun hy--shell-send-async (string)
+  "Send STRING to internal hy process asynchronously."
+  (let ((output-buffer " *Comint Hy Redirect Work Buffer*")
+        (proc (hy-shell-get-process 'internal)))
+    (with-current-buffer (get-buffer-create output-buffer)
+      (erase-buffer)
+      (comint-redirect-send-command-to-process string output-buffer proc nil t)
+
+      (set-buffer (process-buffer proc))
+      (while (and (null comint-redirect-completed)
+                  (accept-process-output proc nil 100 t)))
+      (set-buffer output-buffer)
+      (buffer-string))))
+
+
+
+(rx "." (or expresso-filename-extensions) eos))
+
+(let* ((DIRECTORY (or directory default-directory))
+)
+  (directory-files-recursively DIRECTORY nil "\\.x$")))
+
+
+(use-package google-this
+
+  :commands (google-search google-word google-symbol google-line google-region)
+
+  :bind (:map sboo-search-keymap
+              ( . google-this)
+  )
+
+  :config 
+
+  (google-this-mode +1))
+
+;; ^ `google-this' provides navigating through your undo history in a temporary buffer.
+;;
+;; Features include:
+;;
+
+https://github.com/Malabarba/emacs-google-this
+
+(global-set-key (kbd "C-x g") 'google-this-mode-submap)
+google-word, google-symbol, google-line and google-region functions, bound as w, s, l and SPC
+
+
+(use-package flycheck
+  :commands (flycheck-mode
+             flycheck-next-error
+             flycheck-previous-error)
+  :init
+  (dolist (where '((emacs-lisp-mode-hook . emacs-lisp-mode-map)
+                   (haskell-mode-hook    . haskell-mode-map)
+                   (js2-mode-hook        . js2-mode-map)
+                   (c-mode-common-hook   . c-mode-base-map)))
+    (add-hook (car where)
+              `(lambda ()
+                 (bind-key "M-n" #'flycheck-next-error ,(cdr where))
+                 (bind-key "M-p" #'flycheck-previous-error ,(cdr where)))))
+
+
+(setq scroll-step 1) 
+(setq scroll-margin 0) 
+(setq scroll-preserve-screen-position 't) ;;; scroll without moving cursor 
+(setq scroll-conservatively 10000) ;;; (0 or 10000 seems same) 
+(setq auto-window-vscroll nil) 
+(setq scroll-up nil) 
+(setq scroll-down nil) 
+(setq scroll-up-aggressively nil) 
+(setq scroll-down-aggressively nil) 
+(setq next-screen-context-lines 0) 
+(mouse-wheel-mode 't) ;;; mouse-wheel enabled 
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;;; 1 line at a time 
+(setq mouse-wheel-follow-mouse 't) ;;; scroll window under mouse 
+(setq indent-tabs-mode nil) 
+(setq blink-matching-paren nil) 
+(setq column-number-mode 't) 
+(setq size-indication-mode 't) 
+
+;;; open with single window 
+(setq inhibit-startup-screen 't) 
+(add-hook 'emacs-startup-hook 'delete-other-windows) 
+
+;;; initial frame width,height,position 
+(set-frame-width (selected-frame) 80)        ; #chars wide 
+(set-frame-height (selected-frame) 52)       ; #lines ling 
+(set-frame-position (selected-frame) 10 10 ) ; x y from upper-left 
+
+;;; insert tab character 
+(defun insert-tab () 
+  (interactive) 
+  (insert "\t")) 
+(global-unset-key [tab]) 
+(global-set-key (kbd "TAB") 'insert-tab) 
+;;; --- end-of-file --- 
+
+
+
+(ispell-list-command "--list")
+
+;; ^ Because the “-l” option, which means “--list” in program `ispell', means “--lang” in program `aspell'.
+ 
+
+
+(REQUIRE-EXISTING? (not allow-non-existing))
+          )
+
+    (when (or REQUIRE-EXISTING? (file-exists-p FILE))
+
+
+(defun sboo-open-command-string (program &rest arguments)
+
+
+
+(pcase program
+
+ ('xdg-open "xdg-open")
+ ('start "start \"\"")
+ ('open "open")
+
+ ((pred symbolp) (symbol-name program))
+ ((pred stringp) program)
+
+ (_ (read-shell-command "Program (to open with): "))))
+
+
+
+
+========================================================================
+
+
+
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
