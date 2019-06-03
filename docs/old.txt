@@ -9067,6 +9067,23 @@ google-word, google-symbol, google-line and google-region functions, bound as w,
 
 ========================================================================
 
+## Installation
+
+I install via:
+
+``` bash
+cd ~ && git clone git@github.com:sboosali/.emacs.d.git && cd .emacs.d/sboo/
+
+git submodule init sboo/lib/use-package sboo/lib/ sboo/lib/delight sboo/lib/helm
+git submodule init sboo/lib/dash sboo/lib/s sboo/lib/f
+git submodule init sboo/lib/magit sboo/lib/company-mode sboo/lib/yasnippets sboo/lib/yasnippet-snippets sboo/lib/flycheck sboo/lib/projectile sboo/lib/simpleclip
+git submodule init sboo/lib/solarized
+git submodule init sboo/lib/haskell-mode sboo/lib/nix-mode
+git submodule update
+```
+
+========================================================================
+
 
 
 ;;----------------------------------------------;;

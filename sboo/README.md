@@ -14,8 +14,11 @@ I install via:
 ``` bash
 cd ~ && git clone git@github.com:sboosali/.emacs.d.git && cd .emacs.d/sboo/
 
-git submodule init sboo/lib/helm sboo/lib/magit sboo/lib/yasnippets sboo/lib/flycheck sboo/lib/projectile
-git submodule init sboo/lib/haskell-mode sboo/lib/nix-mode
+git submodule init submodules/use-package submodules/ submodules/delight submodules/helm
+git submodule init submodules/dash submodules/s submodules/f
+git submodule init submodules/magit submodules/company-mode submodules/yasnippets submodules/yasnippet-snippets submodules/flycheck submodules/projectile submodules/simpleclip
+git submodule init submodules/solarized
+git submodule init submodules/haskell-mode submodules/nix-mode
 git submodule update
 ```
 
