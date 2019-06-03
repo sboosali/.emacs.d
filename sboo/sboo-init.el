@@ -85,7 +85,6 @@
 ;;
 ;; • `eval-and-compile' is like `progn' at both run-time AND compile-time.
 ;;
-;; • 
 ;;
 
 ;;----------------------------------------------;;

@@ -1,13 +1,25 @@
 # `sboo` 
 
-My Emacs configuration.
-
-
+`sboosali`'s Personal Emacs Configuration.
 
 ## Jargon
 
-* `feature`: an Emacs module, which can be `require`d.
+* *feature*: an Emacs Library, which can be `require`d.
+* *window*: an Emacs Window (not an OS Window, which are Emacs Frames).
 
+## Installation
+
+I install via:
+
+``` bash
+cd ~ && git clone git@github.com:sboosali/.emacs.d.git && cd .emacs.d/sboo/
+
+git submodule init sboo/lib/helm sboo/lib/magit sboo/lib/yasnippets sboo/lib/flycheck sboo/lib/projectile
+git submodule init sboo/lib/haskell-mode sboo/lib/nix-mode
+git submodule update
+```
+
+## Usage
 
 ## Structure / Organization
 
@@ -138,4 +150,6 @@ Miscellaneous *Vendored Libraries* (which are useful, but used infrequently) inc
 * `desktop-environment.el`
 * `smartscan.el`
 
-##
+## Notes
+
+>
