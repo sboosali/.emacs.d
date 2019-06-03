@@ -102,6 +102,8 @@ most have *Minimal Dependencies*, either:
 * `visual-fill-column.el`
 * `writeroom-mode.el` — `;; Package-Requires: ((visual-fill-column "1.9"))` — `;; Version: 3.8`
 * `olivetti.el` — `;; Version: 1.7.1`
+* `flycheck.el` — `;; Version: 32-cvs`. `Package-Requires: ((emacs "24.3") ... (dash "2.12.1") (let-alist "1.0.4"))`
+* `htmlize.el` — *v1.55*
 
 * `pandoc-mode`:
 
@@ -119,7 +121,7 @@ most have *Minimal Dependencies*, either:
 * `loop.el`       — *v1.3*
 * `list-utils.el` — *v0.4.4*
 * `memoize.el`    — *v*
-* `htmlize.el` — *v1.55*
+* `let-alist.el`  — *v*
 
 Miscellaneous *Vendored Libraries* (which are useful, but used infrequently) include:
 
