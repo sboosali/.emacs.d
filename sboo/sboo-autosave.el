@@ -1,9 +1,9 @@
-;;; sboo-autosave.el --- -*- lexical-binding: t -*-
+;;; sboo-autosave.el --- sboosali's autosave config -*- lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
 ;; Version: 0.0.0
-;; Package-Requires: ((emacs "25") seq pcase)
+;; Package-Requires: ((emacs "25") pcase)
 ;; Author:  Spiros Boosalis <samboosalis@gmail.com>
 ;; Homepage: https://github.com/sboosali/.emacs.d
 ;; Keywords: local
@@ -27,8 +27,12 @@
 
 ;;; Commentary:
 
-;; Personal configuration for `autosave' and `backup'.
+;; Autosave configuration.
 ;; 
+;; Emacs-26.1 introduced `auto-save-visited-mode';
+;; otherwise, use `real-auto-save-mode'.
+;; 
+;; Personal configuration for `autosave' and `backup'.
 ;; 
 
 ;;; Code:
@@ -40,11 +44,10 @@
 ;; Builtins:
 
 (eval-when-compile 
-  (require 'cl-lib))
+  (require 'pcase))
 
 (progn
-  (require 'pcase)
-  (require 'seq))
+  (require 'cl-lib))
 
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
@@ -65,12 +68,58 @@
 ;;(xdg-cache-dir "emacs/autosave")
 
 ;;----------------------------------------------;;
-;; Configuration -------------------------------;;
+;; Configuration (`real-auto-save') ------------;;
 ;;----------------------------------------------;;
 
-(defun sboo-autosave-init! ()
+(defun sboo-autosave/real-auto-save/init! ()
+
+  "Initialize `real-auto-save-mode' variables."
+
+  (interactive)
+
+  (progn
+
+    (setq real-auto-save-interval 1)
+    ;; ^ autosave each second (by default, 5s).
+
+    (add-hook 'find-file-hook #'real-auto-save-mode)
+    ;; ^ enable on every buffer that's opened from a file.
+
+    ()))
+
+;;----------------------------------------------;;
+
+(defun sboo-autosave/real-auto-save/config! ()
+
+  "Configure `real-auto-save-mode' & enable it.
+
+Notes:
+
+• “`real-auto-save-mode' auto-saves a (file-)buffer to its visited file,
+   not the `~`-suffixed backup file.”"
+
+  (interactive)
+
+  (defalias '/ras #'real-auto-save-mode)
+
+  (real-auto-save-mode +1)
+
+  ;; ^ Autosave by overwriting the visited file.
+  ;; 
+  ;; `real-auto-save-mode' is a GlobalMinorMode.
+  ;;
+  ;; Enable globally.
+
+  ())  
+
+;;----------------------------------------------;;
+;; Configuration (`auto-save-visited-mode') ----;;
+;;----------------------------------------------;;
+
+(defun sboo-autosave/auto-save-visited/init! ()
+
   "Initialize `auto-save-visited-mode' variables."
-  
+
   (interactive)
 
   (setq auto-save-visited-interval 1)
@@ -82,14 +131,14 @@
   ())
 
 ;;----------------------------------------------;;
-;;; `:config'
 
-(defun sboo-autosave-config! ()
+(defun sboo-autosave/auto-save-visited/config! ()
 
-  "Configure `auto-save-visited-mode'."
+  "Configure `auto-save-visited-mode' & enable it."
+
   (interactive)
 
-  (auto-save-visited-mode 1)
+  (auto-save-visited-mode +1)
 
   ;; ^ Autosave by overwriting the visited file.
   ;; 
@@ -98,6 +147,38 @@
   ;; Enable globally.
 
   ())
+
+;;----------------------------------------------;;
+;; Configuration -------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-autosave-init! ()
+
+  "Initialize Auto-Save."
+
+  (interactive)
+
+  (if (>= emacs-major-version 26)
+
+      (sboo-autosave/auto-save-visited/init!)
+
+    (progn
+      (require 'real-auto-save)
+      (sboo-autosave/real-auto-save/init!))))
+
+;;----------------------------------------------;;
+
+(defun sboo-autosave-config! ()
+
+  "Configure Auto-Save."
+
+  (interactive)
+
+  (if (>= emacs-major-version 26)
+
+      (sboo-autosave/auto-save-visited/config!)
+
+    (sboo-autosave/real-auto-save/config!)))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

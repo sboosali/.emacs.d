@@ -61,3 +61,9 @@
 [submodule "all-the-icons"]
 	path = submodules/all-the-icons
 	url = https://github.com/domtronn/all-the-icons.el
+[submodule "haskell-mode"]
+	path = submodules/haskell-mode
+	url = https://github.com/haskell/haskell-mode
+[submodule "magit"]
+	path = submodules/magit
+	url = https://github.com/magit/magit
