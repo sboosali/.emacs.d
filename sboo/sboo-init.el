@@ -2641,6 +2641,7 @@ $0")
 
   (use-package haskell
     :demand t
+    :load-path "submodules/haskell-mode"
 
     :commands (haskell-mode)
 
