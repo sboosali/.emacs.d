@@ -40,13 +40,10 @@
 ;; Builtins:
 
 (eval-when-compile
-  (require 'pcase)
-  (require 'cl-lib)
-  )
+  (require 'pcase))
 
 (progn
-  
-  )
+  (require 'cl-lib))
 
 ;;----------------------------------------------;;
 ;; Conditions ----------------------------------;;
@@ -78,8 +75,6 @@ Uses:
     (_                        (quote nil))))
 
 ;; M-: (sboo-os-build-system)
-
-
 
 ;;----------------------------------------------;;
 

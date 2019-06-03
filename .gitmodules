@@ -34,12 +34,6 @@
 [submodule "unicode-fonts"]
 	path = submodules/unicode-fonts
 	url = https://github.com/rolandwalker/unicode-fonts
-[submodule "Elsa"]
-	path = submodules/Elsa
-	url = https://github.com/emacs-elsa/Elsa
-[submodule "sed-mode"]
-	path = submodules/sed-mode
-	url = https://github.com/emacsfodder/sed-mode
 [submodule "icons-in-terminal"]
 	path = submodules/icons-in-terminal
 	url = https://github.com/sebastiencs/icons-in-terminal
@@ -64,3 +58,9 @@
 [submodule "company-mode"]
 	path = submodules/company-mode
 	url = https://github.com/company-mode/company-mode
+[submodule "haskell-mode"]
+	path = submodules/haskell-mode
+	url = https://github.com/haskell/haskell-mode
+[submodule "magit"]
+	path = submodules/magit
+	url = https://github.com/magit/magit

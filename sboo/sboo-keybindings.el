@@ -609,6 +609,14 @@ Inputs:
 
 ;;==============================================;;
 
+;; ChromeBook:
+
+(global-set-key (kbd "<XF86Reload>")  #'execute-extended-command)
+;(global-set-key (kbd "<XF86Back>")    #')
+;(global-set-key (kbd "<XF86Forward>") #')
+
+;;==============================================;;
+
 ;;; Function-Key Keybindings (`<f_>')...
 
 ;;==============================================;;

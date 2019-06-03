@@ -249,7 +249,7 @@
   (let ((*value* (getenv sboo-environment-variable-install)))
     (pcase *value*
 
-      ('()     nil)
+      ('()     'submodules)
 
       (""      nil)
       ("0"     nil)

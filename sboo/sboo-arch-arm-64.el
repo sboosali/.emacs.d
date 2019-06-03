@@ -1,13 +1,13 @@
-;;; sboo-private.el --- Private information (e.g. passwords) -*- coding: utf-8; lexical-binding: t -*-
+;;; sboo-arch-arm-64.el --- sboosali's `aarch64' config -*- coding: utf-8; lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
 ;; Version: 0.0.0
-;; Package-Requires: ((emacs "25"))
+;; Package-Requires: ((emacs "25") pcase)
 ;; Author:  Spiros Boosalis <samboosalis@gmail.com>
 ;; Homepage: https://github.com/sboosali/.emacs.d
 ;; Keywords: local
-;; Created: 03 May 2019
+;; Created: 03 Jun 2019
 ;; License: GPL-3.0-or-later
 
 ;; This file is not part of GNU Emacs.
@@ -27,9 +27,8 @@
 
 ;;; Commentary:
 
-;; Declare “signatures” for `sboo-private-*' (stubs-only).
+;; Personal architecture-specific configuration for 64-bit ARM (`aarch64').
 ;; 
-;; (This file MUST NOT contain any sensitive information.)
 ;; 
 
 ;;; Code:
@@ -38,29 +37,28 @@
 ;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
-;; Builtins:
+;; builtins:
+
+(eval-when-compile
+  (require 'pcase))
 
 ;;----------------------------------------------;;
-;; Variables -----------------------------------;;
-;;----------------------------------------------;;
 
-(defvar sboo-private-password
-
-  nil ;;(read-passwd "Password (sboo): ")
-
-  "Password for...")
+(progn
+  (require 'cl-lib))
 
 ;;----------------------------------------------;;
-;; Commands ------------------------------------;;
+;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
+
+;; 
+;;
+;;
 
 ;;----------------------------------------------;;
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
 
-(provide 'sboo-private)
+(provide 'sboo-arch-arm-64)
 
-;; Local Variables:
-;; End:
-
-;;; sboo-private.el ends here
+;;; sboo-arch-arm-64.el ends here
