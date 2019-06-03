@@ -61,3 +61,6 @@
 [submodule "all-the-icons"]
 	path = submodules/all-the-icons
 	url = https://github.com/domtronn/all-the-icons.el
+[submodule "company-mode"]
+	path = submodules/company-mode
+	url = https://github.com/company-mode/company-mode
