@@ -3,6 +3,8 @@
 ########################################
 # my (i.e. sboosali's) local files
 
+sboo-local.el
+
 .sboo/
 
 ignored/
