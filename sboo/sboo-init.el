@@ -1979,75 +1979,57 @@ Links:
 ;; External Packages: Libraries ----------------;;
 ;;----------------------------------------------;;
 
-(use-package dash)
+(require 'dash nil :no-error)
 
 ;; ^ URL `https://github.com/magnars/dash.el'
 
 ;;----------------------------------------------;;
 
-(use-package s)
+(require 's nil :no-error)
 
 ;; ^ URL `https://github.com/magnars/s.el'
 
 ;;----------------------------------------------;;
 
-(use-package f)
+(require 'f nil :no-error)
 
 ;; ^ URL `https://github.com/rejeep/f.el'
 
 ;;----------------------------------------------;;
 
-(use-package ht)
+(require 'ht nil :no-error)
 
 ;; ^ URL `https://github.com/Wilfred/ht.el'
 
 ;;----------------------------------------------;;
 
-(use-package ov)
+(require 'ov nil :no-error)
 
 ;; ^ URL `https://github.com/ShingoFukuyama/ov.el'
 
 ;;----------------------------------------------;;
 
-(use-package popup)
+(require 'popup nil :no-error)
 
 ;; ^ URL `https://github.com/auto-complete/popup-el'
 
 ;;----------------------------------------------;;
 
-(use-package list-utils)
+(require 'list-utils nil :no-error)
 
 ;; ^ URL `https://github.com/rolandwalker/list-utils'
 
 ;;----------------------------------------------;;
 
-(use-package loop)
+(require 'loop nil :no-error)
 
 ;; ^ URL `https://github.com/Wilfred/loop.el'
 
 ;;----------------------------------------------;;
 
-(use-package memoize)
+(require 'memoize nil :no-error)
 
 ;; ^ URL `https://github.com/skeeto/emacs-memoize'
-
-;;----------------------------------------------;;
-
-(use-package htmlize
-
-  :commands (htmlize-region htmlize-buffer htmlize-file)
-
-  :config ())
-
-;; ^ `htmlize-buffer':
-;;
-;; “To use it, just switch to the buffer you want HTML-ized and type M-x htmlize-buffer. You will be switched to a new buffer that contains the resulting HTML code. You can edit and inspect this buffer, or you can just save it with C-x C-w. M-x htmlize-file will find a file, fontify it, and save the HTML version in FILE.html, without any additional intervention.”
-;;
-
-;; ^ Links:
-;;
-;;   • URL `https://github.com/hniksic/emacs-htmlize'
-;;
 
 ;;----------------------------------------------;;
 ;; External Packages: Completion ---------------;;
@@ -2411,10 +2393,15 @@ $0")
 
   :delight (flycheck-mode " 🛸")
 
+  :hook ((emacs-lisp-mode . flycheck-mode))
+
   :bind (
          :map emacs-lisp-mode-map
               (("<kp-prior>" . flycheck-previous-error)
                ("<kp-next>"  . flycheck-next-error))
+         :map emacs-lisp-mode-map
+              (("M-<left>"   . flycheck-previous-error)
+               ("M-<right>"  . flycheck-next-error))
          ;; :map js-mode-map
          ;;      (("<kp-prior>" . flycheck-previous-error)
          ;;       ("<kp-next>"  . flycheck-next-error))
@@ -2592,7 +2579,50 @@ $0")
 
 ;;----------------------------------------------;;
 
-git*-mode.el
+(use-package gitignore-mode
+
+  :commands (gitignore-mode)
+
+  :mode ((rx "/" ".gitignore" eos) . gitignore-mode)
+
+  :config
+  
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `'
+;;
+
+;;----------------------------------------------;;
+
+(use-package gitconfig-mode
+
+  :commands (gitconfig-mode)
+
+  :config
+  
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `'
+;;
+
+;;----------------------------------------------;;
+
+(use-package gitattributes-mode
+
+  :commands (gitattributes-mode)
+
+  :config
+  
+  ())
+
+;; ^ Links:
+;;
+;;   • URL `'
+;;
 
 ;;----------------------------------------------;;
 ;; External Packages: Lisp ---------------------;;
@@ -5208,6 +5238,24 @@ search (upwards) for a named Code-Block. For example,
 
 ;;----------------------------------------------;;
 ;; External Packages: Miscellaneous ------------;;
+;;----------------------------------------------;;
+
+(use-package htmlize
+
+  :commands (htmlize-region htmlize-buffer htmlize-file)
+
+  :config ())
+
+;; ^ `htmlize-buffer':
+;;
+;; “To use it, just switch to the buffer you want HTML-ized and type M-x htmlize-buffer. You will be switched to a new buffer that contains the resulting HTML code. You can edit and inspect this buffer, or you can just save it with C-x C-w. M-x htmlize-file will find a file, fontify it, and save the HTML version in FILE.html, without any additional intervention.”
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/hniksic/emacs-htmlize'
+;;
+
 ;;----------------------------------------------;;
 
 (use-package refine
