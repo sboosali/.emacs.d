@@ -110,7 +110,7 @@ Notes:
   ;;
   ;; Enable globally.
 
-  ())  
+  ())
 
 ;;----------------------------------------------;;
 ;; Configuration (`auto-save-visited-mode') ----;;

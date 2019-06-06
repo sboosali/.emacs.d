@@ -561,9 +561,7 @@ Related:
 ;;; Builtin Packages: --------------------------;;
 ;;----------------------------------------------;;
 
-(when (and (>= emacs-major-version 26)
-           (require 'sboo-autosave nil :no-error)
-           )
+(when (require 'sboo-autosave nil :no-error)
 
   (sboo-autosave-init!)
 
@@ -1910,7 +1908,7 @@ Links:
   ('submodules (progn
                  (sboo-register-submodule-packages! "use-package/")
                  (sboo-register-submodule-packages! "helm/")
-                 
+
                  (when (< emacs-major-version 26)
                    (sboo-register-submodule-packages! "real-auto-save/"))))
 
@@ -2884,6 +2882,8 @@ $0")
 
   (use-package nix-mode
 
+    :load-path ("submodules/nix-mode")
+
     :interpreter (("nix"       . nix-mode)
                   ("nix-build" . nix-mode)
                   ("nix-shell" . nix-mode)
@@ -2898,11 +2898,15 @@ $0")
     (dolist (HOOK sboo-nix-hooks-list)
       (add-hook 'nix-mode-hook HOOK))
 
-    ())
+    :config ())
 
   ;;------------------------;;
 
-  (use-package nix-repl)
+  (use-package nix-repl
+
+    :load-path ("submodules/nix-mode")
+ 
+    :config ())
 
   ;;------------------------;;
 

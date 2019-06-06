@@ -28,12 +28,12 @@
 [submodule "unicode-fonts"]
 	path = submodules/unicode-fonts
 	url = https://github.com/rolandwalker/unicode-fonts
-[submodule "icons-in-terminal"]
-	path = submodules/icons-in-terminal
-	url = https://github.com/sebastiencs/icons-in-terminal
-[submodule "all-the-icons-dired"]
-	path = submodules/all-the-icons-dired
-	url = https://github.com/jtbm37/all-the-icons-dired
+#[submodule "icons-in-terminal"]
+#	path = submodules/icons-in-terminal
+#	url = https://github.com/sebastiencs/icons-in-terminal
+#[submodule "all-the-icons-dired"]
+#	path = submodules/all-the-icons-dired
+#	url = https://github.com/jtbm37/all-the-icons-dired
 [submodule "simpleclip"]
 	path = submodules/simpleclip
 	url = https://github.com/rolandwalker/simpleclip
@@ -61,3 +61,6 @@
 [submodule "nix-mode"]
 	path = submodules/nix-mode
 	url = https://github.com/NixOS/nix-mode
+[submodule "real-auto-save"]
+	path = submodules/real-auto-save
+	url = https://github.com/ChillarAnand/real-auto-save
