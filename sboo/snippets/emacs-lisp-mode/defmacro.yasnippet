@@ -11,7 +11,7 @@
 
 (eval-when-compile
 
-  (defmacro sboo-${1:name} (${2:symbol} ${3:expression} &optional docstring)
+  (defmacro ${7:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name} (${2:symbol} ${3:expression} &optional docstring)
 
     "$3.
 

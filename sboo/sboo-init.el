@@ -2675,6 +2675,31 @@ $0")
 ;;
 
 ;;----------------------------------------------;;
+
+(use-package smart-compile
+  :disabled t
+
+  :config
+
+  (setcdr (assoc "\\.c\\'" smart-compile-alist)
+          "gcc -O2 %f -lm -o %n -std=gnu99")
+
+  ;; ^ Always compile against the C99 Standard.
+
+  ())
+
+;; ^ `smart-compile':
+;;
+;; 
+
+;; ^ Links:
+;; 
+;; • URL `https://www.emacswiki.org/emacs/SmartCompile'
+;; • URL `https://github.com/zenitani/elisp/blob/master/smart-compile.el' 
+;; • URL `https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-compile.el'
+;;
+
+;;----------------------------------------------;;
 ;; External Packages: Lisp ---------------------;;
 ;;----------------------------------------------;;
 

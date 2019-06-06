@@ -10,7 +10,7 @@
 ;;----------------------------------------------;;
 
 (cl-defstruct (sboo-${1:NAME}
-               (:constructor sboo-$1-create)
+               (:constructor ${7:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-$1-create)
                (:copier      nil))
 
   ${2:x} ${3:y} $0)

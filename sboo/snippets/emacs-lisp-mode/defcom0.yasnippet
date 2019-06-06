@@ -8,13 +8,13 @@
 # --
 ;;----------------------------------------------;;
 
-(defun sboo-${1:name} ()
+(defun ${7:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name} ()
 
   "$3.
 
 Example:
 
-• M-x sboo-$1 <RET>
+• M-x ${7:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-$1 <RET>
     ⇒ ()
 
 Links:

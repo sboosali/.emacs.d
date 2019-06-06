@@ -125,8 +125,7 @@ Notes:
   (setq auto-save-visited-interval 1)
   ;; ^ autosave each second (by default, 5s).
 
-  (setq auto-save-visited-file-name nil)
-  ;; ^ disable a setting which itself disables our feature.
+  (setq auto-save-visited-mode t)
 
   ())
 
