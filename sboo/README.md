@@ -14,7 +14,7 @@ I install via:
 ``` bash
 cd ~ && git clone git@github.com:sboosali/.emacs.d.git && cd .emacs.d/sboo/
 
-git submodule init submodules/use-package submodules/ submodules/delight submodules/helm
+git submodule init submodules/use-package submodules/ submodules/helm submodules/real-auto-save
 git submodule init submodules/dash submodules/s submodules/f
 git submodule init submodules/magit submodules/company-mode submodules/yasnippets submodules/yasnippet-snippets submodules/flycheck submodules/projectile submodules/simpleclip
 git submodule init submodules/solarized

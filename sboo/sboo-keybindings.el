@@ -687,7 +687,8 @@ Inputs:
 
   ())
 
-(global-set-key (kbd "M-S-r") #'query-replace)        ; [R]eplace (Find/Replace with Regex Strings).
+(global-set-key (kbd "S-M-r") #'query-replace)        ; [R]eplace (Find/Replace with Regex Strings).
+(global-set-key (kbd "S-M-x") #'eval-expression)      ; `helm-M-x' shadows « M-x ».
 
 (global-set-key (kbd "M-`") #'sboo-switch-to-previous-buffer)
 (global-set-key (kbd "M-~") #'sboo-switch-to-previous-buffer)

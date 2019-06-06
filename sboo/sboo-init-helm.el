@@ -1,4 +1,4 @@
-;;; sboo-helm.el --- -*- lexical-binding: t -*-
+;;; sboo-init-helm.el --- -*- lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -47,9 +47,9 @@
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
-;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
-;; (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+;;----------------------------------------------;;
+;; Effects -------------------------------------;;
+;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
@@ -59,6 +59,6 @@
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
 
-(provide 'sboo-helm)
+(provide 'sboo-init-helm)
 
-;;; sboo-helm.el ends here
+;;; sboo-init-helm.el ends here

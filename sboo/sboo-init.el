@@ -2045,11 +2045,11 @@ Links:
   ;; ^  NOTE `helm-command-prefix-key':
   ;;    becomes immutable once `helm-config' is `load'ed.
 
-  ;;   :bind (:map helm-map
-  ;;               ("<tab>" . helm-execute-persistent-action)
-  ;;               ("C-i"   . helm-execute-persistent-action)
-  ;;               ("C-z"   . helm-select-action)
-  ;;               ("A-v"   . helm-previous-page))
+  :bind (:map helm-map
+              ("<tab>"    . nil)
+              ("C-i"      . helm-execute-persistent-action) ; make TAB work in terminal.
+              ("C-RET"    . helm-select-action)
+         )
 
   :config
 
