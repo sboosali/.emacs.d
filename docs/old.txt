@@ -9112,7 +9112,8 @@ git submodule update
 
 ========================================================================
 
-
+Error running timer ‘require’: (file-missing "Cannot open load file" "No such file or directory" "avy")
+(require 'avy)
 
 ;;----------------------------------------------;;
 

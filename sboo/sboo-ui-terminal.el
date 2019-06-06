@@ -51,6 +51,7 @@
 ;;----------------------------------------------;;
 
 (use-package icons-in-terminal
+  :disable t
   :load-path "submodules/icons-in-terminal"
 
   :config

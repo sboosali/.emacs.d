@@ -12,7 +12,7 @@
 I install via:
 
 ``` bash
-cd ~ && git clone git@github.com:sboosali/.emacs.d.git && cd .emacs.d/sboo/
+git clone https://github.com/sboosali/.emacs.d.git ~/.emacs.d/ --recurse-submodules && cd ~/.emacs.d/
 
 git submodule init submodules/use-package submodules/ submodules/helm submodules/real-auto-save
 git submodule init submodules/dash submodules/s submodules/f

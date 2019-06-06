@@ -2,14 +2,6 @@
 
 ;; Copyright © 2019 Spiros Boosalis
 
-;; Version: 0.0.0
-;; Package-Requires: ((emacs "25") pcase)
-;; Author:  Spiros Boosalis <samboosalis@gmail.com>
-;; Homepage: https://github.com/sboosali/.emacs.d
-;; Keywords: local
-;; Created: 03 May 2019
-;; License: GPL-3.0-or-later
-
 ;; This file is not part of GNU Emacs.
 ;;
 ;; This file is free software; you can redistribute it and/or modify
@@ -130,7 +122,5 @@ Uses:
 ;;----------------------------------------------;;
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
-
-(provide 'sboo-ui)
 
 ;;; sboo-ui.el ends here
