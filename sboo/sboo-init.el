@@ -3654,9 +3654,24 @@ Related:
 
 (use-package rg
 
+  :commands (rg-dwim)
+
   :config
 
+  (rg-enable-default-bindings "\M-s")
+
   ())
+
+;; ^ `rg-enable-default-bindings':
+;;
+;; • takes an optional `rg-keymap-prefix'.
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/dajva/rg.el'
+;;   • URL `'
+;;
 
 ;;----------------------------------------------;;
 
