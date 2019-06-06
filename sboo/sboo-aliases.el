@@ -1,14 +1,29 @@
-;;; -*- lexical-binding: t -*-
+;;; sboo-aliases.el --- -*- coding: utf-8; lexical-binding: t -*-
+
+;; Copyright © 2019 Spiros Boosalis
+
+;; This file is not part of GNU Emacs.
+;;
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
-;;----------------------------------------------;;
 ;; Aliases for Commands
 ;;
 ;; Motivation: shorten frequently-typed commands
 ;; (c.f. keybindings, i.e. frequently-pressed commands).
 ;;
-;;----------------------------------------------;;
 
 ;;; Code:
 
@@ -16,17 +31,24 @@
 ;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
-;; builtin packages:
+;; builtins:
 
-(require 'cl-lib)
+(eval-when-compile
+  (require 'rx)
+  (require 'pcase))
+
+(progn
+  (require 'seq)
+  (require 'cl-lib))
 
 ;;----------------------------------------------;;
 
-;; sboo packages:
+;; personal:
 
-(require 'sboo-utilities)
-(require 'sboo-unicode)
-;(require 'sboo-functions)
+(progn
+;;(require 'sboo-functions)
+  (require 'sboo-unicode)
+  (require 'sboo-utilities))
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
@@ -232,4 +254,7 @@
 ;;    - http://ergoemacs.org/emacs/emacs_alias.html
 
 ;;----------------------------------------------;;
-(provide 'sboo-aliases)
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
+;;; sboo-aliases.el ends here

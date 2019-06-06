@@ -1,6 +1,26 @@
-;; -*- lexical-binding: t; -*-
+;;; sboo-commands.el --- -*- coding: utf-8; lexical-binding: t -*-
+
+;; Copyright © 2019 Spiros Boosalis
+
+;; This file is not part of GNU Emacs.
+;;
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;----------------------------------------------;;
+
+;;; Commentary:
+
 ;; Custom `interactive' commands.
 ;;
 ;; (This `feature' is "pure" (it has declarations only, no settings)).
@@ -11,20 +31,30 @@
 ;; See my `define-graceful-command` macro, for conveniently defining commands with fallbacks
 ;; (when external packages haven't been installed and/or can't be loaded).
 ;;
+;; 
+
 ;;----------------------------------------------;;
 ;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
 ;; builtins:
 
-(require 'cl-lib)
-(require 'cl-lib)
-(require 'shell)
+(eval-when-compile
+  (require 'rx)
+  (require 'pcase))
+
+(progn
+  (require 'shell)
+  (require 'seq)
+  (require 'cl-lib))
+
+;;----------------------------------------------;;
 
 ;; personal:
 
-(require 'sboo-conditions)
-(require 'sboo-utilities)
+(progn
+  (require 'sboo-conditions)
+  (require 'sboo-utilities))
 
 ;;----------------------------------------------;;
 ;; Macros --------------------------------------;;
@@ -1021,9 +1051,7 @@ Note:
 
 (with-demoted-errors "[Warning] %s"
 
-  (widget)
-
-  (widget-checklist-add-item)
+;;(widget-checklist-add-item)
 
   ())
 
@@ -2988,5 +3016,16 @@ Related:
 ;;    - http://www.wilkesley.org/~ian/xah/emacs/emacs_open_file_path_fast.html
 ;;    - 
 
-;;==============================================;;
-(provide 'sboo-commands)
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
+
+;; 
+;;
+;;
+
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
+;;; sboo-commands.el ends here

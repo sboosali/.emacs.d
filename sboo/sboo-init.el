@@ -2,14 +2,6 @@
 
 ;; Copyright © 2019 Spiros Boosalis
 
-;; Version: 0.0.0
-;; Package-Requires: ((emacs "25") pcase seq)
-;; Author:  Spiros Boosalis <samboosalis@gmail.com>
-;; Homepage: https://github.com/sboosali/.emacs.d
-;; Keywords: local
-;; Created: 07 May 2019
-;; License: GPL-3.0-or-later
-
 ;; This file is not part of GNU Emacs.
 ;;
 ;; This file is free software; you can redistribute it and/or modify
@@ -1972,7 +1964,7 @@ Links:
 
 ;;----------------------------------------------;;
 
-;;(sboo-load-file! "sboo-init-helm.el")
+(sboo-load-file! "sboo-init-helm.el")
 
 ;;----------------------------------------------;;
 ;; External Packages: Libraries ----------------;;
@@ -2053,16 +2045,6 @@ Links:
 
   :config
 
-  ;; Remap keybindings:
-
-  (define-key global-map [remap execute-extended-command] #'helm-M-x)
-  (define-key global-map [remap list-buffers]             #'helm-buffers-list)
-  (define-key global-map [remap find-file]                #'helm-find-files) ; Includes the « `<tool-bar>' `<new-file>' ».
-  (define-key global-map [remap find-file-existing]       #'helm-find-files) ; Includes the « `<tool-bar>' `<open-file>' »?
-  (define-key global-map [remap occur]                    #'helm-occur)
-
-  (define-key global-map [remap menu-find-file-existing]  #'helm-find-files) ; The `toolbar's `<open-file>'.
-
   (when (executable-find "curl")
     (setq helm-google-suggest-use-curl-p t))
 
@@ -2075,6 +2057,7 @@ Links:
 (use-package helm
 
   :delight (helm-mode " ⎈")
+
   :custom
 
   (helm-allow-mouse t "Enable mouse (doesn't enable selection-by-clicking, only marking-by-clicking).")
@@ -2105,10 +2088,22 @@ Links:
 
   :config
 
+  ;; Remap keybindings:
+
+  (define-key global-map [remap execute-extended-command] #'helm-M-x)
+  (define-key global-map [remap list-buffers]             #'helm-buffers-list)
+  (define-key global-map [remap find-file]                #'helm-find-files) ; Includes the « `<tool-bar>' `<new-file>' ».
+  (define-key global-map [remap find-file-existing]       #'helm-find-files) ; Includes the « `<tool-bar>' `<open-file>' »?
+  (define-key global-map [remap occur]                    #'helm-occur)
+
+  (define-key global-map [remap menu-find-file-existing]  #'helm-find-files) ; The `toolbar's `<open-file>'.
+
   ;; Helm and Ido mode are mutually-exclusive:
 
   (helm-autoresize-mode +1)
-  (ido-mode             -1))
+  (ido-mode             -1)
+
+  ())
 
 ;; ^ Links:
 ;;
@@ -2120,11 +2115,40 @@ Links:
 
 ;; ^ `helm-mode' vs `helm-autoresize-mode': TODO.
 
-;;----------------------------------------------;;
-
-;; (use-package helm-mode
-;;   :config
-;;   (helm-mode 1))
+;; ^ `helm-*-map's:
+;;
+;; • `helm-etags-map'
+;; • `helm-swoop-edit-map'
+;; • `helm-eval-expression-map'
+;; • `helm-multi-swoop-edit-map'
+;; • `helm-pdfgrep-map'
+;; • `helm-map'
+;; • `helm-M-x-map'
+;; • `helm-grep-map'
+;; • `helm-swoop-map'
+;; • `helm-moccur-map'
+;; • `helm-locate-map'
+;; • `helm-buffer-map'
+;; • `helm-command-map'
+;; • `helm-read-file-map'
+;; • `helm-kill-ring-map'
+;; • `helm-wikipedia-map'
+;; • `helm-comp-read-map'
+;; • `helm-grep-mode-map'
+;; • `helm-major-mode-map'
+;; • `helm-find-files-map'
+;; • `helm-multi-swoop-map'
+;; • `helm-moccur-mode-map'
+;; • `helm--minor-mode-map'
+;; • `helm-ff-lynx-style-map'
+;; • `helm--remap-mouse-mode'
+;; • `helm-generic-files-map'
+;; • `helm--remap-mouse-mode-map'
+;; • `helm--remap-mouse-mode-hook'
+;; • `helm-multi-swoop-buffers-map'
+;; • `helm-buffers-ido-virtual-map'
+;; • `helm-search-suggest-action-google-maps-url'
+;;
 
 ;;----------------------------------------------;;
 
@@ -2171,8 +2195,8 @@ Links:
 
   (dolist (MODE '(picture-mode artist-mode))
     (add-to-list 'helm-buffers-favorite-modes MODE))
-                                           
-  )
+
+  ())
 
 ;;----------------------------------------------;;
 
@@ -2188,7 +2212,32 @@ Links:
   (helm-boring-file-regexp-list '("\\.git$" "\\.hg$" "\\.svn$" "\\.CVS$" "\\._darcs$" "\\.la$" "\\.o$" "\\.i$")
                                 "hide these files from the Helm Buffer.")
 
-  )
+  :config
+
+  (dolist (*MAP* (list helm-generic-files-map
+                       helm-find-files-map
+                       helm-read-file-map
+                       ))
+
+    (define-key *MAP* (kbd "<kp-left>")  #'backward-char)
+    (define-key *MAP* (kbd "<kp-right>") #'forward-char))
+
+  ())
+
+;; ^ `helm-generic-files-map':
+;;
+;; `helm-generic-files-map' corresponds with (?) `minibuffer-local-filename-completion-map'
+;;
+;;
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-mode
+
+  :config
+
+  (helm-mode +1))
 
 ;;----------------------------------------------;;
 
