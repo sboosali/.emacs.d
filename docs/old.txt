@@ -9119,6 +9119,175 @@ Error running timer ‘require’: (file-missing "Cannot open load file" "No suc
 
 ;;----------------------------------------------;;
 
+(defcustom mtg-symbol-alist
+
+  `(
+    ( . ,(mtg-symbol-create :symbol ' :abbreviation ' :char ? ))
+    )
+
+  "Symbol metadata (abbreviations and endonyms).
+
+`listp' of `mtg-symbol-p's:
+
+• each ‘:symbol’ should be in `mtg-symbol-list'."
+
+  :type '(alist :key-type   (symbol     :tag "Symbol")
+                :value-type (mtg-symbol :tag "Symbol Info"))
+
+  :safe #'listp
+  :group 'mtg)
+
+'tap 'T
+'untap 'Q
+
+'white-mana 'W
+'blue-mana 'U
+'black-mana 'B
+'red-mana 'R
+'green-mana 'G
+
+'colorless-mana 'C
+'snow-mana 'S
+'energy-mana 'E
+'variable-X-mana 'X
+'variable-Y-mana 'Y
+'variable-Z-mana 'Z
+
+'phyrexian-white-mana 'P/W
+'phyrexian-blue-mana 'P/U
+'phyrexian-black-mana 'P/B
+'phyrexian-red-mana 'P/R
+'phyrexian-green-mana 'P/G
+
+'monohybrid-white-mana '2/W
+'monohybrid-blue-mana '2/U
+'monohybrid-black-mana '2/B
+'monohybrid-red-mana '2/R
+'monohybrid-green-mana '2/G
+
+'zero-generic-mana '0
+'one-generic-mana '1
+'two-generic-mana '2
+'three-generic-mana '3
+'four-generic-mana '4
+'five-generic-mana '5
+'six-generic-mana '6
+'seven-generic-mana '7
+'eight-generic-mana '8
+'nine-generic-mana '9
+'ten-generic-mana '10
+'eleven-generic-mana '11
+'twelve-generic-mana '12
+'thirteen-generic-mana '13
+'fourteen-generic-mana '14
+'fifteen-generic-mana '15
+'sixteen-generic-mana '16
+'seventeen-generic-mana '17
+'eighteen-generic-mana '18
+'nineteen-generic-mana '19
+'twenty-generic-mana '20
+
+;;----------------------------------------------;;
+
+
+(defcustom mtg-blue-mana-symbol-char
+
+  ?🌢
+
+  "Unicode character representing “{U}”, the Blue-Mana Symbol.
+
+a `characterp'."
+
+  :type '(character)
+
+  :safe #'characterp
+  :group 'mtg)
+
+;;----------------------------------------------;;
+
+(defcustom mtg-two-generic-mana-symbol-char
+
+  ?⓶
+
+  "Unicode character representing “{2}”, the Generic Two-Mana Symbol.
+
+a `characterp'."
+
+  :type '(character)
+
+  :safe #'characterp
+  :group 'mtg)
+
+;;----------------------------------------------;;
+
+(defcustom mtg-snow-mana-symbol-char
+
+  ?❄
+
+  "Unicode character representing “{S}”, the Snow Mana Symbol.
+
+a `characterp'."
+
+  :type '(character)
+
+  :safe #'characterp
+  :group 'mtg)
+
+
+    (tap                    . ,(mtg-symbol-create :symbol 'tap                    :abbreviation 'T   :char ?T))
+    (untap                  . ,(mtg-symbol-create :symbol 'untap                  :abbreviation 'Q   :char ?Q))
+
+    (white-mana             . ,(mtg-symbol-create :symbol 'white-mana             :abbreviation 'W   :char ?🌞))
+    (blue-mana              . ,(mtg-symbol-create :symbol 'blue-mana              :abbreviation 'U   :char ?🌢))
+    (black-mana             . ,(mtg-symbol-create :symbol 'black-mana             :abbreviation 'B   :char ?💀))
+    (red-mana               . ,(mtg-symbol-create :symbol 'red-mana               :abbreviation 'R   :char ?⛰))
+    (green-mana             . ,(mtg-symbol-create :symbol 'green-mana             :abbreviation 'G   :char ?🌲))
+
+    (colorless-mana         . ,(mtg-symbol-create :symbol 'colorless-mana         :abbreviation 'C   :char ?◇))
+    (snow-mana              . ,(mtg-symbol-create :symbol 'snow-mana              :abbreviation 'S   :char ?❄))
+    (energy-mana            . ,(mtg-symbol-create :symbol 'energy-mana            :abbreviation 'E   :char ?🗲))
+    (variable-X-mana        . ,(mtg-symbol-create :symbol 'variable-X-mana        :abbreviation 'X   :char ?X))
+    (variable-Y-mana        . ,(mtg-symbol-create :symbol 'variable-Y-mana        :abbreviation 'Y   :char ?Y))
+    (variable-Z-mana        . ,(mtg-symbol-create :symbol 'variable-Z-mana        :abbreviation 'Z   :char ?Z))
+
+    (phyrexian-white-mana   . ,(mtg-symbol-create :symbol 'phyrexian-white-mana   :abbreviation 'P/W :char ?ϕ))
+    (phyrexian-blue-mana    . ,(mtg-symbol-create :symbol 'phyrexian-blue-mana    :abbreviation 'P/U :char ?ϕ))
+    (phyrexian-black-mana   . ,(mtg-symbol-create :symbol 'phyrexian-black-mana   :abbreviation 'P/B :char ?ϕ))
+    (phyrexian-red-mana     . ,(mtg-symbol-create :symbol 'phyrexian-red-mana     :abbreviation 'P/R :char ?ϕ))
+    (phyrexian-green-mana   . ,(mtg-symbol-create :symbol 'phyrexian-green-mana   :abbreviation 'P/G :char ?ϕ))
+
+    (monohybrid-white-mana  . ,(mtg-symbol-create :symbol 'monohybrid-white-mana  :abbreviation '2/W :char ?2/W))
+    (monohybrid-blue-mana   . ,(mtg-symbol-create :symbol 'monohybrid-blue-mana   :abbreviation '2/U :char ?2/U))
+    (monohybrid-black-mana  . ,(mtg-symbol-create :symbol 'monohybrid-black-mana  :abbreviation '2/B :char ?2/B))
+    (monohybrid-red-mana    . ,(mtg-symbol-create :symbol 'monohybrid-red-mana    :abbreviation '2/R :char ?2/R))
+    (monohybrid-green-mana  . ,(mtg-symbol-create :symbol 'monohybrid-green-mana  :abbreviation '2/G :char ?2/G))
+
+    (zero-generic-mana      . ,(mtg-symbol-create :symbol 'zero-generic-mana      :abbreviation '0   :char ?⓪))
+    (one-generic-mana       . ,(mtg-symbol-create :symbol 'one-generic-mana       :abbreviation '1   :char ?⓵))
+    (two-generic-mana       . ,(mtg-symbol-create :symbol 'two-generic-mana       :abbreviation '2   :char ?⓶))
+    (three-generic-mana     . ,(mtg-symbol-create :symbol 'three-generic-mana     :abbreviation '3   :char ?⓷))
+    (four-generic-mana      . ,(mtg-symbol-create :symbol 'four-generic-mana      :abbreviation '4   :char ?⓸))
+    (five-generic-mana      . ,(mtg-symbol-create :symbol 'five-generic-mana      :abbreviation '5   :char ?⓹))
+    (six-generic-mana       . ,(mtg-symbol-create :symbol 'six-generic-mana       :abbreviation '6   :char ?⓺))
+    (seven-generic-mana     . ,(mtg-symbol-create :symbol 'seven-generic-mana     :abbreviation '7   :char ?⓻))
+    (eight-generic-mana     . ,(mtg-symbol-create :symbol 'eight-generic-mana     :abbreviation '8   :char ?⓼))
+    (nine-generic-mana      . ,(mtg-symbol-create :symbol 'nine-generic-mana      :abbreviation '9   :char ?⓽))
+    (ten-generic-mana       . ,(mtg-symbol-create :symbol 'ten-generic-mana       :abbreviation '10  :char ?))
+    (eleven-generic-mana    . ,(mtg-symbol-create :symbol 'eleven-generic-mana    :abbreviation '11  :char ?11))
+    (twelve-generic-mana    . ,(mtg-symbol-create :symbol 'twelve-generic-mana    :abbreviation '12  :char ?12))
+    (thirteen-generic-mana  . ,(mtg-symbol-create :symbol 'thirteen-generic-mana  :abbreviation '13  :char ?13))
+    (fourteen-generic-mana  . ,(mtg-symbol-create :symbol 'fourteen-generic-mana  :abbreviation '14  :char ?14))
+    (fifteen-generic-mana   . ,(mtg-symbol-create :symbol 'fifteen-generic-mana   :abbreviation '15  :char ?15))
+    (sixteen-generic-mana   . ,(mtg-symbol-create :symbol 'sixteen-generic-mana   :abbreviation '16  :char ?16))
+    (seventeen-generic-mana . ,(mtg-symbol-create :symbol 'seventeen-generic-mana :abbreviation '17  :char ?17))
+    (eighteen-generic-mana  . ,(mtg-symbol-create :symbol 'eighteen-generic-mana  :abbreviation '18  :char ?18))
+    (nineteen-generic-mana  . ,(mtg-symbol-create :symbol 'nineteen-generic-mana  :abbreviation '19  :char ?19))
+    (twenty-generic-mana    . ,(mtg-symbol-create :symbol 'twenty-generic-mana    :abbreviation '20  :char ?20))
+
+
+    (tap                    . ,(make-mtg-symbol :symbol 'tap                    :abbreviation 'T   :char ?Ⓣ))
+    (untap                  . ,(make-mtg-symbol :symbol 'untap                  :abbreviation 'Q   :char ?🅠))
+    
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

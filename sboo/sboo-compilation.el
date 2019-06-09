@@ -166,7 +166,7 @@ Links:
 • URL `http://stackoverflow.com/a/13408008/1219634'.
 • URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c52b4605f700fc4/setup-files/setup-compile.el'."
 
-  (unless (seq--p #'derived-mode-p sboo-compile-colorize-buffer-blacklist)
+  (unless (seq-some #'derived-mode-p sboo-compile-colorize-buffer-blacklist)
 
     (ansi-color-apply-on-region compilation-filter-start (point))))
 

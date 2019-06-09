@@ -1,0 +1,28 @@
+# -*- mode: snippet -*-
+#
+# key         : def-mtg-symbol-char
+# name        : [sboo,mtg] a « defcustom » for « mtg-*-symbol-char ». 
+#
+# type        : snippet
+# condition   : t
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+
+;;----------------------------------------------;;
+
+(defcustom mtg-${1:mana}-symbol-char
+
+  ?$0
+
+  "Unicode character representing “{}”, the $1 Symbol.
+
+a \`characterp'."
+
+  :type '(character)
+
+  :safe #'characterp
+  :group 'mtg)

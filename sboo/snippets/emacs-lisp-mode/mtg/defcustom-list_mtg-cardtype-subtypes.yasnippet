@@ -1,0 +1,30 @@
+# -*- mode: snippet -*-
+#
+# key         : def-subtype
+# name        : [sboo] a « defcustom » for « mtg-*-subtypes-list ».
+#
+# type        : snippet
+# condition   : t
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region t))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+;;----------------------------------------------;;
+
+(defcustom mtg-${1:TYPE}-subtypes-list
+
+  '(
+    $0
+   )
+
+  "Known Subtypes for $1s.
+
+a \`listp' of \`symbolp's."
+
+  :type '(repeat (symbol :tag "Subtype"))
+
+  :safe #'listp
+  :group 'mtg)
+
