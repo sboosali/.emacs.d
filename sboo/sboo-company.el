@@ -88,7 +88,7 @@
 
     )
 
-  "Company Backends, ordered by priority.
+  "Personal `company-backends', ordered by priority.
 
 each Company Backend in a group has a higher priority than
 any Company Backend in a later group (and a lower priority than
@@ -109,10 +109,9 @@ any Company Backend in an earlier group).
 
   '(company-pseudo-tooltip-unless-just-one-frontend
     company-echo-metadata-frontend
-    company-preview-frontend
-    )
+    company-preview-frontend )
 
-  "Personal Company Frontends.
+  "Personal `company-frontends'.
 
 a `listp' of `functionp's."
 
@@ -123,6 +122,31 @@ a `listp' of `functionp's."
 
 ;;----------------------------------------------;;
 ;; Company Backends ----------------------------;;
+;;----------------------------------------------;;
+;; Mode-specific `company-backends': Text
+
+(defun sboo-company-text-setup ()
+
+  "Setup `company-mode' for `text-mode' deriveés."
+
+  (add-to-list (make-local-variable 'company-backends)
+               #'company-ispell)
+
+  ;; ^ the `company-ispell' backend completes words.
+
+  (setq company-ispell-dictionary (file-truename "~/.emacs.d/misc/english-words.txt"))
+
+  ;; OPTIONAL, if `company-ispell-dictionary' is nil, `ispell-complete-word-dict' is used
+  ;;  but I prefer hard code the dictionary path. That's more portable.
+
+  ())
+
+;; ^ `company-backends':
+;;
+;; • must be buffer-local, otherwise
+;;   modifying it affects completion across all major modes.
+;;
+
 ;;----------------------------------------------;;
 ;; Mode-specific `company-backends': Haskell
 
@@ -135,15 +159,19 @@ a `listp' of `functionp's."
 ;;----------------------------------------------;;
 ;; Mode-specific `company-backends': Python
 
-(defun sboo-company-python ()
-  
+(defun sboo-company-python-setup ()
+
+  "Setup `company-mode' for `python-mode'."
+
   (add-to-list (make-local-variable 'company-backends)
                #'company-anaconda))
 
 ;;----------------------------------------------;;
 ;; Mode-specific `company-backends': JavaScript
 
-(defun sboo-company-javascript ()
+(defun sboo-company-javascript-setup ()
+
+  "Setup `company-mode' for `javascript-mode'."
 
   (tern-mode t)
 
@@ -239,9 +267,6 @@ a `listp' of `functionp's."
 ;;
 
 ;;----------------------------------------------;;
-;; Notes ---------------------------------------;;
-;;----------------------------------------------;;
-
 ;;; `company-backends'
 ;;
 ;; `company-backends' default value is:

@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
 #
 # key         : defset
-# name        : a « defcustom » declaration for « (:set ...) » types.
+# name        : a « defcustom » declaration for « (:set (const _) ...) » types.
 # condition   : (let ((KEY "defset")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 2) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
@@ -9,19 +9,23 @@
 # --
 ;;----------------------------------------------;;
 
-(defcustom ${7:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}-set
+(defcustom ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}-set
 
-  '( $0
-   )
+  '()
 
-  "A set of ${2:value}s. 
+  "Set of $0.
 
-(Customize via checklist widget)."
+a \`listp' of \`symbol's.
 
-  :type '(set (const nil)
-              (const $3)
-              (const $4))
+Customization:
+
+• Widgets — via a checklist.
+• Code    — via \`add-to-list' or \`cl-remove'."
+
+  :type '(set (const $3)
+              (const $4)
+              (const nil))
 
   :safe #'listp
-  :group 'sboo)
+  :group '$2)
 

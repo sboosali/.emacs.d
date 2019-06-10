@@ -865,6 +865,20 @@ Related:
 
 ;;----------------------------------------------;;
 
+(use-package checkdoc
+
+  :custom
+
+  (checkdoc-arguments-in-order-flag t "ensure that the order of arguments coincides between (1) a function's Argument List ans (2) its docstring's Header Line.")
+
+  :init
+
+  (setq checkdoc-spellcheck-documentation-flag t)
+
+  :config ())
+
+;;----------------------------------------------;;
+
 (use-package elint
 
   :commands (elint-initialize elint-current-buffer)
@@ -2251,9 +2265,17 @@ Links:
 
     ;;------------------------;;
 
+    :hook ((text-mode       . sboo-company-text-setup)
+           (python-mode     . sboo-company-python-setup)
+           (javascript-mode . sboo-company-javascript-setup)
+           )
+
+    ;;------------------------;;
+
     :custom
 
-    (company-backends sboo-company-backends "personal Company Backends.")
+    (company-backends  sboo-company-backends  "personal Company Backends.")
+    (company-frontends sboo-company-frontends "personal Company Frontends.")
 
     (company-show-numbers               t   "")
     (company-minimum-prefix-length      1   "minimum Prefix Length for Idle Completion.")
@@ -2514,13 +2536,13 @@ $0")
     :config
 
     (sboo-append-to-list! projectile-globally-ignored-directories
-                          sboo-excluded-directories)
+                          sboo-projectile-excluded-directories)
 
     (sboo-append-to-list! projectile-globally-ignored-files
-                          sboo-excluded-file-names)
+                          sboo-projectile-excluded-file-names)
 
     (sboo-append-to-list! projectile-globally-ignored-file-suffixes
-                          sboo-excluded-file-extensions)
+                          sboo-projectile-excluded-file-extensions)
 
     (with-eval-after-load 'magit-branch
       (advice-add 'magit-checkout
@@ -4643,7 +4665,7 @@ search (upwards) for a named Code-Block. For example,
 ;; ^  URL `https://github.com/jaypei/emacs-neotree'
 
 ;;----------------------------------------------;;
-;; Web -----------------------------------------;;
+;; External Packages: Web ----------------------;;
 ;;----------------------------------------------;;
 
 (use-package eww
@@ -5499,6 +5521,40 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
+;; Personal Packages ---------------------------;;
+;;----------------------------------------------;;
+
+(when (require 'sboo-mtg nil :no-error)
+
+  ;;--------------------------;;
+
+  (use-package mtg
+
+    :config ())
+
+  ;;--------------------------;;
+
+  (use-package mtg-company
+
+    :hook ((text-mode . mtg-company-setup)
+           (markdown-mode . mtg-company-setup)
+           )
+
+    :config ())
+
+  ;;--------------------------;;
+
+  (use-package mtg-helm
+
+    :commands (mtg-helm-card-name)
+
+    :config ())
+
+  ;;--------------------------;;
+
+  ())
+
+;;----------------------------------------------;;
 ;; Conditional Configuration -------------------;;
 ;;----------------------------------------------;;
 
@@ -5690,6 +5746,18 @@ search (upwards) for a named Code-Block. For example,
 ;; • `awesome-tab-buffer-groups-function' defaults to function `awesome-tab-buffer-groups'.
 ;;
 ;; • 
+
+;;----------------------------------------------;;
+
+;; People's « init.el »s (which I've copied from or been inspired by):
+;;
+;; • URL `https://github.com/jwiegley/dot-emacs/blob/master/init.el'
+;; • URL `https://github.com/DamienCassou/emacs.d/blob/master/init.el'
+;; • URL `'
+;; • URL `'
+;; • URL `'
+;; • URL `'
+;; • URL `'
 
 ;;----------------------------------------------;;
 ;; EOF -----------------------------------------;;

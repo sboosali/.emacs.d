@@ -9,16 +9,15 @@
 # --
 ;;----------------------------------------------;;
 
-(defcustom ${7:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}-callbacks
+(defcustom ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}-callbacks
 
-  (list #'$2
-   )
+  (list #'${3:$(apply #'yas-choose-value (sboo-commands-list))})
 
   "$0.
 
-Zero-or-more functions."
+\`listp' of \`functionp's."
 
   :type 'hook
 
-  :safe t
-  :group 'sboo)
+  :safe #'listp
+  :group '$2)

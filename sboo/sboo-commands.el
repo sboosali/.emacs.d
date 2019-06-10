@@ -1083,9 +1083,30 @@ Notes:
 
 ;;----------------------------------------------;;
 
+(defun sboo-commands-list ()
+
+  "Get all `commandp's (Interactive Commands).
+
+Output:
+
+• a `listp' of `symbolp's.
+  Everything defined by `defun' with `interactive'.
+  An average `length' is 5,000."
+
+  (let* ((COMMANDS )
+         )
+
+    (mapatoms (lambda (*SYMBOL*)
+                (let ((COMMAND? (commandp *SYMBOL*)))
+                  (when COMMAND?
+                    (push *SYMBOL* COMMANDS)))))
+    COMMANDS))
+
+;;----------------------------------------------;;
+
 (defun sboo-custom-groups-list ()
 
-  "Get all Customization Groups.
+  "Get all `groupp's (Customization Groups).
 
 Output:
 

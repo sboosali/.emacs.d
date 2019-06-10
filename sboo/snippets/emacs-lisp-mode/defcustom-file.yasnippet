@@ -9,16 +9,16 @@
 # --
 ;;----------------------------------------------;;
 
-(defcustom ${7:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}
+(defcustom ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}
 
-  ${2:""}
+  ""
 
-  "$0
+  "Filepath for $0.
 
 a \`stringp'."
 
   :type '(file :must-match t :tag "${3:File}")
 
   :safe #'stringp
-  :group 'sboo)
+  :group '$2)
 

@@ -7,16 +7,13 @@
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
-;;----------------------------------------------;;
+(defcustom ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}
 
-(defcustom sboo-${1:name}
+  nil
 
-  ${2:nil}
+  "."
 
-  "$0."
+  :type '(${3:string})
 
-  :type  '($3)
-
-  :safe  t
-  :group 'sboo)
-
+  :safe #'$3p
+  :group '$2)
