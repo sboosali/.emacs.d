@@ -109,7 +109,7 @@ any Company Backend in an earlier group).
 
   '(company-pseudo-tooltip-unless-just-one-frontend
     company-echo-metadata-frontend
-    company-preview-frontend )
+    company-preview-frontend)
 
   "Personal `company-frontends'.
 
@@ -147,16 +147,16 @@ a `listp' of `functionp's."
 ;;   modifying it affects completion across all major modes.
 ;;
 
-;;----------------------------------------------;;
+;;==============================================;;
 ;; Mode-specific `company-backends': Haskell
 
-;;----------------------------------------------;;
+;;==============================================;;
 ;; Mode-specific `company-backends': ELisp
 
-;;----------------------------------------------;;
+;;==============================================;;
 ;; Mode-specific `company-backends': bash
 
-;;----------------------------------------------;;
+;;==============================================;;
 ;; Mode-specific `company-backends': Python
 
 (defun sboo-company-python-setup ()
@@ -166,7 +166,7 @@ a `listp' of `functionp's."
   (add-to-list (make-local-variable 'company-backends)
                #'company-anaconda))
 
-;;----------------------------------------------;;
+;;==============================================;;
 ;; Mode-specific `company-backends': JavaScript
 
 (defun sboo-company-javascript-setup ()
@@ -185,6 +185,26 @@ a `listp' of `functionp's."
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
+
+(defun sboo-toggle-company-ispell (&optional argument)
+
+  "Toggle the `company-ispell' backend.
+
+URL `http://blog.binchen.org/posts/emacs-auto-completion-for-non-programmers.html'"
+  
+  (interactive "P")
+
+  (cond
+   
+   ((memq 'company-ispell company-backends)
+    (setq company-backends (delete 'company-ispell company-backends))
+    (message "‘company-ispell’ disabled"))
+
+   (t
+    (add-to-list 'company-backends 'company-ispell)
+    (message "‘company-ispell’ enabled"))))
+
+;;==============================================;;
 
 ;; `company-complete-number' utilities:
 ;;

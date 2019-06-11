@@ -2253,7 +2253,7 @@ Links:
 
   (helm-mode +1))
 
-;;----------------------------------------------;;
+;;==============================================;;
 
 (when (require 'sboo-company nil :no-error)
 
@@ -2340,6 +2340,29 @@ Links:
     ;;------------------------;;
 
     (global-company-mode +1)))
+
+;;----------------------------------------------;;
+
+(use-package company-ispell
+
+  :after (company)
+
+  :custom
+
+  (company-ispell-dictionary (sboo-data-file "english-words.txt"))
+
+  :config
+
+  ())
+
+;; ^ ‘company-ispell-dictionary’ defaults to ‘ispell-complete-word-dict’.
+
+;; ^ Links:
+;;
+;;   • URL `http://blog.binchen.org/posts/emacs-auto-completion-for-non-programmers.html'
+;;
+
+;;==============================================;;
 
 ;;----------------------------------------------;;
 ;; External Packages: Templates ----------------;;

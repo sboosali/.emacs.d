@@ -1,22 +1,51 @@
-;;; -*- lexical-binding: t -*-
+;;; sboo-definitions.el --- Definitions for sboosali's configuration -*- coding: utf-8; lexical-binding: t -*-
 
-;;==============================================;;
+;; Copyright © 2019 Spiros Boosalis
+
+;; Version: 0.0.0
+;; Package-Requires: ((emacs "25"))
+;; Author:  Spiros Boosalis <samboosalis@gmail.com>
+;; Homepage: https://github.com/sboosali/.emacs.d
+;; Keywords: local
+;; Created: 10 Jun 2019
+;; License: GPL-3.0-or-later
+
+;; This file is not part of GNU Emacs.
+;;
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 ;;; Commentary:
 
-;; Core definitions (no statements) for « sboo »'s emacs configuration
-;;
-;; 
+;; Core definitions (no statements) for « sboo »'s personal configuration. 
 
-;;==============================================;;
 ;;; Code:
 
 ;;----------------------------------------------;;
-;; Imports: ;;----------------------------------;;
+;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
-;; builtin packages:
+;; builtins:
 
-(require 'cl-lib)
+(eval-when-compile
+  (require 'rx)
+  (require 'pcase))
+
+;;----------------------------------------------;;
+
+(progn
+  (require 'seq)
+  (require 'cl-lib))
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
@@ -24,9 +53,9 @@
 
 (defun truename-as-directory (FilePath)
 
-  "Return « `FilePath'/ ».
+  "Return « FILEPATH/ ».
 
-Return the true name of `FilePath', as a directory path:
+Return the true name of FILEPATH, as a directory path:
 
 * an absolute path, 
 * with symbolic links resolved (but not hard links),
@@ -91,7 +120,7 @@ Wraps `sboo-install-p'."
       (_           nil)))
 
 ;;----------------------------------------------;;
-;; Paths ;;-------------------------------------;;
+;; Paths ---------------------------------------;;
 ;;----------------------------------------------;;
 
 (defconst emacs-directory
@@ -158,16 +187,24 @@ Wraps `sboo-install-p'."
 ;;----------------------------------------------;;
 
 (defun sboo-subdir (FilePath)
-  "Return « `sboo-root-directory'/`FilePath'/ ».
 
-  i.e. Return the relative directory `FilePath', 
+  "Return « `sboo-root-directory'/FILEPATH/ ».
+
+  i.e. Return the relative directory FILEPATH, 
   as an absolute sub-directory of `sboo-root-directory'.
 
   Calls `file-name-as-directory' and `file-truename'.
   "
 
-  (truename-as-directory (concat sboo-root-directory
-				 FilePath)))
+  (truename-as-directory (concat sboo-root-directory FilePath)))
+
+;;----------------------------------------------;;
+
+(defconst sboo-data-directory
+
+  (sboo-subdir "data/")
+
+  "Directory with (miscellaneous) data files.")
 
 ;;----------------------------------------------;;
 
@@ -176,16 +213,6 @@ Wraps `sboo-install-p'."
   (sboo-subdir "lisp/")
 
   "Directory with vendored (individual) ELisp files.")
-
-;;----------------------------------------------;;
-
-(defconst sboo-snippets-directory
-
-  (sboo-subdir "snippets/")
-
-  "Directory whose (per-major-mode) subdirectories contain snippets.
-
-Snippets are « .yasnippet » template files.")
 
 ;;----------------------------------------------;;
 
@@ -209,17 +236,99 @@ Icons are « .xpm » (or « .pbm ») files.")
 
 ;;----------------------------------------------;;
 
+(defconst sboo-font-directory
+
+  (sboo-subdir "font/")
+
+  "Directory with Font files.")
+
+;;----------------------------------------------;;
+
+(defconst sboo-snippets-directory
+
+  (sboo-subdir "snippets/")
+
+  "Directory whose (per-major-mode) subdirectories contain snippets.
+
+Snippets are « .yasnippet » template files.")
+
+;;----------------------------------------------;;
+
 (defun sboo-file (FilePath)
 
-  "Return « `sboo-root-directory'/`FilePath' ».
+  "Return « `sboo-root-directory'/FILEPATH ».
 
-i.e. Return the relative filepath `FilePath', 
+i.e. Return the relative filepath FILEPATH, 
 as an absolute filepath, under `sboo-root-directory'.
 
 Calls `file-truename'."
 
-  (file-truename (concat sboo-root-directory
-			 FilePath)))
+  (file-truename (concat sboo-root-directory FilePath)))
+
+;;----------------------------------------------;;
+
+(defun sboo-data-file (FilePath)
+
+  "Return « `sboo-data-directory'/FILEPATH ».
+
+i.e. Return the relative filepath FILEPATH, 
+as an absolute filepath, under `sboo-data-directory'.
+
+Calls `file-truename'."
+
+  (file-truename (concat sboo-data-directory FilePath)))
+
+;;----------------------------------------------;;
+
+(defun sboo-lisp-file (FilePath)
+
+  "Return « `sboo-lisp-directory'/FILEPATH ».
+
+i.e. Return the relative filepath FILEPATH, 
+as an absolute filepath, under `sboo-lisp-directory'.
+
+Calls `file-truename'."
+
+  (file-truename (concat sboo-lisp-directory FilePath)))
+
+;;----------------------------------------------;;
+
+(defun sboo-theme-file (FilePath)
+
+  "Return « `sboo-theme-directory'/FILEPATH ».
+
+i.e. Return the relative filepath FILEPATH, 
+as an absolute filepath, under `sboo-theme-directory'.
+
+Calls `file-truename'."
+
+  (file-truename (concat sboo-theme-directory FilePath)))
+
+;;----------------------------------------------;;
+
+(defun sboo-icon-file (FilePath)
+
+  "Return « `sboo-icon-directory'/FILEPATH ».
+
+i.e. Return the relative filepath FILEPATH, 
+as an absolute filepath, under `sboo-icon-directory'.
+
+Calls `file-truename'."
+
+  (file-truename (concat sboo-icon-directory FilePath)))
+
+;;----------------------------------------------;;
+
+(defun sboo-font-file (FilePath)
+
+  "Return « `sboo-font-directory'/FILEPATH ».
+
+i.e. Return the relative filepath FILEPATH, 
+as an absolute filepath, under `sboo-font-directory'.
+
+Calls `file-truename'."
+
+  (file-truename (concat sboo-font-directory FilePath)))
 
 ;;----------------------------------------------;;
 
@@ -271,6 +380,7 @@ most other installed packages; concisely, efficiently, and safely.")
 ;;----------------------------------------------;;
 
 (defun sboo-submodule-file (package-name &optional file-name)
+
   "Return « \"`sboo-submodule-directory'/`PACKAGE-NAME'/`FILE-NAME'\" ».
 
 Calls `file-truename'.
@@ -305,6 +415,7 @@ Links:
 ;;----------------------------------------------;;
 
 (cl-defun sboo-submodule-directory (package-name &key version)
+
   "Return « \"`sboo-submodule-directory'/`PACKAGE-NAME-VERSION'\" ».
 
 Examples:
@@ -472,16 +583,24 @@ Related:
   (add-hook 'emacs-startup-hook function-symbol))
 
 ;;----------------------------------------------;;
-;;; Notes: ;;-----------------------------------;;
+;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
 ;; `file-truename':
 ;;
-;; "file-truename handles ‘~’ in the same way that expand-file-name does."
-;;
-;; See:
-;; - https://www.gnu.org/software/emacs/manual/html_node/elisp/Truenames.html
+;; "file-truename handles ‘~’ in the same way that ‘expand-file-name’ does."
 ;;
 
-;;==============================================;;
+;; Links:
+;;
+;; • URL `https://www.gnu.org/software/emacs/manual/html_node/elisp/Truenames.html'
+;; • URL `'
+;;
+
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
 (provide 'sboo-definitions)
+
+;;; sboo-definitions.el ends here

@@ -11,7 +11,7 @@
 
 (defcustom ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}-callbacks
 
-  (list #'${3:$(apply #'yas-choose-value (sboo-commands-list))})
+  (list #'${3:`(apply #'yas-choose-value (sboo-commands-list))`})
 
   "$0.
 
