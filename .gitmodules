@@ -64,3 +64,6 @@
 [submodule "real-auto-save"]
 	path = submodules/real-auto-save
 	url = https://github.com/ChillarAnand/real-auto-save
+[submodule "submodules/sidebar"]
+	path = submodules/submodules/sidebar
+	url = https://github.com/sebastiencs/sidebar.el

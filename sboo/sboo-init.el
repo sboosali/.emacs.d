@@ -563,11 +563,22 @@ Related:
 
 (when (require 'sboo-autosave nil :no-error)
 
-  (sboo-autosave-init!)
+  (if (>= emacs-major-version 26)
 
-  (sboo-autosave-config!))
+      ;; `auto-save-visited-mode':
 
-;;(add-startup-hook! #'sboo-autosave-config!))
+      (progn
+        (sboo-autosave/auto-save-visited/init!)
+        (sboo-autosave/auto-save-visited/config!))
+
+    ;; `real-auto-save-mode':
+
+    (progn
+      (eval-after-load 'real-auto-save
+        `(progn
+           (sboo-autosave/real-auto-save/init!)
+           (sboo-autosave/real-auto-save/config!)))
+      (require 'real-auto-save nil :no-error))))
 
 ;;==============================================;;
 ;; Builtin Packages: Primary:
@@ -2071,6 +2082,7 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package helm
+  :load-path "vendored/helm"
 
   :delight (helm-mode " ⎈")
   :custom
@@ -2195,6 +2207,7 @@ Links:
   ;;------------------------;;
 
   (use-package company
+    :load-path "vendored/company-mode"
 
     :delight (company-mode " ©")
 
@@ -2487,6 +2500,9 @@ $0")
   ;;--------------------------;;
 
   (use-package magit
+
+ ;; :load-path ("vendored/magit")
+    :load-path ("submodules/magit/lisp")
 
     :commands (magit-status)
 
@@ -2964,28 +2980,59 @@ $0")
 
 (when (require 'sboo-company nil :no-error)
 
+
+  ;;------------------------;;
+
+  (use-package company-quickhelp
+    :after (company)
+
+    :config
+
+    (company-quickhelp-mode +1)
+
+    ())
+
+  ;; ^ Links:
+  ;;
+  ;;   • URL `https://github.com/expez/company-quickhelp'
+  ;;
+
   ;;------------------------;;
 
   (use-package company-cabal
+    :after (company)
 
-    :init
-    (add-to-list 'company-backends #'company-cabal)
+    :config
+
+    (add-to-list 'company-backends 'company-cabal)
 
     ())
+
+  ;; ^ Links:
+  ;;
+  ;;   • URL `https://github.com/iquiw/company-cabal'
+  ;;
 
   ;;------------------------;;
 
   (use-package company-ghci
+    :after (company)
 
-    :init
+    :config
 
-    (push #'company-ghci company-backends)
-    
     (add-hook 'haskell-mode-hook             #'company-mode)
     (add-hook 'haskell-interactive-mode-hook #'company-mode)
     ;; ^ for completions in the REPL
 
+    (add-to-list 'company-backends 'company-ghci)
+
     ())
+
+  ;; ^ Links:
+  ;;
+  ;;   • URL `https://github.com/horellana/company-ghci'
+  ;;
+
 
   ;;------------------------;;
 
@@ -3609,9 +3656,18 @@ Related:
 
 (use-package rg
 
+  :commands (rg rg-dwim rg-project rg-literal)
+
   :config
 
+  (rg-enable-default-bindings)
+
   ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/dajva/rg.el'
+;;
 
 ;;----------------------------------------------;;
 
@@ -3925,12 +3981,12 @@ Inputs:
 ;;----------------------------------------------;;
 
 (use-package sed-mode
+  
+  :commands (sed-mode)
 
   :delight (sed-mode " ")
 
-  :config
-
-  ())
+  :config ())
 
 ;; ^ Links:
 ;;
@@ -4440,7 +4496,8 @@ search (upwards) for a named Code-Block. For example,
 
 ;;----------------------------------------------;;
 
-(use-package outshine)
+(use-package outshine
+  :disabled t)
 
 ;; ^ Links:
 ;;
@@ -4941,6 +4998,7 @@ search (upwards) for a named Code-Block. For example,
 ;;----------------------------------------------;;
 
 (use-package telephone-line
+  :disabled t
 
   :custom
 
@@ -5199,6 +5257,7 @@ search (upwards) for a named Code-Block. For example,
 
   :config
 
+  (which-key-setup-side-window-right-bottom)
   (which-key-mode +1)
 
   ())
@@ -5316,6 +5375,8 @@ search (upwards) for a named Code-Block. For example,
 
 (use-package bm
 
+  :commands (bm-toggle bm-next bm-previous)
+
   :custom
 
   (bm-buffer-persistence t "Do save bookmarks (i.e. enable buffer persistence).")
@@ -5334,10 +5395,11 @@ search (upwards) for a named Code-Block. For example,
 
   ())
 
-;; `bm' (a `featurep').
+;; ^ `bm' (a `featurep').
+;;
 ;; > Quickly save and restore point using registers
 ;; 
-
+;;
 ;; `bmkp' a.k.a bookmark+
 
 ;; ^ Links:

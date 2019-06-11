@@ -242,7 +242,7 @@ a `listp' of `functionp's."
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
-;;; `company-backends'
+;; `company-backends'
 ;;
 ;; `company-backends' default value is:
 ;;
@@ -269,7 +269,7 @@ a `listp' of `functionp's."
 ;; - a backend group; has type `list' of `function'.
 ;; 
 
-;;; CompanyBackend
+;;;CompanyBackend
 ;; 
 ;; Each CompanyBackend has this signature:
 ;; 
@@ -282,18 +282,17 @@ a `listp' of `functionp's."
 ;; - 
 ;; 
 
-;;; CompanyCommand
+;; CompanyCommand
 ;; 
 ;; A CompanyBackend takes a CompanyCommand.
 ;; 
 ;; CompanyCommand is a `symbol', one of:
 ;; 
 
-;;; Links
-;;
-;; - 
-;; - 
-;; - 
-
 ;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
 (provide 'sboo-company)
+
+;;; sboo-company.el ends here
