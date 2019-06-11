@@ -9,7 +9,7 @@
 # --
 ;;----------------------------------------------;;
 
-(defcustom sboo-${1:name}-callbacks
+(defcustom ${7:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}-callbacks
 
   (list #'$2
    )

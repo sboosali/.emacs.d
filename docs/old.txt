@@ -9084,7 +9084,36 @@ git submodule update
 
 ========================================================================
 
+(define-key helm-map (kbd "<tab>") nil)
+(define-key helm-map (kbd "TAB") nil)
 
+(define-key helm-map (kbd "C-RET") #'helm-select-action)
+
+(add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
+
+
+(with-eval-after-load 'helm-command
+
+  (global-set-key (kbd "M-x") #'helm-M-x)
+
+  ())
+
+
+(with-eval-after-load 'helm
+
+  (define-key global-map (kbd "C-c m") #'helm-imenu)
+  (define-key global-map (kbd "C-x b") #'helm-buffers-list)
+
+  ())
+
+(with-eval-after-load 'helm-projectile
+  (helm-projectile-on))
+
+
+========================================================================
+
+Error running timer ‘require’: (file-missing "Cannot open load file" "No such file or directory" "avy")
+(require 'avy)
 
 ;;----------------------------------------------;;
 

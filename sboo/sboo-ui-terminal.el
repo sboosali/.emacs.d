@@ -51,6 +51,7 @@
 ;;----------------------------------------------;;
 
 (use-package icons-in-terminal
+  :disable t
   :load-path "submodules/icons-in-terminal"
 
   :config
@@ -66,8 +67,18 @@
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
-;; 
+;; these Keysequences are identical (and thus, can't be bound separately)
+;; in any (conformant) terminal emulator.
 ;;
+;; • « C-i » — « TAB »
+;; • « C-m » — « RET »
+;; • « C-[ » — « ESC »
+;; • « C-d » — « DEL »
+;;
+;; Links:
+;;
+;;   • URL `https://unix.stackexchange.com/questions/116629/how-do-keyboard-input-and-text-output-work'
+;;   • URL `https://unix.stackexchange.com/questions/203418/bind-c-i-and-tab-keys-to-different-commands-in-terminal-applications-via-inputr'
 ;;
 
 ;;----------------------------------------------;;

@@ -9,7 +9,7 @@
 # --
 ;;----------------------------------------------;;
 
-(defcustom sboo-${1:name}-regexp
+(defcustom ${7:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}-regexp
 
   (rx bos $0 eos
    )

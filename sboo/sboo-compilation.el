@@ -1,8 +1,33 @@
-;;; -*- lexical-binding: t -*-
+;;; sboo-compilation.el --- -*- coding: utf-8; lexical-binding: t -*-
+
+;; Copyright © 2019 Spiros Boosalis
+
+;; Version: 0.0.0
+;; Package-Requires: ((emacs "25") seq)
+;; Author:  Spiros Boosalis <samboosalis@gmail.com>
+;; Homepage: https://github.com/sboosali/.emacs.d
+;; Keywords: local
+;; Created: 04 Jun 2019
+;; License: GPL-3.0-or-later
+
+;; This file is not part of GNU Emacs.
+;;
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
-;; My `compilation-mode' configuration.
+;; Personal `compilation-mode' configuration.
 ;;
 ;; See:
 ;;
@@ -18,10 +43,16 @@
 
 ;; Builtins:
 
-(require 'cl-lib)
-(require 'pcase)
+(progn
+  (require 'compile)
+  (require 'seq)
+  (require 'cl-lib))
 
-(require 'compile)
+;;----------------------------------------------;;
+
+(eval-when-compile
+  (require 'rx)
+  (require 'pcase))
 
 ;;----------------------------------------------;;
 ;; Variables: `compilation-mode' ---------------;;
@@ -39,8 +70,7 @@
 
 (defcustom sboo-compilation-issue-string-alist
 
-  `(
-    (success   . "✔")
+  `((success   . "✔")
     (errors    . "⛔")                  ; the "Stop" Sign.
     (warnings  . "⚠")                  ; the "Warning" Sign.
    )
@@ -52,6 +82,21 @@ Associates `symbolp's with `stringp's."
   :type '(alist :key-type   (symbol :tag "Issue")
                 :value-type (choice (const nil)
                                     (string :tag "Alias")))
+
+  :safe #'listp
+  :group 'sboo-compilation)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-compile-colorize-buffer-blacklist
+
+  '(grep-mode ag-mode rg-mode)
+
+  "Exceptions (`major-mode's) for `sboo-compile-colorize-buffer'.
+
+`listp' of `symbolp's."
+
+  :type '(repeat (symbol :tag "Major Mode"))
 
   :safe #'listp
   :group 'sboo-compilation)
@@ -108,6 +153,25 @@ Associates `symbolp's with `characterp's."
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
+(defun sboo-compile-colorize-buffer ()
+
+  "Colorize ANSI Color Codes in non-`grep-mode' `compilation-buffer's.
+
+Implementation:
+
+• Invokes `ansi-color-apply-on-region'.
+
+Links:
+
+• URL `http://stackoverflow.com/a/13408008/1219634'.
+• URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c52b4605f700fc4/setup-files/setup-compile.el'."
+
+  (unless (seq--p #'derived-mode-p sboo-compile-colorize-buffer-blacklist)
+
+    (ansi-color-apply-on-region compilation-filter-start (point))))
+
+;;----------------------------------------------;;
+
 ;; TODO unicode-messages:
 ;;
 ;; (spaceline-define-segment
@@ -139,9 +203,8 @@ Associates `symbolp's with `characterp's."
 ;;     :when active :tight t )
 
 ;;----------------------------------------------;;
-;;; Functions: Configuration -------------------;;
+;;; Configuration ------------------------------;;
 ;;----------------------------------------------;;
-;; `:init'
 
 (defun sboo-compilation-init! ()
 
@@ -171,7 +234,6 @@ Associates `symbolp's with `characterp's."
   ())
 
 ;;----------------------------------------------;;
-;; `:config'
 
 (defun sboo-compilation-config! ()
 
@@ -180,8 +242,9 @@ Associates `symbolp's with `characterp's."
   (interactive)
 
   (when (require 'ansi-color nil :noerror)
+    (add-hook 'compilation-filter-hook #'sboo-compile-colorize-buffer))
 
-    (add-hook 'compilation-filter-hook #'sboo-colorize-compilation-buffer))
+  ;; ^ Don't mess up colors in Grep/Ag results buffers"
 
   ;; ^ Compilation.
   ;; 
@@ -193,20 +256,6 @@ Associates `symbolp's with `characterp's."
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 
-(defun sboo-colorize-compilation-buffer ()
-
-  "Invoke `ansi-color-apply-on-region'.
-
-See:
-
-• URL `http://stackoverflow.com/a/13408008/1219634'.
-• URL `https://github.com/kaushalmodi/.emacs.d/blob/08f8256f3de346bf6d389f922c52b4605f700fc4/setup-files/setup-compile.el'."
-
-  (unless (or (derived-mode-p 'grep-mode) ;Don't mess up colors in Grep/Ag results buffers
-              (derived-mode-p 'ag-mode))
-    
-    (ansi-color-apply-on-region compilation-filter-start (point))))
-  
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
@@ -242,11 +291,17 @@ See:
 ;;
 
 ;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
 
-;; See:
-;;     - 
-;;     - 
+;; 
+;;
 ;;
 
 ;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
 (provide 'sboo-compilation)
+
+;;; sboo-compilation.el ends here

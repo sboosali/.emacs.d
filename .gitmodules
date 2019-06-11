@@ -67,3 +67,6 @@
 [submodule "submodules/sidebar"]
 	path = submodules/submodules/sidebar
 	url = https://github.com/sebastiencs/sidebar.el
+[submodule "submodules/rg"]
+	path = submodules/submodules/rg
+	url = https://github.com/dajva/rg.el

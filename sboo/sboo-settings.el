@@ -2,14 +2,6 @@
 
 ;; Copyright © 2019 Spiros Boosalis
 
-;; Version: 0.0.0
-;; Package-Requires: ((emacs "25") seq pcase)
-;; Author:  Spiros Boosalis <samboosalis@gmail.com>
-;; Homepage: https://github.com/sboosali/.emacs.d
-;; Keywords: local
-;; Created: 08 May 2019
-;; License: GPL-3.0-or-later
-
 ;; This file is not part of GNU Emacs.
 ;;
 ;; This file is free software; you can redistribute it and/or modify
@@ -328,7 +320,7 @@
   (sboo-custom-set scroll-conservatively 10000
     "Scroll smoothly.")
 
-  (sboo-custom-set scroll-preserve-screen-position always
+  (sboo-custom-set scroll-preserve-screen-position 'always
     "`t' means that Emacs adjusts point to keep the cursor at the same screen position whenever a scroll command moves it off-window, rather than moving it to the topmost or bottommost line.")
 
   ())
@@ -748,7 +740,5 @@
 ;;----------------------------------------------;;
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
-
-(provide 'sboo-settings)
 
 ;;; sboo-settings.el ends here

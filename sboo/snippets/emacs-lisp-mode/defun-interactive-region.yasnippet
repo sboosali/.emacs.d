@@ -8,7 +8,7 @@
 # --
 ;;----------------------------------------------;;
 
-(defun sboo-${1:name}-region (beg end)
+(defun ${7:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}-region (beg end)
 
   "TODO between BEG and END.
 

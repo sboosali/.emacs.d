@@ -2,14 +2,6 @@
 
 ;; Copyright © 2019 Spiros Boosalis
 
-;; Version: 0.0.0
-;; Package-Requires: ((emacs "25"))
-;; Author:  Spiros Boosalis <samboosalis@gmail.com>
-;; Homepage: https://github.com/sboosali/.emacs.d
-;; Keywords: local
-;; Created: 07 May 2019
-;; License: GPL-3.0-or-later
-
 ;; This file is not part of GNU Emacs.
 ;;
 ;; This file is free software; you can redistribute it and/or modify
@@ -687,13 +679,15 @@ Inputs:
 
   ())
 
-(global-set-key (kbd "M-S-r") #'query-replace)        ; [R]eplace (Find/Replace with Regex Strings).
+(global-set-key (kbd "S-M-r") #'query-replace)        ; [R]eplace (Find/Replace with Regex Strings).
 
 (global-set-key (kbd "M-`") #'sboo-switch-to-previous-buffer)
 (global-set-key (kbd "M-~") #'sboo-switch-to-previous-buffer)
 
-(global-set-key (kbd "M-:") #'comment-dwim) ; Shadows: `eval-expression'.
+(global-set-key (kbd "C-:") #'eval-expression)
 
+;; (global-set-key (kbd "M-:") #'comment-dwim) ; Shadows: `eval-expression'.
+;;
 ;; ^ Thus, both « M-; » and « M-S-; » are identical.
 ;;   NOTE shadows `eval-expression', but `eval-expression' has been bound to « <f11> ».
 
@@ -1591,15 +1585,10 @@ its “Prefix Command” is bound to « \\[sboo-mode-keymap] ».
 (dolist (*MAP* (list minibuffer-local-filename-completion-map
                      minibuffer-local-completion-map
                      minibuffer-local-must-match-map
-
-                     ido-file-completion-map
-                     ido-file-dir-completion-map
                      ))
 
   (define-key *MAP* (kbd "<kp-left>")  #'backward-char)
-  (define-key *MAP* (kbd "<kp-right>") #'forward-char)
-
-  ())
+  (define-key *MAP* (kbd "<kp-right>") #'forward-char))
 
 ;; ^ `minibuffer-local-filename-completion-map':
 ;;
@@ -1612,61 +1601,14 @@ its “Prefix Command” is bound to « \\[sboo-mode-keymap] ».
 
 ;;==============================================;;
 
-;;; TODO `helm-*-map'
+(with-eval-after-load 'ido
 
-(dolist (*MAP* (list helm-generic-files-map
-                     helm-find-files-map
-                     helm-read-file-map
-                     ))
+  (dolist (*MAP* (list ido-file-completion-map
+                       ido-file-dir-completion-map
+                       ))
 
-  (define-key *MAP* (kbd "<kp-left>")  #'backward-char)
-  (define-key *MAP* (kbd "<kp-right>") #'forward-char)
-
-  ())
-
-;; ^ `helm-generic-files-map':
-;;
-;; `helm-generic-files-map' corresponds with (?) `minibuffer-local-filename-completion-map'
-;;
-;;
-;;
-
-;;----------------------------------------------;;
-
-;; TODO `helm-*-map':
-;;
-;; • `helm-etags-map'
-;; • `helm-swoop-edit-map'
-;; • `helm-eval-expression-map'
-;; • `helm-multi-swoop-edit-map'
-;; • `helm-pdfgrep-map'
-;; • `helm-map'
-;; • `helm-M-x-map'
-;; • `helm-grep-map'
-;; • `helm-swoop-map'
-;; • `helm-moccur-map'
-;; • `helm-locate-map'
-;; • `helm-buffer-map'
-;; • `helm-command-map'
-;; • `helm-read-file-map'
-;; • `helm-kill-ring-map'
-;; • `helm-wikipedia-map'
-;; • `helm-comp-read-map'
-;; • `helm-grep-mode-map'
-;; • `helm-major-mode-map'
-;; • `helm-find-files-map'
-;; • `helm-multi-swoop-map'
-;; • `helm-moccur-mode-map'
-;; • `helm--minor-mode-map'
-;; • `helm-ff-lynx-style-map'
-;; • `helm--remap-mouse-mode'
-;; • `helm-generic-files-map'
-;; • `helm--remap-mouse-mode-map'
-;; • `helm--remap-mouse-mode-hook'
-;; • `helm-multi-swoop-buffers-map'
-;; • `helm-buffers-ido-virtual-map'
-;; • `helm-search-suggest-action-google-maps-url'
-;;
+    (define-key *MAP* (kbd "<kp-left>")  #'backward-char)
+    (define-key *MAP* (kbd "<kp-right>") #'forward-char)))
 
 ;;==============================================;;
 
@@ -1772,7 +1714,5 @@ its “Prefix Command” is bound to « \\[sboo-mode-keymap] ».
 ;;----------------------------------------------;;
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
-
-(provide 'sboo-keybindings)
 
 ;;; sboo-keybindings.el ends here

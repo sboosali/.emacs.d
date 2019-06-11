@@ -9,7 +9,7 @@
 # --
 ;;----------------------------------------------;;
 
-(defgroup sboo-${1:name} nil
+(defgroup ${7:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name} nil
 
   "$0."
 

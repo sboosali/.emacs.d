@@ -5479,7 +5479,7 @@ search (upwards) for a named Code-Block. For example,
 ;; Conditional Configuration -------------------;;
 ;;----------------------------------------------;;
 
-(when (require 'sboo-os nil :no-error)
+(when (load "sboo-os" :no-error)
 
   (add-hook 'window-setup-hook #'sboo-maximize-frame t)
 
@@ -5492,7 +5492,7 @@ search (upwards) for a named Code-Block. For example,
 
 ;;----------------------------------------------;;
 
-(when (require 'sboo-ui nil :no-error)
+(when (load "sboo-ui" :no-error)
 
   ())
 
