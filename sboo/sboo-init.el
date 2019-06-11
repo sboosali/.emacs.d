@@ -4256,6 +4256,25 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
+
+(use-package synosaurus
+
+  :commands (synosaurus-lookup synosaurus-choose-and-replace synosaurus-choose-and-insert)
+
+  :custom
+
+  (synosaurus-backend #'synosaurus-backend-wordnet "program ‘wn’ works offline".)
+  (synosaurus-choose-method 'popup "choose alternatives via ‘popup.el’.")
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `'
+;;   • URL `'
+;;
+
+;;----------------------------------------------;;
 ;; External Packages: Navigation ---------------;;
 ;;----------------------------------------------;;
 
