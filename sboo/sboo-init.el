@@ -2360,7 +2360,7 @@ Links:
 ;; ^ Links:
 ;;
 ;;   • URL `http://blog.binchen.org/posts/emacs-auto-completion-for-non-programmers.html'
-;;
+;;   • URL `http://blog.binchen.org/posts/how-to-spell-check-functionvariable-in-emacs.html' 
 
 ;;==============================================;;
 
