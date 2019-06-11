@@ -1,4 +1,4 @@
-;;; sboo-company.el --- -*- lexical-binding: t -*-
+;;; sboo-company.el --- Personal `company-mode' configuration -*- lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -27,7 +27,7 @@
 
 ;;; Commentary:
 
-;; Personal configuration for `company'.
+;; Personal `company-mode' configuration.
 ;; 
 ;; 
 
@@ -287,7 +287,23 @@ URL `http://blog.binchen.org/posts/emacs-auto-completion-for-non-programmers.htm
 ;;
 
 ;;----------------------------------------------;;
-;;; `company-backends'
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
+
+;; CompanyBackend
+;; 
+;; Each CompanyBackend has this signature:
+;; 
+;; (defun company-<name>-backend (COMMAND &optional _ &rest _) ...)
+;; 
+;; where:
+;; 
+;; - `COMMAND' is a `symbol' (see below)
+;; - 
+;; - 
+;; 
+
+;; `company-backends'
 ;;
 ;; `company-backends' default value is:
 ;;
@@ -314,31 +330,17 @@ URL `http://blog.binchen.org/posts/emacs-auto-completion-for-non-programmers.htm
 ;; - a backend group; has type `list' of `function'.
 ;; 
 
-;;; CompanyBackend
-;; 
-;; Each CompanyBackend has this signature:
-;; 
-;; (defun company-<name>-backend (COMMAND &optional _ &rest _) ...)
-;; 
-;; where:
-;; 
-;; - `COMMAND' is a `symbol' (see below)
-;; - 
-;; - 
-;; 
-
-;;; CompanyCommand
+;; CompanyCommand
 ;; 
 ;; A CompanyBackend takes a CompanyCommand.
 ;; 
 ;; CompanyCommand is a `symbol', one of:
 ;; 
 
-;;; Links
-;;
-;; - 
-;; - 
-;; - 
-
 ;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
 (provide 'sboo-company)
+
+;;; sboo-company.el ends here

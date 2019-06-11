@@ -110,7 +110,7 @@ Notes:
   ;;
   ;; Enable globally.
 
-  ())  
+  ())
 
 ;;----------------------------------------------;;
 ;; Configuration (`auto-save-visited-mode') ----;;
@@ -146,38 +146,6 @@ Notes:
   ;; Enable globally.
 
   ())
-
-;;----------------------------------------------;;
-;; Configuration -------------------------------;;
-;;----------------------------------------------;;
-
-(defun sboo-autosave-init! ()
-
-  "Initialize Auto-Save."
-
-  (interactive)
-
-  (if (>= emacs-major-version 26)
-
-      (sboo-autosave/auto-save-visited/init!)
-
-    (progn
-      (require 'real-auto-save)
-      (sboo-autosave/real-auto-save/init!))))
-
-;;----------------------------------------------;;
-
-(defun sboo-autosave-config! ()
-
-  "Configure Auto-Save."
-
-  (interactive)
-
-  (if (>= emacs-major-version 26)
-
-      (sboo-autosave/auto-save-visited/config!)
-
-    (sboo-autosave/real-auto-save/config!)))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
