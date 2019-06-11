@@ -23,14 +23,14 @@
 ;;
 ;; Sections:
 ;;
-;; • the Commands — will be bound in a keybinding (below)
-;; • the Utilities — may be used to define the keybindings (below) 
+;; • the Commands  — will be bound in a keybinding (below).
+;; • the Utilities — may be used to define the keybindings (below).
 ;;
 ;; In this file's keybindings, the keys are bound to:
 ;;
-;; • Builtin Commands (most) — defined by Emacs.
-;; • Personal Commands (some) — defined in this file.
-;; • Other Commands (some) — undefined (until later, they are defined by external packages).
+;; • Builtin Commands (most)  — i.e. defined by Emacs.
+;; • Personal Commands (some) — i.e. defined in this file.
+;; • Other Commands (some)    — i.e. undefined (until later, they are defined by external packages).
 ;;
 
 ;;; Code:

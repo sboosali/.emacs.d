@@ -50,6 +50,38 @@
   (require 'cl-lib))
 
 ;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-translate-function-keys-under-control ()
+
+  "Translate « <f1> » as « C-1 », « <f11> » as « C-0 1 », etc."
+
+  (progn
+
+    (define-key key-translation-map (kbd "C-1")   (kbd "<f1>"))
+    (define-key key-translation-map (kbd "C-2")   (kbd "<f2>"))
+    (define-key key-translation-map (kbd "C-3")   (kbd "<f3>"))
+    (define-key key-translation-map (kbd "C-4")   (kbd "<f4>"))
+    (define-key key-translation-map (kbd "C-5")   (kbd "<f5>"))
+    (define-key key-translation-map (kbd "C-6")   (kbd "<f6>"))
+    (define-key key-translation-map (kbd "C-7")   (kbd "<f7>"))
+    (define-key key-translation-map (kbd "C-8")   (kbd "<f8>"))
+    (define-key key-translation-map (kbd "C-9")   (kbd "<f9>"))
+    (define-key key-translation-map (kbd "C-0 1") (kbd "<f11>"))
+    (define-key key-translation-map (kbd "C-0 2") (kbd "<f12>"))
+
+    ()))
+
+;;----------------------------------------------;;
+;; Effects -------------------------------------;;
+;;----------------------------------------------;;
+
+(sboo-translate-function-keys-under-control)
+
+;; ^ Chromebook has no F-Keys.
+
+;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 

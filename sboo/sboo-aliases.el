@@ -236,7 +236,7 @@
   (defalias '/mli #'markdown-insert-link) ;[M]arkdown [I]nsert [L]ink
   (defalias '/mci #'markdown-insert-code) ;[M]arkdown [I]nsert [C]ode
 
-  'markdown-mode)
+  #'markdown-mode)
 
 ;;----------------------------------------------;;
 
@@ -245,6 +245,10 @@
 ;; ^ directory sidebar with automatic viewing (click filename to open it in a buffer).
 
 ;;TODO ; mnemonic: "d" for "Directory".
+
+;;==============================================;;
+
+(defalias 'helm-insert-char #'helm-ucs)
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
