@@ -1,4 +1,4 @@
-;;; sboo-settings.el --- -*- coding: utf-8; lexical-binding: t -*-
+;;; sboo-settings.el --- Personal `custom-set-variables' -*- coding: utf-8; lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -46,14 +46,23 @@
 
 (eval-when-compile
 
+  ;;--------------------------;;
+
   (when (not (fboundp #'sboo-custom-set))
 
-    (defmacro sboo-custom-set (variable expression &optional comment requirements)
+    (defmacro sboo-custom-set (variable expression &optional comment)
+
       "`custom-set-variables' wrapper."
+      
       (declare (indent 2) (doc-string 3))
+
       `(with-demoted-errors "[Warning] %s"
          (custom-set-variables
-          (list (quote ,variable) ,expression t ,requirements ,comment))))))
+          (list (quote ,variable) (quote ,expression) :eager nil ,comment))))) ;TODO handle variables, not just symbols
+
+  ;;--------------------------;;
+
+  ())
 
 ;;----------------------------------------------;;
 
@@ -221,7 +230,7 @@
 ;; Settings: Toolbar ---------------------------;;
 ;;----------------------------------------------;;
 
-(sboo-custom-set tool-bar-position left
+(sboo-custom-set tool-bar-position 'left
   "the Tool Bar is on the left.")
 
 (sboo-custom-set auto-resize-tool-bars t
@@ -339,7 +348,7 @@
 (sboo-custom-set visible-bell t
   "flash a Black Square onto the screen on User Errors (instead of honking loudly through the speakers).")
 
-(sboo-custom-set ring-bell-function ignore
+(sboo-custom-set ring-bell-function 'ignore
   "disable Blinking and Flashing.")
 
 ;;----------------------------------------------;;
@@ -380,7 +389,7 @@
 (sboo-custom-set show-paren-delay 0
   "no Delay.")
 
-(sboo-custom-set show-paren-style mixed
+(sboo-custom-set show-paren-style 'mixed
   "highlight the Parenthesized Expression, unless the Matching Parenthesis is visible (not just the Parenthesis).")
 
 ;;----------------------------------------------;;
@@ -403,15 +412,15 @@
 
 ;;----------------------------------------------;;
 
-(sboo-custom-set initial-major-mode text-mode
-  "the default Major Mode for a new Buffer.")
+;; (sboo-custom-set initial-major-mode 'text-mode
+;;   "the default Major Mode for a new Buffer.")
 
 ;(setq initial-buffer-choice 'xah-new-empty-buffer)
 ;; ^ Start Emacs with Empty Buffer
 
 ;;----------------------------------------------;;
 
-(sboo-custom-set linum-format dynamic
+(sboo-custom-set linum-format 'dynamic
   "")
 
 ;; (sboo-custom-set linum-format "%3d"
@@ -563,7 +572,7 @@
 (sboo-custom-set grep-save-buffers t
   "Don't ask (just save all buffers).")
 
-(sboo-custom-set grep-highlight-matches always
+(sboo-custom-set grep-highlight-matches 'always
   "grep ‘--color=’ (`auto' or `always')")
 
 (sboo-custom-set grep-first-column 1

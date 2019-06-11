@@ -146,7 +146,7 @@
 
     `(with-demoted-errors "[Warning] %s"
        (custom-set-variables
-        (list (quote ,variable) ,expression :eager nil ,comment)))) ;TODO handle variables, not just symbols
+        (list (quote ,variable) (quote ,expression) :eager nil ,comment)))) ;TODO handle variables, not just symbols
 
   ;;--------------------------;;
 
@@ -2334,6 +2334,8 @@ Links:
 
   (use-package yasnippet
 
+    :demand 5
+
     :commands (snippet-mode yas-insert-snippet yas-next-field-or-maybe-expand)
 
     :delight (yas-minor-mode " Y")
@@ -2393,7 +2395,7 @@ $0")
 
     :config
 
-    (defun sboo-yas-reload (force)
+    (defun sboo-yas-reload (&optional force)
 
       "Recompile and reload all « .yasnippet » files."
 

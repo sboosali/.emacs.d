@@ -408,3 +408,15 @@ See:
 
 
 
+
+run-hooks: Wrong number of arguments: (((now 23807 8636 996882 400000) (now 23807 8636 944293 694000) t) (force) "Recompile and reload all « .yasnippet » files." (interactive "P") (yas-recompile-all) (yas-reload-all force) (require (quote sboo-yasnippets) nil :no-error)), 0
+
+
+
+Error running timer ‘require’: (file-missing "Cannot open load file" "No such file or directory" "avy")
+
+
+
+
+
+
