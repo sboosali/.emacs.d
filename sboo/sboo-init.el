@@ -1,4 +1,4 @@
-;;; sboo-init.el --- `init.el' for `sboo'. -*- coding: utf-8; lexical-binding: t -*-
+;;; sboo-init.el --- sboosali's ‘init.el’ -*- coding: utf-8; lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -3867,7 +3867,10 @@ Inputs:
 
   :config
 
-  (add-to-list 'wrap-region-except-modes 'magit-status-mode)
+  (dolist (MODE '(magit-status-mode))
+    (add-to-list 'wrap-region-except-modes MODE))
+
+  ;; ^ TUIs
 
   (require 'sboo-html nil :no-error)
 
@@ -3976,6 +3979,10 @@ Inputs:
   ;;TODO...
   ;; (when (bound-and-true-p sboo-markdown-wrap-region-table)
   ;;   (wrap-region-add-wrappers (sboo-markdown-wrap-region-table)))
+
+  (turn-on-wrap-region-mode)
+
+  ;; ^ `wrap-region-global-mode' is a `define-globalized-minor-mode'.
 
   ())
 
@@ -5524,35 +5531,35 @@ search (upwards) for a named Code-Block. For example,
 ;; Personal Packages ---------------------------;;
 ;;----------------------------------------------;;
 
-(when (require 'sboo-mtg nil :no-error)
+;; (when (require 'sboo-mtg nil :no-error)
 
-  ;;--------------------------;;
+;;   ;;--------------------------;;
 
-  (use-package mtg
+;;   (use-package mtg
 
-    :config ())
+;;     :config ())
 
-  ;;--------------------------;;
+;;   ;;--------------------------;;
 
-  (use-package mtg-company
+;;   (use-package mtg-company
 
-    :hook ((text-mode . mtg-company-setup)
-           (markdown-mode . mtg-company-setup)
-           )
+;;     :hook ((text-mode . mtg-company-setup)
+;;            (markdown-mode . mtg-company-setup)
+;;            )
 
-    :config ())
+;;     :config ())
 
-  ;;--------------------------;;
+;;   ;;--------------------------;;
 
-  (use-package mtg-helm
+;;   (use-package mtg-helm
 
-    :commands (mtg-helm-card-name)
+;;     :commands (mtg-helm-card-name)
 
-    :config ())
+;;     :config ())
 
-  ;;--------------------------;;
+;;   ;;--------------------------;;
 
-  ())
+;;   ())
 
 ;;----------------------------------------------;;
 ;; Conditional Configuration -------------------;;
