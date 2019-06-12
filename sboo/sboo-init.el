@@ -3571,6 +3571,29 @@ $0")
 
 ;;----------------------------------------------;;
 
+(use-package fdlcap
+
+  :commands (fdlcap-change-case-region
+             fdlcap-change-case-current-word
+             sboo-fdlcap-dwim)
+
+  :bind (("S-<f3>" . sboo-fdlcap-dwim) ; like Microsoft Word.
+         )
+
+  :preface
+
+  (when (fboundp #'defun-dwim)
+    (defun-dwim sboo-fdlcap-dwim fdlcap-change-case-region fdlcap-change-case-current-word))
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `http://www.emacswiki.org/elisp/fdlcap.el'
+;;
+
+;;----------------------------------------------;;
+
 (use-package string-inflection
 
   ;;--------------------------;;
