@@ -1,0 +1,29 @@
+# -*- mode: snippet -*-
+#
+# key         : deftoolbar/toggle/minor-mode
+# name        : [sboo] a Toolbar Entry, a Checkbox, for a minor mode. i.e. « (define-key [tool-bar _] '(menu-item ... (:toggle . _-mode) ...)) »
+#
+# type        : snippet
+# condition   : (let ((KEY "deftoolbar/toggle/minor-mode")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 8) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+(define-key ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "global"))`}-map [tool-bar $1]
+
+  '(menu-item "${1:$(string-join (split-string (capitalize yas-text) "[-/]") " ")}"
+
+              $3-mode
+
+              :help    "Toggle ${1:$(string-join (split-string (capitalize yas-text) "[-/]") " ")} (a minor-mode)."
+
+              :image   $1-image
+
+              :button  (:toggle . $3-mode)
+
+   ;;         :visible (not ($3-global-mode))
+
+              :keys    "\\\\[$3]"))
+$0

@@ -1,4 +1,4 @@
-;;; sboo-keybindings.el --- -*- lexical-binding: t -*-
+;;; sboo-keybindings.el --- Personal keybinding -*- lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -1519,7 +1519,23 @@ its “Prefix Command” is bound to « \\[sboo-mode-keymap] ».
 ;(global-set-key (kbd "<menu>") 'list-buffers)
 
 ;;==============================================;;
-;;; Local Keybindings...
+;; Mode-Local Keybindings ======================;;
+;;==============================================;;
+
+;;; `special-mode-map'
+
+(let ((MAP special-mode-map))
+
+  (define-key MAP ":" #'other-window)
+
+  'special-mode-map)
+
+;; ^ Links:
+;;
+;;   • URL `https://emacs.stackexchange.com/questions/28289/how-to-define-a-key-in-special-mode'
+;;   • URL `https://www.gnu.org/software/emacs/manual/html_node/elisp/Standard-Keymaps.html'
+;;
+
 ;;==============================================;;
 
 ;;; `minibuffer-local-map'

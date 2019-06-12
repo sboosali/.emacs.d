@@ -9287,7 +9287,209 @@ a `characterp'."
 
     (tap                    . ,(make-mtg-symbol :symbol 'tap                    :abbreviation 'T   :char ?Ⓣ))
     (untap                  . ,(make-mtg-symbol :symbol 'untap                  :abbreviation 'Q   :char ?🅠))
-    
+
+========================================================================
+
+# -*- mode: snippet -*-
+#
+# key         : deftoolbar
+# name        : [sboo] a « (define-key [tool-bar _] '(menu-item ...)) » Keybinding
+#
+# type        : snippet
+# condition   : (let ((KEY "deftoolbar")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 8) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+(define-key ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "global"))`}-map [tool-bar $1]
+
+  '(menu-item "${1:$(string-join (split-string (capitalize yas-text) "[-/]") " ")}"
+
+              $3
+
+              :help    "${1:$(string-join (split-string (capitalize yas-text) "[-/]") " ")} the ..."
+
+              :image   $1-image
+
+              :visible ()
+
+              :enable  ()
+
+              :button  
+
+              :key-sequence 
+
+              :keys      
+
+              :filter  
+
+  ))
+$0
+
+========================================================================
+
+# -*- mode: snippet -*-
+#
+# key         : deftoolbar/toggle/minor-mode
+# name        : [sboo] a Toolbar Entry, a Checkbox, i.e. « (define-key [tool-bar _] '(menu-item ... (:toggle . _) ...)) »
+#
+# type        : snippet
+# condition   : (let ((KEY "deftoolbar/toggle/minor-mode")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 8) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+(define-key ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "global"))`}-map [tool-bar $1]
+
+  '(menu-item "${1:$(string-join (split-string (capitalize yas-text) "[-/]") " ")}"
+
+              $3-minor-mode
+
+              :help    "Toggle ${1:$(string-join (split-string (capitalize yas-text) "[-/]") " ")}."
+
+              :image   $1-image
+
+              :button  (:toggle . $3-minor-mode)
+
+   ;;         :visible (not ($3-global-minor-mode))
+
+              :keys    "\\\\[$3]"))
+$0
+
+========================================================================
+
+;;
+
+(defvar compilation-no-skip-threshold 0
+  "Skip no messages.")
+
+(defvar compilation-info-skip-threshold 1
+  "Skip WARN messages.")
+
+(defvar compilation-warn-skip-threshold 2
+  "Skip INFO messages (and WARN too).")
+
+;;
+
+(defcustom compilation-skip-threshold
+
+  compilation-no-skip-threshold
+  
+  :type (choice (const 0 :tag "Don't Skip any Messages")
+                (const 1 :tag "Skip INFO Messages")
+                (const 2 :tag "Skip INFO & WARN Messages"))
+  :group 'compile)
+
+;;
+
+(defun compilation-disable-skip-threshold ()
+  "Customize `compilation-skip-threshold' as `compilation-no-skip-threshold'."
+  (interactive)
+  (customize-set-variable 'compilation-skip-threshold compilation-no-skip-threshold))
+
+(defun compilation-enable-warn-skip-threshold ()
+  "Customize `compilation-skip-threshold' as `compilation-warn-skip-threshold'."
+  (interactive)
+  (customize-set-variable 'compilation-skip-threshold compilation-warn-skip-threshold))
+
+(defun compilation-enable-info-skip-threshold ()
+  "Customize `compilation-skip-threshold' as `compilation-info-skip-threshold'."
+  (interactive)
+  (customize-set-variable 'compilation-skip-threshold compilation-info-skip-threshold))
+
+;; 
+
+   (define-key opt-map [compilation-skip-info]
+      '(menu-item "Skip Info"
+		  
+		  :help "Skip anything less than warning"
+		  :button (:radio . (eq compilation-skip-threshold 1))))
+
+;;
+
+(defvar compilation-menu-map (make-sparse-keymap "Errors"))
+
+(defvar compilation-skip-menu-map (make-sparse-keymap "Skip"))
+
+;;
+
+(progn
+
+    ;; 
+
+    (define-key compilation-menu-map [compilation-skip]
+      (cons "Skip Less Important Messages" compilation-skip-menu-map))
+
+    ;; 
+
+    (define-key compilation-skip-menu-map [compilation-skip-none]
+
+      '(menu-item "Don't Skip Any Messages"		  compilation-disable-skip-threshold
+		  :help "Do not skip any type of messages"
+		  :button (:radio . (eq compilation-skip-threshold compilation-no-skip-threshold))))
+
+    ;; 
+
+    (define-key compilation-skip-menu-map [compilation-skip-info]
+
+      '(menu-item "Skip Info"
+		  compilation-enable-info-skip-threshold
+		  :help "Skip anything less than warning"
+		  :button (:radio . (eq compilation-skip-threshold compilation-info-skip-threshold))))
+
+    ;;
+
+    (define-key compilation-skip-menu-map [compilation-skip-warning-and-info]
+
+      '(menu-item "Skip Warnings and Info"
+		 compilation-enable-warn-skip-threshold
+		  :help "Skip over Warnings and Info, stop for errors"
+		  :button (:radio . (eq compilation-skip-threshold compilation-warn-skip-threshold))))
+
+    ;; 
+
+    'compilation-skip-menu-map)
+
+========================================================================
+
+
+;;----------------------------------------------;;
+
+(defun sboo-special-modes-list ()
+
+  "Get all `special-mode'\'s.
+
+Output:
+
+• A `Listp' Of `Symbolp'S.
+  Every `major-mode' which inherits from `special-mode'."
+
+  (let* ((MODES)
+         )
+
+    (mapatoms (lambda (*SYMBOL*)
+                (let ((MODE? (or (derived-mode-p *SYMBOL* 'special-mode))))
+                  (when MODE?
+                    (push *SYMBOL* MODES)))))
+    MODES))
+
+;; ^ Notes:
+;;
+;; M-: (provided-mode-derived-p 'dired-mode '(special-mode))
+;;   ⇒ t
+;;
+
+========================================================================
+
+
+
+
+========================================================================
+
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

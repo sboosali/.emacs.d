@@ -27,11 +27,11 @@
 ;;
 ;; Most commands are namespaced under `sboo-` or `xah-`
 ;; (as are their non-`interactive' utilities).
-;; 
+;;
 ;; See my `define-graceful-command` macro, for conveniently defining commands with fallbacks
 ;; (when external packages haven't been installed and/or can't be loaded).
 ;;
-;; 
+;;
 
 ;;----------------------------------------------;;
 ;; Imports -------------------------------------;;
@@ -130,7 +130,7 @@ Notes:
 ;; M-: (format "DWIM: call `%s' when `use-region-p', otherwise call `%s'." #'eval-region #'eval-last-sexp)
 ;;   ⇒ "DWIM: call `eval-region' when `use-region-p', otherwise call `eval-last-sexp'."
 ;;
-;; 
+;;
 
 ;; ^ NOTES
 ;;
@@ -143,16 +143,16 @@ Notes:
 (defmacro define-graceful-command (Name ExternalCommand BuiltinCommand &optional DocString)
 
   `(defun ,Name ()
-     
+
      ,DocString
-     
+
      (interactive) ;;TODO must expose, e.g. for helm-find-files, (interactive "P") ;; use cl-defun for :doc and :interactive
-     
+
      (let ((*command* (function ,ExternalCommand)))
-  
-    (if (and (commandp *command*) 
+
+    (if (and (commandp *command*)
              (fboundp  *command*))
-             
+
       (call-interactively *command*)
 
      (call-interactively (function ,BuiltinCommand))))))
@@ -351,16 +351,16 @@ version 2016-06-18"
 (defun sboo-toggle-buffer ()
 
   "Switch to the previously open buffer.
-  
+
   Repeated invocations **toggle** between the two most recently open buffers.
-  (c.f. the default behavior of repeated `other-buffer' invocations, 
+  (c.f. the default behavior of repeated `other-buffer' invocations,
   which **cycle** through all open buffers).
 
   See http://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
   "
   (interactive)
 
-  (switch-to-buffer 
+  (switch-to-buffer
     (other-buffer (current-buffer) 1)))
 
 
@@ -374,7 +374,7 @@ version 2016-06-18"
 "
 
   (interactive)
-  
+
   (progn
     (delete-other-windows)
     (split-window-horizontally)
@@ -470,7 +470,7 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
   ;; (switch-to-buffer BUFFER-OR-NAME &optional NORECORD FORCE-SAME-WINDOW)
   ;; '''Display buffer BUFFER-OR-NAME in the selected window.'''
   ;; NOTE `shell` doesn't have an option for the `'force-same-window` behavior.
-  ;; 
+  ;;
 
 ;;----------------------------------------------;;
 
@@ -479,9 +479,9 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
   "Switch to (or create) a `term-mode` buffer."
 
   (interactive)
-  
+
   (progn
-  
+
     (term "/bin/bash") ;;TODO still prompts
 
     ()))
@@ -496,7 +496,7 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 
   TODO handle "dir/dir/file.ext:line:column"
   "
-  
+
   (interactive)
 
   (if (commandp #'ffap)
@@ -574,7 +574,7 @@ Version 2015-04-09"
 ;;----------------------------------------------;;
 
 (defun sboo-insert-angle-quote-left ()
-  
+
   "`insert' \"«\", the \"LEFT-POINTING DOUBLE ANGLE QUOTATION MARK\" Unicode character,
   with spacing."
   (interactive)
@@ -584,57 +584,57 @@ Version 2015-04-09"
 ;;----------------------------------------------;;
 
 (defun sboo-insert-angle-quote-right ()
-  
+
   "`insert' \"»\", the \"RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK\" Unicode character,
   with spacing."
   (interactive)
-  
+
   (insert " »"))
 
 ;;----------------------------------------------;;
 
 (defun sboo-insert-triple-equals-sign ()
-  
+
   "`insert' \"≡ \", the \"IDENTICAL TO\" Unicode character,
   with spacing."
   (interactive)
-  
+
   (insert "≡ "))
 
 ;;----------------------------------------------;;
 
 (defun sboo-insert-bullet ()
-  
+
   "`insert' \"•\", the \"BULLET\" Unicode character."
   (interactive)
-  
+
   (insert "•"))
 
 ;;----------------------------------------------;;
 
 (defun sboo-insert-black-circle ()
-  
+
   "`insert' \"●\", the \"BLACK CIRCLE\" Unicode character."
   (interactive)
-  
+
   (insert "●"))
 
 ;;----------------------------------------------;;
 
 (defun sboo-insert-dash ()
-  
+
   "`insert' \"—\", the \"EM DASH\" Unicode character."
   (interactive)
-  
+
   (insert "—"))
 
 ;;----------------------------------------------;;
 
 (defun sboo-insert-null ()
-  
+
   "`insert' \"∅\", the \"EMPTY SET\" Unicode character."
   (interactive)
-  
+
   (insert "∅"))
 
 ;;----------------------------------------------;;
@@ -701,7 +701,7 @@ Version 2015-04-09"
  ;    "Invoke `helm-M-x', if bound."
 ;
  ;    (interactive "P")
-  ;   
+  ;
    ;  (if (commandp #'helm-M-x)
     ;     (helm-M-x PrefixArgument)
      ;    (execute-extended-command)))
@@ -709,8 +709,8 @@ Version 2015-04-09"
 ;;;(defalias sboo-M-x helm-M-x)
 ;;;(define-graceful-command sboo-M-x helm-M-x execute-extended-command)
 
-;;  "Try `helm-M-x', fallback to `execute-extended-command'.  
-;;  (When `helm' isn't loaded/installed, this command falls back 
+;;  "Try `helm-M-x', fallback to `execute-extended-command'.
+;;  (When `helm' isn't loaded/installed, this command falls back
 ;;  to the standard-library command upon which that package improves.)
 
 ;;----------------------------------------------;;
@@ -720,7 +720,7 @@ Version 2015-04-09"
      "Invoke `helm-buffers-list', if bound."
 
      (interactive "P")
-     
+
      (if (commandp #'helm-buffers-list)
          (helm-buffers-list PrefixArgument)
          (ibuffer)))
@@ -734,11 +734,11 @@ Version 2015-04-09"
           xah-search-current-word
           isearch-forward-regexp)
 
-;; ^ 
-;; i.e. fallback to `isearch-forward'.  
+;; ^
+;; i.e. fallback to `isearch-forward'.
 ;;
 ;; alternatives:
-;; 
+;;
 ;; - xah-search-current-word
 ;; - isearch-forward
 ;; - isearch-forward-regexp
@@ -825,7 +825,7 @@ Inputs:
 
 Output:
 
-• a `stringp'. The 
+• a `stringp'. The
 
 Example:
 
@@ -862,7 +862,7 @@ Example:
 ;;   ; a
 ;;   ⇒ "a"
 ;;
- 
+
 ;; ^ `when-let*':
 ;;
 ;;   (when-let SPEC &rest BODY)
@@ -895,7 +895,7 @@ Inputs:
          )
 
     (when (and (stringp text) (not (string-empty-p text)))
-      
+
       (with-temp-buffer
 
         (insert TEXT)
@@ -995,7 +995,7 @@ Examples:
 
 • M-: (sboo-get-coding-system-info 'utf-8)
     ⇒ '(:system utf-8 :type utf-8 :charsets (unicode))
-    
+
 Related:
 
 • `describe-coding-system'"
@@ -1065,7 +1065,7 @@ Output:
 
 • a `listp' of `symbolp's.
   Everything defined by `defgroup'.
-  An average `length' is 75. 
+  An average `length' is 75.
 
 Notes:
 
@@ -1104,6 +1104,73 @@ Output:
 
 ;;----------------------------------------------;;
 
+(defun sboo-modes-list ()
+
+  "Get all modes (both `major-mode's and `minor-mode's).
+
+Output:
+
+• a `listp' of `symbolp's.
+  Everything defined by `define-major-mode' and `define-minor-mode'.
+  An average `length' is 500."
+
+  (let* ((MODES )
+         )
+
+    (mapatoms (lambda (*SYMBOL*)
+                (let ((MODE? (or (get *SYMBOL* 'mode-class)
+                                 (and (string-suffix-p "-mode" (symbol-name *SYMBOL*))
+                                      (commandp *SYMBOL*)))))
+                  (when MODE?
+                    (push *SYMBOL* MODES)))))
+    MODES))
+
+;; ^ Notes:
+;;
+;; M-: (and (string-suffix-p "-mode" (symbol-name 'haskell-mode)) (commandp 'haskell-mode))
+;;   ⇒ t
+;;
+
+;;----------------------------------------------;;
+
+(defun sboo-special-modes-list ()
+
+  "Get all `special-mode'\'s.
+
+Output:
+
+• A `Listp' Of `Symbolp'S.
+  Every `major-mode' which inherits from `special-mode'.
+  An average `length' is 30."
+
+  (let* ((MODES)
+         )
+
+    (mapatoms (lambda (*SYMBOL*)
+                (let ((MODE? (or (eq 'special (get *SYMBOL* 'mode-class))
+                                 (derived-mode-p *SYMBOL* 'special-mode))))
+                  (when MODE?
+                    (push *SYMBOL* MODES)))))
+    MODES))
+
+;; ^ e.g.:
+;;
+;; M-: (sboo-special-modes-list)
+;;   ⇒ '(emacs-lisp-mode rmail-mode Custom-mode wdired-mode magit-mode ibuffer-mode Info-edit-mode magit-process-mode image-mode compilation-mode tabulated-list-mode magit-diff-mode occur-mode edebug-eval-mode comint-mode shell-mode messages-buffer-mode helm-major-mode grep-mode special-mode eww-mode completion-list-mode help-mode debugger-mode dired-mode Info-mode prog-mode bookmark-bmenu-mode edmacro-mode magit-status-mode)
+;;
+
+;; ^ Notes:
+;;
+;; M-: (get 'dired-mode 'mode-class)
+;;   ⇒ 'special
+;;
+;; M-: (provided-mode-derived-p 'dired-mode '(special-mode))
+;;   ⇒ nil
+;;
+;; 
+
+;;----------------------------------------------;;
+
 (defun sboo-custom-groups-list ()
 
   "Get all `groupp's (Customization Groups).
@@ -1112,7 +1179,7 @@ Output:
 
 • a `listp' of `symbolp's.
   Everything defined by `defgroup'.
-  An average `length' is 75. 
+  An average `length' is 75.
 
 Notes:
 
@@ -1576,9 +1643,9 @@ Inputs (pass-thru):
 • PROMPT        — c.f. `completing-read'.
 • REQUIRE-MATCH — c.f. `completing-read'.
 • INITIAL-INPUT — c.f. `completing-read'.
-             
-Output:      
-             
+
+Output:
+
 • a `symbolp'
   a `featurep' (which can be `require'd).
   if ONLY-BUILTINS is non-nil, returns a
@@ -1615,7 +1682,7 @@ Related:
 ;; M-: (type-of features)
 ;; 'cons
 ;;
-;; 
+;;
 ;;
 
 ;;----------------------------------------------;;
@@ -1723,7 +1790,7 @@ Related:
 
 ;;TODO emacs copy a lisp expression to the clipboard
 
-;; (kill-new 
+;; (kill-new
 ;; https://stackoverflow.com/questions/2178850/how-to-copy-to-clipboard-in-emacs-lisp
 
 ;TODO few core buffers like home.nix and emacs.md
@@ -1759,7 +1826,7 @@ Users:
 
   "Separator for `sboo-register-append'.
 
-a `stringp' 
+a `stringp'
 (c.f. `register-separator', which is a `characterp')."
 
   :type '(string :tag "Separator")
@@ -1856,7 +1923,7 @@ Wraps:
 
   "Prepend region to contents of Text-Register `sboo-register-char'.
 
-Each invocation of `sboo-register-prepend' 
+Each invocation of `sboo-register-prepend'
 is separated by `sboo-register-separator'.
 
 See:
@@ -1877,7 +1944,7 @@ Wraps:
     (prepend-to-register sboo-register-char beg end)))
 
 ;;----------------------------------------------;;
-      
+
 (defun sboo-register-yank (&optional keep-register)
 
   "Paste contents of Text-Register `sboo-register-char'.
@@ -1888,7 +1955,7 @@ Inputs:
   Text-Register `sboo-register-char' is cleared,
   *unless* KEEP-REGISTER is non-nil.
 
-See:  
+See:
 
 • `sboo-register-append'
 
@@ -2107,8 +2174,8 @@ Inputs:
 
 • COLOR — a `stringp' color, one of:
 
-    • a Hex Value  — 
-    • a Color Name — 
+    • a Hex Value  —
+    • a Color Name —
 
 Output:
 
@@ -2147,10 +2214,10 @@ Inputs:
 
 • COLOR — a color:
 
-    • a Hex string   — 
-    • an RGB triplet — 
-    • an HSL triplet — 
-    • a Color Name string — 
+    • a Hex string   —
+    • an RGB triplet —
+    • an HSL triplet —
+    • a Color Name string —
 
 Output:
 
@@ -2198,7 +2265,7 @@ Related:
 
 (defcustom sboo-things-custom
 
-  '( 
+  '(
    )
 
   "Custom things for `forward-thing' (besides `sboo-things-builtin')."
@@ -2444,7 +2511,7 @@ Related:
 
 Links:
 
-• URL `https://emacs.stackexchange.com/questions/48526/how-do-i-delete-all-blank-lines-in-a-buffer' 
+• URL `https://emacs.stackexchange.com/questions/48526/how-do-i-delete-all-blank-lines-in-a-buffer'
 
 Related:
 
@@ -2487,7 +2554,7 @@ a `stringp'."
 
 (defun sboo-set-font-size (&optional font-size font-name)
 
-  "Sets font size to FONT-SIZE (for all frames). 
+  "Sets font size to FONT-SIZE (for all frames).
 
 Inputs:
 
@@ -2496,7 +2563,7 @@ Inputs:
 
 Examples:
 • M-x sboo-set-font-size <RET> <RET>"
-  
+
   (interactive (list
                 (read-number "number: " font-size)
                 nil                     ;TODO
@@ -2598,7 +2665,7 @@ Inputs:
 Example:
 
 • M-: (sboo-ssh-to-host \"\")
-    ⇒ 
+    ⇒
 
 Links:
 
@@ -2630,12 +2697,12 @@ Links:
 Input:
 
 • COMMAND — a `stringp'.
-  a Command Invocation 
+  a Command Invocation
   (i.e. both the program name and the program arguments as a single line).
 
 Examples:
 
-• M-x sboo-shell-command-buffer 
+• M-x sboo-shell-command-buffer
   RET \"echo 'example'\"
   RET
 
@@ -2714,7 +2781,7 @@ Links:
         (WORD             (flyspell-get-word))
         )
 
-    (when (consp WORD)    
+    (when (consp WORD)
       (flyspell-do-correct 'save nil (car word) CURRENT-LOCATION (cadr word) (caddr word) CURRENT-LOCATION))))
 
 ;;----------------------------------------------;;
@@ -2778,7 +2845,7 @@ Inputs:
 ;;----------------------------------------------;;
 
 (defun sboo-edit-indirect-dwim ()
-                      
+
   "DWIM: `edit-indirect' either the region or a block.
 
 When `region-active-p', edit via `edit-indirect-region'.
@@ -2899,6 +2966,31 @@ Links:
     (string-insert-rectangle POINT-BEG POINT-END DELIMETER)))
 
 ;;----------------------------------------------;;
+
+(defun sboo-acronym-of (text)
+
+  "Return an acronym of TEXT.
+
+Examples:
+
+• M-: (sboo-acronym-of \"Text-based user interface\")
+    ⇒ \"TUI\"
+"
+
+  (let* ((SEPARATORS  "[/ ]")  ; e.g. or "[-/ ]"
+         (OMIT-NULLS? t)
+
+         (ACRONYM (upcase (apply #'string
+                                 (mapcar #'string-to-char
+                                         (split-string text SEPARATORS OMIT-NULLS?)))))
+         )
+
+    ACRONYM))
+
+;; ^ M-: (sboo-acronym-of "Text-based user interface")
+;;     ⇒ "TUI"
+
+;;----------------------------------------------;;
 ;; Selection -----------------------------------;;
 ;;----------------------------------------------;;
 
@@ -2921,7 +3013,7 @@ Related:
 Notes:
 
 • Unlike `forward-char' under `shift-select-mode',
-  `sboo-extend-selection-rightward' is invariant 
+  `sboo-extend-selection-rightward' is invariant
   w.r.t. where the `point' and `mark' are.
 
 Related:
@@ -2973,13 +3065,13 @@ Related:
 
 ;; Interactive Commands
 ;; ====================
-;; 
-;; 
-;; 
+;;
+;;
+;;
 
 ;; `completing-read'
 ;;  ===============
-;; 
+;;
 ;;     (completing-read `PROMPT' `COLLECTION'
 ;;            &optional `PREDICATE' `REQUIRE-MATCH' `INITIAL-INPUT' `HIST' DEF INHERIT-INPUT-METHOD)
 ;;
@@ -3002,32 +3094,32 @@ Related:
 ;;
 ;; `INITIAL-INPUT'
 ;;
-;; `HIST' 
+;; `HIST'
 ;;
-;; 
-;; 
-;; 
-;; 
-;; 
-;; 
-;; 
+;;
+;;
+;;
+;;
+;;
+;;
+;;
 
 ;; List Major Modes:
 ;;
 ;; You can view a list of major mode names by Alt+x `describe-variable' on `auto-mode-alist':
-;; 
+;;
 ;;     (describe-variable 'auto-mode-alist)
 ;;
 
 ;; `kill-ring-save':
-;; 
+;;
 ;;   (kill-ring-save BEG END &optional REGION)
-;; 
+;;
 ;; Save the region as if killed, but don’t kill it.
 ;; In Transient Mark mode, deactivate the mark.
 ;; If ‘interprogram-cut-function’ is non-nil, also save the text for a window
 ;; system cut and paste.
-;; 
+;;
 
 ;; list-matching-lines
 ;;
@@ -3035,18 +3127,20 @@ Related:
 
 ;; See:
 ;;    - http://www.wilkesley.org/~ian/xah/emacs/emacs_open_file_path_fast.html
-;;    - 
+;;    -
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
-;; 
+;;
 ;;
 ;;
 
 ;;----------------------------------------------;;
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
+
+;;(provide 'sboo-commands)
 
 ;;; sboo-commands.el ends here

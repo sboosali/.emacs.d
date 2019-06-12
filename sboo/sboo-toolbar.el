@@ -1,4 +1,4 @@
-;;; sboo-toolbar.el --- -*- coding: utf-8; lexical-binding: t -*-
+;;; sboo-toolbar.el --- Personal `toolbar' configuration -*- coding: utf-8; lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -27,7 +27,7 @@
 
 ;;; Commentary:
 
-;; Configure the `tool-bar' package.
+;; Customize the appearence/behavior of the Tool-Bar.
 ;; 
 ;; 
 
@@ -205,7 +205,27 @@ Related:
 Add some Icons/Commands to the standard Tool Bar.")
 
 ;;----------------------------------------------;;
-;; Configuration -------------------------------;;
+;; Effects: ‘sboo-mode’ ------------------------;;
+;;----------------------------------------------;;
+
+(define-key global-map [tool-bar sboo-mode]
+
+  '(menu-item "SBoo Mode"
+
+              sboo-global-mode
+
+              :help    "Toggle SBoo Mode (globally)."
+
+              :image   sboo-image
+
+              :button  (:toggle . sboo-global-mode)
+
+   ;;         :visible (not (sboo-global-mode))
+
+              :keys    "\\[sboo-global-mode]"))
+
+;;----------------------------------------------;;
+;; Effects -------------------------------------;;
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;

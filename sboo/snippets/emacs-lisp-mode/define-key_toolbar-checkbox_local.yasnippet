@@ -1,0 +1,31 @@
+# -*- mode: snippet -*-
+#
+# key         : deftoolbar/toggle
+# name        : [sboo] a Toolbar Entry, a Checkbox, i.e. « (define-key [tool-bar _] '(menu-item ... (:toggle . _) ...)) »
+#
+# type        : snippet
+# condition   : (let ((KEY "deftoolbar/toggle")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 8) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+(define-key ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "global"))`}-map [tool-bar $1]
+
+  '(menu-item "${1:$(string-join (split-string (capitalize yas-text) "[-/]") " ")}"
+
+              $3
+
+              :help    "${1:$(string-join (split-string (capitalize yas-text) "[-/]") " ")} the ..."
+
+              :image   $1-image
+
+              :button  (:toggle . $3)
+
+   ;;         :visible ()
+
+   ;;         :enable  ()
+
+              :keys    "\\\\[$3]"))
+$0

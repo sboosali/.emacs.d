@@ -3837,7 +3837,15 @@ Inputs:
 
   ;;--------------------------;;
 
-  :config ())
+  :config
+
+  ;; (eval-after-load 'sboo-html
+  ;;   (let ((MAP selected-keymap))
+  ;;     (cl-dolist ((KEYSTRING . COMMAND) '((",ab" . sboo-yas-insert/element-abbrv)))
+  ;;       (define-key MAP (kbd KEYSTRING) COMMAND))))
+  ;; ;; ^ Mnemonic: « , » shares a key with « < », which opens an HTML Element.
+
+  ())
 
 ;; ^ When `selected-minor-mode' is active, the keybindings in `selected-keymap'
 ;;   are enabled as long as the region is active (`use-region-p').
@@ -4263,8 +4271,8 @@ search (upwards) for a named Code-Block. For example,
 
   :custom
 
-  (synosaurus-backend #'synosaurus-backend-wordnet "program ‘wn’ works offline".)
   (synosaurus-choose-method 'popup "choose alternatives via ‘popup.el’.")
+;;(synosaurus-backend #'synosaurus-backend-wordnet "program ‘wn’ works offline".)
 
   :config ())
 

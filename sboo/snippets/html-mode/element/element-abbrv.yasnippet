@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
 #
-# key         : code
-# name        : [sboo] HTML Inline-Code Element, e.g. « <code>...</code> »
+# key         : abbrv
+# name        : [sboo] HTML Abbreviation Element, e.g. « <abbrv>...</abbrv> »
 #
 # type        : snippet
 # expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'auto))
@@ -10,4 +10,4 @@
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
-<code>$0</code>
+<abbrv title="$0">${0:$(sboo-acronym-of yas-text)}</abbrv>

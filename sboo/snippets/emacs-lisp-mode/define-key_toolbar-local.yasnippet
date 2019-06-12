@@ -1,0 +1,29 @@
+# -*- mode: snippet -*-
+#
+# key         : deftoolbar
+# name        : [sboo] a Toolbar Entry, i.e. « (define-key [tool-bar _] '(menu-item ...)) »
+#
+# type        : snippet
+# condition   : (let ((KEY "deftoolbar")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 8) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+(define-key ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "global"))`}-map [tool-bar $1]
+
+  '(menu-item "${1:$(string-join (split-string (capitalize yas-text) "[-/]") " ")}"
+
+              $3
+
+              :help    "${1:$(string-join (split-string (capitalize yas-text) "[-/]") " ")} the ..."
+
+              :image   $1-image
+
+   ;;         :visible ()
+
+   ;;         :enable  ()
+
+              :keys    "\\\\[$3]"))
+$0
