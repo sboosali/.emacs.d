@@ -1,5 +1,7 @@
 -/private
--/etc/sboo/obsolete
+-/docs
+-/archive
+-/etc
 
 -/.cask
 
@@ -12,3 +14,4 @@
 -/vendor/use-package
 
 -/savehist.el
+-/recentf
