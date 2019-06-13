@@ -1043,17 +1043,25 @@ Related:
   :preface
  
   (defun sboo-align-code (beg end &optional arg)
+
     "Align"
-    (interactive "rP")
+
+    (interactive "*r\nP")
+
     (if (null arg)
         (align beg end)
-      (let ((end-mark (copy-marker end)))
+
+      (let ((end-mark (copy-marker end))
+            )
         (indent-region beg end-mark nil)
         (align beg end-mark))))
 
   ;;--------------------------;;
 
   :config
+
+  (when (require 'sboo-align nil :no-error)
+    (sboo-align/setup))
 
   ())
 
