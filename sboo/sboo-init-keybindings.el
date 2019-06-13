@@ -1,4 +1,4 @@
-;;; sboo-keybindings.el --- Personal keybinding -*- lexical-binding: t -*-
+;;; sboo-init-keybindings.el --- Personal keybinding -*- lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -1731,4 +1731,4 @@ its “Prefix Command” is bound to « \\[sboo-mode-keymap] ».
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
 
-;;; sboo-keybindings.el ends here
+;;; sboo-init-keybindings.el ends here

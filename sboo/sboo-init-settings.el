@@ -1,4 +1,4 @@
-;;; sboo-settings.el --- Personal `custom-set-variables' -*- coding: utf-8; lexical-binding: t -*-
+;;; sboo-init-settings.el --- Personal `custom-set-variables' -*- coding: utf-8; lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -750,4 +750,4 @@
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
 
-;;; sboo-settings.el ends here
+;;; sboo-init-settings.el ends here

@@ -1,4 +1,4 @@
-;;; sboo-aliases.el --- -*- coding: utf-8; lexical-binding: t -*-
+;;; sboo-init-aliases.el --- -*- coding: utf-8; lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -261,4 +261,4 @@
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
 
-;;; sboo-aliases.el ends here
+;;; sboo-init-aliases.el ends here

@@ -491,10 +491,15 @@ Related:
 
 ;;----------------------------------------------;;
 
-(with-demoted-errors "[Warning] %s" (sboo-load-file! "sboo-settings.el"))
-(with-demoted-errors "[Warning] %s" (sboo-load-file! "sboo-keybindings.el"))
-(with-demoted-errors "[Warning] %s" (sboo-load-file! "sboo-aliases.el"))
-(with-demoted-errors "[Warning] %s" (sboo-load-file! "sboo-commands.el"))
+(require 'sboo-commands nil :no-error)
+
+;; ^ `commandp's by Sam Boosalis.
+
+;;----------------------------------------------;;
+
+(with-demoted-errors "[Warning] %s" (sboo-load-file! "sboo-init-settings.el"))
+(with-demoted-errors "[Warning] %s" (sboo-load-file! "sboo-init-keybindings.el"))
+(with-demoted-errors "[Warning] %s" (sboo-load-file! "sboo-init-aliases.el"))
 
 ;; ^ NOTE `load' these files (rather than `require' them)
 ;;        because they execute statements
@@ -510,7 +515,7 @@ Related:
 
 (require 'sboo-xah nil :no-error)
 
-;; ^ by Xah Lee:
+;; ^ `commandp's by Xah Lee.
 
 ;;----------------------------------------------;;
 
