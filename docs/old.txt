@@ -9456,6 +9456,40 @@ $0
 
 ========================================================================
 
+(defun sboo-haskell/guess-project-packages (&optional path)
+
+  "Guess the Package Directories a Haskell Project.
+
+Inputs:
+
+• PATH — `stringp's.
+  Filepath to a Haskell Project Root.
+  Defaults to `sboo-haskell-guess-project-root'.
+
+Output:
+
+• a `listp' of `stringp's.
+  Relative subdirectories.
+
+Links:
+
+• URL `https://kitchingroup.cheme.cmu.edu/blog/2014/03/23/Make-a-list-of-org-files-in-all-the-subdirectories-of-the-current-working-directory/'"
+
+  (when-let* ((PATH           (or path (sboo-haskell-guess-project-root)))
+              (DIRECTORY      (file-name-directory PATH))
+              (SUBDIRECTORIES (cl-remove-if-not #'file-directory-p (remove "." (remove ".." (directory-files DIRECTORY)))))
+              (PACKAGE-DIRECTORIES SUBDIRECTORIES)
+              )
+
+    PACKAGE-DIRECTORIES))
+
+              (SUBDIRECTORIES (cl-remove-if (lambda (it) (or (not (string-equal ".." (substring it -2)))
+                                                        (not (string-equal "."  (substring it -1)))))
+                                            (cl-remove-if-not #'file-directory-p
+                                                              (directory-files DIRECTORY))))
+
+========================================================================
+
 
 ;;----------------------------------------------;;
 

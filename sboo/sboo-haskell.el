@@ -51,13 +51,13 @@
 
 (eval-when-compile
   (require 'rx)
-  (require 'cl-lib))
+  (require 'pcase))
 
 ;;----------------------------------------------;;
 
 (progn
-  (require 'pcase)
-  (require 'seq))
+  (require 'seq)
+  (require 'cl-lib))
 
 ;;----------------------------------------------;;
 ;; Customization -------------------------------;;
@@ -616,8 +616,7 @@ Output:
   (let* ((ROOT (or root
                    (sboo-haskell-guess-project-root)))
 
-         (SUBDIRECTORIES (directory-files ROOT)) ; TODO strip ./dist( » and version-control directories.
-          All (recursive) subdirectories, of the project root directory, with a « .cabal » file. 
+         (SUBDIRECTORIES (directory-files ROOT)) ; TODO strip ./dist( » and version-control directories. All (recursive) subdirectories, of the project root directory, with a « .cabal » file. 
          )
 
     SUBDIRECTORIES))
@@ -646,11 +645,84 @@ Implementation:
 • Calls function `sboo-haskell-locate-dominating-project-directory'.
 • Defaults to `default-directory'."
 
-  (or (bound-and-true-p dante-project-root)
-      (bound-and-true-p intero-project-root)
-      (bound-and-true-p projectile-project-root)
-      (sboo-haskell-locate-dominating-project-directory :directory (file-name-directory file))
-      default-directory))
+  (let* ((FILE       (if file (file-name-directory file) nil))
+         (DIRECTORY (or (bound-and-true-p dante-project-root)
+                        (bound-and-true-p intero-project-root)
+                        (bound-and-true-p projectile-project-root)
+                        (sboo-haskell-locate-dominating-project-directory :directory FILE)
+                        default-directory))
+         )
+
+    (file-name-as-directory DIRECTORY)))
+
+;;----------------------------------------------;;
+
+(defun sboo-haskell/guess-project-packages (&optional path)
+
+  "Guess the Package Directories a Haskell Project.
+
+Inputs:
+
+• PATH — `stringp's.
+  Filepath to a Haskell Project Root.
+  Defaults to `sboo-haskell-guess-project-root'.
+
+Output:
+
+• a `listp' of `stringp's.
+  Relative subdirectories.
+
+Links:
+
+• URL `https://kitchingroup.cheme.cmu.edu/blog/2014/03/23/Make-a-list-of-org-files-in-all-the-subdirectories-of-the-current-working-directory/'"
+
+  (when-let* ((PATH           (or path (sboo-haskell-guess-project-root)))
+              (DIRECTORY      (file-name-as-directory PATH))
+              (SUBDIRECTORIES (cl-remove-if (lambda (it) (or (string-equal    ".."  it)
+                                                        (string-equal    "."   it)
+                                                        (string-suffix-p "/.." it)
+                                                        (string-suffix-p "/."  it)))
+                                            (cl-remove-if-not #'file-directory-p
+                                                              (directory-files DIRECTORY t))))
+              (PACKAGE-DIRECTORIES SUBDIRECTORIES)
+              )
+
+    PACKAGE-DIRECTORIES))
+
+;; M-: (cl-remove-if-not #'file-directory-p (remove "." (remove ".." (directory-files (file-name-directory (sboo-haskell-guess-project-root)) t))))
+;;   ⇒ 
+;;
+;; M-: (substring ".." -2)
+;;   ⇒ ".."
+;;
+;; M-: (substring "~/haskell/skeletor/.." -2)
+;;   ⇒ ".."
+;;
+
+;;----------------------------------------------;;
+
+(defun sboo-haskell/register-project-packages-with-compilation-search-path (&optional paths)
+
+  "Extend `compilation-search-path' with PATHS.
+
+Inputs:
+
+• PATHS — a `listp' of `stringp's.
+  Filepaths relative to the Haskell Project Root.
+  Defaults to:
+
+    • “cabal.project”'s “packages: …” stanza.
+    • “stack.yaml”'s “packages: …” field.
+
+Output:
+
+• The updated `compilation-search-path'."
+
+  (let* ((PATHS (or paths (sboo-haskell/guess-project-packages)))
+         )
+
+    (dolist (PATH PATHS)
+      (add-to-list 'compilation-search-path PATH))))
 
 ;;----------------------------------------------;;
 
@@ -658,7 +730,11 @@ Implementation:
 
   "« dirname » of `'sboo-haskell-locate-dominating-project-file'."
 
-  (file-name-directory (sboo-haskell-locate-dominating-project-file :directory directory)))
+  (when-let* ((FILE      (sboo-haskell-locate-dominating-project-file :directory directory))
+              (DIRECTORY (file-name-directory FILE))
+              )
+
+    DIRECTORY))
 
 ;;----------------------------------------------;;
 

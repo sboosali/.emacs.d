@@ -793,12 +793,53 @@ Related:
 
 (use-package help
 
-  :bind (:map help-mode-map
-              (("/" . isearch-forward)
-               )
+  :bind (:map help-map
+              ("C-v" . find-variable)
+              ("C-k" . find-function-on-key)
+              ("C-f" . find-function)
+              ("C-l" . find-library)
+         :map help-mode-map
+              ("/" . isearch-forward)
+              ("g" . sboo-revert-buffer-never-confirm)
          )
 
+  :preface
+
+  (defun sboo-revert-buffer-never-confirm (&optional ignore-auto)
+    "`revert-buffer' without asking."
+    (interactive (list (not current-prefix-arg)))
+    (revert-buffer ignore-auto t nil))
+
   :config ())
+
+;; describe-*:
+;;
+;; • `describe-bindings'
+;; • `describe-categories'
+;; • `describe-char'
+;; • `describe-char-eldoc'
+;; • `describe-character-set'
+;; • `describe-coding-system'
+;; • `describe-current-display-table'
+;; • `describe-display-table'
+;; • `describe-distribution'
+;; • `describe-face'
+;; • `describe-font'
+;; • `describe-fontset'
+;; • `describe-function'
+;; • `describe-input-method'
+;; • `describe-key'
+;; • `describe-key-briefly'
+;; • `describe-minor-mode'
+;; • `describe-mode'
+;; • `describe-package'
+;; • `describe-symbol'
+;; • `describe-syntax'
+;; • `describe-text-properties'
+;; • `describe-theme'
+;; • `describe-variable'
+;; • `describe-vector'
+;;
 
 ;;==============================================;;
 
@@ -1817,6 +1858,8 @@ Links:
 
   (ispell-personal-dictionary sboo-spelling-personal-dictionary
                               "XDG-conformant (defaults to « ~/.aspell.en.pws »).")
+
+;;:custom-face (TODO '(:color "red" :style wave))
 
   :config
 
@@ -3583,7 +3626,7 @@ $0")
   :preface
 
   (when (fboundp #'defun-dwim)
-    (defun-dwim sboo-fdlcap-dwim fdlcap-change-case-region fdlcap-change-case-current-word))
+    (defun-dwim sboo-fdlcap-dwim fdlcap-change-case-region fdlcap-change-case-current-word "Cycle through `lowercase' → `capitalized' → `uppercase' → …"))
 
   :config ())
 
@@ -3780,9 +3823,9 @@ Related:
            ;; ("/" . )
            ;; ("\\" . )
 
-              ("<left>"  . sboo-extend-selection-leftward)
-              ("<right>" . sboo-extend-selection-rightward)
-
+           ;;   ("<left>"  . sboo-extend-selection-leftward)
+           ;;   ("<right>" . sboo-extend-selection-rightward)
+-
            ;; ("<home>"  . )
            ;; ("<end>"   . )
               ("<prior>" . move-text-up)           ; from `move-text'.
@@ -4520,7 +4563,7 @@ search (upwards) for a named Code-Block. For example,
 
   ;; ^ Options: `browse-url', `browse-url-generic',`browse-url-emacs', `eww-browse-url'."
 
-  :config 
+  :config
 
   (define-key sboo-search-keymap (kbd "g") #'google-this-mode-submap)
 
@@ -4535,6 +4578,17 @@ search (upwards) for a named Code-Block. For example,
 ;;
 ;;   • URL `https://github.com/Malabarba/emacs-google-this'
 ;;
+
+;;----------------------------------------------;;
+
+(use-package google-translate
+  :disabled t
+
+  :init
+  (setq google-translate-default-source-language "en")
+  (setq google-translate-default-target-language "gr")
+
+  :config ())
 
 ;;----------------------------------------------;;
 

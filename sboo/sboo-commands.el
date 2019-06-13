@@ -370,8 +370,7 @@ version 2016-06-18"
 
 (defun sboo-split-window-left-right ();;TODO
 
-  "
-"
+  ""
 
   (interactive)
 
@@ -2917,6 +2916,21 @@ Keymap:
 ;; sboo-haskell-mark-quasiquote
 
 ;;----------------------------------------------;;
+;; Editing -------------------------------------;;
+;;----------------------------------------------;;
+
+;; (defun sboo-sort-region (beg end &optional arg)
+
+;;   "Sort all lines between BEG and END.
+
+;; If ARG (the \\[universal-argument]) is non-nil, 
+;; sort in reverse order."
+
+;;   (interactive "*r\nP")
+
+;;   ())
+
+;;----------------------------------------------;;
 ;; Munging -------------------------------------;;
 ;;----------------------------------------------;;
 
@@ -2974,8 +2988,7 @@ Links:
 Examples:
 
 • M-: (sboo-acronym-of \"Text-based user interface\")
-    ⇒ \"TUI\"
-"
+    ⇒ \"TUI\""
 
   (let* ((SEPARATORS  "[/ ]")  ; e.g. or "[-/ ]"
          (OMIT-NULLS? t)

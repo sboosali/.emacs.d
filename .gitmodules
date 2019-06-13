@@ -95,3 +95,6 @@
 #	path = submodules/all-the-icons-dired
 #	url = https://github.com/jtbm37/all-the-icons-dired
 
+[submodule "submodules/skeletor"]
+	path = submodules/submodules/skeletor
+	url = https://github.com/chrisbarrett/skeletor.el

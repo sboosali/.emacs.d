@@ -111,14 +111,15 @@ most have *Minimal Dependencies*, either:
 * `yasnippet.el`
 * `auto-highlight-symbol.el`  — *v1.53*. automatically highlight the current symbol (c.f. *Eclipse*).
 * `highlight2clipboard.el`    — `;; Package-Requires: ((htmlize "1.47"))`
-* `syntax-subword.el` — like `subword-mode` but finer.
-* `helm-navi.el` `;; Package-Requires: ((helm "1.9.4") (navi-mode "2.0") ...)`
-* `navi-mode.el` *v2.0*
+* `syntax-subword.el`         — like `subword-mode` but finer.
+* `helm-navi.el`              — `;; Package-Requires: ((helm "1.9.4") (navi-mode "2.0") ...)`
+* `navi-mode.el`              — *v2.0*
 * `visual-fill-column.el`
-* `writeroom-mode.el` — `;; Package-Requires: ((visual-fill-column "1.9"))` — `;; Version: 3.8`
-* `olivetti.el` — `;; Version: 1.7.1`
-* `flycheck.el` — `;; Version: 32-cvs`. `Package-Requires: ((emacs "24.3") ... (dash "2.12.1") (let-alist "1.0.4"))`
-* `htmlize.el` — *v1.55*
+* `writeroom-mode.el`         — `;; Package-Requires: ((visual-fill-column "1.9"))` — `;; Version: 3.8`
+* `olivetti.el`               — `;; Version: 1.7.1`
+* `flycheck.el`               — `;; Version: 32-cvs`. `Package-Requires: ((emacs "24.3") ... (dash "2.12.1") (let-alist "1.0.4"))`
+* `htmlize.el`                — *v1.55*
+* `fdlcap.el`                 — from *2007*. *Cycle through case/capitalization of words.*
 
 * `pandoc-mode`:
 
