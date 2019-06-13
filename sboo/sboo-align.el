@@ -46,23 +46,99 @@
 ;;----------------------------------------------;;
 
 (progn
-  (require 'seq)
+  (require 'align)
   (require 'cl-lib))
 
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
+(defvar sboo-align/rules
+
+  (list '(text-column-whitespace
+          (regexp  . "\\(^\\|\\S-\\)\\([ \t]+\\)")
+          (group   . 2)
+          (modes   . align-text-modes)
+          (repeat  . t))
+        )
+
+  "`align-rules-list' extensions.
+
+a `listp' of Alignment-Rules.")
+
 ;;----------------------------------------------;;
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
+
+(defun sboo-align/register-alignment-rules ()
+
+  "Extend `align-rules-list'.
+
+Customizes command `align' via variable `align-rules-list'.
+
+Related:
+
+• Gets `sboo-align/rules'
+• Visit URL `https://www.emacswiki.org/emacs/AlignCommands#toc8'"
+
+  (dolist (RULE sboo-align/rules)
+    (add-to-list 'align-rules-list RULE)))
+
+;;----------------------------------------------;;
+
+(defun sboo-align/setup ()
+
+  "Setup `align'."
+
+  (interactive)
+
+  (progn
+
+    ;;------------------------;;
+
+    (add-hook 'align-load-hook #'sboo-align/register-alignment-rules)
+
+    ;;------------------------;;
+
+    (progn
+
+      (defadvice align-regexp (around align-regexp-with-spaces)
+        "Align with spaces only (never use tabs for alignment.)"
+        (let ((indent-tabs-mode nil))
+          ad-do-it))
+
+      (ad-activate 'align-regexp))
+
+    ;;------------------------;;
+
+    ()))
+
+;;----------------------------------------------;;
+;; Commands ------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-align-code (beg end &optional arg)
+
+  "Indent & Align."
+
+  (interactive "*r\nP")
+
+  (if (null arg)
+      (align beg end)
+
+    (let ((end-mark (copy-marker end))
+          )
+      (indent-region beg end-mark nil)
+      (align beg end-mark))))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
-;; 
+;; ‘align-*-modes’ include:
 ;;
+;; • `align-text-modes'
+;; • `align-lisp-modes'
 ;;
 
 ;;----------------------------------------------;;

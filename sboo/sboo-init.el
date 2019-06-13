@@ -56,7 +56,16 @@
   (require 'seq))
 
 ;;----------------------------------------------;;
-;; Imports (Bootstrapped) ----------------------;;
+;; Settings: Bootstrapping ---------------------;;
+;;----------------------------------------------;;
+;; Configure Loading-Settings before calling `load-file':
+
+(setq load-prefer-newer t)
+
+;; ^ never accidentally `load' outdated (byte-compiled) files.
+
+;;----------------------------------------------;;
+;; Imports: Bootstrapping ----------------------;;
 ;;----------------------------------------------;;
 
 (eval-and-compile
@@ -87,6 +96,8 @@
 ;;
 ;;
 
+;;----------------------------------------------;;
+;; Functions: Bootstrapping --------------------;;
 ;;----------------------------------------------;;
 
 (defun sboo-debug ()
@@ -483,17 +494,16 @@ Related:
   (setq custom-file sboo-custom-file))
 
 ;;----------------------------------------------;;
-;; Configure Loading-Settings before calling `load-file':
-
-(setq load-prefer-newer t) 
-
-;; ^ never accidentally `load' outdated (byte-compiled) files.
-
-;;----------------------------------------------;;
 
 (require 'sboo-commands nil :no-error)
 
-;; ^ `commandp's by Sam Boosalis.
+;; ^ My `commandp's.
+
+;;----------------------------------------------;;
+
+(require 'sboo-keymaps nil :no-error)
+
+;; ^ My `keymapp's.
 
 ;;----------------------------------------------;;
 
@@ -1040,24 +1050,6 @@ Related:
 
   ;;--------------------------;;
 
-  :preface
- 
-  (defun sboo-align-code (beg end &optional arg)
-
-    "Align"
-
-    (interactive "*r\nP")
-
-    (if (null arg)
-        (align beg end)
-
-      (let ((end-mark (copy-marker end))
-            )
-        (indent-region beg end-mark nil)
-        (align beg end-mark))))
-
-  ;;--------------------------;;
-
   :config
 
   (when (require 'sboo-align nil :no-error)
@@ -1248,7 +1240,8 @@ Related:
   ;;---------------------------;;
 
   :bind (:map dired-mode-map
-              ("w" . wdired-change-to-wdired-mode) ; mnemonic: [w]dired.
+              ("w" . wdired-change-to-wdired-mode)   ; Mnemonic: [W]dired.
+              ("/" . dired-isearch-filenames-regexp) ; Mnemonic: like « $ less ».
               )
 
   ;; ^ Shadows `dired-copy-filename-as-kill':
