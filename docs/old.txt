@@ -9491,6 +9491,10 @@ Links:
 ========================================================================
 
 
+    (declare (debug (&define symbolp symbolp symbolp &optional stringp))
+             (doc-string 4)
+             (indent     4))
+
 ;;----------------------------------------------;;
 
 (defun sboo-special-modes-list ()

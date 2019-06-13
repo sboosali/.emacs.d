@@ -843,6 +843,25 @@ Related:
 
 ;;==============================================;;
 
+(use-package view
+
+  :bind (:map view-mode-map
+              ("/" . isearch-forward)
+              ("n" . sboo-narrow-dwim) ; “[N]arrow”.
+              ("N" . widen)            ; Mnemonic: “N” (upper-case) inverts “n” (lower-case).
+         )
+
+  :preface
+
+  (when (fboundp #'defun-dwim)
+    (defun-dwim sboo-narrow-dwim narrow-to-region narrow-to-defun))
+
+  :config ())
+
+;; TODO `flycheck' warns “reference to free variable” with custom macro.
+
+;;==============================================;;
+
 (use-package diff-mode
 
   :commands (diff-mode)
@@ -864,7 +883,7 @@ Related:
 
   ())
 
-;; « nroff » is a format for writing « manpage » files.
+;; ^ « nroff » is a format for writing « manpage » files.
 
 ;;----------------------------------------------;;
 ;; Builtin Packages: Prog Modes: ---------------;;
@@ -2349,8 +2368,6 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package company-ispell
-
-  :after (company)
 
   :custom
 
@@ -4217,6 +4234,7 @@ search (upwards) for a named Code-Block. For example,
 ;;----------------------------------------------;;
 
 (use-package typo
+  :disabled t
 
   :commands (typo-mode)
 
@@ -5877,3 +5895,6 @@ search (upwards) for a named Code-Block. For example,
 ;;----------------------------------------------;;
 
 ;;; sboo-init.el ends here
+
+;; Local Variables:
+;; End:

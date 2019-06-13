@@ -84,7 +84,7 @@ Output:
 Example:
 
 • M-: (pp-macroexpand-expression (quote (defun-dwim eval-dwim eval-region eval-last-sexp \"`eval-region' or `eval-last-sexp'.\")))
-    ⇒ (defun sboo-eval-dwim ()
+    ⇒ (defun eval-dwim ()
     ⇒   \"`eval-region' or `eval-last-sexp'.\"
     ⇒   (interactive)
     ⇒   (if (use-region-p)
@@ -99,14 +99,16 @@ Notes:
 
 • “DWIM” abbreviates “Do-What-I-Mean”."
 
-    (declare (indent 1) (doc-string 4))
+    (declare (debug (&define name name name &optional stringp))
+             (doc-string 4)
+             (indent     4))
 
     (let* ((NAME     name)
            (ACTIVE   active)
            (INACTIVE inactive)
 
            (DOCSTRING (or docstring
-                          (format "DWIM: call `%s' when `use-region-p', otherwise call `%s'." active inactive)))
+                          (format "Call `%s' when a region is active, otherwise call `%s'." active inactive)))
            )
 
       `(defun ,NAME ()
@@ -137,6 +139,12 @@ Notes:
 ;; • `use-region-p':
 ;;
 ;;   Return `t' if ① the region is active and ② it is appropriate to act on it.
+;;
+;; • « (declare (debug (...)) ...) »:
+;;
+;;   • "(debug (&define ...))" — a `defun'-like form.
+;;   • "(debug (... symbolp ...))" — an unquoted(?) `symbolp'.
+;;
 
 ;;----------------------------------------------;;
 
