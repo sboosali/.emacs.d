@@ -46,6 +46,29 @@
 (progn
   (require 'seq))
 
+;;==============================================;;
+
+(progn
+  (require 'company))
+
+;;----------------------------------------------;;
+;; Utilities: ----------------------------------;;
+;;----------------------------------------------;;
+
+;; (defun sboo-company/register-backends (variable value)
+;;   "Register `sboo-company-backends'."
+;;   (setq company-backends sboo-company-backends))
+
+;; (defun cwm--set-and-recenter-windows (var val)
+;;   "Set customizable variable VAR to VAL and recenter windows.
+;; All windows in all frames are recentered.
+;; This is intended for use as the `setfunction' of a
+;; `defcustom'. See Info node `(elisp) Variable Definitions'."
+;;   (set-default var val)
+;;   (dolist (frame (frame-list))
+;;     (with-selected-frame frame
+;;       (cwm-center-windows))))
+
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
@@ -77,13 +100,16 @@
      )
 
     (
-     company-yasnippet ; `yasnippet'.
      company-abbrev    ; Abbreviations.
      company-dabbrev   ; Dynamic Abbreviations.
      )
 
     (
      company-ispell    ; Spell-Checking.
+     )
+
+    (
+     company-yasnippet ; `yasnippet'.
      )
 
     )
@@ -97,6 +123,8 @@ any Company Backend in an earlier group).
 `listp' of `listp's of `symbolp's."
 
   :type '(repeat (function :tag "Company Backend"))
+
+  ;; :set #'sboo-company/register-backends
 
   :safe #'listp
   :group 'sboo-company)
@@ -285,6 +313,14 @@ URL `http://blog.binchen.org/posts/emacs-auto-completion-for-non-programmers.htm
 ;; 
 ;; > "Insert the common part of all candidates, or select the next one."
 ;;
+
+;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-company-register-backends ()
+  "Register `sboo-company-backends'."
+  (setq company-backends sboo-company-backends))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

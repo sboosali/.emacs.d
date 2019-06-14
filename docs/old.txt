@@ -9720,6 +9720,182 @@ Output:
 
 
 ========================================================================
+(progn
+  
+(global-set-key (kbd "s-M-a") #'sboo-insert-alpha)
+;; (global-set-key (kbd "s-M-b") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-c") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-d") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-e") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-f") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-g") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-h") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-i") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-j") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-k") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-l") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-m") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-n") #'sboo-insert-)
+(global-set-key (kbd "s-M-o") #'sboo-insert-bullet)
+;; (global-set-key (kbd "s-M-p") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-q") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-r") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-s") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-t") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-u") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-v") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-w") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-x") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-y") #'sboo-insert-)
+;; (global-set-key (kbd "s-M-z") #'sboo-insert-)
+
+(global-set-key (kbd "s-M-0") #'sboo-insert-null)
+(global-set-key (kbd "s-M-1") #'sboo-insert-circled-1)
+(global-set-key (kbd "s-M-2") #'sboo-insert-circled-2)
+(global-set-key (kbd "s-M-3") #'sboo-insert-circled-3)
+(global-set-key (kbd "s-M-4") #'sboo-insert-circled-4)
+(global-set-key (kbd "s-M-5") #'sboo-insert-circled-5)
+(global-set-key (kbd "s-M-6") #'sboo-insert-circled-6)
+(global-set-key (kbd "s-M-7") #'sboo-insert-circled-7)
+(global-set-key (kbd "s-M-8") #'sboo-insert-circled-8)
+(global-set-key (kbd "s-M-9") #'sboo-insert-circled-9)
+
+(global-set-key (kbd "s-M-,") #'sboo-insert-angle-quote-left)
+(global-set-key (kbd "s-M-.") #'sboo-insert-angle-quote-right)
+(global-set-key (kbd "s-M--") #'sboo-insert-dash)
+(global-set-key (kbd "s-M-=") #'sboo-insert-triple-equals-sign)
+
+(global-set-key (kbd "s-M-'")  #'sboo-insert-left-double-quotation-mark)
+(global-set-key (kbd "s-M-\"") #'sboo-insert-right-double-quotation-mark)
+
+(global-set-key (kbd "s-M-<right>") #'sboo-insert-double-right-arrow)
+
+;;(global-set-key (kbd "s-M-") #'sboo-insert-)
+
+  ())
+
+========================================================================
+
+
+(defvar outline-regexp "[*\^L]+"
+  "Regular expression to match the beginning of a heading.
+Any line whose beginning matches this regexp is considered to start a heading.
+Note that Outline mode only checks this regexp at the start of a line,
+so the regexp need not (and usually does not) start with `^'.
+The recommended way to set this is with a Local Variables: list
+in the file it applies to.  See also `outline-heading-end-regexp'.")
+;;;###autoload(put 'outline-regexp 'safe-local-variable 'stringp)
+
+(defvar outline-heading-end-regexp "\n"
+  "Regular expression to match the end of a heading line.
+You can assume that point is at the beginning of a heading when this
+regexp is searched for.  The heading ends at the end of the match.
+The recommended way to set this is with a `Local Variables:' list
+in the file it applies to.")
+
+
+(cl-defun sboo-forward-page-or-header (&optional (count 1))
+
+  "Move forward COUNT “Form Feed” pages \(i.e. «  »\) and/or comment headers \(e.g. « ;;; Code: »\).
+
+Inputs:
+
+• COUNT — an `integerp'.
+
+Effects:
+
+• Move `point'.
+
+Related:
+
+• ‘page-delimiter’
+• ‘outline-regexp’"
+
+  (interactive "P")
+
+  (let* ((COUNT (or count))
+         )
+
+    (forward-page COUNT)))
+
+
+;;----------------------------------------------;;
+
+;;;###autoload
+(cl-defun sboo-backward-page-or-header (&optional (count 1))
+
+  "Move backward COUNT “Form Feed” pages \(i.e. «  »\) and/or comment headers \(e.g. « ;;; Code: »\).
+
+Inputs:
+
+• COUNT — an `integerp'.
+
+Effects:
+
+• Move `point' — to prior `sboo-page-or-header-regexp'.
+
+Related:
+
+• Negates ‘sboo-forward-page-or-header’"
+
+  (interactive "P")
+
+  (let* ((COUNT (* -1 (or count +1))))
+
+    (sboo-forward-page-or-header COUNT)))
+
+
+========================================================================
+
+(defcustom sboo-company-backends
+
+  '(
+
+    (
+     company-yasnippet ; `yasnippet'.
+     )
+
+    (
+     company-capf      ; `completion-at-point' Functions.
+     )
+
+    (
+     company-keywords  ; `prog-mode' Keywords.
+     company-etags     ; `prog-mode' TAGS.
+     )
+
+    (
+     company-files     ; Filepaths.
+     )
+
+    (
+     company-abbrev    ; Abbreviations.
+     company-dabbrev   ; Dynamic Abbreviations.
+     )
+
+    (
+     company-ispell    ; Spell-Checking.
+     )
+
+    )
+
+  "Personal `company-backends', ordered by priority.
+
+each Company Backend in a group has a higher priority than
+any Company Backend in a later group (and a lower priority than
+any Company Backend in an earlier group).
+
+`listp' of `listp's of `symbolp's."
+
+  :type '(repeat (function :tag "Company Backend"))
+
+  ;; :set #'sboo-company/register-backends
+
+  :safe #'listp
+  :group 'sboo-company)
+
+========================================================================
+
 
 
 

@@ -720,6 +720,37 @@ Related:
 
   ())
 
+;;==============================================;;
+
+(use-package kmacro
+
+    :commands (kmacro-start-macro-or-insert-counter  ; <f3>
+               kmacro-end-or-call-macro              ; <f4>
+               kmacro-name-last-macro                ; C-x C-k n
+               )
+
+    :config
+    
+    (when (require 'sboo-kmacro nil :no-error)
+
+      ())
+
+    ())
+
+;;----------------------------------------------;;
+
+(use-package macros
+
+    :commands (apply-macro-to-region-lines insert-kbd-macro)
+
+    :config
+    
+    (when (require 'sboo-kmacro nil :no-error)
+
+      ())
+
+    ())
+
 ;;----------------------------------------------;;
 ;; Builtin Packages: Text Modes: ---------------;;
 ;;----------------------------------------------;;

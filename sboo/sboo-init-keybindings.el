@@ -823,6 +823,88 @@ Inputs:
 
   ())
 
+;;----------------------------------------------;;
+
+(progn
+
+  ;;--------------------------;;
+
+  (define-key key-translation-map (kbd "s-M-a") (kbd "α"))
+  ;; (define-key key-translation-map (kbd "s-M-b") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-c") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-d") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-e") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-f") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-g") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-h") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-i") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-j") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-k") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-l") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-m") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-n") (kbd ""))
+  (define-key key-translation-map (kbd "s-M-o") (kbd "•"))
+  ;; (define-key key-translation-map (kbd "s-M-p") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-q") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-r") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-s") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-t") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-u") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-v") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-w") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-x") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-y") (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-z") (kbd ""))
+
+  ;;--------------------------;;
+
+  ;; (define-key key-translation-map (kbd "s-M-`")         (kbd ""))
+  (define-key key-translation-map (kbd "s-M-1")         (kbd "①"))
+  (define-key key-translation-map (kbd "s-M-2")         (kbd "②"))
+  (define-key key-translation-map (kbd "s-M-3")         (kbd "③"))
+  (define-key key-translation-map (kbd "s-M-4")         (kbd "④"))
+  (define-key key-translation-map (kbd "s-M-5")         (kbd "⑤"))
+  (define-key key-translation-map (kbd "s-M-6")         (kbd "⑥"))
+  (define-key key-translation-map (kbd "s-M-7")         (kbd "⑦"))
+  (define-key key-translation-map (kbd "s-M-8")         (kbd "⑧"))
+  (define-key key-translation-map (kbd "s-M-9")         (kbd "⑨"))
+  (define-key key-translation-map (kbd "s-M-0")         (kbd "∅"))
+  (define-key key-translation-map (kbd "s-M-\-")        (kbd "—"))
+  (define-key key-translation-map (kbd "s-M-=")         (kbd "≡"))
+  (define-key key-translation-map (kbd "s-M-[")         (kbd "【"))
+  ;; (define-key key-translation-map (kbd "s-M-{")         (kbd ""))
+  (define-key key-translation-map (kbd "s-M-]")         (kbd "】"))
+  ;; (define-key key-translation-map (kbd "s-M-}")         (kbd ""))
+  ;; (define-key key-translation-map (kbd "s-M-\\")        (kbd ""))
+  (define-key key-translation-map (kbd "s-M-|")         (kbd "▮"))
+  (define-key key-translation-map (kbd "s-M-'")         (kbd "”"))
+  (define-key key-translation-map (kbd "s-M-\"")        (kbd "“"))
+  (define-key key-translation-map (kbd "s-M-,")         nil)            ; (See `sboo-insert-angle-quote-left' below).
+  (define-key key-translation-map (kbd "s-M-.")         nil)            ; (See `sboo-insert-angle-quote-right' below).
+  ;; (define-key key-translation-map (kbd "s-M-/")         (kbd ""))
+  (define-key key-translation-map (kbd "s-M-<up>")      (kbd "↑"))
+  (define-key key-translation-map (kbd "s-M-<down>")    (kbd "↓"))
+  (define-key key-translation-map (kbd "s-M-<left>")    (kbd "←"))
+  (define-key key-translation-map (kbd "s-M-<right>")   (kbd "→"))
+
+  ;;--------------------------;;
+
+  (define-key key-translation-map (kbd "s-M-S-<right>") (kbd "↪"))
+
+;; (define-key key-translation-map (kbd "s-M-")         (kbd ""))
+
+  ;;--------------------------;;
+
+  (define-key global-map          (kbd "s-M-,")         #'sboo-insert-angle-quote-left)
+  (define-key global-map          (kbd "s-M-.")         #'sboo-insert-angle-quote-right)
+
+  ())
+
+;; (define-key key-translation-map (kbd "s-M-[")         (kbd "【"))
+;; (define-key key-translation-map (kbd "s-M-]")         (kbd "】"))
+;; (define-key key-translation-map (kbd "s-M-[")         (kbd "⌞"))
+;; (define-key key-translation-map (kbd "s-M-]")         (kbd "⌝"))
+
 ;;==============================================;;
 
 ;;; Super (`s-*') Keybindings...
@@ -927,27 +1009,40 @@ Inputs:
 ;;==============================================;;
 ;; « s-<SYMBOL> »
 
-;;(global-set-key (kbd "s-`")           #')
-(global-set-key (kbd "s--")           #'text-scale-decrease)
-(global-set-key (kbd "s-=")           #'text-scale-increase)
-;;(global-set-key (kbd "s-<backspace>") #')
-;;(global-set-key (kbd "s-TAB")         #'dabbrev-completion)
-;;(global-set-key (kbd "s-[")           #')
-;;(global-set-key (kbd "s-]")           #')
-;;(global-set-key (kbd "s-\\")          #')
-;;(global-set-key (kbd "s-;")           #')
-;;(global-set-key (kbd "s-'")           #')
-;;(global-set-key (kbd "s-RET")         #')
-;;(global-set-key (kbd "s-,")           #')
-;;(global-set-key (kbd "s-.")           #')
-;;(global-set-key (kbd "s-/")           #')
-;;(global-set-key (kbd "s-SPC")         #')
-;;(global-set-key (kbd "s-<up>")        #')
-;;(global-set-key (kbd "s-<down>")      #')
-;;(global-set-key (kbd "s-<left>")      #')
-;;(global-set-key (kbd "s-<right>")     #')
+(progn
+  
+  ;;(global-set-key (kbd "s-`")           #')
+  (global-set-key (kbd "s--")           #'text-scale-decrease)
+  (global-set-key (kbd "s-=")           #'text-scale-increase)
+  ;;(global-set-key (kbd "s-<backspace>") #')
+  ;;(global-set-key (kbd "s-TAB")         #'dabbrev-completion)
 
-;;==============================================;;
+  (global-set-key (kbd "s-[")     ; Mnemonic: « C-x [ » is the default keybinding.
+                  (if (fboundp #'sboo-backward-page-or-header)
+                      #'sboo-backward-page-or-header
+                    #'backward-page))
+
+  (global-set-key (kbd "s-]")     ; Mnemonic: « C-x ] » is the default keybinding.
+                  (if (fboundp #'sboo-forward-page-or-header)
+                      #'sboo-forward-page-or-header
+                    #'forward-page))
+
+  ;;(global-set-key (kbd "s-\\")          #')
+  ;;(global-set-key (kbd "s-;")           #')
+  ;;(global-set-key (kbd "s-'")           #')
+  ;;(global-set-key (kbd "s-RET")         #')
+  ;;(global-set-key (kbd "s-,")           #')
+  ;;(global-set-key (kbd "s-.")           #')
+  ;;(global-set-key (kbd "s-/")           #')
+  ;;(global-set-key (kbd "s-SPC")         #')
+  ;;(global-set-key (kbd "s-<up>")        #')
+  ;;(global-set-key (kbd "s-<down>")      #')
+  ;;(global-set-key (kbd "s-<left>")      #')
+  ;;(global-set-key (kbd "s-<right>")     #')
+
+  ())
+
+;;----------------------------------------------;;
 
 ;;; Management/Navigation for Buffers/Windows/Frames
 
@@ -956,57 +1051,16 @@ Inputs:
 ;; (global-set-key (kbd "s-t") #'sboo-launch-term)
 ;; (global-set-key (kbd "s-h") #'sboo-split-window-left-right)
 
+;;----------------------------------------------;;
+
+;; (Old:)
+;;
+;; (global-set-key (kbd "s-[")           #'backward-page) ; Mnemonic: « C-x [ » is the default keybinding.
+;; (global-set-key (kbd "s-]")           #'forward-page)  ; Mnemonic: « C-x ] » is the default keybinding.
+
+;;----------------------------------------------;;
+
 ;;; Inserting Unicode characters
-
-(global-set-key (kbd "s-M-a") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-b") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-c") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-d") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-e") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-f") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-g") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-h") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-i") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-j") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-k") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-l") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-m") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-n") #'sboo-insert-)
-(global-set-key (kbd "s-M-o") #'sboo-insert-bullet)
-;; (global-set-key (kbd "s-M-p") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-q") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-r") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-s") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-t") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-u") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-v") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-w") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-x") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-y") #'sboo-insert-)
-;; (global-set-key (kbd "s-M-z") #'sboo-insert-)
-
-(global-set-key (kbd "s-M-0") #'sboo-insert-null)
-(global-set-key (kbd "s-M-1") #'sboo-insert-circled-1)
-(global-set-key (kbd "s-M-2") #'sboo-insert-circled-2)
-(global-set-key (kbd "s-M-3") #'sboo-insert-circled-3)
-(global-set-key (kbd "s-M-4") #'sboo-insert-circled-4)
-(global-set-key (kbd "s-M-5") #'sboo-insert-circled-5)
-(global-set-key (kbd "s-M-6") #'sboo-insert-circled-6)
-(global-set-key (kbd "s-M-7") #'sboo-insert-circled-7)
-(global-set-key (kbd "s-M-8") #'sboo-insert-circled-8)
-(global-set-key (kbd "s-M-9") #'sboo-insert-circled-9)
-
-(global-set-key (kbd "s-M-,") #'sboo-insert-angle-quote-left)
-(global-set-key (kbd "s-M-.") #'sboo-insert-angle-quote-right)
-(global-set-key (kbd "s-M--") #'sboo-insert-dash)
-(global-set-key (kbd "s-M-=") #'sboo-insert-triple-equals-sign)
-
-(global-set-key (kbd "s-M-'")  #'sboo-insert-left-double-quotation-mark)
-(global-set-key (kbd "s-M-\"") #'sboo-insert-right-double-quotation-mark)
-
-(global-set-key (kbd "s-M-<right>") #'sboo-insert-double-right-arrow)
-
-;;(global-set-key (kbd "s-M-") #'sboo-insert-)
 
 ;;==============================================;;
 ;;; "User" Keybindings...

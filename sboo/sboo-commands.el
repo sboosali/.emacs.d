@@ -501,15 +501,14 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
     ()))
 
 ;;----------------------------------------------;;
-;; Filesystem Navigation.
+;; Filesystem Navigation -----------------------;;
 ;;----------------------------------------------;;
 
 (defun sboo-find-file ()
 
-  "Wraps `ffap' ("find file at point").
+  "Wraps `ffap' (a.k.a. “find file at point”).
 
-  TODO handle "dir/dir/file.ext:line:column"
-  "
+TODO handle “dir/dir/file.ext:line:column”."
 
   (interactive)
 
@@ -520,49 +519,124 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
     (call-interactively #'find-file)))
 
 ;;----------------------------------------------;;
-;; Text Navigation.
+;; Text Motion ---------------------------------;;
 ;;----------------------------------------------;;
 
-(defun xah-search-current-word ()
+(defcustom sboo-page-regexp
 
-  "Call `isearch' on current word or text selection.
-“word” here is A to Z, a to z, and hyphen 「-」 and underline 「_」, independent of syntax table.
-URL `http://ergoemacs.org/emacs/modernization_isearch.html'
-Version 2015-04-09"
-  (interactive)
+  (rx-to-string `(or (regexp ,page-delimiter)))
 
-  (let ( $p1 $p2 )
+  "Matches a “Form Feed” page \(i.e. «  »\).
 
-    (if (use-region-p)
+a `regexpp'."
 
-        (progn
-          (setq $p1 (region-beginning))
-          (setq $p2 (region-end)))
+  :type 'regexp
 
-      (save-excursion
-        (skip-chars-backward "-_A-Za-z0-9") ;TODO dont use region if only whitespace
-        (setq $p1 (point))
-        (right-char)
-        (skip-chars-forward "-_A-Za-z0-9")
-        (setq $p2 (point))))
+  :safe #'stringp
+  :group 'sboo)
 
-    (setq mark-active nil)
+;;----------------------------------------------;;
 
-    (when (< $p1 (point))
-      (goto-char $p1))
+(defcustom sboo-page-or-elisp-header-regexp
 
-    (isearch-mode t)
+  (rx-to-string `(or (regexp ,page-delimiter)
+                     (and bol ";;;" blank (char alnum))))
 
-    (isearch-yank-string (buffer-substring-no-properties $p1 $p2))))
+  "Matches a “Form Feed” page \(i.e. «  »\) or comment header \(e.g. « ;;; Code: »\).
+
+a `regexpp'."
+
+  :type 'regexp
+
+  :safe #'stringp
+  :group 'sboo)
+
+;;==============================================;;
+
+;;;###autoload
+(cl-defun sboo-forward-page-or-header (&optional (count 1))
+
+  "Move forward COUNT “Form Feed” pages \(i.e. «  »\) and/or comment headers \(e.g. « ;;; Code: »\).
+
+Inputs:
+
+• COUNT — an `integerp'.
+
+Effects:
+
+• Move `point' — to next `sboo-page-or-header-regexp'.
+
+Related:
+
+• ‘page-delimiter’
+• ‘outline-regexp’"
+
+  (interactive "P")
+
+  (let* ((COUNT  (or count +1))
+         (REGEXP (sboo-page-or-header-regexp))
+         )
+    (progn
+
+      (re-search-forward REGEXP nil :no-error COUNT)
+      (end-of-line)
+      (recenter 0))))
+
+;; Notes:
+;;
+;; • ‘re-search-forward’ — for NOERROR argument, « :no-error » ≠ « t ».
+
+;;----------------------------------------------;;
+
+;;;###autoload
+(cl-defun sboo-backward-page-or-header (&optional (count 1))
+
+  "Move backward COUNT “Form Feed” pages \(i.e. «  »\) and/or comment headers \(e.g. « ;;; Code: »\).
+
+Inputs:
+
+• COUNT — an `integerp'.
+
+Effects:
+
+• Move `point' — to prior `sboo-page-or-header-regexp'.
+
+Related:
+
+• Negates ‘sboo-forward-page-or-header’"
+
+  (interactive "P")
+
+  (let* ((COUNT  (or count +1))
+         (REGEXP (sboo-page-or-header-regexp))
+         )
+    (progn
+
+      (beginning-of-line)
+      (re-search-backward REGEXP nil :no-error COUNT)
+      (unless (bobp) (end-of-line))
+      (recenter 0))))
+
+;;==============================================;;
+
+(defun sboo-page-or-header-regexp ()
+
+  "Accessor for `sboo-page-or-header-regexp'."
+
+  (let* ()
+
+    (if (parent-mode-is-derived-p major-mode 'emacs-lisp-mode)
+        sboo-page-or-header-regexp
+      sboo-page-regexp)))
 
 ;;----------------------------------------------;;
 ;; Projectile.
 ;;----------------------------------------------;;
 
 (defun sboo-projectile-find-file ()
+  "`projectile-find-file'."
   (interactive)
-  (projectile-find-file))
-  ;;OLD (projectile-find-file (make-hash-table))
+  (projectile-find-file t))
 
 ;;----------------------------------------------;;
 
@@ -571,17 +645,21 @@ Version 2015-04-09"
 ;;   (projectile-grep))
 
 ;;----------------------------------------------;;
-;; Macros
+;; Macros --------------------------------------;;
 ;;----------------------------------------------;;
 
 (defun sboo-kmacro-insert-counter-letter ()
 
-  "Inserts a,b,c(,...) when `kmacro-counter' is 0,1,2,(,...)."
+  "Insert a,b,c,… when `kmacro-counter' is 0,1,2,…."
+
   (interactive)
 
-  (progn
-    (insert (make-string 1 (+ ?a kmacro-counter)))
-    (kmacro-add-counter 1)))
+  (let* ((CHAR   (+ ?a kmacro-counter))
+         (STRING (make-string 1 CHAR))
+         )
+    
+    (insert STRING)
+    (kmacro-add-counter +1)))
 
 ;;----------------------------------------------;;
 ;; Unicode insertion.
