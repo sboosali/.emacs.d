@@ -9581,6 +9581,147 @@ Output:
 ========================================================================
 
 
+           ;;-----------------------------------------;;
+           ;; Try the current “thing”s (at `point'):
+
+           (condition-case e
+
+               (cl-loop for THING in things
+
+                        (let* ((TEXT   (thing-at-point THING :no-text-properties))
+                               (TEXT-P (and TEXT
+                                            (funcall predicate TEXT)))
+                               )
+                          (when TEXT-P
+                            (return TEXT))))
+
+             ;; “thing”s include: ‘symbol’, ‘list’, ‘sexp’, ‘defun’, ‘filename’, ‘url’, ‘email’, ‘word’, ‘sentence’, ‘whitespace’, ‘line’, ‘number’, ‘page’.
+
+(cl-loop for THING in '(line word symbol char) collect (let* (((thing-at-point THING :no-text-properties)) (TEXT-P (and TEXT (funcall #' TEXT)))) (when TEXT-P (return TEXT))))
+
+(cl-loop for THING in '(line word symbol char) with TEXT = (thing-at-point THING :no-text-properties) if t collect TEXT)
+
+;; Notes:
+;;
+;; (cl-loop for THING in '(line word symbol char) with TEXT = (symbol-name THING) if t collect TEXT)
+;;
+;; (cl-loop for THING in '(line word symbol char) with TEXT = (thing-at-point THING :no-text-properties) if t collect TEXT)
+;;
+;; (cl-loop for x in '(line word symbol char) with RES = nil do (push x RES) finally return RES)
+;;
+;; (cl-loop for THING in '(filename line word symbol char) with LENGTH = (length (symbol-name THING)) with OUT = nil if (>= LENGTH 3) do (push THING OUT) finally return OUT)
+;;
+
+               (cl-loop for THING in things
+                  with TEXT = (thing-at-point THING :no-text-properties)
+                  if (funcall predicate TEXT)
+                  then collect TEXT)
+
+               (cl-loop for THING in '(filename line word symbol char)
+                  for TEXT = (thing-at-point THING :no-text-properties)
+                  if (funcall (lambda (*S*) (= (length *S*) 3)) TEXT)
+                  collect TEXT)
+
+               (cl-loop for THING in '(url char line word symbol)
+                  for TEXT = (symbol-name THING)
+                  if (funcall (lambda (*S*) (= (length *S*) 4)) TEXT)
+                  collect TEXT)
+
+(cl-defun sboo-dwim-get-things (&key (predicate #'sboo-dwim/textual-string-p) (things '(line word symbol char)))
+
+  "Return all “valid” nearby ‘thing’s (and which ‘thing’ each is).
+
+Inputs:
+
+• PREDICATE — a `functionp'.
+  PREDICATE defines what “valid” means
+  Takes one `stringp' and gives a `booleanp'.
+
+• THINGS — a `listp' of `symbolp's.
+  “Things” include: ‘symbol’, ‘list’, ‘sexp’, ‘defun’, ‘filename’, ‘url’, ‘email’, ‘word’, ‘sentence’, ‘whitespace’, ‘line’, ‘number’, ‘page’.
+
+Output:
+
+• a Property-List, a `listp' of `symbolp's and `stringp's."
+
+  (let* ((VALID-THINGS
+          (cl-loop for THING in things
+             for TEXT = (thing-at-point THING :no-text-properties)
+             if (funcall predicate TEXT)
+             collect (list THING TEXT)))
+
+         (PLIST (seq-concatenate (seq-reverse VALID-THINGS))))
+
+    PLIST))
+
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-dwim-get-things (&key (predicate #'sboo-dwim/textual-string-p) (things '(line word symbol char)))
+
+  "Return all “valid” nearby ‘thing’s (and which ‘thing’ each is).
+
+Inputs:
+
+• PREDICATE — a `functionp'.
+  PREDICATE defines what “valid” means
+  Takes one `stringp' and gives a `booleanp'.
+
+• THINGS — a `listp' of `symbolp's.
+  “Things” include: ‘symbol’, ‘list’, ‘sexp’, ‘defun’, ‘filename’, ‘url’, ‘email’, ‘word’, ‘sentence’, ‘whitespace’, ‘line’, ‘number’, ‘page’.
+
+Output:
+
+• a Property-List, a `listp' of `symbolp's and `stringp's."
+
+  (let* ((VALID-THINGS
+          (cl-loop for THING in things
+             for TEXT = (thing-at-point THING :no-text-properties)
+             if (funcall predicate TEXT)
+             collect (list THING TEXT)))
+
+         (PLIST (apply #'append VALID-THINGS)))
+
+    PLIST))
+
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-dwim-get-things (&key (predicate #'sboo-dwim/textual-string-p) (things '(line word symbol char)))
+
+  "Return all “valid” nearby ‘thing’s (and which ‘thing’ each is).
+
+Inputs:
+
+• PREDICATE — a `functionp'.
+  PREDICATE defines what “valid” means
+  Takes one `stringp' and gives a `booleanp'.
+
+• THINGS — a `listp' of `symbolp's.
+  “Things” include: ‘symbol’, ‘list’, ‘sexp’, ‘defun’, ‘filename’, ‘url’, ‘email’, ‘word’, ‘sentence’, ‘whitespace’, ‘line’, ‘number’, ‘page’.
+
+Output:
+
+• an Association-List, a `listp' of `consp's, 
+  with `car' `symbolp's and `cdr' `stringp's."
+
+  (let* ((VALID-THINGS
+          (cl-loop for THING in things
+             for TEXT = (thing-at-point THING :no-text-properties)
+             if (funcall predicate TEXT)
+             collect (cons THING TEXT)))
+
+         (ALIST VALID-THINGS))
+
+    ALIST))
+
+
+
+
+
+========================================================================
+
+
 
 
 ========================================================================

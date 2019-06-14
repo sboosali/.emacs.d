@@ -50,63 +50,6 @@
 
 (eval-when-compile
 
-  (cl-defmacro defun-dired (name directory &key doc)
-
-    "Define a command which launches `dired' at DIRECTORY.
-
-• NAME — (unquoted) `symbolp'.
-  the function name.
-• DIRECTORY — a `stringp'.
-  a directory filepath.
-• DOC — a `stringp'.
-  the function documentation.
-  (defaults to the empty string.)
-
-Output:
-
-• an `interactive' `defun' declaration.
-
-Example:
-
-• M-: (pp-macroexpand-expression (defun-dired sboo-dired-emacs \"~/.emacs.d\"))
-
-     ⇒ (defun sboo-dired-emacs ()
-     ⇒   \"Launch `dired' at directory « ~/emacs.d ».\"
-     ⇒   (interactive)
-     ⇒   (dired \"~/emacs.d\"))
-
-Related:
-
-• `dired'"
-
-    (declare (indent 1) (doc-string 3))
-
-    (let* ((NAME     name)
-           (DIRECTORY directory)
-
-           (DOCSTRING (or doc
-                          (format "Launch `dired' at directory « %s »." DIRECTORY)))
-           )
-
-      `(defun ,NAME ()
-         ,DOCSTRING
-         (interactive)
-         (dired ,DIRECTORY)))))
-
-;; ^ e.g. `defun-dired':
-;;
-;; M-: (pp-macroexpand-expression '(defun-dired sboo-dired-emacs "~/emacs.d"))
-;;
-;;   ⇒ (defun sboo-dired-emacs ()
-;;   ⇒   "Launch `dired' at directory « ~/emacs.d »."
-;;   ⇒   (interactive)
-;;   ⇒   (dired "~/emacs.d"))
-;;
-
-;;----------------------------------------------;;
-
-(eval-when-compile
-
   (cl-defmacro defun-insert-char (name char &key doc)
 
     "Define a command which `insert-char's (Unicode Character) CHAR.
@@ -930,7 +873,9 @@ Inputs:
 ;;==============================================;;
 ;; « s-<LETTER> »
 
+(require 'sboo-keymaps nil :no-error)
 
+;;----------------------------------------------;;
 
 (progn
 

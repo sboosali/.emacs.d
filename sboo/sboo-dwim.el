@@ -1,8 +1,34 @@
-;;; -*- lexical-binding: t -*-
+;;; sboo-dwim.el --- Utilities for writing ‘*-dwim’ commands -*- coding: utf-8; lexical-binding: t -*-
 
-;;==============================================;;
+;; Copyright © 2019 Spiros Boosalis
+
+;; Version: 0.0.0
+;; Package-Requires: ((emacs "25"))
+;; Author:  Spiros Boosalis <samboosalis@gmail.com>
+;; Homepage: https://github.com/sboosali/.emacs.d
+;; Keywords: local
+;; Created: 13 Jun 2019
+;; License: GPL-3.0-or-later
+
+;; This file is not part of GNU Emacs.
+;;
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 ;;; Commentary:
 
+;; Utilities for writing “DWIM” (a.k.a. Do-What-I-Mean) commands.
+;; 
 ;; Augment functions to “Do-What-I-Mean”.
 ;;
 ;; Replace a reader (e.g. `read-string'),
@@ -25,7 +51,6 @@
 ;; • `sboo-dwim-*-default'
 ;; 
 
-;;==============================================;;
 ;;; Code:
 
 ;;----------------------------------------------;;
@@ -34,9 +59,15 @@
 
 ;; builtins:
 
-(require 'cl-lib)
-(require 'pcase)
-(require 'seq)
+(eval-when-compile
+  (require 'rx)
+  (require 'pcase))
+
+;;----------------------------------------------;;
+
+(progn
+  (require 'seq)
+  (require 'cl-lib))
 
 ;;----------------------------------------------;;
 ;; Types ---------------------------------------;;
@@ -46,18 +77,32 @@
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
-(defgroup sboo-dwim
+(defgroup sboo-dwim nil
 
-  nil
-
-  "."
-
-  ;;:link (url-link "")
+  "Customize DWIM utilities."
 
   :prefix "sboo-dwim/"
   :group 'lisp)
 
 ;;==============================================;;
+
+(defcustom sboo-dwim-all-builtin-things
+
+  '( symbol
+     list
+     sexp
+     defun
+     filename
+     url
+     email
+     word
+     sentence
+     whitespace
+     line
+     page
+    )
+
+  "Builtin things for `forward-thing' (see `thingatpt').")
 
 ;; predicate #'sboo-dwim/textual-string-p
 
@@ -139,6 +184,100 @@ Output:
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
+(cl-defun sboo-dwim-all-things (&key (fast nil))
+
+  "Return all known “Things” (w.r.t. ‘thinatpt’).
+
+Inputs:
+
+• FAST — a `booleanp'.
+
+Output:
+
+• a `listp' of `symbolp's.
+
+Example:
+
+• M-: (sboo-dwim-all-things :fast nil)
+    ⇒ '(symbol list sexp defun filename url email word sentence whitespace line page str page op line list word point button symbol sentence paragraph defun char comment whitespace thing sexp)
+
+Related:
+
+• `forward-thing'"
+
+  (let* ((KNOWN-THINGS sboo-dwim-all-builtin-things)
+         )
+
+    (if fast
+        KNOWN-THINGS
+
+      (let* ((UNKNOWN-THINGS '())
+             (ADD-THING       (lambda (symbol)
+                                (when (sboo-thing-p symbol)
+                                  (push symbol UNKNOWN-THINGS))))
+             )
+
+        (progn
+          (mapatoms ADD-THING obarray)
+
+          (let* ((THINGS (append KNOWN-THINGS UNKNOWN-THINGS))
+                 )
+
+            (remove-duplicates THINGS :test #'eq :from-end t)))))))
+
+;;----------------------------------------------;;
+
+(defun sboo-dwim-forward-op (symbol)
+
+  "Return the movement function of the SYMBOL thing.
+
+Inputs:
+
+• SYMBOL — a `symbolp'.
+
+Output:
+
+• a `functionp' or nil.
+
+Example:
+
+• M-: (sboo-dwim-forward-op 'sexp)
+    ⇒ #'`forward-sexp'
+• M-: (sboo-dwim-forward-op 'acab)
+    ⇒ nil
+
+Notes:
+
+a thing is defined as:
+
+• « 'forward-op » symbols — i.e. any `symbolp' with the « 'forward-op » property.
+• « forward-* » functions — any `functionp's which starts with “forward-”.
+
+most things have « forward-* » functions:
+
+• M-: (sboo-dwim-forward-op 'sexp)
+    ⇒ #'`forward-sexp'
+• M-: (intern-soft (format \"forward-sexp\"))
+    ⇒ #'`forward-sexp'
+• M-: (get 'sexp 'forward-op)
+    ⇒ nil
+
+some things have a (differently-named) « 'forward-op » property:
+
+• M-: (sboo-dwim-forward-op 'defun)
+    ⇒ #'`end-of-defun'
+• M-: (intern-soft (format \"forward-defun\"))
+    ⇒ nil
+• M-: (get 'defun 'forward-op)
+    ⇒ #'`forward-sexp'"
+
+  (or (get symbol 'forward-op)
+      (intern-soft (format "forward-%s" symbol))))
+
+;;----------------------------------------------;;
+;; Functions: Getters --------------------------;;
+;;----------------------------------------------;;
+
 (cl-defun sboo-dwim-get (&key (predicate #'sboo-dwim/textual-string-p)
                               (things    '(line word char))
                               (reader    #'read-string)
@@ -204,26 +343,14 @@ Links:
            (condition-case e
 
                (cl-loop for THING in things
-
-                        (let* ((TEXT   (thing-at-point THING :no-text-properties))
-                               (TEXT-P (and TEXT
-                                            (funcall predicate TEXT)))
-                               )
-                          (when TEXT-P
-                            (return TEXT))))
+                  for TEXT = (thing-at-point THING :no-text-properties)
+                  if (funcall predicate TEXT)
+                  collect TEXT)
 
              ;; “thing”s include: ‘symbol’, ‘list’, ‘sexp’, ‘defun’, ‘filename’, ‘url’, ‘email’, ‘word’, ‘sentence’, ‘whitespace’, ‘line’, ‘number’, ‘page’.
 
              (error
               (message "%S" e)))  ;TODO (ERROR-SYMBOL . SIGNAL-DATA)
-
-   (cl-loop for x below 10
-            if (cl-oddp x)
-              collect x into odds
-            else
-              collect x into evens
-            finally return `(:odd ,odds :even ,evens))
-
 
            ;;-----------------------------------------;;
            ;; Try the current contents of the (emacs) clipboard:
@@ -281,19 +408,95 @@ Links:
 
       OBJECT)))
 
+;; Examples:
+;;
 ;; M-: (sboo-dwim-get :predicate (lambda (s) (let ((n (string-to-number s))) (and (numberp n) (/= n 0)))) :things '(word char) :prompt "Number: " :reader #'read-number)
 ;;
-
+;;
 ;; M-: (sboo-dwim-get :predicate (lambda (s) (let ((c (string-to-char s))) (and ( c) ( c)))) :things '(char) :prompt "Character: " :reader #'read-char)
 ;;
-
+;;
 ;; M-: (let ((choices '(white blue black red green))) (sboo-dwim-get :predicate (lambda (s) (let ((choice (intern s))) (memq choice choices))) :things '(char word line) :prompt nil :reader (completing-read "Color: " choices))) ; blue
-
+;;
 ;; M-: (let ((choices '("white" "blue" "black" "red" "green"))) (sboo-dwim-get :predicate (lambda (s) (member s choices)) :things '(char word line) :prompt nil :reader (completing-read "Color: " choices))) ; blue
-
+;;
 ;; M-: (progn (end-of-line) (let ((xs '(white blue black red green))) (sboo-dwim-get :predicate (lambda (s) (let ((x (intern s))) (memq x xs))) :things '(char word line) :prompt nil :reader (lambda (&optional *PROMPT*) (intern (completing-read *PROMPT* choices)))))) ; blue
-
+;;
 ;; M-: (progn (end-of-line) (let ((xs '(white blue black red green))) (sboo-dwim-get :predicate (lambda (s) (let ((x (intern s))) (memq x xs))) :things '(char word line) :prompt nil :reader (lambda () (intern (completing-read "Color: " xs)))))) ; blue
+;;
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-dwim-get-things-at-point (&key (predicate #'sboo-dwim/textual-string-p) (things '(line word symbol char)))
+
+  "Return all “valid” nearby ‘thing’s (and which ‘thing’ each is).
+
+Inputs:
+
+• PREDICATE — a `functionp', or t.
+  PREDICATE defines what “valid” means
+  Takes one `stringp' and gives a `booleanp'.
+  t means `identity'.
+
+• THINGS — a `listp' of `symbolp's, or t.
+  t means “All Things” (via `sboo-dwim-all-things'),
+  including: ‘symbol’, ‘list’, ‘sexp’, ‘defun’, ‘filename’, ‘url’, ‘email’, ‘word’, ‘sentence’, ‘whitespace’, ‘line’, ‘number’, ‘page’.
+
+Output:
+
+• an Association-List, a `listp' of `consp's, 
+  with `car' `symbolp's and `cdr' `stringp's.
+
+Examples:
+
+• 【M-x sboo-dwim-get-things-at-point】 on 【example▮ text】
+• 【M-: (sboo-dwim-get-things-at-point :things t :predicate t)】 on 【example▮ text】
+
+(where ▮ represent the `point'.)"
+
+  (let* ((THINGS    (if (eq t things)    (sboo-dwim-all-things :fast t) things))
+         (PREDICATE (if (eq t predicate) #'identity predicate))
+         )
+
+    (let* ((VALID-THINGS
+            (cl-loop for THING in THINGS
+               for TEXT = (thing-at-point THING :no-text-properties)
+               if (funcall PREDICATE TEXT)
+               collect (cons THING TEXT)))
+
+           (ALIST VALID-THINGS))
+
+      ALIST)))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-dwim-get-thing-at-point (&key (predicate #'sboo-dwim/textual-string-p) (things '(line word symbol char)))
+
+  "Return a “valid” nearby ‘thing’.
+
+Inputs:
+
+• PREDICATE — a `functionp'.
+  PREDICATE defines what “valid” means
+  Takes one `stringp' and gives a `booleanp'.
+
+• THINGS — a `listp' of `symbolp's.
+  “Things” include: ‘symbol’, ‘list’, ‘sexp’, ‘defun’, ‘filename’, ‘url’, ‘email’, ‘word’, ‘sentence’, ‘whitespace’, ‘line’, ‘number’, ‘page’.
+
+Output:
+
+• a `stringp', or nil."
+
+  (cl-loop for THING in things
+     for TEXT = (thing-at-point THING :no-text-properties)
+     if (funcall predicate TEXT)
+     collect TEXT))
+
+;; e.g. `cl-loop':
+;;
+;; M-: (cl-loop for THING in '(url char line word symbol) for TEXT = (symbol-name THING) if (funcall (lambda (*S*) (= (length *S*) 4)) TEXT) collect TEXT)
+;;   ⇒ ("char" "line" "word")
+;;
 
 ;;----------------------------------------------;;
 
@@ -461,7 +664,11 @@ Related:
 ;;             else
 ;;               collect x into evens
 ;;             finally return `(:odd ,odds :even ,evens))
-;;
 
-;;==============================================;;
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
 (provide 'sboo-dwim)
+
+;;; sboo-dwim.el ends here

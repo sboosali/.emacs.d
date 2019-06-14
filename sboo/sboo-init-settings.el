@@ -539,7 +539,7 @@
 ;;----------------------------------------------;;
 ;; Lisp:
 
-(sboo-custom-set lisp-indent-function common-lisp-indent-function
+(sboo-custom-set lisp-indent-function 'common-lisp-indent-function
   "format Property Lists correctly.")
 
 ;;----------------------------------------------;;

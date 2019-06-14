@@ -1,6 +1,14 @@
-;;; sboo-commands.el --- -*- coding: utf-8; lexical-binding: t -*-
+;;; sboo-commands.el --- Personal ‘commandp’s -*- coding: utf-8; lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
+
+;; Version: 0.0.0
+;; Package-Requires: ((emacs "25"))
+;; Author:  Spiros Boosalis <samboosalis@gmail.com>
+;; Homepage: https://github.com/sboosali/.emacs.d
+;; Keywords: local
+;; Created: 13 Jun 2019
+;; License: GPL-3.0-or-later
 
 ;; This file is not part of GNU Emacs.
 ;;
@@ -15,13 +23,10 @@
 ;; GNU General Public License for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-;;----------------------------------------------;;
 
 ;;; Commentary:
 
-;; Custom `interactive' commands.
+;; Personal ‘interactive’ ‘commandp’s.
 ;;
 ;; (This `feature' is "pure" (it has declarations only, no settings)).
 ;;
@@ -43,12 +48,14 @@
   (require 'rx)
   (require 'pcase))
 
+;;----------------------------------------------;;
+
 (progn
   (require 'shell)
   (require 'seq)
   (require 'cl-lib))
 
-;;----------------------------------------------;;
+;;==============================================;;
 
 ;; personal:
 
@@ -2463,8 +2470,7 @@ some things have a (differently-named) « 'forward-op » property:
     ⇒ #'`forward-sexp'"
 
   (or (get symbol 'forward-op)
-      (intern-soft (format "forward-%s" symbol))
-      ))
+      (intern-soft (format "forward-%s" symbol))))
 
 ;;----------------------------------------------;;
 
@@ -3162,6 +3168,6 @@ Related:
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
 
-;;(provide 'sboo-commands)
+(provide 'sboo-commands)
 
 ;;; sboo-commands.el ends here

@@ -70,8 +70,8 @@
 
 (eval-and-compile
 
-  (let* ((EmacsDirectory     (or user-emacs-directory
-                                 "~/.emacs.d/"))
+  (let* ((EmacsDirectory     (or (bound-and-true-p user-emacs-directory)
+                                 "~/.emacs.d"))
 
          (SbooDirectory      (file-name-as-directory (concat EmacsDirectory
                                                              "sboo/")))
@@ -139,7 +139,7 @@
 
 (defmacro sboo-append-to-list! (variable list)
 
-  "Append (the value) LIST to (the variable) VARIABLE."
+  "Append, to (the variable) VARIABLE, (the value) LIST."
 
   `(setq ,variable (append ,list ,variable)))
 
@@ -644,7 +644,7 @@ Related:
 
   ;;---------------------------;;
 
-  ())
+  'sboo-auto-mode)
 
 ;; ^ NOTES:
 ;;
@@ -3848,7 +3848,7 @@ Related:
 
            ;;   ("<left>"  . sboo-extend-selection-leftward)
            ;;   ("<right>" . sboo-extend-selection-rightward)
--
+
            ;; ("<home>"  . )
            ;; ("<end>"   . )
               ("<prior>" . move-text-up)           ; from `move-text'.
