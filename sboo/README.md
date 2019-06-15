@@ -69,13 +69,13 @@ most have *Minimal Dependencies*, either:
 *Vendored Features* include:
 
 * `awesome-tab.el`
-* `color-identifiers-mode.el` — 
-* `dumb-jump.el`              — *v0.5.2*
+* `color-identifiers-mode.el`   — 
+* `dumb-jump.el`                — *v0.5.2*
 * `edit-indirect.el`
 * `eimp.el`
 * `elisp-docstring-mode.el`
 * `elisp-refs.el`
-* `flycheck-package.el`       — `;; Package-Requires: ((flycheck "0.22") (package-lint "0.2"))`
+* `flycheck-package.el`         — `;; Package-Requires: ((flycheck "0.22") (package-lint "0.2"))`
 * `find-file-in-project.el` *v5.7.4*
 * `goto-last-change.el`
 * `goto-line-preview.el`
@@ -89,7 +89,7 @@ most have *Minimal Dependencies*, either:
 * `highlight-numbers.el`
 * `highlight-quoted.el`
 * `jq-mode.el`
-* `link-hint.el`
+* `link-hint.el`                — `Package-Requires: ((avy "0.4.0"))`
 * `llvm-mode.el`
 * `lua-mode.el`
 * `makefile-runner.el`

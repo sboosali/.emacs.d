@@ -221,7 +221,7 @@ Add some Icons/Commands to the standard Tool Bar.")
                            MAP
                            :label  "Compile"
                            :help   "« M-x compile »"
-                           :enable '(or (equal (default-value 'compile-command) (symbol-value 'compile-command)) (derived-mode-p 'prog-mode))
+                           :visible t ; '(or (equal (default-value 'compile-command) (symbol-value 'compile-command)) (derived-mode-p 'prog-mode))
                            ;; ^ Enable only for either: ❶ non-default `compile-command's; or ❷ `prog-mode' Major Modes.
                            )
 
@@ -241,7 +241,6 @@ Add some Icons/Commands to the standard Tool Bar.")
                            MAP
                            :label  "Go Back"
                            :help   "« M-x pop-global-mark »"
-                           :enable t
                            :rtl    "right-arrow"
                            )
 

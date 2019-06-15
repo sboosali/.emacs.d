@@ -2,14 +2,6 @@
 
 ;; Copyright © 2019 Spiros Boosalis
 
-;; Version: 0.0.0
-;; Package-Requires: ((emacs "25") pcase seq)
-;; Author:  Spiros Boosalis <samboosalis@gmail.com>
-;; Homepage: https://github.com/sboosali/.emacs.d
-;; Keywords: local
-;; Created: 07 May 2019
-;; License: GPL-3.0-or-later
-
 ;; This file is not part of GNU Emacs.
 ;;
 ;; This file is free software; you can redistribute it and/or modify
@@ -58,6 +50,7 @@
 ;;----------------------------------------------;;
 ;; Settings: Bootstrapping ---------------------;;
 ;;----------------------------------------------;;
+
 ;; Configure Loading-Settings before calling `load-file':
 
 (setq load-prefer-newer t)
@@ -468,7 +461,7 @@ Related:
   load-path)
 
 ;;----------------------------------------------;;
-;; Groups --------------------------------------;;
+;;; Groups -------------------------------------;;
 ;;----------------------------------------------;;
 
 ;;;###autoload
@@ -487,7 +480,7 @@ Related:
   )
 
 ;;----------------------------------------------;;
-;; Settings ------------------------------------;;
+;;; Settings -----------------------------------;;
 ;;----------------------------------------------;;
 
 (with-demoted-errors "[Warning] %s"
@@ -540,7 +533,7 @@ Related:
 ;;
 
 ;;----------------------------------------------;;
-;; Themes --------------------------------------;;
+;;; Themes -------------------------------------;;
 ;;----------------------------------------------;;
 
 ;; Register Themes (c.f. `provide-theme'):
@@ -638,9 +631,9 @@ Related:
 
   (add-to-list 'auto-mode-alist (cons "\\.xpm\\'" #'c-mode))
 
-  (sboo-add-auto-mode-file-extension "xml" #'sgml-mode)
+  (sboo-add-auto-mode-file-extension "xml" #'nxml-mode)
 
-  ;; ^ `nxml-mode' vs `sgml-mode'.?
+  ;; ^ `nxml-mode' vs `sgml-mode'?
 
   ;;---------------------------;;
 
@@ -691,7 +684,7 @@ Related:
 ;;
 ;; Otherwise, for example, `.nix` files aren't properly registered with `nix-mode`
 ;; when they are opened, even when `sboo-desktop` follows `sboo-nix`;
-;; and thus need `revert-buffer`. 
+;; and thus need `revert-buffer`.
 ;;
 
 ;;TODO:
@@ -752,16 +745,19 @@ Related:
     ())
 
 ;;----------------------------------------------;;
-;; Builtin Packages: Text Modes: ---------------;;
+;;; Builtin Packages: Text Modes ---------------;;
 ;;----------------------------------------------;;
 
-(defun modi/conf-quote-normal ()
-  "Enable `conf-quote-normal' for *.setup files."
-  (when-let* ((fname (buffer-file-name))
-              (enable-conf-quote-normal (string-match-p "\\.setup.*" fname)))
-    ;; Set the syntax of ' and " to punctuation.
-    (conf-quote-normal nil)))
-(add-hook 'conf-space-mode-hook #'modi/conf-quote-normal)
+(progn
+
+  (defun modi-conf-quote-normal ()
+    "Enable `conf-quote-normal' for *.setup files."
+    (when-let* ((fname (buffer-file-name))
+                (enable-conf-quote-normal (string-match-p "\\.setup.*" fname)))
+      ;; Set the syntax of ' and " to punctuation.
+      (conf-quote-normal nil)))
+
+  (add-hook 'conf-space-mode-hook #'modi-conf-quote-normal))
 
 ;;----------------------------------------------;;
 
@@ -931,9 +927,59 @@ Related:
 
 ;; ^ « nroff » is a format for writing « manpage » files.
 
+;;==============================================;;
+
+(use-package rst
+
+    :mode (("\\.rst$" . rst-mode)
+           ("\\.rest$" . rst-mode)
+           )
+
+    :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://www.emacswiki.org/emacs/reStructuredText'
+;;
+
+;;==============================================;;
+
+(use-package image-file
+
+  :defer 5
+
+  :config
+
+  (auto-image-file-mode +1)
+
+  (add-hook 'image-mode-hook #'image-transform-reset)
+  (add-hook 'image-mode-hook #'auto-revert-mode)
+
+  ;; ^ Images are Read-Only, hence Auto-Revert them.
+
+ ())
+
+;; ^ Links:
+;;
+;;   • URL `http://ergoemacs.org/emacs/emacs_view_images.html'
+;;   • URL `'
+;;
+
 ;;----------------------------------------------;;
-;; Builtin Packages: Prog Modes: ---------------;;
+;;; Builtin Packages: Prog Modes ---------------;;
 ;;----------------------------------------------;;
+
+(use-package prog-mode
+
+    :commands (prettify-symbols-mode)
+
+    :custom
+
+    (prettify-symbols-unprettify-at-point 'right-edge "“Unprettify” a symbol if ‘point’ is ① at it or ② just after it.")
+
+    :config ())
+
+;;==============================================;;
 
 (when (require 'sboo-lisp nil :no-error)
 
@@ -1036,29 +1082,6 @@ Related:
 ;; ^ Links:
 ;;
 ;;   • Info Node `(emacs) Elint'
-;;
-
-;;==============================================;;
-
-(use-package image-file
-
-  :defer 5
-
-  :config
-
-  (auto-image-file-mode +1)
-
-  (add-hook 'image-mode-hook #'image-transform-reset)
-  (add-hook 'image-mode-hook #'auto-revert-mode)
-
-  ;; ^ Images are Read-Only, hence Auto-Revert them.
-
- ())
-
-;; ^ Links:
-;;
-;;   • URL `http://ergoemacs.org/emacs/emacs_view_images.html'
-;;   • URL `'
 ;;
 
 ;;==============================================;;
@@ -2500,7 +2523,7 @@ $0")
 
       (yas-recompile-all)
       (yas-reload-all force)
-      (require 'sboo-yasnippets nil :no-error))
+      (load "sboo-yasnippets" :no-error :no-message))
 
     ;;------------------------;;
 
@@ -2821,6 +2844,12 @@ $0")
 ;;
 ;;   • URL `https://github.com/purcell/flycheck-package'
 ;;
+
+;;----------------------------------------------;;
+
+(require 'use-package-lint nil :no-error)
+
+;; ^ Provides: ⟨ M-x `use-package-lint' ⟩.
 
 ;;----------------------------------------------;;
 ;; External Packages: Haskell ------------------;;
@@ -3238,7 +3267,7 @@ $0")
 ;;
 
 ;;----------------------------------------------;;
-;; External Packages: Formats ------------------;;
+;;; External Packages: Formats -----------------;;
 ;;----------------------------------------------;;
 
 (use-package markdown-mode
@@ -3559,7 +3588,7 @@ $0")
 ;;
 
 ;;----------------------------------------------;;
-;; External Packages: Tools --------------------;;
+;;; External Packages: Tools -------------------;;
 ;;----------------------------------------------;;
 
 (use-package jq-mode
@@ -3634,7 +3663,7 @@ $0")
 ;;
 
 ;;----------------------------------------------;;
-;; External Packages: Editing ------------------;;
+;;; External Packages: Editing -----------------;;
 ;;----------------------------------------------;;
 
 ;;; `wgrep': "Writeable GREP".
@@ -4404,7 +4433,7 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
-;; External Packages: Navigation ---------------;;
+;;; External Packages: Navigation --------------;;
 ;;----------------------------------------------;;
 
 (use-package helm-swoop
@@ -4434,7 +4463,16 @@ search (upwards) for a named Code-Block. For example,
 
 ;; ^ Links:
 ;;
-;;   • URL `https://github.com/ShingoFukuyama/helm-swoop#readme'
+;;   • URL `https://github.com/ShingoFukuyama/helm-swoop'
+;;
+
+;;----------------------------------------------;;
+
+(use-package avy)
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/abo-abo/avy'
 ;;
 
 ;;----------------------------------------------;;
@@ -4576,20 +4614,21 @@ search (upwards) for a named Code-Block. For example,
 ;;----------------------------------------------;;
 
 (use-package link-hint
-  :defer 5
 
-  :bind (("s-n l o" . link-hint-open-link)
-         ("s-n l c" . link-hint-copy-link)
-         )
+    :after (avy)
 
-  :config
+    :bind (("s-n l o" . link-hint-open-link)
+           ("s-n l c" . link-hint-copy-link)
+           )
 
-  (add-hook 'eww-mode-hook (lambda ()
-                             (bind-key "f" #'link-hint-open-link eww-mode-map)))
-  (add-hook 'w3m-mode-hook (lambda ()
-                             (bind-key "f" #'link-hint-open-link w3m-mode-map)))
+    :config
 
-  ())
+    (add-hook 'eww-mode-hook (lambda ()
+                               (bind-key "f" #'link-hint-open-link eww-mode-map)))
+    (add-hook 'w3m-mode-hook (lambda ()
+                               (bind-key "f" #'link-hint-open-link w3m-mode-map)))
+
+    ())
 
 ;; ^ Links:
 ;;
@@ -4797,7 +4836,7 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
-;; External Packages: Filesystem ---------------;;
+;;; External Packages: Filesystem --------------;;
 ;;----------------------------------------------;;
 
 (use-package peep-dired
@@ -4828,7 +4867,7 @@ search (upwards) for a named Code-Block. For example,
 ;; ^  URL `https://github.com/jaypei/emacs-neotree'
 
 ;;----------------------------------------------;;
-;; External Packages: Web ----------------------;;
+;;; External Packages: Web ---------------------;;
 ;;----------------------------------------------;;
 
 (use-package eww
@@ -4887,7 +4926,7 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
-;; External Packages: Highlighting -------------;;
+;;; External Packages: Highlighting ------------;;
 ;;----------------------------------------------;;
 
 (use-package volatile-highlights
@@ -5119,7 +5158,7 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
-;; External Packages: Windows/Buffers ----------;;
+;;; External Packages: Windows/Buffers ---------;;
 ;;----------------------------------------------;;
 
 (use-package awesome-tab
@@ -5152,38 +5191,45 @@ search (upwards) for a named Code-Block. For example,
 ;;TODO;; (add-to-list helm-source-list awesome-tab-build-helm-source)
 
 ;;----------------------------------------------;;
-;; External Packages: Terminal -----------------;;
+;;; External Packages: Terminal ----------------;;
 ;;----------------------------------------------;;
 
-(progn
+(use-package shell-pop
+    :disabled t
 
-  ;;--------------------------;;
-
-  (defun sboo-shell-pop-launch ()
-    "Launch `ansi-term' for function `shell-pop'."
-    (ansi-term shell-pop-term-shell))
-
-  ;;--------------------------;;
-
-  (use-package shell-pop
+    ;;--------------------------;;
 
     :commands (shell-pop)
+
+    ;;--------------------------;;
 
     :bind (("s-x s" . shell-pop)
            )
 
+    ;;--------------------------;;
+
     :custom
 
-    (shell-pop-term-shell "/bin/bash"                                                      "Bash")
+    (shell-pop-term-shell "/bin/bash" "Bash")
     (shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda () (sboo-shell-pop-launch))) "use `ansi-term' (not `shell').")
 
     ;; ^ NOTE `shell-pop' doesn't handle function-symbols correctly (i.e. « #'sboo-shell-pop-launch »).
+
+    ;;--------------------------;;
+
+    :preface
+
+    (defun sboo-shell-pop-launch ()
+      "Launch `ansi-term' for function `shell-pop'."
+      (ansi-term shell-pop-term-shell))
+
+    ;;--------------------------;;
 
     :config
 
     (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type)
 
-    ()))
+    ())
 
 ;; ^ Links:
 ;;
@@ -5192,7 +5238,7 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
-;; External Packages: Appearence ---------------;;
+;;; External Packages: Appearence --------------;;
 ;;----------------------------------------------;;
 
 (use-package diredfl
@@ -5323,7 +5369,7 @@ search (upwards) for a named Code-Block. For example,
   (back-button-mode +1))
 
 ;;----------------------------------------------;;
-;; External Packages: Clipboard ----------------;;
+;;; External Packages: Clipboard ---------------;;
 ;;----------------------------------------------;;
 
 (use-package simpleclip
@@ -5342,11 +5388,7 @@ search (upwards) for a named Code-Block. For example,
 
 ;;----------------------------------------------;;
 
-(use-package highlight2clipboard
-
-  :commands (htmlize-)
-
-  :config ())
+(use-package highlight2clipboard :defer t)
 
 ;; ^ Links:
 ;;
@@ -5354,7 +5396,7 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
-;; External Packages: Media --------------------;;
+;;; External Packages: Media -------------------;;
 ;;----------------------------------------------;;
 
 (use-package eimp
@@ -5446,7 +5488,7 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
-;; External Packages: Help ---------------------;;
+;;; External Packages: Help --------------------;;
 ;;----------------------------------------------;;
 
 ;; (use-package helpful
@@ -5515,7 +5557,7 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
-;; External Packages: Miscellaneous ------------;;
+;;; External Packages: Miscellaneous -----------;;
 ;;----------------------------------------------;;
 
 (use-package htmlize
@@ -5649,9 +5691,7 @@ search (upwards) for a named Code-Block. For example,
 
   ;; :custom (olivetti- t "")
 
-  :config
-
-  ())
+  :config ())
 
 ;; ^ Links:
 ;;
@@ -5689,7 +5729,7 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
-;; Personal Packages ---------------------------;;
+;;; Personal Packages --------------------------;;
 ;;----------------------------------------------;;
 
 ;; (when (require 'sboo-mtg nil :no-error)
@@ -5723,7 +5763,7 @@ search (upwards) for a named Code-Block. For example,
 ;;   ())
 
 ;;----------------------------------------------;;
-;; Conditional Configuration -------------------;;
+;;; Conditional Configuration ------------------;;
 ;;----------------------------------------------;;
 
 (when (load "sboo-os" :no-error)
@@ -5757,14 +5797,16 @@ search (upwards) for a named Code-Block. For example,
 ;; TODO https://www.emacswiki.org/emacs/SpreadSheet
 
 ;;----------------------------------------------;;
-;; Finalization --------------------------------;;
+;;; Finalization -------------------------------;;
 ;;----------------------------------------------;;
 
 (when (require 'sboo-fonts nil :no-error)
   (sboo-fonts-config!))
 
+;;; Notes:
+
 ;;----------------------------------------------;;
-;;; Notes: -------------------------------------;;
+;;; Notes --------------------------------------;;
 ;;----------------------------------------------;;
 
 ;; `wgrep' notes

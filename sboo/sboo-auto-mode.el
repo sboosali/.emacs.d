@@ -34,7 +34,7 @@
 ;; • ‘sboo-add-auto-mode-file-extension’ — registers file-extensions.
 ;;   e.g. « *.conf ».
 ;;
-;; • ‘sboo-add-auto-mode-basename’— registers base-names. 
+;; • ‘sboo-add-auto-mode-basename’— registers base-names.
 ;;   e.g. « README ».
 ;;
 ;; Requires:
@@ -104,7 +104,8 @@ Examples:
       (unless pure
         (progn
           (add-to-list 'auto-mode-alist Association suffix)
-          (message "%S" Association)))
+       ;; (message "%S" Association)
+          ()))
 
       (if pure
           Association
@@ -152,7 +153,8 @@ Examples:
       (unless pure
         (progn
           (add-to-list 'auto-mode-alist Association suffix)
-          (message "%S" Association)))
+       ;; (message "%S" Association)
+          ()))
 
       (if pure
           Association
