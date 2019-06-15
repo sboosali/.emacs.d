@@ -1,4 +1,4 @@
-;;; sboo-toolbar.el --- Personal `toolbar' configuration -*- coding: utf-8; lexical-binding: t -*-
+;;; sboo-tool-bar.el --- Personal `toolbar' configuration -*- coding: utf-8; lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -39,7 +39,7 @@
 
 ;; builtins:
 
-(eval-when-compile 
+(eval-when-compile
   (require 'pcase)
   (require 'cl-lib))
 
@@ -54,7 +54,7 @@
 
 (eval-when-compile
 
-  (defmacro sboo-toolbar (menu-items &optional toolbar-map)
+  (defmacro sboo-tool-bar (menu-items &optional toolbar-map)
 
     "toolbar-map.
 
@@ -70,7 +70,7 @@ Output:
 
 Example:
 
-• M-: (pp-macroexpand-expression (sboo-toolbar ()))
+• M-: (pp-macroexpand-expression (sboo-tool-bar ()))
     ⇒ 
 
 Related:
@@ -191,7 +191,7 @@ Related:
       (tool-bar-local-item "left-arrow"
                            #'pop-global-mark
                            'pop-global-mark
-                           tool-bar-map
+                           MAP
                            :label  "Go Back"
                            :help   "« M-x pop-global-mark »"
                            :enable t
@@ -200,12 +200,75 @@ Related:
 
       MAP))
 
-  "my Tool Bar.
+  "Personal Tool-Bar.
 
 Add some Icons/Commands to the standard Tool Bar.")
 
 ;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-tool-bar-setup ()
+
+  "Extend `tool-bar-map'."
+
+  (let* ((MAP tool-bar-map)
+         )
+
+      (tool-bar-local-item "mpc/play"
+                           #'compile
+                           'compile
+                           MAP
+                           :label  "Compile"
+                           :help   "« M-x compile »"
+                           :enable '(or (equal (default-value 'compile-command) (symbol-value 'compile-command)) (derived-mode-p 'prog-mode))
+                           ;; ^ Enable only for either: ❶ non-default `compile-command's; or ❷ `prog-mode' Major Modes.
+                           )
+
+      ;; (tool-bar-local-item "right-arrow"
+      ;;                      #'
+      ;;                      '
+      ;;                      MAP
+      ;;                      :label  "Forward"
+      ;;                      :help   "« M-x  »"
+      ;;                      :enable t
+      ;;                      :rtl    "left-arrow"
+      ;;                      )
+
+      (tool-bar-local-item "left-arrow"
+                           #'pop-global-mark
+                           'pop-global-mark
+                           MAP
+                           :label  "Go Back"
+                           :help   "« M-x pop-global-mark »"
+                           :enable t
+                           :rtl    "right-arrow"
+                           )
+
+      MAP))
+
+;;----------------------------------------------;;
 ;; Effects: ‘sboo-mode’ ------------------------;;
+;;----------------------------------------------;;
+
+;; (define-key global-map [tool-bar sboo-mode]
+
+;;   '(menu-item "SBoo Mode"
+
+;;               sboo-global-mode
+
+;;               :help    "Toggle SBoo Mode (globally)."
+
+;;               :image   sboo-image
+
+;;               :button  (:toggle . sboo-global-mode)
+
+;;    ;;         :visible (not (sboo-global-mode))
+
+;;               :keys    "\\[sboo-global-mode]"))
+
+;;----------------------------------------------;;
+;; Effects -------------------------------------;;
 ;;----------------------------------------------;;
 
 (define-key global-map [tool-bar sboo-mode]
@@ -222,11 +285,13 @@ Add some Icons/Commands to the standard Tool Bar.")
 
    ;;         :visible (not (sboo-global-mode))
 
-              :keys    "\\[sboo-global-mode]"))
+    :keys    "\\[sboo-global-mode]"))
 
-;;----------------------------------------------;;
-;; Effects -------------------------------------;;
-;;----------------------------------------------;;
+;; (progn
+;;   (define-key global-map [tool-bar shell]
+;;     '(menu-item "Shell" shell
+;;       :image (image :type xpm :file "shell.xpm")))
+;;   (define-key global-map [tool-bar S-shell] #'example/shell))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
@@ -314,5 +379,10 @@ Add some Icons/Commands to the standard Tool Bar.")
 ;; 🔝
 ;;
 
-;;==============================================;;
-(provide 'sboo-toolbar)
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
+(provide 'sboo-tool-bar)
+
+;;; sboo-tool-bar.el ends here

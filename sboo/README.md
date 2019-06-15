@@ -101,7 +101,7 @@ most have *Minimal Dependencies*, either:
 * `rainbow-delimiters.el`
 * `rainbow-identifiers.el`
 * `rainbow-mode.el`
-* `refine.el`                 — `;; Package-Requires: ((s "1.11.0") (dash "2.12.0") (list-utils "0.4.4") (loop "1.2"))`
+* `refine.el`                   — `;; Package-Requires: ((s "1.11.0") (dash "2.12.0") (list-utils "0.4.4") (loop "1.2"))`
 * `shell-pop.el`
 * `simpleclip.el`
 * `string-edit.el`
@@ -109,17 +109,21 @@ most have *Minimal Dependencies*, either:
 * `wrap-region.el`
 * `xmodmap-mode.el`
 * `yasnippet.el`
-* `auto-highlight-symbol.el`  — *v1.53*. automatically highlight the current symbol (c.f. *Eclipse*).
-* `highlight2clipboard.el`    — `;; Package-Requires: ((htmlize "1.47"))`
-* `syntax-subword.el`         — like `subword-mode` but finer.
-* `helm-navi.el`              — `;; Package-Requires: ((helm "1.9.4") (navi-mode "2.0") ...)`
-* `navi-mode.el`              — *v2.0*
+* `auto-highlight-symbol.el`    — *v1.53*. automatically highlight the current symbol (c.f. *Eclipse*).
+* `highlight2clipboard.el`      — `;; Package-Requires: ((htmlize "1.47"))`
+* `syntax-subword.el`           — like `subword-mode` but finer.
+* `helm-navi.el`                — `;; Package-Requires: ((helm "1.9.4") (navi-mode "2.0") ...)`
+* `navi-mode.el`                — *v2.0*
 * `visual-fill-column.el`
-* `writeroom-mode.el`         — `;; Package-Requires: ((visual-fill-column "1.9"))` — `;; Version: 3.8`
-* `olivetti.el`               — `;; Version: 1.7.1`
-* `flycheck.el`               — `;; Version: 32-cvs`. `Package-Requires: ((emacs "24.3") ... (dash "2.12.1") (let-alist "1.0.4"))`
-* `htmlize.el`                — *v1.55*
-* `fdlcap.el`                 — from *2007*. *Cycle through case/capitalization of words.*
+* `writeroom-mode.el`           — `;; Package-Requires: ((visual-fill-column "1.9"))` — `;; Version: 3.8`
+* `olivetti.el`                 — `;; Version: 1.7.1`
+* `flycheck.el`                 — `;; Version: 32-cvs`. `Package-Requires: ((emacs "24.3") ... (dash "2.12.1") (let-alist "1.0.4"))`
+* `htmlize.el`                  — *v1.55*
+* `fdlcap.el`                   — from *2007*. *Cycle through case/capitalization of words.*
+* `compile-command-default.el`  — Guesses a default `compile-command` for `M-x compile`. <http://user42.tuxfamily.org/compile-command-default/index.html>
+* `compilation-recenter-end.el` — Recenter `compilation-mode` buffers once `M-x compile` finishes (to maximize the onscreen text). <http://user42.tuxfamily.org/compilation-recenter-end/index.html>
+* `sql-postgres.el`             — Indents *PL/pgSQL*. <https://github.com/nicferrier/emacs-sql-postgres>. 
+* `company-web.el`              — *Company Backend* for Web Buffers. <https://github.com/osv/company-web>
 
 * `pandoc-mode`:
 

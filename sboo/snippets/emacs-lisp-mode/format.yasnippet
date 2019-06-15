@@ -1,7 +1,14 @@
 # -*- mode: snippet -*-
 #
 # key         : format
-# name        : the « format » function.
+# name        : [sboo] the « format » function.
+#
+# type        : snippet
+# condition   : (let ((KEY "format")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
 # --
 (format "${1:example format %s}" "${2:example-value}"$0) ; ⇒ "${1:$(with-demoted-errors "[YASnippet] %s" (format (yas-field-value 1) (yas-field-value 2)))}"

@@ -513,11 +513,13 @@ Links:
          (LENGTH      (string-width key))
          )
 
-    (or (= LENGTH COLUMN)
+    (and (equal (thing-at-point 'symbol) key)
+
+         (or (= LENGTH COLUMN)
 
         (when (and indentation (numberp indentation) (> indentation 0))
           (and (>= (- COLUMN LENGTH) 0)
-               (<= (- COLUMN LENGTH) indentation))))))
+               (<= (- COLUMN LENGTH) indentation)))))))
 
 ;;==============================================;;
 

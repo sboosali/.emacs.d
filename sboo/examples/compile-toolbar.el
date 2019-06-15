@@ -91,4 +91,4 @@ Add some Icons/Commands to the standard Tool Bar.")
 
 ;; 
 ;;----------------------------------------------;;
-(provide 'sboo-toolbar)
+(provide 'sboo-tool-bar)

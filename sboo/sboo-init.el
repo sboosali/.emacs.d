@@ -1225,7 +1225,7 @@ Related:
 
 ;;----------------------------------------------;;
 
-(when (require 'sboo-toolbar nil :no-error)
+(when (require 'sboo-tool-bar nil :no-error)
 ;;(setq tool-bar-map sboo-tool-bar-map)
   ())
 
@@ -5921,7 +5921,7 @@ search (upwards) for a named Code-Block. For example,
 ;;
 ;; • URL `https://github.com/jwiegley/dot-emacs/blob/master/init.el'
 ;; • URL `https://github.com/DamienCassou/emacs.d/blob/master/init.el'
-;; • URL `'
+;; • URL `https://caiorss.github.io/Emacs-Elisp-Programming/Elisp_Snippets.html'
 ;; • URL `'
 ;; • URL `'
 ;; • URL `'

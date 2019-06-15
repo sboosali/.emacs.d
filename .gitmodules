@@ -98,3 +98,6 @@
 [submodule "submodules/skeletor"]
 	path = submodules/submodules/skeletor
 	url = https://github.com/chrisbarrett/skeletor.el
+[submodule "company-web"]
+	path = submodules/company-web
+	url = https://github.com/osv/company-web
