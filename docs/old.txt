@@ -9958,6 +9958,70 @@ Links:
     (dired DIRECTORY SWITCHES)))
 
 
+========================================================================
+
+;;----------------------------------------------;;
+;; Mode ----------------------------------------;;
+;;----------------------------------------------;;
+
+(defvar sboo-mode-map
+
+  (let ((MAP (make-sparse-keymap)))
+
+    (define-key MAP (kbd "q") #'turn-off-sboo-mode)
+
+    MAP)
+
+  "`keymapp' for `sboo-mode'.")
+
+;;----------------------------------------------;;
+
+(define-minor-mode sboo-mode
+
+    "Minor Mode to...
+
+=== Keybindings ===
+
+\\{sboo-mode-map}"
+
+  :lighter " SBoo"
+
+  :keymap sboo-mode-map
+
+  :group 'sboo
+
+  :init-value t
+
+  (progn
+
+    (if (bound-and-true-p sboo-mode)
+        ()
+      ())
+
+    sboo-mode))
+
+;;----------------------------------------------;;
+
+(define-globalized-minor-mode sboo-mode
+
+  )
+
+;;----------------------------------------------;;
+
+(defun turn-on-sboo-mode ()
+  "Enable `sboo-mode'."
+  (interactive)
+  (sboo-mode +1))
+
+;;----------------------------------------------;;
+
+(defun turn-off-sboo-mode ()
+  "Disable `sboo-mode'."
+  (interactive)
+  (sboo-mode -1))
+
+========================================================================
+
 
 
 

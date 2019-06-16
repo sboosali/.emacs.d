@@ -1,0 +1,65 @@
+# -*- mode: snippet -*-
+#
+# key         : defminor
+# name        : [sboo] Minor Mode, via « define-minor-mode ».
+#
+# type        : snippet
+# condition   : (let ((KEY "defminor")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 4) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+;;----------------------------------------------;;
+;; Mode ----------------------------------------;;
+;;----------------------------------------------;;
+
+(defvar $1-mode-map
+
+  (let ((MAP (make-sparse-keymap)))
+
+    (define-key MAP (kbd "q") #'turn-off-$1-mode)
+
+    MAP)
+
+  "\`keymapp' for \`$1-mode'.")
+
+;;----------------------------------------------;;
+
+(define-minor-mode $1-mode-map
+
+    "Minor Mode to...
+
+=== Keybindings ===
+
+\\\\{$1-mode-map}"
+
+  :lighter " ${1:$(string-join (split-string (capitalize yas-text) "[-]+" :omit-nulls) "")}"
+
+  :keymap $1-mode-map
+
+  :group '$1
+
+  :init-value t
+
+  (if (bound-and-true-p $1-mode)
+
+      ()
+
+    ()))
+
+;;----------------------------------------------;;
+
+(defun turn-on-$1-mode ()
+  "Enable \`$1-mode'."
+  (interactive)
+  ($1-mode +1))
+
+;;----------------------------------------------;;
+
+(defun turn-off-$1-mode ()
+  "Disable \`$1-mode'."
+  (interactive)
+  ($1-mode -1))
+

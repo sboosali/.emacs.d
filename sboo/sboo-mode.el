@@ -68,9 +68,57 @@
 ;; Mode ----------------------------------------;;
 ;;----------------------------------------------;;
 
-(define-globalized-minor-mode sboo-mode
+(defvar sboo-mode-map
 
-  )
+  (let ((MAP (make-sparse-keymap)))
+
+ ;; (define-key MAP (kbd "q") #'turn-off-sboo-mode)
+
+    MAP)
+
+  "`keymapp' for `sboo-mode'.")
+
+;;----------------------------------------------;;
+
+(define-minor-mode sboo-mode
+
+    "Minor Mode for personal keybindings.
+
+=== Keybindings ===
+
+\\{sboo-mode-map}"
+
+  :lighter " SBoo"
+
+  :keymap sboo-mode-map
+
+  :group 'sboo
+
+  :init-value t
+
+  (if (bound-and-true-p sboo-mode)
+
+      ()
+
+    ()))
+
+;;----------------------------------------------;;
+
+(defun turn-on-sboo-mode ()
+  "Enable `sboo-mode'."
+  (interactive)
+  (sboo-mode +1))
+
+;;----------------------------------------------;;
+
+(defun turn-off-sboo-mode ()
+  "Disable `sboo-mode'."
+  (interactive)
+  (sboo-mode -1))
+
+;;==============================================;;
+
+;;(define-globalized-minor-mode sboo-global-mode sboo-mode sboo-mode)
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
@@ -87,3 +135,6 @@
 (provide 'sboo-mode)
 
 ;;; sboo-mode.el ends here
+
+;; Local Variables:
+;; End:

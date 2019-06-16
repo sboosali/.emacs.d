@@ -1740,8 +1740,9 @@ Notes:
 
   ())
 
-;;==============================================;;
-;; Builtin Packages: Shells / Terminals:
+;;----------------------------------------------;;
+;;; Builtin Packages: Shells / Terminals:
+;;----------------------------------------------;;
 
 (use-package shell
 
@@ -1897,7 +1898,67 @@ Notes:
   (add-hook 'term-mode-hook #'sboo-local-unset-tab))
 
 ;;----------------------------------------------;;
-;; Builtin Packages: Spell-Checking ------------;;
+;;; Builtin Packages: Web:
+;;----------------------------------------------;;
+
+(use-package browse-url
+
+    :commands (browse-url)
+
+    :custom
+
+    (browse-url-browser-function #'browse-url-chrome)
+
+    :config ())
+
+;; ^ `browse-url-browser-function':
+;;
+;; • ‘eww-browse-url’        — via ‘eww’.
+;; • ‘browse-url-firefox’    — via "Mozilla Firefox".
+;; • ‘browse-url-chrome’     — via "Google Chrome".
+;; • ‘browse-url-text-emacs’ — via a Text Browser in an Emacs Window.
+;;
+
+;;----------------------------------------------;;
+
+(use-package eww
+
+  :commands (eww eww-open-file eww-browse-with-external-browser)
+
+  :bind (:map sboo-launch-keymap
+              ("w" . eww)
+              )
+
+  :custom
+
+  (url-configuration-directory (sboo-xdg-data "eww" :subdir "emacs") "XDG-conformant")
+
+  :config ())
+
+;; ^ `eww' is the Emacs Web Browser.
+;;
+;; "eww" abbreviates "[E]macs [W]eb Bro[W]ser".
+;;
+;; Keybindings include:
+;;
+;; • 【&】 `eww-browse-with-external-browser'
+;; • 【R】 `eww-readable'
+;; • 【d】 `eww-download'
+;; • 【g】 `eww-reload'
+;; • 【p】 `eww-previous-url'
+;; • 【q】 `eww-quit'
+;; • 【r】 `eww-forward-url'
+;; • 【w】 `eww-copy-page-url'
+;;
+
+;; ^ Links:
+;;
+;;   • URL `'
+;;   • URL `http://ergoemacs.org/emacs/emacs_eww_web_browser.html'
+;;
+
+;;----------------------------------------------;;
+;;; Builtin Packages: Spell-Checking:
 ;;----------------------------------------------;;
 
 (defvar sboo-spelling-aspell-p
@@ -1963,9 +2024,10 @@ i.e. use `aspell' over `ispell'.")
 
 Motivation:
 
->If I add a word during a flyspell session, it’s still marked up as misspelled.
->And flyspell-correct-previous-word tells me that it’s spelling is correct.
-> How do I run flyspell-buffer on the buffer every time the dictionary is modified?
+>If I add a word during a flyspell session, it’s still marked up as
+>misspelled. And flyspell-correct-previous-word tells me that it’s
+>spelling is correct. How do I run ‘flyspell-buffer’ on the buffer every
+>time the dictionary is modified?
 
 Links:
 
@@ -2443,33 +2505,43 @@ Links:
 
     (bind-keys :map company-active-map
 
+               ("!"           . sboo-company-complete-1)
                ("<kp-1>"      . sboo-company-complete-1)
                ("<kp-end>"    . sboo-company-complete-1)
 
+               ("@"           . sboo-company-complete-2)
                ("<kp-2>"      . sboo-company-complete-2)
                ("<kp-down>"   . sboo-company-complete-2)
 
+               ("#"           . sboo-company-complete-3)
                ("<kp-3>"      . sboo-company-complete-3)
                ("<kp-next>"   . sboo-company-complete-3)
 
+               ("$"           . sboo-company-complete-4)
                ("<kp-4>"      . sboo-company-complete-4)
                ("<kp-left>"   . sboo-company-complete-4)
 
+               ("%"           . sboo-company-complete-5)
                ("<kp-5>"      . sboo-company-complete-5)
                ("<kp-begin>"  . sboo-company-complete-5)
 
+               ("^"           . sboo-company-complete-6)
                ("<kp-6>"      . sboo-company-complete-6)
                ("<kp-right>"  . sboo-company-complete-6)
 
+               ("&"           . sboo-company-complete-7)
                ("<kp-7>"      . sboo-company-complete-7)
                ("<kp-home>"   . sboo-company-complete-7)
 
+               ("*"           . sboo-company-complete-8)
                ("<kp-8>"      . sboo-company-complete-8)
                ("<kp-up>"     . sboo-company-complete-8)
 
+               ("("           . sboo-company-complete-9)
                ("<kp-9>"      . sboo-company-complete-9)
                ("<kp-prior>"  . sboo-company-complete-9)
 
+               (")"           . sboo-company-complete-10)
                ("<kp-0>"      . sboo-company-complete-10)
                ("<kp-insert>" . sboo-company-complete-10)
 
@@ -4925,47 +4997,6 @@ search (upwards) for a named Code-Block. For example,
 
 ;;----------------------------------------------;;
 ;;; External Packages: Web ---------------------;;
-;;----------------------------------------------;;
-
-(use-package eww
-  :disabled
-
-  :commands (eww eww-open-file eww-browse-with-external-browser)
-
-  :bind (:map sboo-launch-keymap
-              ("w" . eww)
-              )
-
-  :custom
-
-  (browse-url-browser-function #'eww-browse-url "internal (emacs) Web Browser.")
-
-  (url-configuration-directory (sboo-xdg-data "eww" :subdir "emacs") "XDG-conformant")
-
-  :config ())
-
-;; ^ `eww' is the Emacs Web Browser.
-;;
-;; "eww" abbreviates "[E]macs [W]eb Bro[W]ser".
-;;
-;; Keybindings include:
-;;
-;; • 【&】 `eww-browse-with-external-browser'
-;; • 【R】 `eww-readable'
-;; • 【d】 `eww-download'
-;; • 【g】 `eww-reload'
-;; • 【p】 `eww-previous-url'
-;; • 【q】 `eww-quit'
-;; • 【r】 `eww-forward-url'
-;; • 【w】 `eww-copy-page-url'
-;;
-
-;; ^ Links:
-;;
-;;   • URL `'
-;;   • URL `http://ergoemacs.org/emacs/emacs_eww_web_browser.html'
-;;
-
 ;;----------------------------------------------;;
 
 (use-package w3m
