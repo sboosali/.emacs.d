@@ -902,6 +902,27 @@ Links:
     (list LEFT RIGHT KEY MODES)))
 
 ;;----------------------------------------------;;
+;; Commands ------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-markdown-goto-h1 (&optional query)
+
+  "Go to an H1 with text QUERY.
+
+e.g. this elisp call:
+
+         (sboo-markdown-goto-h1 \"mark\")
+
+     will go to this markdown line:
+
+         # The Mark-Ring
+"
+
+  (interactive)
+
+  ()) ;TODO
+
+;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 

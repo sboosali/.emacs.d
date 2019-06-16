@@ -208,9 +208,25 @@ Related:
 
 ;;----------------------------------------------;;
 
-(defun sboo-next-buffer ()
-  (interactive)
-  (next-buffer))
+(cl-defun sboo-next-buffer (&optional count &key predicate)
+
+  "Switch to the COUNT-nth next buffer.
+
+Inputs: same as `sboo-prior-buffer'.
+
+Related:
+
+• Calls ‘next-buffer’."
+
+  (interactive "P")
+
+  (let* ((PREDICATE (or predicate #'sboo-user-buffer-p))
+         )
+
+    (next-buffer)
+
+    (while (not (funcall PREDICATE (current-buffer)))
+      (next-buffer))))
 
 ;; (sboo-next-buffer)
 ;; (sboo-previous-buffer)
@@ -740,10 +756,10 @@ Inputs:
 
 ;;----------------------------------------------;;
 
-(global-set-key (kbd "<f9>")  #'undo)
-(global-set-key (kbd "<f10>") #'keyboard-quit)
-(global-set-key (kbd "<f11>") #'pp-eval-expression) 
-(global-set-key (kbd "<f12>") #'execute-extended-command)
+(global-set-key (kbd "<f9>")  #'undo)                     ; 
+(global-set-key (kbd "<f10>") #'compile)                  ; Mnemonic: S-<f10> is Run/Debug in IntelliJ.
+(global-set-key (kbd "<f11>") #'pp-eval-expression)       ;
+(global-set-key (kbd "<f12>") #'execute-extended-command) ;
 
 ;;==============================================;;
 
@@ -787,13 +803,6 @@ Inputs:
 (global-set-key (kbd "M-`") #'sboo-switch-to-previous-buffer)
 (global-set-key (kbd "M-~") #'sboo-switch-to-previous-buffer)
 
-(global-set-key (kbd "C-:") #'eval-expression)
-
-;; (global-set-key (kbd "M-:") #'comment-dwim) ; Shadows: `eval-expression'.
-;;
-;; ^ Thus, both « M-; » and « M-S-; » are identical.
-;;   NOTE shadows `eval-expression', but `eval-expression' has been bound to « <f11> ».
-
 (global-set-key (kbd "M-.") #'sboo-jump)
 
 (global-set-key (kbd "M-<up>")   #'beginning-of-buffer)
@@ -819,6 +828,13 @@ Inputs:
 
 (progn
 
+  (global-set-key (kbd "C-#") #'comment-dwim) ; Mnemonic: “#” is a ubiquitous comment delimiter.
+  (global-set-key (kbd "C-3") #'comment-dwim) ; Mnemonic: “<S-3>” and “<#>” are the same key.
+
+  ())
+
+(progn
+
 ;;(global-set-key (kbd "C-a") #')
 ;;(global-set-key (kbd "C-b") #')
 ;;(global-set-key (kbd "C-c") #')
@@ -833,7 +849,7 @@ Inputs:
 ;;(global-set-key (kbd "C-l") #')
 ;;(global-set-key (kbd "C-m") #')
 ;;(global-set-key (kbd "C-n") #')
-  (global-set-key (kbd "C-o") #'find-file-at-point) ; [O]pen File.
+  (global-set-key (kbd "C-o") #'other-window)
 ;;(global-set-key (kbd "C-p") #')
 ;;(global-set-key (kbd "C-q") #')
 ;;(global-set-key (kbd "C-r") #')
@@ -850,7 +866,8 @@ Inputs:
 
 (progn
 
-  (global-set-key (kbd "C-;") #'comment-region)
+  (global-set-key (kbd "C-;") #'comment-dwim)
+  (global-set-key (kbd "C-:") #'comment-dwim)
 
   ())
 
