@@ -1285,22 +1285,15 @@ Related:
 ;;   (dolist (HOOK sboo-text-mode-hooks)
 ;;     (add-hook 'text-mode-hook HOOK)))
 
-;;----------------------------------------------;;
+;;==============================================;;
 
 (use-package dired
-
-  :commands (wdired-change-to-wdired-mode)
 
   ;;---------------------------;;
 
   :bind (:map dired-mode-map
-              ("w" . wdired-change-to-wdired-mode)   ; Mnemonic: [W]dired.
               ("/" . dired-isearch-filenames-regexp) ; Mnemonic: like « $ less ».
               )
-
-  ;; ^ Shadows `dired-copy-filename-as-kill':
-  ;;
-  ;; (define-key map "w" 'dired-copy-filename-as-kill)
 
   ;;---------------------------;;
 
@@ -1308,14 +1301,19 @@ Related:
 
   (dired-recursive-deletes 'top "`top' means: ask for each directory at the TOP level, but delete subdirectories without asking.")
 
-  (wdired-allow-to-change-permissions t "edit Permission-Bits directly (`wdired' ensures you can only enter valid ones), by pressing « w » or « x » or « r ».")
+  (dired-auto-revert-buffer t)
 
-  (wdired-allow-to-redirect-links t "edit Symbolic Links (adding or removing), by pressing « s » or deleting it.")
+  ;; ^ revert Dired buffers automatically.
 
-  (wdired-use-dired-vertical-movement 'sometimes
-                                      "`sometimes' means — upon any Vertical Movement, emacs will move `point' to the Beginning of a Filename (if `point' is to the left of it).")
+  (dired-listing-switches "-l --recursive --almost-all --ignore-backups --human-readable --group-directories-first")
 
-  ;;---------------------------;;
+  ;; ^ Program ‘ls’ options (must include ‘-l’).
+  ;;
+  ;; * `--recursive': list subdirectories recursively.
+  ;; * `--almost-all': omit « ./ » and « ../ »
+  ;; * `--ignore-backups': omit « ~ »-suffixed files.
+  ;; * `--human-readable': print sizes like 1K, 234M, 2G, etc (needs `-l' and `-s').
+  ;;
 
   :config
 
@@ -1333,7 +1331,7 @@ Related:
 
   ())
 
-;; ^ "WDired" abbreviates "[W]riteable [DIR]ectory [ED]itor".
+;; ^ "Dired" abbreviates "[DIR]ectory [ED]itor".
 
 ;; ^ Dired Keybindings include:
 ;;
@@ -1343,10 +1341,69 @@ Related:
 ;; ^ Links
 ;;
 ;; • URL `http://ergoemacs.org/emacs/emacs_dired_tips.html' 
+
+;;----------------------------------------------;;
+
+(use-package wdired
+
+  :commands (wdired-change-to-wdired-mode)
+
+  ;;---------------------------;;
+
+  :bind (:map dired-mode-map
+              ("w" . wdired-change-to-wdired-mode)   ; Mnemonic: [W]dired.
+              )
+
+  ;; ^ Shadows `dired-copy-filename-as-kill':
+  ;;
+  ;; (define-key map "w" 'dired-copy-filename-as-kill)
+
+  ;;---------------------------;;
+
+  :custom
+
+  (wdired-allow-to-change-permissions t "edit Permission-Bits directly (`wdired' ensures you can only enter valid ones), by pressing « w » or « x » or « r ».")
+
+  (wdired-allow-to-redirect-links t "edit Symbolic Links (adding or removing), by pressing « s » or deleting it.")
+
+  (wdired-use-dired-vertical-movement 'sometimes
+                                      "`sometimes' means — upon any Vertical Movement, emacs will move `point' to the Beginning of a Filename (if `point' is to the left of it).")
+
+  ;;---------------------------;;
+
+  :config
+
+  ())
+
+;; ^ "WDired" abbreviates "[W]riteable [DIR]ectory [ED]itor".
+
+;; ^ Links
+;;
 ;; • URL `https://www.masteringemacs.org/article/wdired-editable-dired-buffers' 
-;; 
+
+;;----------------------------------------------;;
+
+(use-package find-dired
+
+    ;;---------------------------;;
+
+    :commands (find-dired
+               find-grep-dired
+               find-name-dired)
+
+    ;;---------------------------;;
+
+    ;; :custom (find-dired- "" "only Files.")
+
+    ;;---------------------------;;
+
+    :config
+
+    ())
+
+;; ^ Links
 ;;
-;;
+;; • URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired-and-Find.html'
 
 ;;==============================================;;
 ;; Completion:

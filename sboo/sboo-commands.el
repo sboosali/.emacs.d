@@ -401,6 +401,52 @@ version 2016-06-18"
 ;;
 
 ;;----------------------------------------------;;
+;; Launching -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-find-uri-at-point ()
+
+  "Open the file or uri at `point'."
+
+  (interactive)
+
+  (let* ((URI  (ffap-url-at-point))
+         (FILE (ffap-file-at-point))
+         )
+
+    (cond
+
+      (URI  (progn
+              (eww-browse-url URI)
+              URI))
+
+      (FILE  (progn
+              (find-file FILE)
+              FILE))
+
+      (t nil))))
+
+;;----------------------------------------------;;
+
+(defun sboo-clean-uri (uri)
+
+  "Strip specific leading/trailing characters from URI.
+
+Examples:
+
+• M-: (sboo-clean-uri \"`https://www.gnu.org/software/emacs/manual/html_node/elisp/String-Basics.html'\")
+    ↪ \"https://www.gnu.org/software/emacs/manual/html_node/elisp/String-Basics.html\""
+
+  (when-let* ((URI uri)
+              (TRIMMED (string-trim URI "[<`‘“ \t\n\r]+" "[>'’” \t\n\r]+"))
+              )
+
+    TRIMMED))
+
+;; M-: (sboo-clean-uri "`https://www.gnu.org/software/emacs/manual/html_node/elisp/String-Basics.html'")
+;;   ↪ "https://www.gnu.org/software/emacs/manual/html_node/elisp/String-Basics.html""
+
+;;----------------------------------------------;;
 ;; Files
 ;;----------------------------------------------;;
 

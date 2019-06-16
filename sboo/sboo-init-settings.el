@@ -671,7 +671,24 @@
 
 ;;----------------------------------------------;;
 
-(setq ediff-window-setup-function #'ediff-setup-windows-plain)
+(sboo-custom-set ediff-window-setup-function #'ediff-setup-windows-plain)
+
+;;----------------------------------------------;;
+
+(progn
+
+  (setq search-default-mode #'char-fold-to-regexp) ; for ‘isearch’.
+
+  (setq replace-char-fold t) ; for ‘query-replace’.
+
+  ())
+
+;; ^ match Unicode Characters when searching for an ASCII Character.
+;;
+;; e.g. Searching for “a” also matches “á”, “ⓐ”, “𝒶”, etc.
+;;
+
+;; ^ URL `http://endlessparentheses.com/new-in-emacs-25-1-easily-search-non-ascii-characters.html'
 
 ;;----------------------------------------------;;
 

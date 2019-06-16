@@ -523,7 +523,9 @@ Inputs:
   ())
 
 ;;==============================================;;
-;;; Single-Character Keybindings...
+
+;;; Single-Character Keybindings (‘TAB’, ‘RET’, ‘<XF86*>’, etc)...
+
 ;;==============================================;;
 
 (global-set-key (kbd "TAB") #'dabbrev-expand) ; Shadows `indent-according-to-mode'.
@@ -532,6 +534,13 @@ Inputs:
 (global-set-key (kbd "<backtab>") #'dabbrev-completion)
 
 ;; ^ `<backtab>' is (translated from?) `<S-TAB>'.
+
+;;==============================================;;
+
+(when (fboundp #'sboo-find-uri-at-point)
+  (global-set-key (kbd "S-<return>") #'sboo-find-uri-at-point))
+
+;; ^ 
 
 ;;==============================================;;
 

@@ -9896,6 +9896,73 @@ any Company Backend in an earlier group).
 
 ========================================================================
 
+;;----------------------------------------------;;
+;; Launching -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-try-find-uri-at-point ()
+
+  "."
+
+  (let* (()
+         )
+
+    (if ()
+        ()
+      (newline))))
+      
+(when (fboundp #'sboo-try-find-uri-at-point)
+  (global-set-key (kbd "S-<return>") #'sboo-try-find-uri-at-point))
+
+;; ^ 
+
+
+========================================================================
+
+(let* ((DIRECTORY     default-directory)
+       (FIND-ARGUMENTS "-type f -name '*.md'")
+       )
+  (find-dired DIRECTORY FIND-ARGUMENTS))
+
+
+
+
+(cl-defun sboo-dired (&key directory)
+
+  "Launch `dired' recursively.
+
+Inputs:
+
+• DIRECTORY — a `stringp'.
+  Filepath.
+  Defaults to `default-directory'.
+
+Effects:
+
+• Launches a `dired-mode' buffer.
+
+Related:
+
+• Wraps `dired'.
+
+Links:
+
+• URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired-and-Find.html'"
+
+  (interactive)
+
+  (let* ((DIRECTORY (or directory default-directory))
+         (SWITCHES '(""))
+         )
+
+    (dired DIRECTORY SWITCHES)))
+
+
+
+
+
+
+
 
 
 

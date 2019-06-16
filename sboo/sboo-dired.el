@@ -1,31 +1,153 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; sboo-dired.el --- Pesronal ‘dired’ configurations. -*- coding: utf-8; lexical-binding: t -*-
 
+;; Copyright © 2019 Spiros Boosalis
 
+;; Version: 0.0.0
+;; Package-Requires: ((emacs "25"))
+;; Author:  Spiros Boosalis <samboosalis@gmail.com>
+;; Homepage: https://github.com/sboosali/.emacs.d
+;; Keywords: local
+;; Created: 15 Jun 2019
+;; License: GPL-3.0-or-later
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This file is not part of GNU Emacs.
+;;
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; Pesronal ‘dired’ & ‘find-dired’ configurations.
+;; 
+;; 
+
+;;; Code:
+
+;;----------------------------------------------;;
+;; Imports -------------------------------------;;
+;;----------------------------------------------;;
+
+;; builtins:
+
+(eval-when-compile
+  (require 'rx)
+  (require 'pcase))
+
+;;----------------------------------------------;;
 
 (progn
+  (require 'seq)
+  (require 'cl-lib))
 
-  (require 'dired)
+;;----------------------------------------------;;
+;; Variables -----------------------------------;;
+;;----------------------------------------------;;
 
-  (setq dired-listing-switches "-l --recursive --almost-all --ignore-backups --human-readable --group-directories-first")
+(defgroup sboo-dired nil
 
-  ;; ^ `ls' options (must include ‘-l’).
-  ;;
-  ;; * `--recursive': list subdirectories recursively.
-  ;; * `--almost-all': omit « ./ » and « ../ »
-  ;; * `--ignore-backups': omit « ~ »-suffixed files.
-  ;; * `--human-readable': print sizes like 1K, 234M, 2G, etc (needs `-l' and `-s').
-  ;;
+  "Customize ‘dired’ & ‘find-dired’."
 
-  (setq dired-auto-revert-buffer t)
+  :prefix 'sboo
+  :group 'dired
+  :group 'sboo)
 
 
-  ;; ^ revert Dired buffers automatically.
+;;==============================================;;
 
-  ())
+(defcustom sboo-dired-find-switces-elisp
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  "-type f \\( -name '*.el' -or -name '*.el.gz' \\)"
+
+  "Command-Line Options to program ‘find’ for Elisp files.
+
+a `stringp'."
+
+  :type '(string :tag "Find Switches")
+
+  :safe #'stringp
+  :group 'sboo-dired)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-dired-find-switces-nix
+
+  "-type f -name '*.nix'"
+
+  "Command-Line Options to program ‘find’ for Nix files.
+
+a `stringp'."
+
+  :type '(string :tag "Find Switches")
+
+  :safe #'stringp
+  :group 'sboo-dired)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-dired-find-switces-haskell
+
+  "-type f \\( -name '*.hs' -or -name '*.lhs' -or -name '*.chs' \\)"
+
+  "Command-Line Options to program ‘find’ for Haskell files.
+
+a `stringp'."
+
+  :type '(string :tag "Find Switches")
+
+  :safe #'stringp
+  :group 'sboo-dired)
+
+;;----------------------------------------------;;
+;; Commands ------------------------------------;;
+;;----------------------------------------------;;
+
+(cl-defun sboo-dired (&key directory type)
+
+  "Launch `dired' recursively.
+
+Inputs:
+
+• DIRECTORY — a `stringp'.
+  Filepath.
+  Defaults to `default-directory'.
+
+• TYPE — a `symbolp'.
+  Defaults to TODO.
+
+Effects:
+
+• Launches a `dired-mode' buffer.
+
+Related:
+
+• Wraps `find-dired'.
+
+Links:
+
+• URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired-and-Find.html'"
+
+  (interactive)
+
+  (let* ((DIRECTORY      (or directory default-directory))
+         (FIND-ARGUMENTS sboo-dired-find-switces-elisp)
+         )
+
+    (find-dired DIRECTORY FIND-ARGUMENTS)))
+
+
+
+
+
 
 (when (>= emacs-major-version 26)
   
@@ -59,11 +181,13 @@
          (filepath-blacklist-regexp ""))
     (directory-files-recursively default-directory filepath-blacklist-regexp include-directories))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Invoke Dired 
+
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
+
+;; Invoke Dired:
 ;;
 ;; * M-x dired
 ;; * C-x d
@@ -97,5 +221,10 @@
 ;; - http://man7.org/linux/man-pages/man1/ls.1.html
 ;; 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
 (provide 'sboo-dired)
+
+;;; sboo-dired.el ends here

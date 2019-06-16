@@ -76,7 +76,7 @@ most have *Minimal Dependencies*, either:
 * `elisp-docstring-mode.el`
 * `elisp-refs.el`
 * `flycheck-package.el`         — `;; Package-Requires: ((flycheck "0.22") (package-lint "0.2"))`
-* `find-file-in-project.el` *v5.7.4*
+* `find-file-in-project.el`     — *v5.7.4*.
 * `goto-last-change.el`
 * `goto-line-preview.el`
 * `graphviz-dot-mode.el`
@@ -124,6 +124,7 @@ most have *Minimal Dependencies*, either:
 * `compilation-recenter-end.el` — Recenter `compilation-mode` buffers once `M-x compile` finishes (to maximize the onscreen text). <http://user42.tuxfamily.org/compilation-recenter-end/index.html>
 * `sql-postgres.el`             — Indents *PL/pgSQL*. <https://github.com/nicferrier/emacs-sql-postgres>. 
 * `company-web.el`              — *Company Backend* for Web Buffers. <https://github.com/osv/company-web>
+* `validate.el`                 — *v1.0.4*. no external dependencies: `;; Package-Requires: ((emacs "24.1") (cl-lib "0.5") (seq "2.16"))`. <http://endlessparentheses.com/validate-el-schema-validation-for-emacs-lisp.html>
 
 * `pandoc-mode`:
 
