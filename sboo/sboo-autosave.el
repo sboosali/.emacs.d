@@ -1,4 +1,4 @@
-;;; sboo-autosave.el --- sboosali's autosave config -*- lexical-binding: t -*-
+;;; sboo-autosave.el --- Configure Auto-Saving -*- lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -27,7 +27,7 @@
 
 ;;; Commentary:
 
-;; Autosave configuration.
+;; Configure Auto-Saving via `auto-save-visited-mode' or `real-auto-save-mode'.
 ;; 
 ;; Emacs-26.1 introduced `auto-save-visited-mode';
 ;; otherwise, use `real-auto-save-mode'.
