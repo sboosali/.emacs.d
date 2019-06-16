@@ -10096,6 +10096,74 @@ Links:
 
 ========================================================================
 
+(defun sboo-prior-window (&optional count)
+
+  "Select the COUNT-nth previous window.
+
+Inputs:
+
+• COUNT — an optional `integerp'.
+  Defaults to +1.
+
+When called interactively:
+
+• COUNT is the (Raw) Prefix Argument."
+
+  (interactive "P")
+
+  (let* ((COUNT (prefix-numeric-value (or count +1))))
+
+    ( COUNT)))
+
+;;==============================================;;
+
+;sboo-next-buffer (* -1  (switch-to-buffer (other-buffer (current-buffer) :visible-ok))
+
+  (let* ((COUNT   (prefix-numeric-value (or count +1)))
+         (BUFFERS (buffer-list))
+         (OTHER-BUFFERS (cdr BUFFERS))
+         (LIVE-BUFFERS (seq-filter #'buffer-live-p OTHER-BUFFERS))
+         )
+
+
+(cl-defun sboo-prior-buffer (&optional count &key predicate)
+
+  "Switch back to the COUNT-nth prior buffer.
+
+Inputs:
+
+• COUNT — an optional `integerp'.
+  Defaults to +1.
+
+• PREDICATE — an optional `functionp' from `bufferp' to `booleanp'.
+  Defaults to #‘buffer-file-name’.
+
+When called interactively:
+
+• COUNT is the (Raw) Prefix Argument.
+
+Effects:
+
+• Switches the ‘current-buffer’."
+
+  (interactive "P")
+
+  (let* ((COUNT     (prefix-numeric-value (or count +1)))
+         (PREDICATE (or predicate #'buffer-file-name))
+         )
+
+    (let* ((INDEX         (min 0 (- COUNT 1)))
+           (ALL-BUFFERS   (buffer-list))
+           (OTHER-BUFFERS (cdr ALL-BUFFERS))
+           (LIVE-BUFFERS  (seq-filter #'buffer-live-p OTHER-BUFFERS))
+           (GOOD-BUFFERS  (seq-filter PREDICATE LIVE-BUFFERS))
+           (PRIOR-BUFFER  (seq-elt GOOD-BUFFERS INDEX))
+           )
+
+      (switch-to-buffer PRIOR-BUFFER nil :force-same-window))))
+
+========================================================================
+
 
 
 

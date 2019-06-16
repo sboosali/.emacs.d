@@ -169,7 +169,107 @@ Related:
 
   ())
 
+;;==============================================;;
+
+(cl-defun sboo-prior-buffer (&optional count &key predicate)
+
+  "Switch back to the COUNT-nth prior buffer.
+
+Inputs:
+
+• COUNT — an optional `integerp'.
+  Defaults to +1.
+
+• PREDICATE — an optional `functionp' from `bufferp' to `booleanp'.
+  Defaults to #‘sboo-user-buffer-p’.
+
+When called interactively:
+
+• COUNT is the (Raw) Prefix Argument.
+
+Effects:
+
+• Changes the ‘current-buffer’.
+• Preserves the ‘selected-window’.
+
+Related:
+
+• Calls ‘previous-buffer’."
+
+  (interactive "P")
+
+  (let* ((PREDICATE (or predicate #'sboo-user-buffer-p))
+         )
+
+    (previous-buffer)
+
+    (while (not (funcall PREDICATE (current-buffer)))
+      (previous-buffer))))
+
 ;;----------------------------------------------;;
+
+(defun sboo-next-buffer ()
+  (interactive)
+  (next-buffer))
+
+;; (sboo-next-buffer)
+;; (sboo-previous-buffer)
+
+;;----------------------------------------------;;
+
+(defun sboo-user-buffer-p (&optional buffer)
+
+  "Whether the user wants to see the BUFFER.
+
+Inputs:
+
+• BUFFER — an optional `bufferp'.
+  Defaults to `current-buffer'."
+
+  (let* ((BUFFER (or buffer (current-buffer))))
+
+    (and (buffer-live-p buffer)
+         (buffer-file-name buffer))))
+
+;;==============================================;;
+
+(cl-defun sboo-last-buffer (&optional count &key predicate)
+
+  "Switch back to the COUNT-nth prior buffer.
+
+Inputs:
+
+• COUNT — an optional `integerp'.
+  Defaults to +1.
+
+• PREDICATE — an optional `functionp' from `bufferp' to `booleanp'.
+  Defaults to #‘buffer-file-name’.
+
+When called interactively:
+
+• COUNT is the (Raw) Prefix Argument.
+
+Effects:
+
+• Switches the ‘current-buffer’."
+
+  (interactive "P")
+
+  (let* ((COUNT     (prefix-numeric-value (or count +1)))
+         (PREDICATE (or predicate #'buffer-file-name))
+         )
+
+    (let* ((INDEX         (min 0 (- COUNT 1)))
+           (ALL-BUFFERS   (buffer-list))
+           (OTHER-BUFFERS (cdr ALL-BUFFERS))
+           (LIVE-BUFFERS  (seq-filter #'buffer-live-p OTHER-BUFFERS))
+           (GOOD-BUFFERS  (seq-filter PREDICATE LIVE-BUFFERS))
+           (PRIOR-BUFFER  (seq-elt GOOD-BUFFERS INDEX))
+           )
+
+      (switch-to-buffer PRIOR-BUFFER nil :force-same-window))))
+
+;;==============================================;;
 
 (defun sboo-dired ()
 
@@ -449,9 +549,7 @@ Returns:
           #'sboo-yas-insert-snippet
       #'yas-insert-snippet))
 
-   (t nil)))
-
-                                        ;sboo-yas-insert-snippet
+   (t nil))) ;sboo-yas-insert-snippet
 
 ;;==============================================;;
 ;; DWIM Editing
@@ -590,12 +688,19 @@ Inputs:
 
 ;;==============================================;;
 
-(global-set-key sboo-key-compile      #'compile)
-(global-set-key (kbd "<Scroll_Lock>") #'compile)
-(global-set-key (kbd "<pause>")       #'sboo-press-C-g)
+(progn
 
-(global-set-key (kbd "<insert>") #'yank)
-;;(global-set-key (kbd "<delete>") #'sboo-undefined)
+  (global-set-key (kbd "<prior>") #'sboo-backward-defun)
+  (global-set-key (kbd "<next>")  #'sboo-forward-defun)
+
+  (global-set-key sboo-key-compile      #'compile)
+  (global-set-key (kbd "<Scroll_Lock>") #'compile)
+  (global-set-key (kbd "<pause>")       #'sboo-press-C-g)
+
+  (global-set-key (kbd "<insert>") #'yank)
+  ;;(global-set-key (kbd "<delete>") #'sboo-undefined)
+
+  ())
 
 ;;==============================================;;
 
@@ -754,6 +859,20 @@ Inputs:
   (global-set-key (kbd "<C-next>")  #'sboo-page-forward)) ; Overrides: `scroll-left'.
 
 (progn
+
+  (global-set-key (kbd "C-<tab>")         #'sboo-next-buffer)
+  (global-set-key (kbd "S-C-<tab>")       #'sboo-prior-buffer)
+  (global-set-key (kbd "<C-iso-lefttab>") #'sboo-prior-buffer)
+
+  (eval-when-compile
+    (ignore-errors
+      (bind-key* "C-<tab>"         #'sboo-next-buffer)
+      (bind-key* "S-C-<tab>"       #'sboo-prior-buffer)
+      (bind-key* "<C-iso-lefttab>" #'sboo-prior-buffer)))
+
+  ())
+
+(progn
   (global-set-key (kbd "<C-up>")   #'backward-paragraph)
   (global-set-key (kbd "<C-down>") #'forward-paragraph))
 
@@ -803,19 +922,24 @@ Inputs:
 
 ;;==============================================;;
 
-(global-set-key (kbd "<kp-left>")  #'previous-buffer)
-(global-set-key (kbd "<kp-right>") #'next-buffer)
+(progn
+  (global-set-key (kbd "<kp-left>")  #'previous-buffer)
+  (global-set-key (kbd "<kp-right>") #'next-buffer))
 
-(global-set-key (kbd "<kp-up>")    #'sboo-prior-definition)
-(global-set-key (kbd "<kp-down>")  #'sboo-next-definition)
+(progn
+  (global-set-key (kbd "<kp-up>")    #'sboo-prior-definition)
+  (global-set-key (kbd "<kp-down>")  #'sboo-next-definition))
 
-(global-set-key (kbd "<kp-begin>") #'sboo-find)
+(progn
+  (global-set-key (kbd "<kp-home>")  #'set-mark-command)
+  (global-set-key (kbd "<kp-end>")   #'delete-other-windows))
 
-(global-set-key (kbd "<kp-home>")  #'set-mark-command)
-(global-set-key (kbd "<kp-end>")   #'delete-other-windows)
+(progn
+  (global-set-key (kbd "<kp-prior>")    #'flycheck-previous-error)
+  (global-set-key (kbd "<kp-next>")     #'flycheck-next-error))
 
-(global-set-key (kbd "<kp-prior>")    #'flycheck-previous-error)
-(global-set-key (kbd "<kp-next>")     #'flycheck-next-error)
+(progn
+  (global-set-key (kbd "<kp-begin>") #'sboo-find))
 
 ;;(global-set-key (kbd "<kp-insert>")   #')
 ;;(global-set-key (kbd "<kp-delete>")   #')
@@ -1067,14 +1191,14 @@ Inputs:
 (progn
 
   (global-set-key (kbd "s-<up>")
-                  (if (fboundp #'sboo-backward-defun)
-                      #'sboo-backward-defun
-                    #'backward-defun))
+                  (or (and (fboundp #'sboo-backward-defun) #'sboo-backward-defun)
+                      (and (fboundp #'backward-defun)      #'backward-defun)
+                      #'backward-paragraph))
 
   (global-set-key (kbd "s-<down>")
-                  (if (fboundp #'sboo-forward-defun)
-                      #'sboo-forward-defun
-                    #'forward-defun))
+                  (or (and (fboundp #'sboo-forward-defun) #'sboo-forward-defun)
+                      (and (fboundp #'forward-defun)      #'forward-defun)
+                      #'forward-paragraph))
 
   ;;(global-set-key (kbd "s-`")           #')
   (global-set-key (kbd "s--")           #'text-scale-decrease)

@@ -1,0 +1,33 @@
+# -*- mode: snippet -*-
+#
+# key         : defun-count
+# name        : [sboo] Define a « defun (&optional COUNT) (interactive "P") ... ».
+#
+# type        : snippet
+# condition   : (let ((KEY "defun-count")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+;;----------------------------------------------;;
+
+(defun ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name} (&optional count)
+
+  "COUNT times.
+
+Inputs:
+
+• COUNT — an optional \`integerp'.
+  Defaults to +1.
+
+When called interactively:
+
+• COUNT is the (Raw) Prefix Argument."
+
+  (interactive "P")
+
+  (let* ((COUNT (prefix-numeric-value (or count +1))))
+
+    ($0 COUNT)))
