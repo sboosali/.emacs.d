@@ -4565,6 +4565,32 @@ search (upwards) for a named Code-Block. For example,
 ;;; External Packages: Navigation --------------;;
 ;;----------------------------------------------;;
 
+(use-package back-button
+  :defer 1
+
+  :commands (back-button-mode)
+
+  :custom
+
+  (back-button-show-toolbar-buttons t)
+
+  :config
+
+  (back-button-mode +1))
+
+;; ^ `back-button' usage:
+;;
+;;   • press the plus sign in the toolbar to create a mark
+;;   •  press the arrows in the toolbar to navigate marks
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/rolandwalker/back-button'
+;;
+
+;;----------------------------------------------;;
+
 (use-package helm-swoop
 
   :commands (helm-swoop helm-multi-swoop)
@@ -5440,21 +5466,6 @@ search (upwards) for a named Code-Block. For example,
 ;;
 ;;   • URL `https://github.com/seagle0128/doom-modeline'
 ;;
-
-;;----------------------------------------------;;
-
-(use-package back-button
-  :defer 5
-
-  :commands (back-button-mode)
-
-  :init
-
-  (setq back-button-show-toolbar-buttons t)
-
-  :config
-
-  (back-button-mode +1))
 
 ;;----------------------------------------------;;
 ;;; External Packages: Clipboard ---------------;;

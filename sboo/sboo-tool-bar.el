@@ -235,14 +235,16 @@ Add some Icons/Commands to the standard Tool Bar.")
       ;;                      :rtl    "left-arrow"
       ;;                      )
 
-      (tool-bar-local-item "left-arrow"
-                           #'pop-global-mark
-                           'pop-global-mark
-                           MAP
-                           :label  "Go Back"
-                           :help   "« M-x pop-global-mark »"
-                           :rtl    "right-arrow"
-                           )
+      ;; (subsumed by ‘back-button’:)
+      ;;
+      ;; (tool-bar-local-item "left-arrow"
+      ;;                      #'pop-global-mark
+      ;;                      'pop-global-mark
+      ;;                      MAP
+      ;;                      :label  "Go Back"
+      ;;                      :help   "« M-x pop-global-mark »"
+      ;;                      :rtl    "right-arrow"
+      ;;                      )
 
       MAP))
 
