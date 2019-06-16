@@ -127,7 +127,7 @@ most have *Minimal Dependencies*, either:
 * `validate.el`                 — *v1.0.4*. has no external dependencies: `;; Package-Requires: ((emacs "24.1") (cl-lib "0.5") (seq "2.16"))`. <http://endlessparentheses.com/validate-el-schema-validation-for-emacs-lisp.html>
 * `cfrs.el`                     — *cfrs* abbreviates *Child-Frame Read-String*. `cfrs-read` provides the Frame-based `cfrs-read` (c.f. the Minibuffer-based `read-string`). <https://github.com/Alexander-Miller/cfrs>
 * `company-shell.el`            — *company-shell* provides *Company Backends* for shell Executables (via `'company-shell`) & shell Environment Variables (via `'company-shell-env`). <https://github.com/Alexander-Miller/company-shell>
-* `flyspell-helm.el`            — Correct `flyspell` suggestions via `helm`.
+* `helm-flyspell.el`            — Correct `flyspell` suggestions via `helm`.
 * `back-button.el`              — . has several external dependencies: `;; Package-Requires: ((nav-flash "1.0.0") (smartrep "0.0.3") (ucs-utils "0.7.2") (list-utils "0.4.2") (persistent-soft "0.8.8") (pcache "0.2.3"))`. <https://github.com/rolandwalker/back-button>
 
 * `pandoc-mode`:

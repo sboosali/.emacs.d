@@ -756,7 +756,7 @@ Inputs:
 
 ;;----------------------------------------------;;
 
-(global-set-key (kbd "<f9>")  #'undo)                     ; 
+;;(global-set-key (kbd "<f9>")  nil)
 (global-set-key (kbd "<f10>") #'compile)                  ; Mnemonic: S-<f10> is Run/Debug in IntelliJ.
 (global-set-key (kbd "<f11>") #'pp-eval-expression)       ;
 (global-set-key (kbd "<f12>") #'execute-extended-command) ;

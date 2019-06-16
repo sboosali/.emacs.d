@@ -2084,16 +2084,53 @@ Links:
 
   :delight (flyspell-mode " 🔤")
 
+  ;;--------------------------;;
+
   :commands (flyspell-mode flyspell-prog-mode flyspell-auto-correct-word flyspell-goto-next-error flyspell-check-next-highlighted-word)
+
+  ;;--------------------------;;
+
+  :bind (("M-<f9>"    . sboo-flyspell-prior-error)
+         ("C-<f9>"    . sboo-flyspell-next-error))
 
   :bind (:map text-mode-map
               ("<kp-up>"   . sboo-flyspell-check-first-word)
-              ("<kp-down>" . sboo-flyspell-check-next-word)
-              )
+              ("<kp-down>" . sboo-flyspell-check-next-word))
+
+  ;;--------------------------;;
 
   :hook ((text-mode     . flyspell-mode)
          (markdown-mode . flyspell-mode)
          )
+
+  ;;--------------------------;;
+
+  :preface
+
+  (defun sboo-turn-on-flyspell-mode ()
+    "Turn on either ‘flyspell-mode’ or ‘flyspell-prog-mode’."
+    (interactive)
+    (unless flyspell-mode
+      (if (derived-mode-p 'prog-mode)
+          (flyspell-prog-mode)
+        (turn-on-flyspell)))
+    )
+
+  (defun sboo-flyspell-prior-error ()
+    "Launch Flyspell and goto the prior Spelling Error."
+    (interactive)
+    (sboo-turn-on-flyspell-mode)
+    ;; (flyspell-buffer)
+    (flyspell-goto-previous-error))
+
+  (defun sboo-flyspell-next-error ()
+    "Launch Flyspell and goto the next Spelling Error."
+    (interactive)
+    (sboo-turn-on-flyspell-mode)
+    ;; (flyspell-buffer)
+    (flyspell-goto-next-error))
+
+  ;;--------------------------;;
 
   :config
 
@@ -4543,25 +4580,6 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
-
-(use-package synosaurus
-
-  :commands (synosaurus-lookup synosaurus-choose-and-replace synosaurus-choose-and-insert)
-
-  :custom
-
-  (synosaurus-choose-method 'popup "choose alternatives via ‘popup.el’.")
-;;(synosaurus-backend #'synosaurus-backend-wordnet "program ‘wn’ works offline".)
-
-  :config ())
-
-;; ^ Links:
-;;
-;;   • URL `'
-;;   • URL `'
-;;
-
-;;----------------------------------------------;;
 ;;; External Packages: Navigation --------------;;
 ;;----------------------------------------------;;
 
@@ -4580,8 +4598,8 @@ search (upwards) for a named Code-Block. For example,
 
 ;; ^ `back-button' usage:
 ;;
-;;   • press the plus sign in the toolbar to create a mark
-;;   •  press the arrows in the toolbar to navigate marks
+;;   • press the « Push Mark » (a.k.a. plus sign) Button in the toolbar to create a mark.
+;;   • press the « Back/Forward by Mark » (a.k.a. left/right arrow) Button in the toolbar to navigate marks.
 ;;
 
 ;; ^ Links:
@@ -5584,6 +5602,44 @@ search (upwards) for a named Code-Block. For example,
 ;; ^ Links:
 ;;
 ;;   • URL `https://github.com/m00natic/vlfi'
+;;
+
+;;----------------------------------------------;;
+;;; External Packages: Spell-Checking:
+;;----------------------------------------------;;
+
+(use-package helm-flyspell
+
+  :commands (helm-flyspell-correct)
+
+  :bind (:map flyspell-mode-map
+              ("s-SPC" . helm-flyspell-correct)
+              ("<f9>"  . helm-flyspell-correct)
+         )
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/pronobis/helm-flyspell'
+;;
+
+;;----------------------------------------------;;
+
+(use-package synosaurus
+
+  :commands (synosaurus-lookup synosaurus-choose-and-replace synosaurus-choose-and-insert)
+
+  :custom
+
+  (synosaurus-choose-method 'popup "choose alternatives via ‘popup.el’.")
+;;(synosaurus-backend #'synosaurus-backend-wordnet "program ‘wn’ works offline".)
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/hpdeifel/synosaurus'
 ;;
 
 ;;----------------------------------------------;;
