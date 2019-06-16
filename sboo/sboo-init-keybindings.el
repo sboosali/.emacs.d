@@ -125,6 +125,52 @@ Related:
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 
+(progn
+
+  ;;--------------------------;;
+
+  (unless (fboundp #'forward-defun)
+    (defun forward-defun (&optional count)
+      (interactive "P")
+      (let* ((COUNT (or count +1)))
+        (forward-thing 'defun COUNT))))
+
+  (unless (fboundp #'backward-defun)
+    (defun backward-defun (&optional count)
+      (interactive "P")
+      (let* ((COUNT (* -1 (or count +1))))
+        (forward-thing 'defun COUNT))))
+
+  ;;--------------------------;;
+
+  (defvar-local sboo-forward-defun-function #'forward-defun)
+
+  (defvar-local sboo-backward-defun-function #'backward-defun)
+
+  ;;--------------------------;;
+
+  (defun sboo-forward-defun ()
+
+    "Invokes `sboo-forward-defun-function'."
+
+    (interactive)
+
+    (call-interactively sboo-forward-defun-function))
+
+  (defun sboo-backward-defun ()
+
+    "Invokes `sboo-backward-defun-function'."
+
+    (interactive)
+
+    (call-interactively sboo-backward-defun-function))
+
+  ;;--------------------------;;
+
+  ())
+
+;;----------------------------------------------;;
+
 (defun sboo-dired ()
 
   "Wraps `dired'."
@@ -1019,7 +1065,17 @@ Inputs:
 ;; « s-<SYMBOL> »
 
 (progn
-  
+
+  (global-set-key (kbd "s-<up>")
+                  (if (fboundp #'sboo-backward-defun)
+                      #'sboo-backward-defun
+                    #'backward-defun))
+
+  (global-set-key (kbd "s-<down>")
+                  (if (fboundp #'sboo-forward-defun)
+                      #'sboo-forward-defun
+                    #'forward-defun))
+
   ;;(global-set-key (kbd "s-`")           #')
   (global-set-key (kbd "s--")           #'text-scale-decrease)
   (global-set-key (kbd "s-=")           #'text-scale-increase)

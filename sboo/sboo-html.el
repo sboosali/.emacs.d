@@ -554,7 +554,12 @@ Merges:
 
   (let* ()
 
-    (define-key selected-keymap (kbd ">") #'sboo-blockquote-toggle-region)
+    (when (bound-and-true-p selected-keymap)
+      (define-key selected-keymap (kbd ">") #'sboo-blockquote-toggle-region))
+
+    (progn
+      (setq-local sboo-forward-defun-function #'markdown-forward-page)
+      (setq-local sboo-backward-defun-function #'markdown-backward-page))
 
     ()))
 
