@@ -47,6 +47,8 @@
 (progn
   (require 'seq))
 
+;;; BOOTSTRAPPING ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;----------------------------------------------;;
 ;; Settings: Bootstrapping ---------------------;;
 ;;----------------------------------------------;;
@@ -465,19 +467,15 @@ Related:
 ;;----------------------------------------------;;
 
 ;;;###autoload
-(defgroup sboo
+(defgroup sboo nil
 
-  nil
-
-  "« sboo »'s customization."
-
-  :link '(url-link :tag "GitHub" "https://github.com/sboosali/.emacs.d#readme")
+  "‹sboosali›'s customization."
 
   :group 'local
 
   ;; ^ Group `local' means: your personal (“site-local”) configuration.
 
-  )
+  :link '(url-link :tag "GitHub" "https://github.com/sboosali/.emacs.d#readme"))
 
 ;;----------------------------------------------;;
 ;;; Settings -----------------------------------;;
@@ -532,7 +530,7 @@ Related:
 ;;        but doesn't contain any sensitive information.)
 ;;
 
-;;----------------------------------------------;;
+;;==============================================;;
 ;;; Themes -------------------------------------;;
 ;;----------------------------------------------;;
 
@@ -563,33 +561,11 @@ Related:
 
   ())
 
-;;; Internal Packages:
-
-;;----------------------------------------------;;
-;;; Builtin Packages: --------------------------;;
-;;----------------------------------------------;;
-
-(when (require 'sboo-autosave nil :no-error)
-
-  (if (>= emacs-major-version 26)
-
-      ;; `auto-save-visited-mode':
-
-      (progn
-        (sboo-autosave/auto-save-visited/init!)
-        (sboo-autosave/auto-save-visited/config!))
-
-    ;; `real-auto-save-mode':
-
-    (progn
-      (eval-after-load 'real-auto-save
-        `(progn
-           (sboo-autosave/real-auto-save/init!)
-           (sboo-autosave/real-auto-save/config!)))
-      (require 'real-auto-save nil :no-error))))
+;;; INTERNAL PACKAGES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;==============================================;;
-;; Builtin Packages: Primary:
+;;; Builtin Packages:
+;;----------------------------------------------;;
 
 (use-package emacs
 
@@ -610,7 +586,7 @@ Related:
 
   ())
 
-;;----------------------------------------------;;;
+;;----------------------------------------------;;
 
 (when (require 'sboo-auto-mode nil :no-error)
 
@@ -660,6 +636,31 @@ Related:
 ;;
 
 ;;==============================================;;
+;;; Feature: Autosaving:
+;;----------------------------------------------;;
+
+(when (require 'sboo-autosave nil :no-error)
+
+  (if (>= emacs-major-version 26)
+
+      ;; `auto-save-visited-mode':
+
+      (progn
+        (sboo-autosave/auto-save-visited/init!)
+        (sboo-autosave/auto-save-visited/config!))
+
+    ;; `real-auto-save-mode':
+
+    (progn
+      (eval-after-load 'real-auto-save
+        `(progn
+           (sboo-autosave/real-auto-save/init!)
+           (sboo-autosave/real-auto-save/config!)))
+      (require 'real-auto-save nil :no-error))))
+
+;;==============================================;;
+;;; Feature: Sessions:
+;;----------------------------------------------;;
 
 (when (require 'sboo-desktop nil :no-error)
 
@@ -700,49 +701,32 @@ Related:
 ;; ")
 ;;     ()))
 
+;;==============================================;;
+;;; Feature: Server (for ‘emacsclient’)
 ;;----------------------------------------------;;
 
-(use-package autorevert
-
-  :commands (auto-revert-mode)
-
-  :delight (auto-revert-mode " 🗘")
-  ;; ^ Shorten `auto-revert-modee'.
-
-  :config
-
-  ())
+(when (require 'sboo-server nil :no-error)
+  (add-startup-hook! #'server-start-unless-running))
 
 ;;==============================================;;
+;;; Builtin Packages: Widgets (Menubar/Toolbar):
+;;----------------------------------------------;;
 
-(use-package kmacro
-
-    :commands (kmacro-start-macro-or-insert-counter  ; <f3>
-               kmacro-end-or-call-macro              ; <f4>
-               kmacro-name-last-macro                ; C-x C-k n
-               )
-
-    :config
-    
-    (when (require 'sboo-kmacro nil :no-error)
-
-      ())
-
-    ())
+(when (require 'sboo-toolbar nil :no-error)
+;;(setq tool-bar-map sboo-toolbar-map)
+  ())
 
 ;;----------------------------------------------;;
 
-(use-package macros
+(when (require 'sboo-menubar nil :no-error)
+;;(setq menu-bar-map sboo-menubar-map)
+  ())
 
-    :commands (apply-macro-to-region-lines insert-kbd-macro)
+;;----------------------------------------------;;
 
-    :config
-    
-    (when (require 'sboo-kmacro nil :no-error)
-
-      ())
-
-    ())
+(require 'sboo-widgets nil :no-error)
+;;;  (sboo-minibuffer-config))
+;;;  (sboo-config-fonts))
 
 ;;----------------------------------------------;;
 ;;; Builtin Packages: Text Modes ---------------;;
@@ -1086,6 +1070,38 @@ Related:
 
 ;;==============================================;;
 ;; Builtin Packages: Editing:
+;;----------------------------------------------;;
+
+(use-package kmacro
+
+    :commands (kmacro-start-macro-or-insert-counter  ; <f3>
+               kmacro-end-or-call-macro              ; <f4>
+               kmacro-name-last-macro                ; C-x C-k n
+               )
+
+    :config
+    
+    (when (require 'sboo-kmacro nil :no-error)
+
+      ())
+
+    ())
+
+;;----------------------------------------------;;
+
+(use-package macros
+
+    :commands (apply-macro-to-region-lines insert-kbd-macro)
+
+    :config
+    
+    (when (require 'sboo-kmacro nil :no-error)
+
+      ())
+
+    ())
+
+;;==============================================;;
 
 (use-package align
 
@@ -1112,7 +1128,8 @@ Related:
   ())
 
 ;;==============================================;;
-;; Builtin Packages: Viewing:
+;;; Builtin Packages: Viewing:
+;;----------------------------------------------;;
 
 (use-package hl-line
 
@@ -1141,10 +1158,11 @@ Related:
 
   :config ())
 
-;; ^ "hi-lock" abbreviates "[HI]ghlight [LOCK]".
+;; ^ "hi-lock" abbreviates "[HI]ghlight [LOCK
 
 ;;==============================================;;
-;; Builtin Packages: Searching:
+;;; Builtin Packages: Searching:
+;;----------------------------------------------;;
 
 (use-package isearch
   :no-require t
@@ -1228,38 +1246,6 @@ Related:
 
 ;;==============================================;;
 
-(when (require 'sboo-server nil :no-error)
-  (add-startup-hook! #'server-start-unless-running))
-
-;;==============================================;;
-
-(use-package minibuffer
-
-  :config
-
-  (add-to-list 'completion-styles 'substring nil)
-
-  (dolist (COMPLETER '(elisp-completion-at-point comint-dynamic-complete-filename))
-    (add-to-list 'completion-at-point-functions COMPLETER nil))
-
-  ())
-
-;; ^ « C-M-i » binds `complete-symbol', which tries `completion-at-point-functions'.
-
-;;----------------------------------------------;;
-
-(when (require 'sboo-tool-bar nil :no-error)
-;;(setq tool-bar-map sboo-tool-bar-map)
-  ())
-
-;;----------------------------------------------;;
-
-(require 'sboo-widgets)
-;;;  (sboo-minibuffer-config))
-;;;  (sboo-config-fonts))
-
-;;==============================================;;
-
 (when (require 'sboo-compilation nil :no-error)
 
   (sboo-compilation-init!)
@@ -1286,6 +1272,38 @@ Related:
 ;;     (add-hook 'text-mode-hook HOOK)))
 
 ;;==============================================;;
+;;; Builtin Packages: Buffers
+;;----------------------------------------------;;
+
+(use-package autorevert
+
+  :commands (auto-revert-mode)
+
+  :delight (auto-revert-mode " 🗘")
+  ;; ^ Shorten `auto-revert-modee'.
+
+  :config
+
+  ())
+
+;;==============================================;;
+
+(use-package uniquify
+
+  :custom
+
+  (uniquify-buffer-name-style 'forward
+                              "distinguish Synonyms Buffers (when two buffers are open with the same name, this makes it easier to tell them apart).")
+
+  :config ())
+
+;;==============================================;;
+;;; Builtin Packages: Windows
+;;----------------------------------------------;;
+
+;;==============================================;;
+;;; Builtin Packages: Filesystem
+;;----------------------------------------------;;
 
 (use-package dired
 
@@ -1385,63 +1403,99 @@ Related:
 
 (use-package find-dired
 
-    ;;---------------------------;;
-
     :commands (find-dired
                find-grep-dired
                find-name-dired)
 
-    ;;---------------------------;;
+    :custom
+
+    (find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld") "“By default Emacs will pass -exec to find and that makes it very slow. It is better to collate the matches and then use xargs to run the command.”")
 
     ;; :custom (find-dired- "" "only Files.")
 
-    ;;---------------------------;;
-
-    :config
-
-    ())
+    :config ())
 
 ;; ^ Links
 ;;
 ;; • URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired-and-Find.html'
+;; • URL `https://www.masteringemacs.org/article/working-multiple-files-dired'
+;;
+
+;;----------------------------------------------;;
+
+(use-package image-dired
+
+  :commands (image-dired)
+
+  :config ())
 
 ;;==============================================;;
-;; Completion:
+;;; Feature: Completion:
+;;----------------------------------------------;;
 
-(defvar sboo-abbrev-file
-
-  (condition-case _
-      (sboo-file "dabbrev/abbrev_defs.el")
-    ((void-function void-variable)
-     "~/.emacs.d/sboo/dabbrev/abbrev_defs.el"))
-
-  "Personal (version-controlled) `abbrev-file-name'.")
-
-;;----------------------------;;
-
-(use-package dabbrev
-
-  :delight (abbrev-mode " 👆")
-
-  :init
-
-  (let* ((DIRECTORY (file-name-directory sboo-abbrev-file))
-         )
-    (when (not (file-directory-p DIRECTORY))
-      (make-directory DIRECTORY :make-parent-directories)))
-
-  :custom
-
-  (abbrev-file-name sboo-abbrev-file "Personal `dabbrev' config.") ; Default: « "~/.emacs.d/abbrev_defs" ».
+(use-package minibuffer
 
   :config
 
-  (add-hook 'text-mode-hook #'abbrev-mode)
+  (add-to-list 'completion-styles 'substring nil)
 
-  (when (file-exists-p abbrev-file-name)
-    (quietly-read-abbrev-file))
+  (dolist (COMPLETER '(elisp-completion-at-point comint-dynamic-complete-filename))
+    (add-to-list 'completion-at-point-functions COMPLETER nil))
 
   ())
+
+;; ^ Notes:
+;;
+;; • « C-M-i » binds `complete-symbol', which tries
+;;   `completion-at-point-functions'.
+;;   « C-M-i » is the same as « M-C-i », which under « emacs -nw » is
+;;   the same as « M-<tab> ».
+;;
+
+;;==============================================;;
+
+(use-package dabbrev
+
+    :delight (abbrev-mode " 👆")
+
+    ;;----------------------------;;
+
+    :custom
+
+    (abbrev-file-name sboo-abbrev-file "Personal `dabbrev' config.") ; Default: « "~/.emacs.d/abbrev_defs" ».
+
+    ;;----------------------------;;
+
+    :preface
+
+    (defvar sboo-abbrev-file
+
+      (condition-case _
+          (sboo-file "dabbrev/abbrev_defs.el")
+        ((void-function void-variable)
+         "~/.emacs.d/sboo/dabbrev/abbrev_defs.el"))
+
+      "Personal (version-controlled) `abbrev-file-name'.")
+
+    ;;----------------------------;;
+
+    :init
+
+    (let* ((DIRECTORY (file-name-directory sboo-abbrev-file))
+           )
+      (when (not (file-directory-p DIRECTORY))
+        (make-directory DIRECTORY :make-parent-directories)))
+
+    ;;----------------------------;;
+
+    :config
+
+    (add-hook 'text-mode-hook #'abbrev-mode)
+
+    (when (file-exists-p abbrev-file-name)
+      (quietly-read-abbrev-file))
+
+    ())
 
 ;; ^ "`dabbrev'" abbreviates "Dynamic ABBREViation".
 
@@ -1452,8 +1506,9 @@ Related:
 ;;   • URL `https://www.emacswiki.org/emacs/AbbrevMode'
 ;;
 
+;;==============================================;;
+;;; Builtin Packages: Recent Files/Places:
 ;;----------------------------------------------;;
-;; Recent Files
 
 (defvar sboo-recentf-file
 
@@ -1492,9 +1547,7 @@ Notes:
 
   :config
 
-  (recentf-mode +1)
-
-  ())
+  (recentf-mode +1))
 
 ;; ^ "`recentf'" abbreviates "[RECENT] [F]iles".
 
@@ -1504,40 +1557,7 @@ Notes:
 ;;   • URL `'
 ;;
 
-;;----------------------------------------------;;
-;; Bookmarks
-
-(when (require 'sboo-bookmark nil :no-error)
-
-  (sboo-bookmark-init!)
-
-  (add-startup-hook! #'sboo-bookmark-config!))
-
-;; ^ Some bookmarking commands:
-;;
-;; ‘C-x r m’ – set a bookmark at the current location (e.g. in a file)
-;; ‘C-x r b’ – jump to a bookmark
-;; ‘C-x r l’ – list your bookmarks
-;; ‘M-x bookmark-delete’ – delete a bookmark by name
-;;
-;; Your personal bookmark file is defined by option ‘bookmark-default-file’, which defaults to `~/.emacs.d/bookmarks
-
-;;----------------------------------------------;;
-;; `uniquify'
-
-(use-package uniquify
-
-  :custom
-
-  (uniquify-buffer-name-style 'forward
-                              "distinguish Synonyms Buffers (when two buffers are open with the same name, this makes it easier to tell them apart).")
-
-  :config
-
-  ())
-
-;;----------------------------------------------;;
-;; `saveplace':
+;;==============================================;;
 
 (use-package saveplace
 
@@ -1547,11 +1567,12 @@ Notes:
 
   :config
 
-  (save-place-mode +1)
+  (save-place-mode +1))
 
-  ;; ^ `saveplace' remembers your Last Position for Re-Opened Files."
-
-  ())
+;; ^ `saveplace'
+;;
+;; • remembers your Last Position for Re-Opened Files.
+;;
 
 ;; ^ Save point position between sessions.
 ;;
@@ -1577,170 +1598,27 @@ Notes:
 ;; Save mode-line history between sessions.
 ;;
 
+;;==============================================;;
+;;; Builtin Packages: Bookmarks:
 ;;----------------------------------------------;;
 
-(use-package man
+(when (require 'sboo-bookmark nil :no-error)
 
-  :config
+  (sboo-bookmark-init!)
 
-  (set-face-attribute 'Man-overstrike nil :inherit font-lock-type-face    :bold      t)
-  (set-face-attribute 'Man-underline  nil :inherit font-lock-keyword-face :underline t)
+  (add-startup-hook! #'sboo-bookmark-config!))
 
-  ())
-
-;; (set-face-attribute 'Man-overstrike nil :inherit 'bold :foreground "orange red")
-;; (set-face-attribute 'Man-underline nil :inherit 'underline :foreground "forest green")
-
-;; Or to be theme agnostic:
-
-;; (set-face-attribute 'Man-overstrike nil :inherit font-lock-type-face :bold t)
-;; (set-face-attribute 'Man-underline nil :inherit font-lock-keyword-face :underline t)
-
-;;----------------------------------------------;;
-
-(use-package comint
-
-  :bind (:map comint-mode-map
-              ("<up>"   . comint-previous-matching-input-from-input)
-              ("<down>" . 'comint-next-matching-input-from-input)
-              )
-
-  :custom
-
-  (comint-scroll-to-bottom-on-output 'others "‘others’ means — “move ‘point’ down to track STDOUT only in ‘other-window’s (not in the ‘selected-window’).”")
-  (comint-scroll-to-bottom-on-input  'this   "‘this’ means — “move ‘point’ down if you type into the ‘selected-window’.”")
-
-  (comint-buffer-maximum-size 65536 "increase to « 2^16.")
-
-  :config
-
-  ())
-
-;; ^ NOTES
+;; ^ Some bookmarking commands:
 ;;
-;;   • `comint' is a Non-Package (?) Feature.
+;; ‘C-x r m’ – set a bookmark at the current location (e.g. in a file)
+;; ‘C-x r b’ – jump to a bookmark
+;; ‘C-x r l’ – list your bookmarks
+;; ‘M-x bookmark-delete’ – delete a bookmark by name
 ;;
+;; Your personal bookmark file is defined by option ‘bookmark-default-file’, which defaults to `~/.emacs.d/bookmarks
 
-;;----------------------------------------------;;
 
-(use-package find-dired
-
-  :commands (find-dired)
-
-  :custom
-
-  (find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld") "“By default Emacs will pass -exec to find and that makes it very slow. It is better to collate the matches and then use xargs to run the command.”")
-
-  :config ())
-
-;; ^ URL `https://www.masteringemacs.org/article/working-multiple-files-dired'
-
-;;----------------------------------------------;;
-
-(use-package image-dired
-
-  :commands (image-dired)
-
-  :config ())
-
-;; ^ 
-
-;;----------------------------------------------;;
-
-(use-package ediff
-
-  :commands (ediff-buffers ediff-current-file)
-
-  ;; mnemonic:
-  ;; • "s-r" — personal keymap for RUNNING stuff.
-  ;; • "=" — “whether two things are EQUAL.”
-
-  :bind (("s-r = B" . ediff-buffers3)
-         ("s-r = F" . ediff-files3)
-         ("s-r = P" . ediff-patch-buffer)
-         ("s-r = b" . ediff-buffers)
-         ("s-r = c" . compare-windows)
-         ("s-r = f" . ediff-files)
-         ("s-r = l" . ediff-regions-linewise)
-         ("s-r = m" . count-matches)
-         ("s-r = p" . ediff-patch-file)
-         ("s-r = r" . ediff-revision)
-         ("s-r = w" . ediff-regions-wordwise)
-         ("s-r = =" . ediff-files))
-
-  :custom
-
-  (ediff-window-setup-function 'ediff-setup-windows-plain "“Plain” means “no multiframe ediff”.")
-
-  :config
-
-  ())
-
-;;----------------------------------------------;;
-
-(use-package eldoc
-
-  :commands (eldoc-mode)
-
-  :delight (eldoc-mode " 👇")
-
-  :hook ((c-mode-common emacs-lisp-mode) . eldoc-mode)
-
-;;:custom
-
-  :config
-
-  ())
-
-;;----------------------------------------------;;
-
-(use-package sql
-
-  :commands (sql-postgres)
-
-  :config
-
-  (when (require 'sboo-sql nil :no-error)
-    ())
-
-  ())
-
-;;----------------------------------------------;;
-
-(use-package vc
-  :defer t
-
-  :custom
-
-  (vc-follow-symlinks t "don't ask when visiting a symbolic link to a version-controlled file (but do warn in the echo area).")
-
-  :config
-
-  ())
-
-;;----------------------------------------------;;
-
-(use-package outline
-  :defer t
-
-  :config ())
-
-;;----------------------------------------------;;
-
-(use-package calendar
-  :defer t
-
-  :commands (calendar)
-
-  :custom
-
-  (calendar-week-start-day 0 "“0 means Sunday, 1 means Monday, etc”")
-
-  :config
-
-  ())
-
-;;----------------------------------------------;;
+;;==============================================;;
 ;;; Builtin Packages: Shells / Terminals:
 ;;----------------------------------------------;;
 
@@ -1957,8 +1835,8 @@ Notes:
 ;;   • URL `http://ergoemacs.org/emacs/emacs_eww_web_browser.html'
 ;;
 
-;;----------------------------------------------;;
-;;; Builtin Packages: Spell-Checking:
+;;==============================================;;
+;;; Feature: Spell-Checking:
 ;;----------------------------------------------;;
 
 (defvar sboo-spelling-aspell-p
@@ -2151,7 +2029,7 @@ Links:
 ;;
 
 ;;----------------------------------------------;;
-;;; Internal Packages: Help --------------------;;
+;;; Builtin Packages: Help:
 ;;----------------------------------------------;;
 
 (use-package re-builder
@@ -2172,18 +2050,151 @@ Links:
 ;;   • URL `https://www.masteringemacs.org/article/re-builder-interactive-regexp-builder'
 ;;
 
-;;----------------------------------------------;;
-;;; Internal Packages: Settings ----------------;;
+;;==============================================;;
+;;; Builtin Packages: Miscellanea:
 ;;----------------------------------------------;;
 
-(progn
+(use-package man
 
-  (add-to-list 'auto-mode-alist '("Cask\\'" . emacs-lisp-mode))
+    :commands (man)
+
+    :config
+
+    (set-face-attribute 'Man-overstrike nil :inherit font-lock-type-face    :bold      t)
+    (set-face-attribute 'Man-underline  nil :inherit font-lock-keyword-face :underline t)
+
+    ())
+
+;; (set-face-attribute 'Man-overstrike nil :inherit 'bold :foreground "orange red")
+;; (set-face-attribute 'Man-underline nil :inherit 'underline :foreground "forest green")
+
+;; Or to be theme agnostic:
+
+;; (set-face-attribute 'Man-overstrike nil :inherit font-lock-type-face :bold t)
+;; (set-face-attribute 'Man-underline nil :inherit font-lock-keyword-face :underline t)
+
+;;----------------------------------------------;;
+
+(use-package comint
+
+  :bind (:map comint-mode-map
+              ("<up>"   . comint-previous-matching-input-from-input)
+              ("<down>" . 'comint-next-matching-input-from-input)
+              )
+
+  :custom
+
+  (comint-scroll-to-bottom-on-output 'others "‘others’ means — “move ‘point’ down to track STDOUT only in ‘other-window’s (not in the ‘selected-window’).”")
+  (comint-scroll-to-bottom-on-input  'this   "‘this’ means — “move ‘point’ down if you type into the ‘selected-window’.”")
+
+  (comint-buffer-maximum-size 65536 "increase to « 2^16.")
+
+  :config
+
+  ())
+
+;; ^ NOTES
+;;
+;;   • `comint' is a Non-Package (?) Feature.
+;;
+
+;;----------------------------------------------;;
+
+(use-package ediff
+
+  :commands (ediff-buffers ediff-current-file)
+
+  ;; mnemonic:
+  ;; • "s-r" — personal keymap for RUNNING stuff.
+  ;; • "=" — “whether two things are EQUAL.”
+
+  :bind (("s-r = B" . ediff-buffers3)
+         ("s-r = F" . ediff-files3)
+         ("s-r = P" . ediff-patch-buffer)
+         ("s-r = b" . ediff-buffers)
+         ("s-r = c" . compare-windows)
+         ("s-r = f" . ediff-files)
+         ("s-r = l" . ediff-regions-linewise)
+         ("s-r = m" . count-matches)
+         ("s-r = p" . ediff-patch-file)
+         ("s-r = r" . ediff-revision)
+         ("s-r = w" . ediff-regions-wordwise)
+         ("s-r = =" . ediff-files))
+
+  :custom
+
+  (ediff-window-setup-function 'ediff-setup-windows-plain "“Plain” means “no multiframe ediff”.")
+
+  :config
 
   ())
 
 ;;----------------------------------------------;;
-;;; Internal Packages: Utilities ---------------;;
+
+(use-package eldoc
+
+  :commands (eldoc-mode)
+
+  :delight (eldoc-mode " 👇")
+
+  :hook ((c-mode-common emacs-lisp-mode) . eldoc-mode)
+
+;;:custom
+
+  :config
+
+  ())
+
+;;----------------------------------------------;;
+
+(use-package sql
+
+  :commands (sql-postgres)
+
+  :config
+
+  (when (require 'sboo-sql nil :no-error)
+    ())
+
+  ())
+
+;;----------------------------------------------;;
+
+(use-package vc
+  :defer t
+
+  :custom
+
+  (vc-follow-symlinks t "don't ask when visiting a symbolic link to a version-controlled file (but do warn in the echo area).")
+
+  :config
+
+  ())
+
+;;----------------------------------------------;;
+
+(use-package outline
+  :defer t
+
+  :config ())
+
+;;----------------------------------------------;;
+
+(use-package calendar
+  :defer t
+
+  :commands (calendar)
+
+  :custom
+
+  (calendar-week-start-day 0 "“0 means Sunday, 1 means Monday, etc”")
+
+  :config
+
+  ())
+
+;;----------------------------------------------;;
+;;; Builtin Packages: Utilities:
 ;;----------------------------------------------;;
 
 (with-demoted-errors "[Warning] %s"
@@ -2201,6 +2212,18 @@ Links:
   (when (require 'sboo-comment nil :no-error)
 
     ()))
+
+;;----------------------------------------------;;
+;;; Builtin Effects:
+;;----------------------------------------------;;
+
+(progn
+
+  (add-to-list 'auto-mode-alist '("Cask\\'" . emacs-lisp-mode))
+
+  ())
+
+;;; EXTERNAL PACKAGES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;----------------------------------------------;;
 ;;; External Packages: Installation ------------;;

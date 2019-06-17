@@ -1,4 +1,4 @@
-;;; sboo-tool-bar.el --- Personal `toolbar' configuration -*- coding: utf-8; lexical-binding: t -*-
+;;; sboo-toolbar.el --- Personal Too-bar configuration -*- coding: utf-8; lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -27,7 +27,7 @@
 
 ;;; Commentary:
 
-;; Customize the appearence/behavior of the Tool-Bar.
+;; Customize the appearence/behavior of the Too-bar.
 ;; 
 ;; 
 
@@ -54,7 +54,7 @@
 
 (eval-when-compile
 
-  (defmacro sboo-tool-bar (menu-items &optional toolbar-map)
+  (defmacro sboo-toolbar (menu-items &optional toolbar-map)
 
     "toolbar-map.
 
@@ -70,7 +70,7 @@ Output:
 
 Example:
 
-• M-: (pp-macroexpand-expression (sboo-tool-bar ()))
+• M-: (pp-macroexpand-expression (sboo-toolbar ()))
     ⇒ 
 
 Related:
@@ -159,7 +159,7 @@ Related:
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
-(defvar sboo-tool-bar-map
+(defvar sboo-toolbar-map
 
   (when (keymapp tool-bar-map)
 
@@ -208,7 +208,7 @@ Add some Icons/Commands to the standard Tool Bar.")
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
-(defun sboo-tool-bar-setup ()
+(defun sboo-toolbar-setup ()
 
   "Extend `tool-bar-map'."
 
@@ -384,6 +384,6 @@ Add some Icons/Commands to the standard Tool Bar.")
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
 
-(provide 'sboo-tool-bar)
+(provide 'sboo-toolbar)
 
-;;; sboo-tool-bar.el ends here
+;;; sboo-toolbar.el ends here

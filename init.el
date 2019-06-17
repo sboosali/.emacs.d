@@ -1,20 +1,35 @@
-;;; init.el --- SBoo's Emacs Configuration -*- lexical-binding: t -*-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; init.el --- Personal configuration -*- coding: utf-8; lexical-binding: t -*-
 
-(package-initialize)
+;;; Commentary:
 
-(setq package-enable-at-startup nil)
+;;; Code:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Setup ---------------------------------------;;
+;;----------------------------------------------;;
+
+(setq load-prefer-newer t)
+
+;; ^ never accidentally `load' outdated (byte-compiled) files.
+
+;;----------------------------------------------;;
+
+(progn
+  (package-initialize)
+  (setq package-enable-at-startup nil))
+
+;;----------------------------------------------;;
 
 ;;(setq debug-on-error t);;TODO environment-variable
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
 
 ;;(when (boundp 'user-init-file) (find-file user-init-file))
 ;; ^ for Debugging
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Configuration -------------------------------;;
+;;----------------------------------------------;;
 
 (let* ((EmacsDirectory (or user-emacs-directory
 			   "~/.emacs.d/"))
@@ -30,12 +45,16 @@
     (with-demoted-errors "[Warning] %s" (find-file SbooFile))
     (load SbooFile nil nil t t)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Teardown ------------------------------------;;
+;;----------------------------------------------;;
 
 (setq debug-on-error nil)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Customization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; init.el ends here
+
+;;----------------------------------------------;;
+;; Customization -------------------------------;;
+;;----------------------------------------------;;
 (put 'scroll-left 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)

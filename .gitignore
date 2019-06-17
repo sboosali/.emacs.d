@@ -92,6 +92,11 @@ transient/history.el
 
 image-dired/
 
+# `flymake` / `flycheck`:
+
+flymake_*
+flycheck_*
+
 ########################################
 # Miscellaneous
 # (miscellaneous state, stored in .emacs.d/ by default)

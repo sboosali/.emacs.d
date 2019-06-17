@@ -26,7 +26,7 @@
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
-(defvar sboo-tool-bar-map
+(defvar sboo-toolbar-map
 
   (when (keymapp tool-bar-map)
 
@@ -91,4 +91,4 @@ Add some Icons/Commands to the standard Tool Bar.")
 
 ;; 
 ;;----------------------------------------------;;
-(provide 'sboo-tool-bar)
+(provide 'sboo-toolbar)
