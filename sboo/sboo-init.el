@@ -719,7 +719,7 @@ Related:
 ;;----------------------------------------------;;
 
 (when (require 'sboo-menubar nil :no-error)
-;;(setq menu-bar-map sboo-menubar-map)
+  (sboo-menubar-setup)
   ())
 
 ;;----------------------------------------------;;
