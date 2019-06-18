@@ -39,35 +39,41 @@
 
 ;; Builtins:
 
-(eval-when-compile 
+(eval-when-compile
   (require 'pcase)
   (require 'cl-lib))
+
+;;----------------------------------------------;;
 
 (progn
   (require 'seq))
 
 ;;==============================================;;
 
-(progn
-  (require 'company))
+(require 'company)
 
 ;;----------------------------------------------;;
-;; Utilities: ----------------------------------;;
+;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 
-;; (defun sboo-company/register-backends (variable value)
-;;   "Register `sboo-company-backends'."
-;;   (setq company-backends sboo-company-backends))
+(defun sboo-company/customization-changed (variable value)
 
-;; (defun cwm--set-and-recenter-windows (var val)
-;;   "Set customizable variable VAR to VAL and recenter windows.
-;; All windows in all frames are recentered.
-;; This is intended for use as the `setfunction' of a
-;; `defcustom'. See Info node `(elisp) Variable Definitions'."
-;;   (set-default var val)
-;;   (dolist (frame (frame-list))
-;;     (with-selected-frame frame
-;;       (cwm-center-windows))))
+  "Callback handling a `sboo-company' customization being changed.
+
+Effects:
+
+• Set VARIABLE to VALUE,
+• Register the VALUE with `company'.
+• Reload `company-mode' (TODO)."
+
+  (set-default variable value)
+
+  (pcase variable
+
+    ('sboo-company-backends (sboo-company-register-backends))
+    ('sboo-company-frontends (sboo-company-register-frontends))
+
+    (_ ())))
 
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
@@ -75,10 +81,11 @@
 
 (defgroup sboo-company nil
 
-  "Personal `company' customization."
+  "Personal `company'."
 
   :prefix 'sboo
-  :group 'sboo)
+  :group 'sboo
+  :group 'company)
 
 ;;==============================================;;
 
@@ -124,7 +131,7 @@ any Company Backend in an earlier group).
 
   :type '(repeat (function :tag "Company Backend"))
 
-  ;; :set #'sboo-company/register-backends
+  :set #'sboo-company/customization-changed
 
   :safe #'listp
   :group 'sboo-company)
@@ -145,8 +152,10 @@ a `listp' of `functionp's."
 
   :type '(repeat (function :tag "Company Frontend"))
 
+  :set #'sboo-company/customization-changed
+
   :safe #'listp
-  :group 'sboo)
+  :group 'sboo-company)
 
 ;;----------------------------------------------;;
 ;; Company Backends ----------------------------;;
@@ -157,15 +166,14 @@ a `listp' of `functionp's."
 
   "Setup `company-mode' for `text-mode' deriveés."
 
-  (add-to-list (make-local-variable 'company-backends)
-               #'company-ispell)
+  (make-local-variable 'company-backends)
+  (add-to-list 'company-backends #'company-ispell :append)
 
-  ;; ^ the `company-ispell' backend completes words.
+  ;; ^ the `company-ispell' backend completes (natural-language) words.
 
-  (setq company-ispell-dictionary (file-truename "~/.emacs.d/misc/english-words.txt"))
+  (setq-local company-ispell-dictionary (sboo-data-file "english-words.txt"))
 
-  ;; OPTIONAL, if `company-ispell-dictionary' is nil, `ispell-complete-word-dict' is used
-  ;;  but I prefer hard code the dictionary path. That's more portable.
+  ;; ^ “if `company-ispell-dictionary' is nil, `ispell-complete-word-dict' is used but I prefer hard code the dictionary path. That's more portable.”
 
   ())
 
@@ -319,8 +327,14 @@ URL `http://blog.binchen.org/posts/emacs-auto-completion-for-non-programmers.htm
 ;;----------------------------------------------;;
 
 (defun sboo-company-register-backends ()
-  "Register `sboo-company-backends'."
+  "Register `sboo-company-backends' with `company-backends'."
   (setq company-backends sboo-company-backends))
+
+;;----------------------------------------------;;
+
+(defun sboo-company-register-frontends ()
+  "Register `sboo-company-frontends' with `company-frontends'."
+  (setq company-frontends sboo-company-frontends))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

@@ -1,0 +1,22 @@
+# -*- mode: snippet -*-
+#
+# key         : defgroup/sboo
+# name        : [sboo] personal « defgroup » declaration.
+#
+# type        : snippet
+# condition   : (let ((KEY "defgroup/sboo")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 4) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+(defgroup sboo-${1:`(sboo-yas-get-sboo-namespace)`} nil
+
+  "Personal ‘$1’."
+
+  :prefix 'sboo
+  :group 'sboo
+  :group '$1)
+
+;;==============================================;;

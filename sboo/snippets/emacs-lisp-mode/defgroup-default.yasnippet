@@ -7,11 +7,11 @@
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
 # --
-(defgroup ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name} nil
+(defgroup ${1:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`} nil
 
   "Customize ‘$1’."
 
-  :prefix '$2
-  :group '${2:sboo})
+  :prefix '$1
+  :group '$2)
 
 ;;==============================================;;

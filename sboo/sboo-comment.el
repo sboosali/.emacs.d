@@ -243,7 +243,7 @@ Defaults to `sboo-comment-default-h1-infix-char'.")
 
   '(
 
-    (lisp-mode             . ";;")
+    (lisp-mode             . ";;;")
     (emacs-lisp-mode       . lisp-mode)
     (scheme-mode           . lisp-mode)
     (lisp-interaction-mode . lisp-mode)

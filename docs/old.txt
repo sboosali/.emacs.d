@@ -10311,9 +10311,6 @@ Effects:
 ;; ^ Thus, both « M-; » and « M-S-; » are identical.
 ;;   NOTE shadows `eval-expression', but `eval-expression' has been bound to « <f11> ».
 
-========================================================================
-
-
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
@@ -10342,38 +10339,289 @@ Effects:
 ;;----------------------------------------------;;
 
 
+========================================================================
+
+(defun menu-bar-update-buffers (&optional force)
+  ;; If user discards the Buffers item, play along.
+  (and (lookup-key (current-global-map) [menu-bar buffer])
+       (or force (frame-or-buffer-changed-p))
+       (let ((buffers (buffer-list))
+	     (frames (frame-list))
+	     buffers-menu)
+
+	 ;; Make the menu of buffers proper.
+	 (setq buffers-menu
+               (let ((i 0)
+                     (limit (if (and (integerp buffers-menu-max-size)
+                                     (> buffers-menu-max-size 1))
+                                buffers-menu-max-size most-positive-fixnum))
+                     alist)
+		 ;; Put into each element of buffer-list
+		 ;; the name for actual display,
+		 ;; perhaps truncated in the middle.
+                 (while buffers
+                   (let* ((buf (pop buffers))
+                          (name (buffer-name buf)))
+                     (unless (eq ?\s (aref name 0))
+                       (push (menu-bar-update-buffers-1
+                              (cons buf
+				    (if (and (integerp buffers-menu-buffer-name-length)
+					     (> (length name) buffers-menu-buffer-name-length))
+					(concat
+					 (substring
+					  name 0 (/ buffers-menu-buffer-name-length 2))
+					 "..."
+					 (substring
+					  name (- (/ buffers-menu-buffer-name-length 2))))
+				      name)
+                                    ))
+                             alist)
+                       ;; If requested, list only the N most recently
+                       ;; selected buffers.
+                       (when (= limit (setq i (1+ i)))
+                         (setq buffers nil)))))
+		 (list (menu-bar-buffer-vector alist))))
+
+	 ;; Make a Frames menu if we have more than one frame.
+	 (when (cdr frames)
+	   (let* ((frames-vec (make-vector (length frames) nil))
+                  (frames-menu
+                   (cons 'keymap
+                         (list "Select Frame" frames-vec)))
+                  (i 0))
+             (dolist (frame frames)
+               (aset frames-vec i
+                     (cons
+                      (frame-parameter frame 'name)
+                      `(lambda ()
+                         (interactive) (menu-bar-select-frame ,frame))))
+               (setq i (1+ i)))
+	     ;; Put it after the normal buffers
+	     (setq buffers-menu
+		   (nconc buffers-menu
+			  `((frames-separator "--")
+			    (frames menu-item "Frames" ,frames-menu))))))
+
+	 ;; Add in some normal commands at the end of the menu.  We use
+	 ;; the copy cached in `menu-bar-buffers-menu-command-entries'
+	 ;; if it's been set already.  Note that we can't use constant
+	 ;; lists for the menu-entries, because the low-level menu-code
+	 ;; modifies them.
+	 (unless menu-bar-buffers-menu-command-entries
+	   (setq menu-bar-buffers-menu-command-entries
+		 (list '(command-separator "--")
+		       (list 'next-buffer
+			     'menu-item
+			     "Next Buffer"
+			     'next-buffer
+			     :help "Switch to the \"next\" buffer in a cyclic order")
+		       (list 'previous-buffer
+			     'menu-item
+			     "Previous Buffer"
+			     'previous-buffer
+			     :help "Switch to the \"previous\" buffer in a cyclic order")
+		       (list 'select-named-buffer
+			     'menu-item
+			     "Select Named Buffer..."
+			     'switch-to-buffer
+			     :help "Prompt for a buffer name, and select that buffer in the current window")
+		       (list 'list-all-buffers
+			     'menu-item
+			     "List All Buffers"
+			     'list-buffers
+			     :help "Pop up a window listing all Emacs buffers"
+			     ))))
+	 (setq buffers-menu
+	       (nconc buffers-menu menu-bar-buffers-menu-command-entries))
+
+         ;; We used to "(define-key (current-global-map) [menu-bar buffer]"
+         ;; but that did not do the right thing when the [menu-bar buffer]
+         ;; entry above had been moved (e.g. to a parent keymap).
+	 (setcdr global-buffers-menu-map (cons "B\
+
+========================================================================
+
+(defun recentf-menu-customization-changed (variable value)
+  "Function called when the recentf menu customization has changed.
+Set VARIABLE with VALUE, and force a rebuild of the recentf menu."
+  (if (and (featurep 'recentf) (recentf-enabled-p))
+      (progn
+        ;; Unavailable until recentf has been loaded.
+        (recentf-hide-menu)
+        (set-default variable value)
+        (recentf-show-menu))
+    (set-default variable value)))
+
+;;
+
+(defcustom recentf-menu-title "Open Recent"
+  "Name of the recentf menu."
+  :group 'recentf
+  :type 'string
+  :set #'recentf-menu-customization-changed)
+
+(defcustom recentf-menu-path '("File")
+  "Path where to add the recentf menu.
+If nil add it at top level (see also `easy-menu-add-item')."
+  :group 'recentf
+  :type '(choice (const :tag "Top Level" nil)
+                 (sexp :tag "Menu Path"))
+  :set 'recentf-menu-customization-changed)
+
+;; 
+
+(defun recentf-show-menu ()
+  "Show the menu of recently opened files."
+  (easy-menu-add-item
+   (recentf-menu-bar) recentf-menu-path
+   (list recentf-menu-title :filter 'recentf-make-menu-items)
+   recentf-menu-before))
+
+(defun recentf-hide-menu ()
+  "Hide the menu of recently opened files."
+  (easy-menu-remove-item (recentf-menu-bar) recentf-menu-path
+                         recentf-menu-title))
+
+(defsubst recentf-menu-bar ()
+  "Return the keymap of the global menu bar."
+  (lookup-key global-map [menu-bar]))
 
 
+;;----------------------------------------------;;
+;; Utilities: ----------------------------------;;
+;;----------------------------------------------;;
+
+;; (defun sboo-company/register-backends (variable value)
+;;   "Register `sboo-company-backends'."
+;;   (setq company-backends sboo-company-backends))
+
+;; (defun cwm--set-and-recenter-windows (var val)
+;;   "Set customizable variable VAR to VAL and recenter windows.
+;; All windows in all frames are recentered.
+;; This is intended for use as the `setfunction' of a
+;; `defcustom'. See Info node `(elisp) Variable Definitions'."
+;;   (set-default var val)
+;;   (dolist (frame (frame-list))
+;;     (with-selected-frame frame
+;;       (cwm-center-windows))))
+
+;; (defun recentf-menu-customization-changed (variable value)
+;;   "Function called when the recentf menu customization has changed.
+;; Set VARIABLE with VALUE, and force a rebuild of the recentf menu."
+;;   (if (and (featurep 'recentf) (recentf-enabled-p))
+;;       (progn
+;;         ;; Unavailable until recentf has been loaded.
+;;         (recentf-hide-menu)
+;;         (set-default variable value)
+;;         (recentf-show-menu))
+;;     (set-default variable value)))
 
 
+(with-eval-after-load 'company
+
+  (pcase 'sboo-company-backends
+
+    ('sboo-company-backends (sboo-company-register-backends))
+    ('sboo-company-frontends (sboo-company-register-frontends))
+
+    (_ ())))
+
+(defun sboo-company/customization-changed (variable value)
+
+  "Callback handling a `sboo-company' customization being changed.
+
+Effects:
+
+• Set VARIABLE to VALUE,
+• Register the VALUE with `company'.
+• Reload `company-mode' (TODO)."
+
+  (set-default variable value)
+
+  (with-eval-after-load 'company
+
+    (pcase variable
+
+      ('sboo-company-backends (sboo-company-register-backends))
+      ('sboo-company-frontends (sboo-company-register-frontends))
+
+      (_ ()))))
 
 
 ========================================================================
 
-;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+========================================================================
 
-;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+========================================================================
 
-;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+========================================================================
 
-;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+========================================================================
 
-;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+========================================================================
 
-;;----------------------------------------------;;
 
-;;----------------------------------------------;;
+========================================================================
 
-;;----------------------------------------------;;
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
+========================================================================
+
+
 
 ========================================================================

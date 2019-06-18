@@ -1126,27 +1126,31 @@ Inputs:
 ;;==============================================;;
 ;; « s-<NUMBER> »
 
-(global-set-key (kbd "s-1") #'delete-other-windows)
-(global-set-key (kbd "s-2") #'split-window-below)
-(global-set-key (kbd "s-3") #'split-window-right)
-;;(global-set-key (kbd "s-4") #')
-;;(global-set-key (kbd "s-5") #')
-;;(global-set-key (kbd "s-6") #')
-;;(global-set-key (kbd "s-7") #')
-;;(global-set-key (kbd "s-8") #')
-;;(global-set-key (kbd "s-9") #')
-;;(global-set-key (kbd "s-0") #')
+(progn
 
-(global-set-key (kbd "s-!") #'delete-other-windows)
-(global-set-key (kbd "s-@") #'split-window-below)
-(global-set-key (kbd "s-#") #'split-window-right)
-;;(global-set-key (kbd "s-$") #')
-;;(global-set-key (kbd "s-%") #')
-;;(global-set-key (kbd "s-^") #')
-;;(global-set-key (kbd "s-&") #')
-;;(global-set-key (kbd "s-*") #')
-;;(global-set-key (kbd "s-(") #')
-;;(global-set-key (kbd "s-)") #')
+  (global-set-key (kbd "s-1") #'delete-other-windows)
+  (global-set-key (kbd "s-2") #'split-window-below)
+  (global-set-key (kbd "s-3") #'split-window-right)
+  ;;(global-set-key (kbd "s-4") #')
+  ;;(global-set-key (kbd "s-5") #')
+  ;;(global-set-key (kbd "s-6") #')
+  ;;(global-set-key (kbd "s-7") #')
+  ;;(global-set-key (kbd "s-8") #')
+  ;;(global-set-key (kbd "s-9") #')
+  ;;(global-set-key (kbd "s-0") #')
+
+  (global-set-key (kbd "s-!") #'delete-other-windows)
+  (global-set-key (kbd "s-@") #'split-window-below)
+  (global-set-key (kbd "s-#") #'split-window-right)
+  ;;(global-set-key (kbd "s-$") #')
+  ;;(global-set-key (kbd "s-%") #')
+  ;;(global-set-key (kbd "s-^") #')
+  ;;(global-set-key (kbd "s-&") #')
+  ;;(global-set-key (kbd "s-*") #')
+  (global-set-key (kbd "s-(") #'sboo-forward-defun)
+  (global-set-key (kbd "s-)") #'sboo-backward-defun)
+
+  ())
 
 ;;==============================================;;
 ;; « s-<LETTER> »

@@ -69,52 +69,68 @@
 ;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
 
-;; Builtins:
+;; builtins:
 
-(require 'cl-lib)
-(require 'pcase)
-
-;;
-
-;;----------------------------------------------;;
-;; Utilities -----------------------------------;;
-;;----------------------------------------------;;
-
-(defvar sboo-projectile/excluded-global-directories      '(".sboo" "tmp" "ignore" ".git" ".dropbox-dist" ".nixnote"))
-(defvar sboo-projectile/excluded-global-file-extensions  '("~" "#" "log"))
-(defvar sboo-projectile/excluded-global-file-names       '("TAGS" "tags" ".bash_history_eternal"))
+(eval-when-compile
+  (require 'pcase))
 
 ;;----------------------------------------------;;
 
-(defvar sboo-projectile/excluded-haskell-directories     '("dist" "dist-newstyle" "dist-dante" ".stack-work" ".cabal-sandbox"))
-(defvar sboo-projectile/excluded-haskell-file-extensions '("o" "hi" "chi" "chs.h"))
-(defvar sboo-projectile/excluded-haskell-file-names      '())
+(progn
+  (require 'cl-lib))
+
+;;==============================================;;
+
+(require 'projectile)
+
+;;----------------------------------------------;;
+;; Constants -----------------------------------;;
+;;----------------------------------------------;;
+
+(defconst sboo-projectile/excluded-global-directories      '(".sboo" "tmp" "ignore" ".git" ".dropbox-dist" ".nixnote"))
+(defconst sboo-projectile/excluded-global-file-extensions  '("~" "#" "log"))
+(defconst sboo-projectile/excluded-global-file-names       '("TAGS" "tags" ".bash_history_eternal"))
 
 ;;----------------------------------------------;;
 
-(defvar sboo-projectile/excluded-emacs-directories       '("db" "auto-save-list" "backups" "elpa" "eshell" "smex-items" "cask" ))
-(defvar sboo-projectile/excluded-emacs-file-extensions   '("elc" "window-layout"))
-(defvar sboo-projectile/excluded-emacs-file-names        '(".emacs.desktop" ".emacs.desktop.lock" "bookmarks" ".emacs.desktop..el" "bookmarks.el" "savehist.el" ".emacs-buffers" "places" "saved-places" "ido.last" "tramp" ".abbrev_defs" ".smex-items" ".yas-compiled-snippets.el"))
+(defconst sboo-projectile/excluded-haskell-directories     '("dist" "dist-newstyle" "dist-dante" ".stack-work" ".cabal-sandbox"))
+(defconst sboo-projectile/excluded-haskell-file-extensions '("o" "hi" "chi" "chs.h"))
+(defconst sboo-projectile/excluded-haskell-file-names      '())
+
+;;----------------------------------------------;;
+
+(defconst sboo-projectile/excluded-emacs-directories       '("db" "auto-save-list" "backups" "elpa" "eshell" "smex-items" "cask" ))
+(defconst sboo-projectile/excluded-emacs-file-extensions   '("elc" "window-layout"))
+(defconst sboo-projectile/excluded-emacs-file-names        '(".emacs.desktop" ".emacs.desktop.lock" "bookmarks" ".emacs.desktop..el" "bookmarks.el" "savehist.el" ".emacs-buffers" "places" "saved-places" "ido.last" "tramp" ".abbrev_defs" ".smex-items" ".yas-compiled-snippets.el"))
 
   ;;TODO `session.*` (prefix, not suffix)
 
 ;;----------------------------------------------;;
 
-(defvar sboo-projectile/excluded-nix-directories       '("result"))
-(defvar sboo-projectile/excluded-nix-file-extensions   '())
-(defvar sboo-projectile/excluded-nix-file-names        '())
+(defconst sboo-projectile/excluded-nix-directories       '("result"))
+(defconst sboo-projectile/excluded-nix-file-extensions   '())
+(defconst sboo-projectile/excluded-nix-file-names        '())
 
 ;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
+(defgroup sboo-projectile nil
+
+  "Customize ‘projectile’."
+
+  :prefix 'sboo
+  :group 'sboo
+  :group 'projectile)
+
+;;==============================================;;
+
 (defcustom sboo-projectile-excluded-directories
 
-  (append
-   sboo-projectile/excluded-global-directories      
-   sboo-projectile/excluded-haskell-directories     
-   sboo-projectile/excluded-emacs-directories       
-   sboo-projectile/excluded-nix-directories)
+  (append sboo-projectile/excluded-global-directories      
+          sboo-projectile/excluded-haskell-directories     
+          sboo-projectile/excluded-emacs-directories       
+          sboo-projectile/excluded-nix-directories)
 
   "Directories to exclude from `projectile' searches.
 
@@ -129,11 +145,10 @@ a `listp' of `stringp's."
 
 (defcustom sboo-projectile-excluded-file-names
 
-  (append
-   sboo-projectile/excluded-global-file-names      
-   sboo-projectile/excluded-haskell-file-names     
-   sboo-projectile/excluded-emacs-file-names       
-   sboo-projectile/excluded-nix-file-names)
+  (append sboo-projectile/excluded-global-file-names      
+          sboo-projectile/excluded-haskell-file-names     
+          sboo-projectile/excluded-emacs-file-names       
+          sboo-projectile/excluded-nix-file-names)
 
   "File basenames to exclude from `projectile' searches.
 
@@ -148,11 +163,10 @@ a `listp' of `stringp's."
 
 (defcustom sboo-projectile-excluded-file-extensions
 
-  (append
-   sboo-projectile/excluded-global-file-extensions      
-   sboo-projectile/excluded-haskell-file-extensions     
-   sboo-projectile/excluded-emacs-file-extensions       
-   sboo-projectile/excluded-nix-file-extensions)
+  (append sboo-projectile/excluded-global-file-extensions      
+          sboo-projectile/excluded-haskell-file-extensions     
+          sboo-projectile/excluded-emacs-file-extensions       
+          sboo-projectile/excluded-nix-file-extensions)
 
   "File extensions to exclude from `projectile' searches.
 
@@ -162,6 +176,24 @@ a `listp' of `stringp's."
 
   :safe #'listp
   :group 'sboo-projectile)
+
+;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-projectile/project-root ()
+
+  "Return the current project's name.
+ 
+=== Usage ===
+
+    (if (featurep 'projectile)
+        (sboo-projectile/project-root)
+      (...))"
+
+  (if (projectile-project-p)
+      (projectile-project-root)
+    default-directory))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

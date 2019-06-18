@@ -123,6 +123,35 @@ Examples:
 ;;
 
 ;;----------------------------------------------;;
+
+(defun sboo-yas-get-sboo-namespace (&optional name)
+
+  "Extract the namespace of a personal configuration file.
+
+Imput:
+
+• NAME — a `stringp'.
+  defaults to `buffer-file-name' or `buffer-name'.
+  a file's basename. 
+  heuristically, a leading “sboo-” is stripped.
+
+Output:
+
+• a `stringp'.
+
+Examples:
+
+• M-: (sboo-yas-get-sboo-namespace)
+     → \"yasnippets\")"
+
+  (let* ((FILENAME (or name (buffer-file-name) (buffer-name)))
+         (BASENAME (file-name-base FILENAME))
+         (NAME     (string-trim BASENAME "sboo-" nil))
+         )
+
+    NAME))
+
+;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 

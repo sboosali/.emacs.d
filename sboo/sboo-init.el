@@ -2599,7 +2599,11 @@ Links:
   (use-package company
     :load-path "vendored/company-mode"
 
-    :delight (company-mode " ©")
+ ;; :delight (company-mode " ©")
+
+    ;;------------------------;;
+
+    :commands (company-complete-common-or-cycle company-mode company-diag)
 
     ;;------------------------;;
 
@@ -2612,9 +2616,6 @@ Links:
 
     :custom
 
-    (company-backends  sboo-company-backends  "personal Company Backends.")
-    (company-frontends sboo-company-frontends "personal Company Frontends.")
-
     (company-show-numbers               t   "")
     (company-minimum-prefix-length      1   "minimum Prefix Length for Idle Completion.")
     (company-tooltip-align-annotations  t   "")
@@ -2623,6 +2624,11 @@ Links:
     ;;------------------------;;
 
     :config
+
+    (sboo-company/register-backends)
+    (sboo-company/register-frontends)
+
+    ;;------------------------;;
 
     (bind-key [remap completion-at-point] #'company-complete company-mode-map)
 
@@ -2718,7 +2724,7 @@ Links:
 
   (use-package yasnippet
 
-    :demand 5
+    :demand
 
     :commands (snippet-mode yas-insert-snippet yas-next-field-or-maybe-expand)
 
