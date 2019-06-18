@@ -675,7 +675,13 @@
 
 ;;----------------------------------------------;;
 
+(setq use-empty-active-region nil)
+
+;;----------------------------------------------;;
+
 (progn
+
+  (setq use-empty-active-region nil)
 
   (setq search-default-mode #'char-fold-to-regexp) ; for ‘isearch’.
 

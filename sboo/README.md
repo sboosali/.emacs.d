@@ -146,6 +146,7 @@ most have *Minimal Dependencies*, either:
 * `list-utils.el` — *v0.4.4*
 * `memoize.el`    — *v*
 * `let-alist.el`  — *v*
+* `transient`     — for `magit`. <https://magit.vc/manual/transient>
 
 Miscellaneous *Vendored Libraries* (which are useful, but used infrequently) include:
 

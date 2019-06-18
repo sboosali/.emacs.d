@@ -53,6 +53,16 @@
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
+(defgroup sboo-align nil
+
+  "Customize ‘align’."
+
+  :prefix 'sboo
+  :group 'sboo
+  :group 'align)
+
+;;==============================================;;
+
 (defvar sboo-align/rules
 
   (list '(text-column-whitespace
@@ -65,6 +75,18 @@
   "`align-rules-list' extensions.
 
 a `listp' of Alignment-Rules.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-align/history-list nil
+
+  "History for `align' commands.
+
+a `listp' of `stringp's.
+
+Related:
+
+• `align-regexp-history'")
 
 ;;----------------------------------------------;;
 ;; Functions -----------------------------------;;
@@ -115,6 +137,32 @@ Related:
 
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-align-regexp (beg end regexp)
+
+  "`align-regexp'."
+
+  (interactive (list
+                (region-beginning)
+                (region-end)
+                (read-string "Align regexp: " nil 'sboo-align/history-list)))
+
+  (align-regexp beg end regexp 0 align-default-spacing t))
+
+;;----------------------------------------------;;
+
+(defun sboo-align (beg end)
+
+  "Align the region or block."
+
+  (interactive "*r")
+
+  (let* ((HISTORY 'sboo-align/history-list)
+         )
+
+    (align beg end)))
+
 ;;----------------------------------------------;;
 
 (defun sboo-align-code (beg end &optional arg)

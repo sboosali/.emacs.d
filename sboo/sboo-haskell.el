@@ -1,4 +1,4 @@
-;;; sboo-haskell.el --- -*- coding: utf-8; lexical-binding: t -*-
+;;; sboo-haskell.el --- My Haskell config -*- coding: utf-8; lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -60,7 +60,7 @@
   (require 'cl-lib))
 
 ;;----------------------------------------------;;
-;; Customization -------------------------------;;
+;; Customize -----------------------------------;;
 ;;----------------------------------------------;;
 
 (defgroup sboo-haskell nil
@@ -324,14 +324,14 @@ Extends `haskell-font-lock-quasi-quote-modes'."
 
   "Hooks for `haskell-mode'.
 
-Zero-or-more function-symbols."
+a `listp' of `functionp's."
 
   :type '(repeat (function))
 
   :safe #'listp
   :group 'sboo-haskell)
 
-;;; sub word mode lets you navigate (e.g. M-b) between "sub words" of a camelcased word
+;; ^ `subword-mode' lets you navigate (e.g. M-b) between "sub words" of a camelcased word.
 
 ;;----------------------------------------------;;
 

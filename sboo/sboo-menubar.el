@@ -86,7 +86,10 @@ Links:
   (let* ()
 
     (define-key menu-bar-search-menu [search-forward]
-      '(menu-item "Find next String…" isearch-forward :help "« M-x isearch-forward »"))
+      '(menu-item "🔎 Find next String…" isearch-forward :help "« M-x isearch-forward »"))
+
+    (define-key menu-bar-search-menu [search-backward]
+      '(menu-item "🔎 Find prior String…" isearch-backward :help "« M-x isearch-backward »"))
 
     ()))
 

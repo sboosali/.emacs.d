@@ -17,13 +17,6 @@
 
     helm                ;;TODO;; (helm . "3.0")
 
-    dash
-    s
-    f
-
-    haskell-mode
-    yasnippet
-    projectile
    )
 
   "Packages which **must** to be installed.
@@ -40,6 +33,14 @@ These packages should also be vendored, for reliability.")
     dante
 
     flycheck
+
+    dash
+    s
+    f
+
+    haskell-mode
+    yasnippet
+    projectile
    )
 
   "Packages which **should** to be installed.

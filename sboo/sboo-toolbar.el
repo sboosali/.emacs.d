@@ -178,16 +178,6 @@ Related:
                            ;; ^ enable only for `prog-mode' Major Modes.
                            )
 
-      ;; (tool-bar-local-item "right-arrow"
-      ;;                      #'
-      ;;                      '
-      ;;                      MAP
-      ;;                      :label  "Forward"
-      ;;                      :help   "« M-x  »"
-      ;;                      :enable t
-      ;;                      :rtl    "left-arrow"
-      ;;                      )
-
       (tool-bar-local-item "left-arrow"
                            #'pop-global-mark
                            'pop-global-mark
@@ -197,6 +187,16 @@ Related:
                            :enable t
                            :rtl    "right-arrow"
                            )
+
+      ;; (tool-bar-local-item "right-arrow"
+      ;;                      #'
+      ;;                      '
+      ;;                      MAP
+      ;;                      :label  "Forward"
+      ;;                      :help   "« M-x  »"
+      ;;                      :enable t
+      ;;                      :rtl    "left-arrow"
+      ;;                      )
 
       MAP))
 

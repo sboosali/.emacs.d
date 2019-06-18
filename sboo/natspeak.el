@@ -50,12 +50,20 @@
   (require 'cl-lib))
 
 ;;----------------------------------------------;;
+;; Constants -----------------------------------;;
+;;----------------------------------------------;;
+
+(defconst natspeak-dns-version "15"
+
+  "Version of “Dragon NaturallySpeaking”.")
+
+;;----------------------------------------------;;
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
 (defgroup natspeak nil
 
-  "Customize ‘natspeak’."
+  "Customize “Dragon NaturallySpeaking”."
 
   :prefix 'natspeak
   :group 'accessibility)
@@ -66,7 +74,59 @@
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
+;;----------------------------------------------;;
+;; Mode ----------------------------------------;;
+;;----------------------------------------------;;
 
+(defvar natspeak-mode-map
+
+  (let ((MAP (make-sparse-keymap)))
+
+    (define-key MAP (kbd "q") #'turn-off-natspeak-mode)
+
+    MAP)
+
+  "`keymapp' for `natspeak-mode'.")
+
+;;----------------------------------------------;;
+
+(define-minor-mode natspeak-mode-map
+
+    "Minor Mode for dictation.
+
+=== Keybindings ===
+
+\\{natspeak-mode-map}"
+
+  :lighter " Natspeak"
+
+  :keymap natspeak-mode-map
+
+  :group 'natspeak
+
+  :init-value t
+
+  (if (bound-and-true-p natspeak-mode)
+
+      (progn
+        )
+
+    (progn
+      )))
+
+;;----------------------------------------------;;
+
+(defun turn-on-natspeak-mode ()
+  "Enable `natspeak-mode'."
+  (interactive)
+  (natspeak-mode +1))
+
+;;----------------------------------------------;;
+
+(defun turn-off-natspeak-mode ()
+  "Disable `natspeak-mode'."
+  (interactive)
+  (natspeak-mode -1))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

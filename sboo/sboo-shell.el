@@ -1,29 +1,111 @@
-;;; -*- lexical-binding: t -*-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; sboo-shell.el --- My Shell/Term config -*- coding: utf-8; lexical-binding: t -*-
 
-(require 'rx)
+;; Copyright © 2019 Spiros Boosalis
 
-(require 'dirtrack)
+;; Version: 0.0.0
+;; Package-Requires: ((emacs "25"))
+;; Author:  Spiros Boosalis <samboosalis@gmail.com>
+;; Homepage: https://github.com/sboosali/.emacs.d
+;; Keywords: local
+;; Created: 17 Jun 2019
+;; License: GPL-3.0-or-later
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; `comint' ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This file is not part of GNU Emacs.
+;;
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(setq comint-scroll-to-bottom-on-input t)
+;;; Commentary:
 
-;; ^ non-`nil' = insertion and yank commands scroll the selected window to the bottom before inserting.
+;; Personal configuration for Terminals / Shell.
+;; 
+;; 
 
-(setq comint-input-ignoredups t)
+;;; Code:
 
-;; ^ whether successive identical inputs are stored in the input history.
+;;----------------------------------------------;;
+;; Imports -------------------------------------;;
+;;----------------------------------------------;;
 
-(setq comint-completion-addsuffix t) 
+;; builtins:
 
-;; ^ whether completion inserts a space or a slash after a fully-completed file or directory (respectively).
+(eval-when-compile
+  (require 'rx))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; `shell' ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+
+(progn
+  (require 'dirtrack)
+  (require 'cl-lib))
+
+;;----------------------------------------------;;
+;; Customize -----------------------------------;;
+;;----------------------------------------------;;
+
+(defgroup sboo-shell nil
+
+  "Personal Shell Mode customization."
+
+  :prefix 'shell
+
+  :group 'shell
+  :group 'sboo)
+
+;;----------------------------------------------;;
+
+(defgroup sboo-term nil
+
+  "Personal Term Mode customization."
+
+  :prefix 'term
+
+  :group 'term
+  :group 'sboo)
+
+;;==============================================;;
+
+(defcustom sboo-shell-hooks-list
+
+  (list #'superword-mode
+        )
+
+  "Hooks for `shell-mode'.
+
+a `listp' of `functionp's."
+
+  :type '(repeat (function))
+
+  :safe #'listp
+  :group 'sboo-shell)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-term-hooks-list
+
+  (list ;; #'sboo-local-unset-tab
+        #'superword-mode
+        )
+
+  "Hooks for `term-mode'.
+
+a `listp' of `functionp's."
+
+  :type '(repeat (function))
+
+  :safe #'listp
+  :group 'sboo-term)
+
+;;----------------------------------------------;;
 
 (defvar sboo-path-regexp
 
@@ -31,6 +113,8 @@
       (zero-or-more (not (any "$"))))
 
    "Regular expression (fragment) matching a (POSIX) filepath.")
+
+;;----------------------------------------------;;
 
 (defvar sboo-prompt-regexp
 
@@ -51,17 +135,32 @@ e.g. Prompt \"~/.emacs.d$ \" holds directory \"~/.emacs.d\".")
 
 ;; ^ e.g. matches this command prompt
 
-(setq dirtrack-list (list sboo-prompt-regexp 0))
+;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
 
-(add-hook 'shell-mode-hook #'dirtrack-mode)
+(defun sboo-process-disable-query-on-exit () 
 
-;; ^ `dirtrack' tracks the working directory from the command prompt
+  "Disable the `query-on-exit' flag.
 
-(setq shell-completion-fignore '("~" "#" "%"))
+=== Usage ===
 
-;; ^ filename extensions to ignore during completion.
+e.g.:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    (dolist (HOOK '(comint-exec-hook term-exec-hook)
+      (add-hook HOOK #'sboo-process-disable-query-on-exit))
+
+    ;; ^ Don't ask when quitting shells & terminals.
+
+=== Links ===
+
+URL `https://stackoverflow.com/questions/2706527/make-emacs-stop-asking-active-processes-exist-kill-them-and-exit-anyway'"
+
+  (when-let* ((CURRENT-PROCESS (get-buffer-process (current-buffer))))
+    (when (processp CURRENT-PROCESS)
+      (set-process-query-on-exit-flag CURRENT-PROCESS nil))))
+
+;;----------------------------------------------;;
 
 (defun sboo-local-unset-tab ()
  
@@ -69,36 +168,34 @@ e.g. Prompt \"~/.emacs.d$ \" holds directory \"~/.emacs.d\".")
 
   (local-unset-key (kbd "<tab>")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;----------------------------------------------;;
+;; Notes ---------------------------------------;;
+;;----------------------------------------------;;
 
-;;; `comint-mode'
+;; `comint-mode':
 ;;
-;; `comint' abbreviates "COMmand INTerpreter".
-;;
-;; 
+;; • `comint' abbreviates "COMmand INTerpreter".
 ;;
 
-;;; `dirtrack-mode'
+;; `dirtrack-mode':
 ;;
-;; 
-;;
-
-;;; `rx'
-;;
-;; 
+;; • 
 ;;
 
-;;; Links
+;; ^ Links:
 ;;
-;; - https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Options.html
-;; - https://www.gnu.org/software/emacs/manual/html_node/emacs/Completion.html
-;; - https://www.gnu.org/software/emacs/manual/html_node/emacs/Directory-Tracking.html
-;; - https://emacs.stackexchange.com/questions/5589/automatically-update-default-directory-when-pwd-changes-in-shell-mode-and-term-m
-;; - https://snarfed.org/why_i_run_shells_inside_emacs
-;; - https://francismurillo.github.io/2017-03-30-Exploring-Emacs-rx-Macro/ 
-;; - 
+;;   • URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Options.html'
+;;   • URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Completion.html'
+;;   • URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Directory-Tracking.html'
+;;   • URL `https://emacs.stackexchange.com/questions/5589/automatically-update-default-directory-when-pwd-changes-in-shell-mode-and-term-m'
+;;   • URL `https://snarfed.org/why_i_run_shells_inside_emacs'
+;;   • URL `https://francismurillo.github.io/2017-03-30-Exploring-Emacs-rx-Macro/ '
+;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'sboo-shell) 
+;;----------------------------------------------;;
+;; EOF -----------------------------------------;;
+;;----------------------------------------------;;
+
+(provide 'sboo-shell)
+
+;;; sboo-shell.el ends here

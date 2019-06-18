@@ -18,6 +18,8 @@
   (package-initialize)
   (setq package-enable-at-startup nil))
 
+;; ^ `package'.el
+
 ;;----------------------------------------------;;
 
 ;;(setq debug-on-error t);;TODO environment-variable

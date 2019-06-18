@@ -83,13 +83,13 @@ Related:
 
 (defconst sboo-environment-variable-install "EMACS_INSTALL"
 
-  "See `sboo-install-p'.
+  "See `sboo-get-installation-method'.
 
 Example Usage: « $ EMACS_INSTALL=t emacs ».")
 
 ;;----------------------------------------------;;
 
-(defun sboo-install-p ()
+(defun sboo-get-installation-method ()
 
   "Whether to install packages. (TODO and how to install them).
 
@@ -112,9 +112,9 @@ Example Usage: « $ EMACS_INSTALL=t emacs ».")
 (defun sboo-install-submodules-p ()
   "Whether to load the `sboo-critical-packages' from vendored submodules.
 
-Wraps `sboo-install-p'."
+Wraps `sboo-get-installation-method'."
 
-  (pcase (sboo-install-p)
+  (pcase (sboo-get-installation-method)
 
       ('submodules   t)
       (_           nil)))

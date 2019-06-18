@@ -204,7 +204,7 @@
 
 (defconst sboo-environment-variable-install "SBOO_EMACS_INSTALL"
 
-  "See `sboo-install-p'.
+  "See `sboo-get-installation-method'.
 
   Example Usage: « $ SBOO_EMACS_INSTALL=t emacs ».")
 
@@ -244,7 +244,7 @@
 
 ;;----------------------------------------------;;
 
-(defvar sboo-install-p
+(defvar sboo-get-installation-method
 
   (let ((*value* (getenv sboo-environment-variable-install)))
     (pcase *value*

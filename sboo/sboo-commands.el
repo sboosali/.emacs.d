@@ -38,6 +38,8 @@
 ;;
 ;;
 
+;;; Code:
+
 ;;----------------------------------------------;;
 ;; Imports -------------------------------------;;
 ;;----------------------------------------------;;
@@ -610,7 +612,7 @@ Inputs:
 
 Effects:
 
-• Move `point' — to next `sboo-page-or-header-regexp'.
+• Move `point' — to next `sboo-page-or-elisp-header-regexp'.
 
 Related:
 
@@ -620,7 +622,7 @@ Related:
   (interactive "P")
 
   (let* ((COUNT  (or count +1))
-         (REGEXP (sboo-page-or-header-regexp))
+         (REGEXP (sboo-page-or-elisp-header-regexp))
          )
     (progn
 
@@ -645,7 +647,7 @@ Inputs:
 
 Effects:
 
-• Move `point' — to prior `sboo-page-or-header-regexp'.
+• Move `point' — to prior `sboo-page-or-elisp-header-regexp'.
 
 Related:
 
@@ -654,7 +656,7 @@ Related:
   (interactive "P")
 
   (let* ((COUNT  (or count +1))
-         (REGEXP (sboo-page-or-header-regexp))
+         (REGEXP (sboo-page-or-elisp-header-regexp))
          )
     (progn
 
@@ -665,14 +667,14 @@ Related:
 
 ;;==============================================;;
 
-(defun sboo-page-or-header-regexp ()
+(defun sboo-page-or-elisp-header-regexp ()
 
-  "Accessor for `sboo-page-or-header-regexp'."
+  "Accessor for `sboo-page-or-elisp-header-regexp'."
 
   (let* ()
 
     (if (parent-mode-is-derived-p major-mode 'emacs-lisp-mode)
-        sboo-page-or-header-regexp
+        sboo-page-or-elisp-header-regexp
       sboo-page-regexp)))
 
 ;;----------------------------------------------;;

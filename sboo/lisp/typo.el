@@ -2,8 +2,9 @@
 
 ;; Copyright (C) 2012 Jorgen Schaefer
 
-;; Version: 1.1
-;; Author: Jorgen Schaefer <forcer@forcix.cx>
+;; Version: 1.2
+;; Author: 2012 Jorgen Schaefer <forcer@forcix.cx>
+;;         2019 Sam Boosalis <samboosalis@gmail.com>
 ;; URL: https://github.com/jorgenschaefer/typoel
 ;; Created: 6 Feb 2012
 ;; Keywords: convenience, wp
@@ -83,14 +84,6 @@
 ;; Check the mode’s documentation for more details.
 
 ;;; Code:
-
-;; For some reason, Emacs default has these as parentheses. This is
-;; completely confusing when mixing this with normal parentheses,
-;; and gets e.g. the following code wrong, even. Punctuation syntax
-;; results in much more intuitive behavior.
-(modify-syntax-entry ?» ".")
-(modify-syntax-entry ?« ".")
-;; Sorry for the intrusion.
 
 (defgroup typo nil
   "*Typography mode for Emacs"

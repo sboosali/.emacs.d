@@ -27,6 +27,15 @@
 ;; • `use-package' declarations.
 ;; • `require'-ing « sboo-* » `featurep's.
 ;;
+;; Symbol Naming:
+;;
+;; • « sboo-* » — most functions/variables are namespaced under ‘sboo’.
+;;
+;; File Naming:
+;;
+;; • « sboo-init-* » — execute effects, should be `load'ed.
+;; • « sboo-* » — only define functions/variables, should be `require'd.
+;;
 ;; 
 
 ;;; Code:
@@ -1018,6 +1027,18 @@ Related:
 
 ;;----------------------------------------------;;
 
+(use-package sh-script
+
+    ;;--------------------------;;
+
+    :hook (sh-mode . flycheck-mode)
+
+    ;; ^ ShellCheck (a Bash Linter) is a builtin FlyCheck checker.
+
+    :config ())
+
+;;==============================================;;
+
 (use-package checkdoc
 
   :custom
@@ -1101,7 +1122,7 @@ Related:
 
     ())
 
-;;==============================================;;
+;;----------------------------------------------;;
 
 (use-package align
 
@@ -1507,6 +1528,255 @@ Related:
 ;;
 
 ;;==============================================;;
+;;; Builtin Packages: Shells / Terminals:
+;;----------------------------------------------;;
+
+(use-package comint
+
+  ;;--------------------------;;
+
+  :bind (:map comint-mode-map
+              ("<up>"   . comint-previous-matching-input-from-input)
+              ("<down>" . 'comint-next-matching-input-from-input)
+              )
+
+  ;;--------------------------;;
+
+  :hook (comint-mode . goto-address-mode)
+
+  ;;--------------------------;;
+
+  :custom
+
+  (comint-scroll-to-bottom-on-output 'others "‘others’ means — “move ‘point’ down to track STDOUT only in ‘other-window’s (not in the ‘selected-window’).”")
+  (comint-scroll-to-bottom-on-input  'this   "‘this’ means — “move ‘point’ down if you type into the ‘selected-window’.”")
+
+  (comint-buffer-maximum-size 65536 "increase to « 2^16.")
+
+  ;;--------------------------;;
+
+  :config
+
+  (setq comint-scroll-to-bottom-on-input t)
+
+  ;; ^ non-`nil' = insertion and yank commands scroll the selected window to the bottom before inserting.
+
+  (setq comint-input-ignoredups t)
+
+  ;; ^ whether successive identical inputs are stored in the input history.
+
+  (setq comint-completion-addsuffix t) 
+
+  ;; ^ whether completion inserts a space or a slash after a fully-completed file or directory (respectively).
+
+  (when (require 'sboo-shell nil :no-error)
+
+    (add-hook 'comint-exec-hook #'sboo-process-disable-query-on-exit)
+    ;; ^ Quit Comint buffers without confirmation.
+
+    ())
+
+  ())
+
+;; ^ NOTES
+;;
+;;   • `comint' is a Non-Package (?) Feature.
+;;
+
+;;----------------------------------------------;;
+
+(use-package shell
+
+    ;;--------------------------;;
+
+    :bind
+
+  ( ("<s>-s" . shell)
+    
+    :map shell-mode-map
+
+    ("<kp-prior>" . comint-previous-input)
+    ;; ^ <prior> is the page-up key.
+    ;; `comint-previous-input` is like "press down in a terminal-emulator".
+    
+    ("<kp-next>" . 'comint-next-input)
+    ;; ^ <next> is the page-down key.
+    ;; `comint-next-input` is like "press up in a terminal-emulator".
+
+    )
+
+  ;;--------------------------;;
+
+  :custom
+
+  (explicit-shell-file-name "/bin/bash")
+
+  ;;--------------------------;;
+
+  :config
+
+  (add-hook 'shell-mode-hook #'dirtrack-mode)
+
+  ;; ^ `dirtrack' tracks the working directory by parsing the command prompt.
+
+  (setq shell-completion-fignore '("~" "#" "%"))
+
+  ;; ^ filename extensions to ignore during completion.
+
+  (push (cons (rx "*shell*") display-buffer--same-window-action)
+        display-buffer-alist)
+
+  ;; ^
+  ;;
+  ;; How To Override The Default Behavior Of  "M-x shell" Opening A New Buffer In Another Window (e.g. splitting).
+   ;;
+   ;; see:
+   ;;    https://stackoverflow.com/questions/40301732/m-x-shell-open-shell-in-other-windows
+   ;;
+   ;; >  The command `shell` uses `pop-to-buffer`.
+   ;; > If you have the Emacs source code, you can see it for yourself by running `C-h d f shell` to open the function's documentation (and then clicking the link to the function's source).
+   ;; `pop-to-buffer` can be configured via `display-buffer-alist`.
+
+  (when (require 'sboo-shell nil :no-error)
+
+    (dolist (HOOK sboo-shell-hooks-list)
+      (add-hook 'shell-mode-hook HOOK))
+
+    ())
+
+  ())
+
+;;----------------------------------------------;;
+
+(use-package term
+
+    :commands (ansi-term)
+
+    ;;--------------------------;;
+
+    :bind (:map term-mode-map             ; `term-line-mode':
+                ("C-j" . term-char-mode)
+                ("C-v" . nil)
+           :map term-raw-map              ; `term-char-mode':
+                ("C-j" . term-line-mode)
+                ("C-v" . nil)
+           )
+
+    ;;--------------------------;;
+
+    :hook (term-mode . goto-address-mode)
+
+    ;;--------------------------;;
+
+    :preface
+
+    (defun sboo-ansi-term ()
+      "Call `ansi-term' with program `bash'."
+      (interactive)
+      (ansi-term "/bin/bash"))
+
+    ;;--------------------------;;
+
+    :config
+
+    (push (cons (rx bos "*" (or "ansi-term" "terminal") "*" eos) display-buffer--same-window-action)
+          display-buffer-alist)
+
+    ;; (defadvice term-char-mode (after term-char-mode-fixes ())
+    ;;   (set (make-local-variable 'cua-mode) nil)
+    ;;   ;; ^ Disable `cua-mode' to enable `?\C-x' for escaping.
+    ;;   (set (make-local-variable 'transient-mark-mode) nil)
+    ;;   (set (make-local-variable 'global-hl-line-mode) nil)
+    ;;   (ad-activate 'term-char-mode)
+    ;;   (term-set-escape-char ?\C-x))
+
+    (when (require 'sboo-shell nil :no-error)
+
+      (dolist (HOOK sboo-term-hooks-list)
+        (add-hook 'term-mode-hook HOOK))
+
+      (add-hook 'term-exec-hook #'sboo-process-disable-query-on-exit)
+
+      ;; ^ Quit Comint buffers without confirmation.
+
+      ())
+
+    ())
+
+;; ^ « (kbd "<S-insert>") » pastes into Terminal-Emulators (like `ansi-term').
+;;   TODO `key-translation-map'? `raw-mode'?
+
+;; ^ Switching between Input Modes.
+;;
+;; • URL `https://stackoverflow.com/questions/14485858/multi-term-understanding-keyboard-bindings/14492124'
+;; • URL `https://stackoverflow.com/questions/14484454/running-emacs-commands-from-ansi-term-in-character-mode/14491568'
+
+;; ^ Links:
+;;
+;;   • URL `https://oremacs.com/2015/01/01/three-ansi-term-tips/'
+;;
+
+;;----------------------------------------------;;
+
+(use-package ansi-color
+
+  ;;--------------------------;;
+
+  :config
+
+  (defun sboo-ansi-colors-apply ()
+
+    "`ansi-color-apply-on-region' on whole buffer."
+
+    (interactive)
+
+    (ansi-color-apply-on-region (point-min) (point-max)))
+
+  ;;--------------------------;;
+
+  ())
+
+;;----------------------------------------------;;
+
+(use-package dirtrack
+
+  ;;--------------------------;;
+
+  :config
+
+  (when (require 'sboo-shell nil :no-error)
+
+    (setq dirtrack-list (list sboo-prompt-regexp 0))
+
+    ())
+
+  ())
+
+;;----------------------------------------------;;
+
+(use-package eshell
+
+  :commands (eshell eshell-command)
+
+  :preface
+
+  (defvar eshell-isearch-map
+    (let ((KEYMAP (copy-keymap isearch-mode-map)))
+      (define-key KEYMAP [(control ?m)] #'eshell-isearch-return)
+      (define-key KEYMAP [return]       #'eshell-isearch-return)
+      (define-key KEYMAP [(control ?r)] #'eshell-isearch-repeat-backward)
+      (define-key KEYMAP [(control ?s)] #'eshell-isearch-repeat-forward)
+      (define-key KEYMAP [(control ?g)] #'eshell-isearch-abort)
+      (define-key KEYMAP [backspace]    #'eshell-isearch-delete-char)
+      (define-key KEYMAP [delete]       #'eshell-isearch-delete-char)
+      KEYMAP)
+    "Keymap for `isearch' in Eshell.")
+
+  :config
+
+  ())
+
+;;==============================================;;
 ;;; Builtin Packages: Recent Files/Places:
 ;;----------------------------------------------;;
 
@@ -1616,164 +1886,6 @@ Notes:
 ;; ‘M-x bookmark-delete’ – delete a bookmark by name
 ;;
 ;; Your personal bookmark file is defined by option ‘bookmark-default-file’, which defaults to `~/.emacs.d/bookmarks
-
-
-;;==============================================;;
-;;; Builtin Packages: Shells / Terminals:
-;;----------------------------------------------;;
-
-(use-package shell
-
-  ;;--------------------------;;
-
-  :bind
-
-  ( ("<s>-s" . shell)
-  
-    :map shell-mode-map
-
-    ("<kp-prior>" . comint-previous-input)
-    ;; ^ <prior> is the page-up key.
-    ;; `comint-previous-input` is like "press down in a terminal-emulator".
-    
-    ("<kp-next>" . 'comint-next-input)
-    ;; ^ <next> is the page-down key.
-    ;; `comint-next-input` is like "press up in a terminal-emulator".
-
-    )
-
-  ;;--------------------------;;
-
-  :hook (sh-mode . flycheck-mode)
-
-  ;; ^ ShellCheck (a Bash Linter) is a builtin FlyCheck checker.
-
-  ;;--------------------------;;
-
-  :config
-
-  (push (cons (rx "*shell*") display-buffer--same-window-action)
-        display-buffer-alist)
-
-   ;; ^
-   ;;
-   ;; How To Override The Default Behavior Of  "M-x shell" Opening A New Buffer In Another Window (e.g. splitting).
-   ;;
-   ;; see:
-   ;;    https://stackoverflow.com/questions/40301732/m-x-shell-open-shell-in-other-windows
-   ;;
-   ;; >  The command `shell` uses `pop-to-buffer`.
-   ;; > If you have the Emacs source code, you can see it for yourself by running `C-h d f shell` to open the function's documentation (and then clicking the link to the function's source).
-   ;; `pop-to-buffer` can be configured via `display-buffer-alist`.
-
-  ())
-
-;;==============================================;;
-
-(use-package eshell
-
-  :commands (eshell eshell-command)
-
-  :preface
-
-  (defvar eshell-isearch-map
-    (let ((KEYMAP (copy-keymap isearch-mode-map)))
-      (define-key KEYMAP [(control ?m)] #'eshell-isearch-return)
-      (define-key KEYMAP [return]       #'eshell-isearch-return)
-      (define-key KEYMAP [(control ?r)] #'eshell-isearch-repeat-backward)
-      (define-key KEYMAP [(control ?s)] #'eshell-isearch-repeat-forward)
-      (define-key KEYMAP [(control ?g)] #'eshell-isearch-abort)
-      (define-key KEYMAP [backspace]    #'eshell-isearch-delete-char)
-      (define-key KEYMAP [delete]       #'eshell-isearch-delete-char)
-      KEYMAP)
-    "Keymap for `isearch' in Eshell.")
-
-  :config
-
-  ())
-
-;;==============================================;;
-
-(defun sboo-ansi-term ()
-  "Call `ansi-term' with program `bash'."
-  (interactive)
-  (ansi-term "/bin/bash"))
-
-;;----------------------------------------------;;
-
-(use-package term
-
-  :commands (ansi-term)
-
-  ;;--------------------------;;
-
-  :bind (:map term-mode-map             ; `term-line-mode':
-              ("C-j" . term-char-mode)
-              ("C-v" . nil)
-         :map term-raw-map              ; `term-char-mode':
-              ("C-j" . term-line-mode)
-              ("C-v" . nil)
-        )
-
-  ;; ^ switching between Input Modes.
-  ;;
-  ;; • URL `https://stackoverflow.com/questions/14485858/multi-term-understanding-keyboard-bindings/14492124'
-  ;; • URL `https://stackoverflow.com/questions/14484454/running-emacs-commands-from-ansi-term-in-character-mode/14491568'
-
-  ;;--------------------------;;
-
-  :config
-
-  ()
-
-  (push (cons (rx bos "*" (or "ansi-term" "terminal") "*" eos) display-buffer--same-window-action)
-        display-buffer-alist)
-
-  ())
-
-;; ^ « (kbd "<S-insert>") » pastes into Terminal-Emulators (like `ansi-term').
-;;   TODO `key-translation-map'? `raw-mode'?
-
-;;----------------------------------------------;;
-
-(use-package ansi-color
-
-  ;;--------------------------;;
-
-  :config
-
-  (defun sboo-ansi-colors-apply ()
-
-    "`ansi-color-apply-on-region' on whole buffer."
-
-    (interactive)
-
-    (ansi-color-apply-on-region (point-min) (point-max)))
-
-  ;;--------------------------;;
-
-  ())
-
-;;----------------------------------------------;;
-
-(when (require 'sboo-shell nil :no-error)
-
-  ;;---------------------------;;
-
-  (defadvice term-char-mode (after term-char-mode-fixes ())
-
-    (set (make-local-variable 'cua-mode) nil)
-    ;; ^ Disable `cua-mode' to enable `?\C-x' for escaping.
-    (set (make-local-variable 'transient-mark-mode) nil)
-    (set (make-local-variable 'global-hl-line-mode) nil)
-
-    (ad-activate 'term-char-mode)
-
-    (term-set-escape-char ?\C-x))
-
-  ;;---------------------------;;
-
-  (add-hook 'term-mode-hook #'sboo-local-unset-tab))
 
 ;;----------------------------------------------;;
 ;;; Builtin Packages: Web:
@@ -2075,31 +2187,6 @@ Links:
 
 ;;----------------------------------------------;;
 
-(use-package comint
-
-  :bind (:map comint-mode-map
-              ("<up>"   . comint-previous-matching-input-from-input)
-              ("<down>" . 'comint-next-matching-input-from-input)
-              )
-
-  :custom
-
-  (comint-scroll-to-bottom-on-output 'others "‘others’ means — “move ‘point’ down to track STDOUT only in ‘other-window’s (not in the ‘selected-window’).”")
-  (comint-scroll-to-bottom-on-input  'this   "‘this’ means — “move ‘point’ down if you type into the ‘selected-window’.”")
-
-  (comint-buffer-maximum-size 65536 "increase to « 2^16.")
-
-  :config
-
-  ())
-
-;; ^ NOTES
-;;
-;;   • `comint' is a Non-Package (?) Feature.
-;;
-
-;;----------------------------------------------;;
-
 (use-package ediff
 
   :commands (ediff-buffers ediff-current-file)
@@ -2229,7 +2316,7 @@ Links:
 ;;; External Packages: Installation ------------;;
 ;;----------------------------------------------;;
 
-(pcase (sboo-install-p)
+(pcase (sboo-get-installation-method)
 
   ('submodules (progn
                  (sboo-register-submodule-packages! "use-package/")
@@ -2238,53 +2325,40 @@ Links:
                  (when (< emacs-major-version 26)
                    (sboo-register-submodule-packages! "real-auto-save/"))))
 
+  ;;--------------------------;;
+
   ('melpa      (progn
-                 (sboo-load-file! "sboo-packages-by-installing.el")))
+                 (sboo-load-file! "sboo-packages-by-installing.el")
+
+                 (when (require 'sboo-packages nil :no-error)
+
+                   (dolist (ARCHIVE sboo-package-archives)
+                     (add-to-list 'package-archives ARCHIVE :append))
+
+                   (when (>= emacs-major-version 26)
+                     (async-start #'package-refresh-contents))
+                   (setq package-load-list sboo-all-packages)
+
+                   ;;(package-initialize)
+                   ;;NOTE we call `package-initialize' in `init.el'.
+
+                   ())))
+  ;;--------------------------;;
 
   ('nixpkgs    (progn))
 
   (_           (progn)))
 
-;;----------------------------------------------;;
-;; External Packages: `package.el' -------------;;
-;;----------------------------------------------;;
-
-(when (require 'sboo-packages nil :no-error)
-
-  ;;------------------------;;
-
-  (dolist (ARCHIVE sboo-package-archives)
-    (add-to-list 'package-archives ARCHIVE 'append))
-
-  ;;------------------------;;
-
-  (when (>= emacs-major-version 26)
-    (async-start #'package-refresh-contents))
-
-  ;;------------------------;;
-
-  (setq package-load-list sboo-all-packages)
-
-  ;;------------------------;;
-
-  ;;(package-initialize)
-  ;;NOTE we call `package-initialize' in `init.el'.
-
-  ;;------------------------;;
-
-  ())
-
-;; ^ `async-start':
+;; ^ NOTES `async-start':
 ;;
 ;;     (async-start START-FUNC &optional FINISH-FUNC)
 ;;
 ;; Execute START-FUNC (often a lambda) in a subordinate Emacs process.
 ;; When done, the return value is passed to FINISH-FUNC.  Example:
-
-;;; External Packages:
+;;
 
 ;;----------------------------------------------;;
-;; External Packages: Prioritized Packages -----;;
+;;; External Packages: Prioritized Packages ----;;
 ;;----------------------------------------------;;
 
 ;;(sboo-load-file! "sboo-init-use-package.el")
@@ -2359,40 +2433,41 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package helm-config
+    :demand t
 
-  :load-path ("submodules/helm" "submodules/async")
+    :load-path ("submodules/helm" "submodules/async")
 
-  :custom
+    :custom
 
-  (helm-command-prefix-key "M-q" "the Default (« C-x c ») is too similar to `kill-emacs's keybinding.")
+    (helm-command-prefix-key "M-q" "the Default (« C-x c ») is too similar to `kill-emacs's keybinding.")
 
-  ;; ^  NOTE `helm-command-prefix-key':
-  ;;    becomes immutable once `helm-config' is `load'ed.
+    ;; ^  NOTE `helm-command-prefix-key':
+    ;;    becomes immutable once `helm-config' is `load'ed.
 
-  ;;   :bind (:map helm-map
-  ;;               ("<tab>" . helm-execute-persistent-action)
-  ;;               ("C-i"   . helm-execute-persistent-action)
-  ;;               ("C-z"   . helm-select-action)
-  ;;               ("A-v"   . helm-previous-page))
+    ;;   :bind (:map helm-map
+    ;;               ("<tab>" . helm-execute-persistent-action)
+    ;;               ("C-i"   . helm-execute-persistent-action)
+    ;;               ("C-z"   . helm-select-action)
+    ;;               ("A-v"   . helm-previous-page))
 
-  :config
+    :config
 
-  ;; Remap keybindings:
+    ;; Remap keybindings:
 
-  (define-key global-map [remap execute-extended-command] #'helm-M-x)
-  (define-key global-map [remap list-buffers]             #'helm-buffers-list)
-  (define-key global-map [remap find-file]                #'helm-find-files) ; Includes the « `<tool-bar>' `<new-file>' ».
-  (define-key global-map [remap find-file-existing]       #'helm-find-files) ; Includes the « `<tool-bar>' `<open-file>' »?
-  (define-key global-map [remap occur]                    #'helm-occur)
+    (define-key global-map [remap execute-extended-command] #'helm-M-x)
+    (define-key global-map [remap list-buffers]             #'helm-buffers-list)
+    (define-key global-map [remap find-file]                #'helm-find-files) ; Includes the « `<tool-bar>' `<new-file>' ».
+    (define-key global-map [remap find-file-existing]       #'helm-find-files) ; Includes the « `<tool-bar>' `<open-file>' »?
+    (define-key global-map [remap occur]                    #'helm-occur)
 
-  (define-key global-map [remap menu-find-file-existing]  #'helm-find-files) ; The `toolbar's `<open-file>'.
+    (define-key global-map [remap menu-find-file-existing]  #'helm-find-files) ; The `toolbar's `<open-file>'.
 
-  (when (executable-find "curl")
-    (setq helm-google-suggest-use-curl-p t))
+    (when (executable-find "curl")
+      (setq helm-google-suggest-use-curl-p t))
 
-  ;; ^ website `google' via program `curl'.
+    ;; ^ website `google' via program `curl'.
 
-  ())
+    ())
 
 ;;----------------------------------------------;;
 
@@ -4061,7 +4136,7 @@ Related:
 
   :commands (selected-minor-mode selected-global-mode)
 
-  :delight (selected-minor-mode)
+  :delight (selected-minor-mode "")
 
   ;;--------------------------;;
 
@@ -4073,7 +4148,7 @@ Related:
 
   :bind (:map selected-keymap
 
-           ;; ("`" . )
+           ;;   ("`" . typo-)
               ("!" . shell-command-on-region)      ; mnemonic is « M-! ».
            ;; ("@" . )
            ;; ("#" . )
@@ -4107,15 +4182,16 @@ Related:
            ;; ("b" . )
               ("c" . capitalize-region)
               ("d" . downcase-region)
-              ("e" . sboo-edit-indirect-region)    ; from `edit-indirect' (via `sboo-commands').
-              ("f" . fill-region)
+              ("e" . sboo-edit-indirect-dwim)      ; from `edit-indirect' (via `sboo-commands').
+              ("f" . fill-region)                  ; Mnemonic is “[F]ill”.
+              ("F" . unfill-region)                ; ‹F› inverts ‹f›.
               ("g" . google-this-region)           ; from `google-this'.
            ;; ("h" . )
-              ("i" . indent-region)                ; mnemonic is “[I]ndent”.
+              ("i" . indent-region)                ; Mnemonic is “[I]ndent”.
            ;; ("j" . )
            ;; ("k" . )
-              ("l" . align-regexp)
-              ("m" . apply-macro-to-region-lines)  ; mnemonic is “[M]acro”.
+              ("l" . sboo-align-regexp)
+              ("m" . apply-macro-to-region-lines)  ; Mnemonic is “[M]acro”.
            ;; ("n" . )
            ;; ("o" . )
            ;; ("p" . )
@@ -4124,13 +4200,11 @@ Related:
               ("s" . sort-lines)
            ;; ("t" . )
               ("u" . upcase-region)
-              ("v" . eval-region)                  ; mnemonic is “e[V]al”.
-              ("w" . delete-trailing-whitespace)   ; mnemonic is “[W]hitespace”.
+              ("v" . eval-region)                  ; Mnemonic is “e[V]al”.
+              ("w" . delete-trailing-whitespace)   ; Mnemonic is “[W]hitespace”.
               ("x" . cua-cut-region)
            ;; ("y" . )
            ;; ("z" . )
-
-              ("U" . unfill-region)
 
               )
 
@@ -4489,19 +4563,47 @@ search (upwards) for a named Code-Block. For example,
 ;;----------------------------------------------;;
 
 (use-package typo
-  :disabled t
+    :disabled t
 
-  :commands (typo-mode)
+    :commands (typo-mode)
 
-  :delight (typo-mode)
+    :delight (typo-mode)
 
-;;:hook (text-mode . typo-mode)
+    ;;:hook (text-mode . typo-mode)
 
-  :config
+    :config
 
-;;(typo-global-mode +1)
+    (modify-syntax-entry ?\» "(«")
+    (modify-syntax-entry ?\« ")»")
 
-  ())
+    ;;------------------------;;
+
+    (defun sboo-typo-cycle ()
+      "`typo-mode' at `point'."
+      (interactive)
+
+      (let* ((CHAR-AT-POINT (point))
+             (ASCII-CHAR    (identity CHAR-AT-POINT))
+             )
+
+        (pcase ASCII-CHAR
+
+          (?\"  (typo-insert-quotation-mark))
+          (?\'  (typo-cycle-right-single-quotation-mark))
+          (?\-  (typo-cycle-dashes))
+          (?\.  (typo-cycle-ellipsis))
+          (?\<  (typo-cycle-left-angle-brackets))
+          (?\>  (typo-cycle-right-angle-brackets))
+          (?\`  (typo-cycle-left-single-quotation-mark))
+          (_    ))))
+
+    ;;------------------------;;
+
+    ;; (typo-global-mode +1)
+
+    ;;------------------------;;
+
+    ())
 
 ;; ^ `typo-mode' binds keys of *printable characters* (e.g. « e » or « - ») to insert related *typographic unicode characters" (e.g. « é » or « — »).
 ;; 
@@ -4607,7 +4709,7 @@ search (upwards) for a named Code-Block. For example,
 ;;----------------------------------------------;;
 
 (use-package back-button
-  :defer 1
+  :disabled
 
   :commands (back-button-mode)
 
@@ -5907,6 +6009,26 @@ search (upwards) for a named Code-Block. For example,
 ;;
 
 ;;----------------------------------------------;;
+
+;; (use-package better-registers
+
+;;   :bind
+;;   (:map global-map ("M-j" . better-registers-jump-to-register))
+
+;;   :init
+;;   (setq-default better-registers-use-C-r nil)
+
+;;   :config
+;;   (rr/expose-bindings better-registers-map '("<f1>" "C-j" "C-x r"))
+
+;;   ())
+
+;; ^ Links:
+;;
+;;   • URL `https://www.emacswiki.org/emacs/BetterRegisters'
+;;
+
+;;----------------------------------------------;;
 ;;; Personal Packages --------------------------;;
 ;;----------------------------------------------;;
 
@@ -5980,8 +6102,6 @@ search (upwards) for a named Code-Block. For example,
 
 (when (require 'sboo-fonts nil :no-error)
   (sboo-fonts-config!))
-
-;;; Notes:
 
 ;;----------------------------------------------;;
 ;;; Notes --------------------------------------;;
@@ -6146,6 +6266,8 @@ search (upwards) for a named Code-Block. For example,
 ;; • URL `'
 ;; • URL `'
 ;; • URL `'
+;; • URL `https://www.draketo.de/light/english/emacs/babcore'
+;;
 
 ;;----------------------------------------------;;
 ;; EOF -----------------------------------------;;
