@@ -94,29 +94,30 @@ Effects:
   '(
 
     (
-     company-capf      ; `completion-at-point' Functions.
-     )
-
-    (
-     company-keywords  ; `prog-mode' Keywords.
-     company-etags     ; `prog-mode' TAGS.
-     )
-
-    (
      company-files     ; Filepaths.
      )
 
     (
-     company-abbrev    ; Abbreviations.
-     company-dabbrev   ; Dynamic Abbreviations.
-     )
-
-    (
-     company-ispell    ; Spell-Checking.
-     )
-
-    (
+     company-capf      ; `completion-at-point' Functions.
+     company-keywords  ; `prog-mode' Keywords.
+     company-etags     ; `prog-mode' TAGS.
      company-yasnippet ; `yasnippet'.
+     )
+
+    ;; (
+    ;;  company-ispell    ; Spell-Checking.
+    ;;  )
+
+
+    ;; the Backends below are all in the last Backend-Grouping
+    ;; because their ‘prefix’ bool command always returns non-nil
+    ;; (even when their ‘candidates’ list command is empty).
+
+    (
+     company-yasnippet    ; `yasnippet'.
+     company-abbrev       ; Abbreviations.
+     company-dabbrev      ; Dynamic Abbreviations.
+     company-dabbrev-code ;
      )
 
     )

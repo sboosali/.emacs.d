@@ -10548,6 +10548,59 @@ Effects:
       (_ ()))))
 
 
+;;==============================================;;
+
+(defcustom sboo-company-backends
+
+  '(
+
+    (
+     company-keywords  ; `prog-mode' Keywords.
+     company-etags     ; `prog-mode' TAGS.
+     )
+
+    (
+     company-files     ; Filepaths.
+     )
+
+    ;; (
+    ;;  company-ispell    ; Spell-Checking.
+    ;;  )
+
+    (
+     company-yasnippet ; `yasnippet'.
+     )
+
+    (
+     company-capf      ; `completion-at-point' Functions.
+     )
+
+    ;; the Backends below are all in the last Backend-Grouping
+    ;; because their ‘prefix’ bool command always returns non-nil
+    ;; (even when their ‘candidates’ list command is empty).
+
+    (
+     company-abbrev    ; Abbreviations.
+     company-dabbrev   ; Dynamic Abbreviations.
+     )
+
+    )
+
+  "Personal `company-backends', ordered by priority.
+
+each Company Backend in a group has a higher priority than
+any Company Backend in a later group (and a lower priority than
+any Company Backend in an earlier group).
+
+`listp' of `listp's of `symbolp's."
+
+  :type '(repeat (function :tag "Company Backend"))
+
+  :set #'sboo-company/customization-changed
+
+  :safe #'listp
+  :group 'sboo-company)
+  
 ========================================================================
 
 

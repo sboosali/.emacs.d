@@ -3183,7 +3183,24 @@ Related:
 ;; Miscellanea ---------------------------------;;
 ;;----------------------------------------------;;
 
+(defun sboo-replace-whole-words (from-string to-string)
 
+  "Like `replace-string', respecting word boundaries."
+
+  (interactive)
+
+  (let* ((DELIMETED t))
+    (replace-string from-string to-string DELIMETED)))
+
+;;----------------------------------------------;;
+
+(defun sboo-replace-in-string-whole-words (what with in)
+
+  "Like `replace-in-string', but replaces whole words.
+
+URL `https://emacs.stackexchange.com/questions/34661/replace-whole-words-in-string'"
+
+  (replace-regexp-in-string (concat "\\b" what "\\b")  with in))
 
 ;;----------------------------------------------;;
 ;; Re-Exports ----------------------------------;;
@@ -3192,7 +3209,7 @@ Related:
 (require 'sboo-english)
 
 ;;----------------------------------------------;;
-;; Notes ---------------------------------------;;
+;;; Notes --------------------------------------;;
 ;;----------------------------------------------;;
 
 ;; `color' feature:
@@ -3287,14 +3304,6 @@ Related:
 ;; See:
 ;;    - http://www.wilkesley.org/~ian/xah/emacs/emacs_open_file_path_fast.html
 ;;    -
-
-;;----------------------------------------------;;
-;; Notes ---------------------------------------;;
-;;----------------------------------------------;;
-
-;;
-;;
-;;
 
 ;;----------------------------------------------;;
 ;; EOF -----------------------------------------;;
