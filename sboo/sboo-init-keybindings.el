@@ -644,15 +644,17 @@ Inputs:
 
 (progn
 
+  ;; accidental `kill-emacs' is frustrating:
+
   (global-unset-key (kbd "C-x c"))
 
-  ())
+  ;; `suspend-frame' is annoying:
 
-(progn
-  ;; Unset annoying `suspend-frame':
   (global-unset-key (kbd "C-x z"))
   (global-unset-key (kbd "C-M-z"))
-  (global-unset-key (kbd "C-x C-z")))
+  (global-unset-key (kbd "C-x C-z"))
+
+  ())
 
 ;;==============================================;;
 
@@ -1153,8 +1155,8 @@ Inputs:
   ;;(global-set-key (kbd "s-^") #')
   ;;(global-set-key (kbd "s-&") #')
   ;;(global-set-key (kbd "s-*") #')
-  (global-set-key (kbd "s-(") #'sboo-forward-defun)
-  (global-set-key (kbd "s-)") #'sboo-backward-defun)
+  (global-set-key (kbd "s-(") #'sboo-backward-defun)
+  (global-set-key (kbd "s-)") #'sboo-forward-defun)
 
   ())
 

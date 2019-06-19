@@ -74,6 +74,61 @@
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
+(defun natspeak-get-frame-visible-text (&optional frame)
+  ""
+
+  (let ((FRAME (or frame (selected-frame))))
+
+    (let* ((SCREEN-WINDOWS
+            (window-list))
+           )
+
+      (mapcar #'natspeak-get-window-visible-text SCREEN-WINDOWS))))
+
+;; M-: (natspeak-get-frame-visible-text)
+
+;;----------------------------------------------;;
+
+(defun natspeak-get-buffer-visible-text (&optional buffer)
+  ""
+
+  (let* ((BUFFER (or buffer (current-buffer)))
+         (WINDOW (get-buffer-window BUFFER))
+         )
+
+    (natspeak-get-window-visible-text WINDOW)))
+
+;; M-: (natspeak-get-buffer-visible-text)
+
+;;----------------------------------------------;;
+
+(defun natspeak-get-window-visible-text (&optional window)
+  ""
+
+  (let ((WINDOW (or window (selected-window))))
+
+    (let* ((FIRST-SCREEN-LINE-POINT
+            (save-excursion
+              (with-selected-window WINDOW
+                (move-to-window-line 0)
+                (beginning-of-line)
+                (point))))
+
+           (LAST-SCREEN-LINE-POINT
+            (save-excursion
+              (with-selected-window WINDOW
+                (move-to-window-line -1)
+                (end-of-line)
+                (point))))
+
+           (SCREEN-REGION
+            (buffer-substring FIRST-SCREEN-LINE-POINT LAST-SCREEN-LINE-POINT))
+           )
+
+      SCREEN-REGION)))
+
+;; M-: (natspeak-get-window-visible-text)
+
 ;;----------------------------------------------;;
 ;; Mode ----------------------------------------;;
 ;;----------------------------------------------;;

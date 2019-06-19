@@ -4157,7 +4157,7 @@ Related:
            ;;   ("`" . typo-)
               ("!" . shell-command-on-region)      ; mnemonic is « M-! ».
            ;; ("@" . )
-           ;; ("#" . )
+              ("#" . comment-or-uncomment-region)
            ;; ("$" . )
               ("%" . query-replace)                ; mnemonic is « M-% ».
            ;; ("^" . )
@@ -4184,10 +4184,10 @@ Related:
               ("<prior>" . move-text-up)           ; from `move-text'.
               ("<next>"  . move-text-down)         ; from `move-text'.
 
-              ("a" . sboo-register-append)
+              ("a" . sboo-register-append-region)
            ;; ("b" . )
               ("c" . capitalize-region)
-              ("d" . downcase-region)
+              ("d" . downcase-region)              ; Mnemonic is “[D]owncase”.
               ("e" . sboo-edit-indirect-dwim)      ; from `edit-indirect' (via `sboo-commands').
               ("f" . fill-region)                  ; Mnemonic is “[F]ill”.
               ("F" . unfill-region)                ; ‹F› inverts ‹f›.
@@ -4196,29 +4196,24 @@ Related:
               ("i" . indent-region)                ; Mnemonic is “[I]ndent”.
            ;; ("j" . )
            ;; ("k" . )
-              ("l" . sboo-align-regexp)
-              ("m" . apply-macro-to-region-lines)  ; Mnemonic is “[M]acro”.
-           ;; ("n" . )
+              ("l" . align-regexp)                 ; Mnemonic is “a[L]ign”.
+              ("m" . apply-macro-to-region-lines)  ; Mnemonic is “[M]acro apply”.
+              ("n" . move-text-down)               ; from `move-text'. Mnemonic is “[N]ext line”, and the ‹p› key is on the top row of (of letters).
            ;; ("o" . )
-           ;; ("p" . )
-              ("q" . selected-off)                 ; from `selected'.
-              ("r" . query-replace-regexp)
-              ("s" . sort-lines)
+              ("p" . move-text-up)                 ; from `move-text'. Mnemonic is “[P]rior line”, and the ‹n› key is on the bottom row (of letters).
+              ("q" . selected-off)                 ; (from `selected' itself.)
+              ("r" . query-replace-regexp)         ; Mnemonic is “[R]eplace”.
+              ("s" . sort-lines)                   ; Mnemonic is “[S]ort”.
+              ("S" . reverse-region)               ; Mnemonic is “rever[S]e”.
            ;; ("t" . )
-              ("u" . upcase-region)
+              ("u" . upcase-region)                ; Mnemonic is “[U]pcase”.
               ("v" . eval-region)                  ; Mnemonic is “e[V]al”.
               ("w" . delete-trailing-whitespace)   ; Mnemonic is “[W]hitespace”.
-              ("x" . cua-cut-region)
+              ("x" . cua-cut-region)               ; Mnemonic is ‹C-x›.
            ;; ("y" . )
-           ;; ("z" . )
+           ;; ("z" . undo)
 
               )
-
-  ;; ("c" . cua-copy-region)
-  ;; ("c" . capitalize-region)
-  ;; ("r" . reverse-region)
-  ;; ("s" . sort-lines)
-  ;; ("w" . delete-trailing-whitespace)
 
   ;;--------------------------;;
 

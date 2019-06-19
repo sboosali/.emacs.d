@@ -148,7 +148,7 @@ Related:
                 (region-end)
                 (read-string "Align regexp: " nil 'sboo-align/history-list)))
 
-  (align-regexp beg end regexp 0 align-default-spacing t))
+  (align-regexp beg end regexp 0 align-default-spacing nil))
 
 ;;----------------------------------------------;;
 

@@ -56,4 +56,3 @@ Libraries (vendored):
 - `magnars`'s  — <https://github.com/magnars/.emacs.d#readme>
 - `jwiegley`'s — <https://github.com/jwiegley/dot-emacs#readme>
 
-## 
