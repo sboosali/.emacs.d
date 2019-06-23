@@ -128,11 +128,19 @@ most have *Minimal Dependencies*, either:
 * `cfrs.el`                     — *cfrs* abbreviates *Child-Frame Read-String*. `cfrs-read` provides the Frame-based `cfrs-read` (c.f. the Minibuffer-based `read-string`). <https://github.com/Alexander-Miller/cfrs>
 * `company-shell.el`            — *company-shell* provides *Company Backends* for shell Executables (via `'company-shell`) & shell Environment Variables (via `'company-shell-env`). <https://github.com/Alexander-Miller/company-shell>
 * `helm-flyspell.el`            — Correct `flyspell` suggestions via `helm`.
-* `back-button.el`              — . has several external dependencies: `;; Package-Requires: ((nav-flash "1.0.0") (smartrep "0.0.3") (ucs-utils "0.7.2") (list-utils "0.4.2") (persistent-soft "0.8.8") (pcache "0.2.3"))`. <https://github.com/rolandwalker/back-button>
+* `back-button.el`              — a global *Back Button*. has several external dependencies: `;; Package-Requires: ((nav-flash "1.0.0") (smartrep "0.0.3") (ucs-utils "0.7.2") (list-utils "0.4.2") (persistent-soft "0.8.8") (pcache "0.2.3"))`. <https://github.com/rolandwalker/back-button>
+* `char-menu.el`                — Insert Unicode Characters efficiently (via `avy`). Supports `wrap-region`-like . <https://github.com/mrkkrp/char-menu>
+* `fix-word.el`                 — <https://github.com/mrkkrp/fix-word>
+* `css-eldoc`                   — *Eldoc* for *CSS*. <https://github.com/zenozeng/css-eldoc>
+* `pandoc-mode`                 — *Minor Mode* for `compile`ing via *Pandoc*.
 
-* `pandoc-mode`:
-    - `pandoc-mode.el`
-    - `pandoc-mode-utils.el`
+* `helm-ag.el`                  —  a *TUI* for `ag` (a.k.a. *The Silver Searcher*). `;; Package-Requires: ((helm "2.0"))`. <https://github.com/syohex/emacs-helm-ag>
+
+* `flyspell-lazy.el`            — increase keyboard responsiveness when `flyspell` is enabled, which (with the default settings) makes typing sluggish. <https://github.com/rolandwalker/flyspell-lazy>
+
+* `restclient`                  — `restclient.el` is an *HTTP Client* as an interactive *Emacs* *TUI*. plus, `restclient-helm.el`, a *Helm* *TUI*. “Run queries from a plain-text query sheet, displays results as pretty-printed XML, JSON, even images.” <https://github.com/pashky/restclient.el>
+
+* `company-restclient.el`       — *Company Backend* for` restclient`. other requirements: `(require 'know-your-http-well)`.
 
 *Vendored Utilities* include:
 

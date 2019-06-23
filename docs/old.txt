@@ -10604,11 +10604,235 @@ any Company Backend in an earlier group).
 ========================================================================
 
 
+(defun sboo-toolbar-setup ()
+
+  "Extend `tool-bar-map'."
+
+  (let* ((MAP tool-bar-map)
+         )
+
+      (tool-bar-local-item "mpc/play"
+                           #'compile
+                           'compile
+                           MAP
+                           :label  "Compile"
+                           :help   "« M-x compile »"
+                           :visible t ; '(or (equal (default-value 'compile-command) (symbol-value 'compile-command)) (derived-mode-p 'prog-mode))
+                           ;; ^ Enable only for either: ❶ non-default `compile-command's; or ❷ `prog-mode' Major Modes.
+                           )
+
+      ;; (tool-bar-local-item "right-arrow"
+      ;;                      #'
+      ;;                      '
+      ;;                      MAP
+      ;;                      :label  "Forward"
+      ;;                      :help   "« M-x  »"
+      ;;                      :enable t
+      ;;                      :rtl    "left-arrow"
+      ;;                      )
+
+      ;; (subsumed by ‘back-button’:)
+      ;;
+      ;; (tool-bar-local-item "left-arrow"
+      ;;                      #'pop-global-mark
+      ;;                      'pop-global-mark
+      ;;                      MAP
+      ;;                      :label  "Go Back"
+      ;;                      :help   "« M-x pop-global-mark »"
+      ;;                      :rtl    "right-arrow"
+      ;;                      )
+
+      MAP))
+
 ========================================================================
 
 
+(defvar sboo-toolbar-map
+
+  (when (keymapp tool-bar-map)
+
+    (let ((MAP (copy-keymap tool-bar-map))
+          )
+
+      (define-key-after MAP [separator-sboo] menu-bar-separator)
+
+      (tool-bar-local-item "mpc/play"
+                           #'compile
+                           'compile
+                           MAP
+                           :label  "Compile"
+                           :help   "« M-x compile »"
+                           :enable '(derived-mode-p 'prog-mode)
+                           ;; ^ enable only for `prog-mode' Major Modes.
+                           )
+
+      (tool-bar-local-item "left-arrow"
+                           #'pop-global-mark
+                           'pop-global-mark
+                           MAP
+                           :label  "Go Back"
+                           :help   "« M-x pop-global-mark »"
+                           :enable t
+                           :rtl    "right-arrow"
+                           )
+
+      ;; (tool-bar-local-item "right-arrow"
+      ;;                      #'
+      ;;                      '
+      ;;                      MAP
+      ;;                      :label  "Forward"
+      ;;                      :help   "« M-x  »"
+      ;;                      :enable t
+      ;;                      :rtl    "left-arrow"
+      ;;                      )
+
+      MAP))
+
+  "Personal Tool-Bar.
+
+Add some Icons/Commands to the standard Tool Bar.")
+
+========================================================================
+;; This executes C-g typed while Emacs is waiting for a command.
+;; Quitting out of a program does not go through here;
+;; that happens in the maybe_quit function at the C code level.
+(defun keyboard-quit ()
+  "Signal a `quit' condition.
+During execution of Lisp code, this character causes a quit directly.
+At top-level, as an editor command, this simply beeps."
+  (interactive)
+  ;; Avoid adding the region to the window selection.
+  (setq saved-region-selection nil)
+  (let (select-active-regions)
+    (deactivate-mark))
+  (if (fboundp 'kmacro-keyboard-quit)
+      (kmacro-keyboard-quit))
+  (when completion-in-region-mode
+    (completion-in-region-mode -1))
+  ;; Force the next redisplay cycle to remove the "Def" indicator from
+  ;; all the mode lines.
+  (if defining-kbd-macro
+      (force-mode-line-update t))
+  (setq defining-kbd-macro nil)
+  (let ((debug-on-quit nil))
+    (signal 'quit nil)))
+
+
 ========================================================================
 
+
+(defun sboo-compny-elisp-symbol-private-or-obsolete-p (symbol)
+
+  "Whether SYMBOL seems private or is obsolete.
+
+Inputs:
+
+• SYMBOL — a `symbolp' or `stringp'.
+
+Output:
+
+• a `booleanp'.
+
+Predicates:
+
+• Private if — the `symbol-name'
+  has a double-hyphen (i.e. ‹--›) or a forward-slash (i.e. ‹/›).
+• Obsolete if — SYMBOL has been given to `make-obsolete'.
+
+Links:
+
+• URL `'
+• URL `'"
+
+  (cl-assert (or string symbol) symbol)
+
+  (let ((SYMBOL (cond
+                  ((symbolp symbol) symbol)
+                  ((stringp symbol) (intern-soft symbol))
+                  (t nil)))
+
+        (STRING (cond
+                  ((symbolp symbol) (symbol-name symbol))
+                  ((stringp symbol) symbol)
+                  (t nil)))
+        )
+
+    (if (or (string-match-p (regexp-quote "--") STRING)
+            (string-match-p (regexp-quote "/") STRING)
+            (not (get SYMBOL 'byte-obsolete-variable)))
+        t nil)))
+
+
+
+(defun sboo-company-elisp-compare-symbols-by-privacy (x y)
+  "Whether X is “less private” than Y.
+
+Ascending Order:
+
+• Public symbols
+• Private symbols
+• Obsolete symbols"
+
+  (let ((BX (sboo-compny-elisp-symbol-private-or-obsolete-p x))
+(BY (sboo-compny-elisp-symbol-private-or-obsolete-p y))
+((NX (cl-case BX (nil 0) ('private 1) ('obsolete 2) (_ 3)))
+(NY (cl-case BY (nil 0) ('private 1) ('obsolete 2) (_ 3)))
+)
+
+ (< NX NY)))
+
+
+
+(defun sboo-company-transformer-elisp-bury-private-or-obsolete-symbols-symbols (candidates)
+
+  "Company-Transformer to deprioritize Elisp symbols that are private/obsolete. 
+
+Reorder CANDIDATES by “burying” any candidate satisfying `sboo-compny-elisp-symbol-private-or-obsolete-p', to the end of the list (which should show up at bottom of he l of the suggested candidates:
+
+=== Inputs ===
+
+• CANDIDATES — a `listp' of `stringp's.
+
+=== Output ===
+
+a `listp' of `stringp's.
+
+=== Laws ===
+
+• Output preserves all elements in CANDIDATES.
+
+=== Usage ===
+
+e.g. register with `company-transformers':
+
+    (make-local-variable 'company-transformers)
+    (add-to-list 'company-transformers #'sboo-company-transformer-elisp-bury-private-or-obsolete-symbols-symbols :append)
+
+=== Notes ===
+
+• Naming — c.f. `bury-buffer'.
+
+=== Links ===
+
+URL `https://emacs.stackexchange.com/questions/12360/how-to-make-private-elisp-methods-the-last-company-mode-choices'."
+
+  (cl-loop for SYMBOL in candidates
+
+     collect SYMBOL into PUBLIC
+     if (sboo-compny-elisp-symbol-private-or-obsolete-p SYMBOL)
+
+     collect SYMBOL into PRIVATE
+     if (not (sboo-compny-elisp-symbol-private-or-obsolete-p SYMBOL))
+
+     finally (append PUBLIC PRIVATE OBSOLETE))
+
+  (let* ((TRANSFORMED-CANDIDATES
+          (cl-stable-sort #'sboo-company-elisp-compare-symbols-by-privacy candidates)))
+
+    TRANSFORMED-CANDIDATES))
+
+
+========================================================================
 
 ========================================================================
 
