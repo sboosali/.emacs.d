@@ -1197,6 +1197,65 @@ Note:
 
 ;;==============================================;;
 
+(defun sboo-symbol-property-list ()
+
+  "Get all known Symbol Properties.
+
+Output:
+
+• a `listp' of `symbolp's, 
+  deduplicated & sorted (lexicographically).
+  Unions all `symbol-plist's 
+  (of all `intern'ed `symbolp's),
+  An average `length' is a few 100's."
+
+  (let* ((PROPS-TABLE (make-hash-table)))
+
+    (mapatoms (lambda (*SYMBOL*)
+                (let ((*PROPERTIES*
+                       (cl-loop for *PROPERTY* in (symbol-plist *SYMBOL*) by 'cddr
+                                        ; ^ gets the first and every other item of a list;
+                                        ;   i.e. the keys of a property-list.
+                          collect *PROPERTY*)))
+                  (dolist (*PROPERTY* *PROPERTIES*)
+                    (puthash *PROPERTY* t PROPS-TABLE)))))
+
+    (let* ((PROPS-LIST (hash-table-keys PROPS-TABLE)))
+
+      (setq PROPS-LIST (cl-sort PROPS-LIST #'string< :key #'symbol-name))
+
+      PROPS-LIST)))
+
+;; ^ e.g.:
+;;
+;; M-: (length (sboo-symbol-property-list))
+;;  ⇒ 227
+;; 
+;; M-: (setq sboo-symbol-plist (sboo-symbol-property-list))
+;;  ⇒ '(:advertised-binding :minor-mode-function CUA abortfunc action ad-advice-info advice--pending apropos-inhibit ascii-character autoload before-string beginning-op bitmap bounds-of-thing-at-point button-category-symbol byte-compile byte-compile-format-like byte-compile-negated-op byte-hunk-handler byte-obsolete-info byte-obsolete-variable byte-opcode byte-opcode-invert byte-optimizer c-mode-prefix c-stylevar-fallback cc-mode-is-initialized ccl-program-idx char-code-property-documentation char-table-extra-slots choice cl--class cl--generic cl-deftype-handler cl-deftype-satisfies cl-generic--context-rewriter common-lisp-indent-function common-lisp-indent-function-for-elisp company-init company-keep compiler-macro composefunc cursor-sensor-functions custom-autoload custom-dependencies custom-get custom-group custom-links custom-loads custom-mode-group custom-options custom-package-version custom-prefix custom-requests custom-set custom-tag custom-type custom-version customized-value customized-variable-comment defalias-fset-function definition-name delete-selection derived-mode-parent disabled doc-string-elt edebug edebug-form-spec end-op error-conditions error-message evaporate event-kind event-symbol-element-mask event-symbol-elements ezimage face face-alias face-defface-spec face-documentation face-modified face-no-inherit flycheck-command flycheck-compilation-level flycheck-config-file-var flycheck-documentation flycheck-enabled flycheck-error-explainer flycheck-error-filter flycheck-error-level flycheck-error-list-face flycheck-error-parser flycheck-error-patterns flycheck-error-severity flycheck-file flycheck-fringe-bitmap-double-arrow flycheck-fringe-face flycheck-generic-checker-version flycheck-interrupt flycheck-modes flycheck-next-checkers flycheck-option-vars flycheck-overlay-category flycheck-predicate flycheck-print-doc flycheck-standard-input flycheck-start flycheck-verify flycheck-working-directory flyspell-delayed flyspell-deplacement flyspell-mode-predicate force-value format-list-atomic-p format-list-valued forward-op fringe function-documentation gnutls-code group-documentation gv-expander hash-table-test header-mouse-map helm-only help-echo home hookvar ibuffer-column-name ibuffer-column-summarizer ibuffer-column-summary ido info-file interactive-only invisible is-run isearch-message-prefix isearch-scroll jka-compr keymap kmacro-repeat last-arrow-position last-arrow-string lcr\? lisp-define-type lisp-indent-function lisp-indent-hook list-order menu-enable mode-class mode-line-face modification-hooks modifier-cache modifier-value mouse-face no-clone-indirect no-self-insert nxml-end-delimiter-length nxml-fontify-rule nxml-friendly-name nxml-outline-display nxml-start-delimiter-length obsolete-face operations overlay-arrow-string pandoc-list-type pcase-macroexpander pcase-used pending-delete permanent-local priority pure quail-help range read-only reader-construct rear-nonsticky reveal-toggle-invisible risky-local-variable rng-c-pattern rng-compile rng-dt-compile rng-rule-matcher rng-xsd-check rng-xsd-convert rng-xsd-length rng-xsd-less-than rng-xsd-matches-anything safe-local-eval-function safe-local-variable safe-magic saved-face saved-face-comment saved-value saved-variable-comment scroll-command sendfunc severity side-effect-free standard-value subfeatures suppress-keymap syntax-table target-idx theme-documentation theme-face theme-feature theme-settings theme-value thing-at-point translation-table translation-table-id type url-file-handlers variable-comment variable-documentation variable-interactive vc-functions vc-templates-grabbed watchers widget-documentation widget-type window-system-initialized x-frame-parameter xsdre-char-class xsdre-ranges xsdre-unicode-block xsdre-unicode-category)
+;; 
+;; 
+
+;; ^ Notes:
+;;
+;; M-: (symbol-plist 'yas-installed-snippets-dir)
+;;  ⇒ '(risky-local-variable t byte-obsolete-variable ("Yasnippet no longer comes with installed snippets" nil "0.13"))
+;;
+;; M-: (cl-loop for *PROPERTY* in (symbol-plist 'yas-installed-snippets-dir) by 'cddr collect *PROPERTY*)
+;;  ⇒ '(risky-local-variable byte-obsolete-variable)
+;;
+;; M-: (cl-sort '(risky-local-variable byte-obsolete-variable) #'string< :key #'symbol-name)
+;;  ⇒ '(byte-obsolete-variable risky-local-variable)
+;;
+;; M-: 
+;;  ⇒ 
+;;
+;; M-: 
+;;  ⇒ 
+;;
+
+;;----------------------------------------------;;
+
 (defun sboo-custom-groups-p (symbol)
 
   "Get all Customization Groups.
@@ -1279,7 +1338,7 @@ Output:
 
 Output:
 
-• A `Listp' Of `Symbolp'S.
+• a `listp' of `symbolp's.
   Every `major-mode' which inherits from `special-mode'.
   An average `length' is 30."
 

@@ -240,6 +240,19 @@
   "visually raise a Tool Bar Item when the Mouse hovers over it.")
 
 ;;----------------------------------------------;;
+;; Settings: Scrollbar -------------------------;;
+;;----------------------------------------------;;
+
+(sboo-custom-set vertical-scroll-bars 'right
+  "Enable and Position the Scrollbar.")
+
+(sboo-custom-set scroll-bar-width 64
+  "Enlarge the Scrollbar, in Pixels (Defaults to 8px wide).")
+
+(sboo-custom-set scroll-bar-height 64
+  "Enlarge the Scrollbar, in Pixels (Defaults to 8px tall).")
+
+;;----------------------------------------------;;
 ;; Settings: Undo ------------------------------;;
 ;;----------------------------------------------;;
 
@@ -294,6 +307,25 @@
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 
 ;; ^ URL `http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html'
+
+;;----------------------------------------------;;
+;; Settings: M-: -------------------------------;;
+;;----------------------------------------------;;
+
+(sboo-custom-set print-length nil
+  "‘nil’ means print arbitrarily-long expressions.")
+
+(sboo-custom-set print-level nil
+  "‘nil’ means print arbitrarily-deep expressions.")
+
+(sboo-custom-set print-quoted t
+  "‘t’ means print « (quote foo) » as « 'foo » and « (function foo) » as « #'foo ».")
+
+(sboo-custom-set eval-expression-print-length nil
+  "‘nil’ means ‘eval-expression’ prints arbitrarily-long expressions.")
+
+(sboo-custom-set eval-expression-print-level nil
+  "‘nil’ means ‘eval-expression’ prints arbitrarily-deep expressions.")
 
 ;;----------------------------------------------;;
 ;; Settings: Viewing ---------------------------;;

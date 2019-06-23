@@ -46,11 +46,28 @@
 ;;----------------------------------------------;;
 
 (progn
+  (require 'subr-x)
   (require 'seq))
 
 ;;==============================================;;
 
-(require 'company)
+(progn
+  (require 'company)
+  (require 'company-ispell))
+
+;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-company-register-backends ()
+  "Register `sboo-company-backends' with `company-backends'."
+  (setq company-backends sboo-company-backends))
+
+;;----------------------------------------------;;
+
+(defun sboo-company-register-frontends ()
+  "Register `sboo-company-frontends' with `company-frontends'."
+  (setq company-frontends sboo-company-frontends))
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
@@ -97,11 +114,12 @@ Effects:
      company-files     ; Filepaths.
      )
 
-    (
+    (:separate
      company-capf      ; `completion-at-point' Functions.
      company-keywords  ; `prog-mode' Keywords.
      company-etags     ; `prog-mode' TAGS.
-     company-yasnippet ; `yasnippet'.
+     :with
+     company-yasnippet    ; `yasnippet'.
      )
 
     ;; (
@@ -114,7 +132,6 @@ Effects:
     ;; (even when their ‘candidates’ list command is empty).
 
     (
-     company-yasnippet    ; `yasnippet'.
      company-abbrev       ; Abbreviations.
      company-dabbrev      ; Dynamic Abbreviations.
      company-dabbrev-code ;
@@ -161,7 +178,7 @@ a `listp' of `functionp's."
 ;;----------------------------------------------;;
 ;; Company Backends ----------------------------;;
 ;;----------------------------------------------;;
-;; Mode-specific `company-backends': Text
+;; `text-mode'-specific `company-backends'...
 
 (defun sboo-company-text-setup ()
 
@@ -185,26 +202,84 @@ a `listp' of `functionp's."
 ;;
 
 ;;==============================================;;
-;; Mode-specific `company-backends': Haskell
+;; `prog-mode'-specific `company-backends'...
+
+(defun sboo-company-prog-setup ()
+
+  "Setup `company-mode' for `prog-mode' deriveés."
+
+  ;; (make-local-variable 'company-backends)
+  ;; (add-to-list 'company-backends #'company- :append)
+
+  ())
 
 ;;==============================================;;
-;; Mode-specific `company-backends': ELisp
+;; Haskell-specific `company-backends'.
+
+(defun sboo-company-haskell-setup ()
+
+  "Setup `company-mode' for `haskell-mode'."
+
+  ;; (make-local-variable 'company-backends)
+  ;; (add-to-list 'company-backends #'company- :append)
+
+  ;; (make-local-variable 'company-transformers)
+  ;; (add-to-list 'company-transformers #'sboo-company-transformer-bury-haskell-private-methods :append)
+
+  ())
 
 ;;==============================================;;
-;; Mode-specific `company-backends': bash
+;; ELisp-specific `company-backends'.
+
+(defun sboo-company-elisp-setup ()
+
+  "Setup `company-mode' for `emacs-lisp-mode'."
+
+  ;; (make-local-variable 'company-backends)
+  ;; (add-to-list 'company-backends #'company- :append)
+
+  (make-local-variable 'company-transformers)
+  (add-to-list 'company-transformers #'sboo-company-transformer-elisp-bury-private-or-obsolete-symbols :append)
+
+  ())
+
+;; ^ `company-transformers':
+;;
+;; • each Company-Transformer is an Endomorphism.
+;;
 
 ;;==============================================;;
-;; Mode-specific `company-backends': Python
+;; Bash-specific `company-backends'.
+
+;;==============================================;;
+;; Nix-specific `company-backends'.
+
+(defun sboo-company-nix-setup ()
+
+  "Setup `company-mode' for `nix-mode'."
+
+  (make-local-variable 'company-backends)
+
+  (when (require 'nix-company nil :no-error)
+    (add-to-list 'company-backends #'company-nix :append))
+
+  ;; (make-local-variable 'company-transformers)
+  ;; (add-to-list 'company-transformers #'sboo-company-transformer-bury-nix-private-methods :append)
+
+  ())
+
+;;==============================================;;
+;; Python-specific `company-backends'.
 
 (defun sboo-company-python-setup ()
 
   "Setup `company-mode' for `python-mode'."
 
-  (add-to-list (make-local-variable 'company-backends)
-               #'company-anaconda))
+  (make-local-variable 'company-backends)
+  (add-to-list 'company-backends #'company-anaconda))
 
 ;;==============================================;;
-;; Mode-specific `company-backends': JavaScript
+;; JavaScript-specific `company-backends'.
 
 (defun sboo-company-javascript-setup ()
 
@@ -218,6 +293,133 @@ a `listp' of `functionp's."
 ;;----------------------------------------------;;
 ;; Company Frontends ---------------------------;;
 ;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+;; Company Transformers ------------------------;;
+;;----------------------------------------------;;
+;; `company-transformers':
+
+(defun sboo-company-transformer-elisp-bury-private-or-obsolete-symbols (candidates)
+
+  "Company-Transformer to deprioritize private/obsolete Elisp symbols.
+
+Reorder CANDIDATES by “burying” any candidate satisfying
+`sboo-company-elisp-symbol-private-or-obsolete-p', to the end of the
+list (which should show up at bottom of he l of the suggested
+candidates:
+
+=== Inputs ===
+
+• CANDIDATES — a `listp' of `stringp's.
+
+=== Output ===
+
+a `listp' of `stringp's.
+
+=== Laws ===
+
+• Output preserves all elements in CANDIDATES.
+
+=== Usage ===
+
+e.g. register with `company-transformers':
+
+    (make-local-variable 'company-transformers)
+    (add-to-list 'company-transformers
+                 #'sboo-company-transformer-elisp-bury-private-or-obsolete-symbols
+                 :append)
+
+=== Notes ===
+
+• Naming — c.f. `bury-buffer'.
+
+=== Links ===
+
+URL `https://emacs.stackexchange.com/questions/12360/how-to-make-private-elisp-methods-the-last-company-mode-choices'."
+
+  (let* ((TRANSFORMED-CANDIDATES
+
+          (cl-loop for SYMBOL in candidates
+               for PUBLICITY = (sboo-company-elisp-symbol-private-or-obsolete-p SYMBOL)
+
+             if (eq nil PUBLICITY)       collect SYMBOL into PUBLIC
+             else
+             if (eq 'private PUBLICITY)  collect SYMBOL into PRIVATE
+             else
+             if (eq 'obsolete PUBLICITY) collect SYMBOL into OBSOLETE
+             else
+             collect SYMBOL into NON-PUBLIC
+
+             finally return (append PUBLIC PRIVATE OBSOLETE NON-PUBLIC))))
+
+    TRANSFORMED-CANDIDATES))
+
+;; M-: (sboo-company-transformer-elisp-bury-private-or-obsolete-symbols '(yas-installed-snippets-dir sboo-company--private sboo-company-public sboo-company/private))
+;; → '(sboo-company-public sboo-company--private sboo-company/private yas-installed-snippets-dir)
+;;
+
+;;----------------------------------------------;;
+
+(defun sboo-company-elisp-symbol-private-or-obsolete-p (symbol)
+
+  "Whether SYMBOL seems private or is obsolete.
+
+Inputs:
+
+• SYMBOL — a `symbolp' or `stringp'.
+
+Output:
+
+• a `booleanp', or Enum:
+    • ‘private’
+    • ‘obsolete’
+
+Predicates:
+
+• Private if — the `symbol-name'
+  has a double-hyphen (i.e. ‹--›) or a forward-slash (i.e. ‹/›).
+• Obsolete if — SYMBOL has been given to `make-obsolete'.
+
+Links:
+
+• URL `'
+• URL `'"
+
+  (cl-check-type symbol (or symbol string))
+
+  (let ((SYMBOL (cond
+                  ((symbolp symbol) symbol)
+                  ((stringp symbol) (intern-soft symbol))
+                  (t nil)))
+
+        (STRING (cond
+                  ((symbolp symbol) (symbol-name symbol))
+                  ((stringp symbol) symbol)
+                  (t nil)))
+        )
+
+    (cond ((or (string-match-p (regexp-quote "--") STRING)
+               (string-match-p (regexp-quote "/") STRING))
+           'private)
+
+          ((or (get SYMBOL 'byte-obsolete-variable)
+               (get SYMBOL 'byte-obsolete-info))
+           'obsolete)
+
+          (t nil))))
+
+;; M-: (sboo-company-elisp-symbol-private-or-obsolete-p 'sboo-company-public)
+;;  → nil
+;;
+;; M-: (sboo-company-elisp-symbol-private-or-obsolete-p 'sboo-company--private)
+;;  → 'private
+;;
+;; M-: (sboo-company-elisp-symbol-private-or-obsolete-p 'sboo-company/private)
+;;  → 'private
+;;
+;; M-: (sboo-company-elisp-symbol-private-or-obsolete-p 'yas-installed-snippets-dir)
+;;  → 'obsolete
+;;
 
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
@@ -322,20 +524,6 @@ URL `http://blog.binchen.org/posts/emacs-auto-completion-for-non-programmers.htm
 ;; 
 ;; > "Insert the common part of all candidates, or select the next one."
 ;;
-
-;;----------------------------------------------;;
-;; Functions -----------------------------------;;
-;;----------------------------------------------;;
-
-(defun sboo-company-register-backends ()
-  "Register `sboo-company-backends' with `company-backends'."
-  (setq company-backends sboo-company-backends))
-
-;;----------------------------------------------;;
-
-(defun sboo-company-register-frontends ()
-  "Register `sboo-company-frontends' with `company-frontends'."
-  (setq company-frontends sboo-company-frontends))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
