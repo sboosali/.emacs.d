@@ -1,4 +1,4 @@
-;;; sboo-nix.el --- -*- lexical-binding: t -*-
+;;; sboo-nix.el --- My nix config -*- lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 

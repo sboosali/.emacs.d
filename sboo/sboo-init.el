@@ -722,7 +722,7 @@ Related:
 ;;----------------------------------------------;;
 
 (when (require 'sboo-toolbar nil :no-error)
-;;(setq tool-bar-map sboo-toolbar-map)
+  (sboo-toolbar-setup)
   ())
 
 ;;----------------------------------------------;;
@@ -2505,6 +2505,15 @@ Links:
 
   :config
 
+  (define-key helm-map (kbd "<f12>") #'helm-select-action)
+
+  ;; ^ Mnemonic: 
+  ;;
+  ;; • Global ‹f12› executes an Emacs Command.
+  ;; • Helm-Local ‹f12› executes a Helm Action
+  ;;   (i.e. the subset of Emacs Commands which can work upon the selection(s)).
+  ;; 
+
   ;; Helm and Ido mode are mutually-exclusive:
 
   (helm-autoresize-mode +1)
@@ -2607,10 +2616,13 @@ Links:
 
     ;;------------------------;;
 
-    :hook ((text-mode       . sboo-company-text-setup)
+    :hook ((prog-mode       . sboo-company-prog-setup)
+           (emacs-lisp-mode . sboo-company-elisp-setup)
+           (haskell-mode    . sboo-company-haskell-setup)
+           (nix-mode        . sboo-company-nix-setup)
            (python-mode     . sboo-company-python-setup)
            (javascript-mode . sboo-company-javascript-setup)
-           )
+           (text-mode       . sboo-company-text-setup))
 
     ;;------------------------;;
 
@@ -2625,8 +2637,8 @@ Links:
 
     :config
 
-    (sboo-company/register-backends)
-    (sboo-company/register-frontends)
+    (sboo-company-register-backends)
+    (sboo-company-register-frontends)
 
     ;;------------------------;;
 
@@ -3341,7 +3353,9 @@ $0")
 
   (use-package nix-mode
 
-    :load-path ("submodules/nix-mode")
+    :load-path ("vendor/nix-mode")
+    ;; :load-path ("vendor/nix-mode")
+    ;; :load-path ("submodules/nix-mode")
 
     :interpreter (("nix"       . nix-mode)
                   ("nix-build" . nix-mode)
@@ -3363,7 +3377,7 @@ $0")
 
   (use-package nix-repl
 
-    :load-path ("submodules/nix-mode")
+    :load-path ("vendor/nix-mode")
  
     :config ())
 

@@ -159,84 +159,86 @@ Related:
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
-(defvar sboo-toolbar-map
-
-  (when (keymapp tool-bar-map)
-
-    (let ((MAP (copy-keymap tool-bar-map))
-          )
-
-      (define-key-after MAP [separator-sboo] menu-bar-separator)
-
-      (tool-bar-local-item "mpc/play"
-                           #'compile
-                           'compile
-                           MAP
-                           :label  "Compile"
-                           :help   "« M-x compile »"
-                           :enable '(derived-mode-p 'prog-mode)
-                           ;; ^ enable only for `prog-mode' Major Modes.
-                           )
-
-      (tool-bar-local-item "left-arrow"
-                           #'pop-global-mark
-                           'pop-global-mark
-                           MAP
-                           :label  "Go Back"
-                           :help   "« M-x pop-global-mark »"
-                           :enable t
-                           :rtl    "right-arrow"
-                           )
-
-      ;; (tool-bar-local-item "right-arrow"
-      ;;                      #'
-      ;;                      '
-      ;;                      MAP
-      ;;                      :label  "Forward"
-      ;;                      :help   "« M-x  »"
-      ;;                      :enable t
-      ;;                      :rtl    "left-arrow"
-      ;;                      )
-
-      MAP))
-
-  "Personal Tool-Bar.
-
-Add some Icons/Commands to the standard Tool Bar.")
-
 ;;----------------------------------------------;;
 ;; Functions -----------------------------------;;
 ;;----------------------------------------------;;
 
 (defun sboo-toolbar-setup ()
 
-  "Extend `tool-bar-map'."
+  "Extend `tool-bar-map'.
+
+Additions of personal Toolbar-Items include: 
+
+• “Compile” — runs `compile'.
+
+Deletions of default Toolbar-Items include: 
+
+• “Save” — manual saving is unnecessary; the
+  Autosave Feature (via `sboo-autosave' / `auto-save-visited-mode')
+  provides automatic saving."
+
+  ;; Deletions:
 
   (let* ((MAP tool-bar-map)
          )
 
-      (tool-bar-local-item "mpc/play"
+    ;; 'save
+
+    MAP)
+
+  ;; Modifications:
+
+  (let* ((MAP tool-bar-map)
+         )
+
+    ;; 'isearch-forward
+    ;; (defalias 'sboo-search #'helm-swoop)
+
+    MAP)
+
+  ;; Additions:
+
+  (let* ((MAP tool-bar-map)
+         )
+
+      (tool-bar-local-item "mpc/play.pbm"
                            #'compile
                            'compile
                            MAP
-                           :label  "Compile"
-                           :help   "« M-x compile »"
-                           :visible t ; '(or (equal (default-value 'compile-command) (symbol-value 'compile-command)) (derived-mode-p 'prog-mode))
-                           ;; ^ Enable only for either: ❶ non-default `compile-command's; or ❷ `prog-mode' Major Modes.
-                           )
+                           :label "Compile"
+                           :help "« M-x compile »"
+                           :visible (sboo-toolbar-compile-visibile-p))
 
-      ;; (tool-bar-local-item "right-arrow"
-      ;;                      #'
-      ;;                      '
-      ;;                      MAP
-      ;;                      :label  "Forward"
-      ;;                      :help   "« M-x  »"
-      ;;                      :enable t
-      ;;                      :rtl    "left-arrow"
-      ;;                      )
+      (tool-bar-local-item "stop.xpm"
+                           #'keyboard-quit
+                           'stop
+                           MAP
+                           :label "Stop"
+                           :help "« M-x keyboard-quit »"
+                           :visible t)
 
-      ;; (subsumed by ‘back-button’:)
-      ;;
+      (tool-bar-local-item "browse-url.xpm"
+                           #'helm-M-x
+                           'M-x
+                           MAP
+                           :label "M-x"
+                           :help "« M-x … »"
+                           :visible t)
+
+      ;; (tool-bar-local-item "spell" #'sboo-spellcheck)
+
+      ;; (tool-bar-local-item "checkmark.xpm")
+
+      ;; (tool-bar-local-item "important")
+
+      ;; (tool-bar-local-item "run")
+
+      ;; (tool-bar-local-item "")
+
+      ;; (tool-bar-local-item "info")
+
+      ;; (tool-bar-local-item "emacs.png")
+
       ;; (tool-bar-local-item "left-arrow"
       ;;                      #'pop-global-mark
       ;;                      'pop-global-mark
@@ -247,6 +249,28 @@ Add some Icons/Commands to the standard Tool Bar.")
       ;;                      )
 
       MAP))
+
+;;----------------------------------------------;;
+
+(defun sboo-toolbar-teardown ()
+
+  "Invert `sboo-toolbar-setup' (restore `tool-bar-map')."
+
+  'TODO)
+
+;;----------------------------------------------;;
+
+(defun sboo-toolbar-compile-visibile-p ()
+
+  "Whether to enable the ‘compile’ Tool Item.
+
+Enable the only for either: 
+
+❶ non-default `compile-command's; or
+❷ `prog-mode' Major Modes."
+
+  (or (equal (default-value 'compile-command) (symbol-value 'compile-command))
+      (derived-mode-p 'prog-mode)))
 
 ;;----------------------------------------------;;
 ;; Effects: ‘sboo-mode’ ------------------------;;
@@ -272,21 +296,21 @@ Add some Icons/Commands to the standard Tool Bar.")
 ;; Effects -------------------------------------;;
 ;;----------------------------------------------;;
 
-(define-key global-map [tool-bar sboo-mode]
+;; (define-key global-map [tool-bar sboo-mode]
 
-  '(menu-item "SBoo Mode"
+;;   '(menu-item "SBoo Mode"
 
-              sboo-global-mode
+;;               sboo-global-mode
 
-              :help    "Toggle SBoo Mode (globally)."
+;;               :help    "Toggle SBoo Mode (globally)."
 
-              :image   sboo-image
+;;               :image   sboo-image
 
-              :button  (:toggle . sboo-global-mode)
+;;               :button  (:toggle . sboo-global-mode)
 
-   ;;         :visible (not (sboo-global-mode))
+;;    ;;         :visible (not (sboo-global-mode))
 
-    :keys    "\\[sboo-global-mode]"))
+;;     :keys    "\\[sboo-global-mode]"))
 
 ;; (progn
 ;;   (define-key global-map [tool-bar shell]
