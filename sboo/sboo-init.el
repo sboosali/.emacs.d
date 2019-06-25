@@ -547,6 +547,11 @@ Related:
 
 (with-demoted-errors "[Warning] %s"
 
+  (defvar sboo-initital-theme 'solarized
+    "Theme Name to initially load (via `load-theme').
+
+  a `symbolp'.")
+
   (when (>= emacs-major-version 24)
 
     (add-to-theme-path! sboo-theme-directory)
@@ -555,7 +560,7 @@ Related:
     (progn
       (sboo-register-submodule-packages! "solarized")
       (sboo-register-submodule-themes!   "solarized")
-      (load-theme 'solarized :no-confirm))
+      (load-theme sboo-initital-theme :no-confirm))
 
     ()))
 
@@ -722,14 +727,12 @@ Related:
 ;;----------------------------------------------;;
 
 (when (require 'sboo-toolbar nil :no-error)
-  (sboo-toolbar-setup)
-  ())
+  (sboo-toolbar-setup))
 
 ;;----------------------------------------------;;
 
 (when (require 'sboo-menubar nil :no-error)
-  (sboo-menubar-setup)
-  ())
+  (sboo-menubar-setup))
 
 ;;----------------------------------------------;;
 
@@ -1061,7 +1064,7 @@ Related:
   ;; • "s-m" — personal keymap for MODE-specific stuff.
   ;; • "l" — LINTING.
 
-  :bind (("s-m l" . sboo-elint-buffer)
+  :bind (("s-q l" . sboo-elint-buffer)
          )
 
   :preface
@@ -2437,12 +2440,14 @@ Links:
 
     :load-path ("submodules/helm" "submodules/async")
 
+    ;;------------------------;;
+
     :custom
 
-    (helm-command-prefix-key "M-q" "the Default (« C-x c ») is too similar to `kill-emacs's keybinding.")
+    (helm-command-prefix-key "<f9>"
+      "the Default (« C-x c ») is too similar to `kill-emacs's keybinding.")
 
-    ;; ^  NOTE `helm-command-prefix-key':
-    ;;    becomes immutable once `helm-config' is `load'ed.
+    ;; ^  NOTE `helm-command-prefix-key' becomes immutable once `helm-config' is `load'ed.
 
     ;;   :bind (:map helm-map
     ;;               ("<tab>" . helm-execute-persistent-action)
@@ -2462,17 +2467,16 @@ Links:
 
     (define-key global-map [remap menu-find-file-existing]  #'helm-find-files) ; The `toolbar's `<open-file>'.
 
-    (when (executable-find "curl")
-      (setq helm-google-suggest-use-curl-p t))
-
-    ;; ^ website `google' via program `curl'.
-
     ())
 
 ;;----------------------------------------------;;
 
 (use-package helm
-  :load-path "vendored/helm"
+    :load-path "vendored/helm"
+
+    :after helm-config
+
+    ;;------------------------;;
 
   :delight (helm-mode " ⎈")
   :custom
@@ -2505,7 +2509,10 @@ Links:
 
   :config
 
-  (define-key helm-map (kbd "<f12>") #'helm-select-action)
+  ;; Helm keybindings:
+
+  (define-key helm-map (kbd "<f12>")         #'helm-select-action)
+  (define-key helm-map sboo-key/keyboard-quit #'keyboard-quit) ; (if Overrides the “Run Ninth Helm Action” command.
 
   ;; ^ Mnemonic: 
   ;;
@@ -2514,10 +2521,19 @@ Links:
   ;;   (i.e. the subset of Emacs Commands which can work upon the selection(s)).
   ;; 
 
-  ;; Helm and Ido mode are mutually-exclusive:
+  ;; Helm config:
 
-  (helm-autoresize-mode +1)
-  (ido-mode             -1))
+  (when (executable-find "curl")
+    (setq helm-net-prefer-curl’ t))
+
+  ;; ^ website `google' via program `curl'.
+
+  (progn
+    ;; Helm and Ido (their `minor-mode's) are mutually-exclusive:
+    (helm-autoresize-mode +1)
+    (ido-mode            -1))
+
+  ())
 
 ;; ^ Links:
 ;;
@@ -5433,27 +5449,134 @@ search (upwards) for a named Code-Block. For example,
 ;;; External Packages: Windows/Buffers ---------;;
 ;;----------------------------------------------;;
 
+(use-package centaur-tabs
+    :disabled
+l    
+    :demand t
+
+    ;;------------------------;;
+
+    :commands (centaur-tabs-mode)
+    
+    :bind  (("C-<kp-left>"  . centaur-tabs-backward)
+            ("C-<kp-right>" . centaur-tabs-forward))
+
+    ;;------------------------;;
+
+    :custom
+
+    (centaur-tabs-style "bar"
+      "")
+
+    (centaur-tabs-cycle-scope 'groups
+      "‘centaur-tabs-forward’ cycles through Tab Groups, not Visible Tags.")
+
+    (centaur-tabs-common-group-name "?"
+      "default name for Tab Groups.")
+
+    (centaur-tabs-height 22
+      "Height of each Tab.")
+
+    (centaur-tabs-bar-height (+ 6 22)
+      "Height of the Tab-bar.")
+
+    (centaur-tabs-set-close-button t
+      "enable Close-Buttons on each tab.")
+
+    (centaur-tabs-close-button (string ?❌)
+      "each Close-Button is « ❌ » (a Unicode Cross-Mark).")
+
+    ;;------------------------;;
+
+    :preface
+
+    (defvar sboo-disable/centaur-tabs nil
+      "Gates `centaur-tabs-mode' (a `booleanp').")
+
+    (defun sboo-centaur-tabs-toggle (&optional force)
+      "Toggle `centaur-tabs-mode', unless `sboo-disable/centaur-tabs'."
+      (interactive "P")
+
+      (let ((FORCE (and (not (null force))
+                        (> (prefix-numeric-value force) 0))))
+        (if FORCE
+            (centaur-tabs-mode FORCE)
+          (unless (or (bound-and-true-p centaur-tabs-mode)
+                      (bound-and-true-p sboo-disable/centaur-tabs))
+            (centaur-tabs-mode +1)))))
+
+    (defun sboo-centaur-tabs-reset-background-color (&optional theme)
+      "Set `centaur-tabs-background-color' for THEME, unless `sboo-disable/centaur-tabs'."
+
+      (when (featurep 'centaur-tabs)
+        (setq centaur-tabs-background-color (face-background 'default))))
+
+    ;;------------------------;;
+
+    :config
+
+    ;; Launch the Tab-bar, later:
+
+    (add-hook 'emacs-startup-hook #'sboo-centaur-tabs-toggle)
+
+    ;; Reset the Tab-bar Color, whenever the Current Theme is changed via `sboo-load-theme':
+
+    (add-hook 'sboo-theme-post-init-hook #'sboo-centaur-tabs-reset-background-color)
+
+    ())
+
+;; ^ `centaur-tabs' provides a Tab-bar.
+;;
+;; forked off `awesome-tab`.
+;;
+;;
+
+;; ^ `centaur-tabs-style' defaults to "bar", and can be:
+;;
+;; - "alternate"
+;; - "bar"
+;; - "box"
+;; - "chamfer"
+;; - "rounded"
+;; - "slant"
+;; - "wave"
+;; - "zigzag"
+;; 
+
+;; ^ Links:
+;;
+;; URL `https://github.com/ema2159/centaur-tabs'
+
+;;----------------------------------------------;;
+
 (use-package awesome-tab
+    ;;:disabled
 
-  :commands (awesome-tab-mode)
+    :demand t
 
-  :custom
+    ;;------------------------;;
 
-  (awesome-tab-style "alternate" "Rectilinear Tabs (default are Rounded).")
+    :commands (awesome-tab-mode)
 
-  (awesome-tab-label-fixed-length 14 "FixedWidth Tabs: all Tab Labels share the same length (unit is number-of-characters).")
+    :custom
 
-;;(awesome-tab-buffer-groups-function #' "")
+    (awesome-tab-style "alternate" "Rectilinear Tabs (default are Rounded).")
 
-  (awesome-tab-background-color "#fdf6e3")  ; the Background-Color of Solarized-Theme.
-;;(awesome-tab-selected         "#fdf6e3")
-;;(awesome-tab-unselected       "#fdf6e3")
+    (awesome-tab-label-fixed-length 14 "FixedWidth Tabs: all Tab Labels share the same length (unit is number-of-characters).")
 
-  :config
+    ;;(awesome-tab-buffer-groups-function #' "")
 
-  (awesome-tab-mode +1)
+    (awesome-tab-background-color "#fdf6e3")  ; the Background-Color of Solarized-Theme.
+    ;;(awesome-tab-selected         "#fdf6e3")
+    ;;(awesome-tab-unselected       "#fdf6e3")
 
-  ())
+    :config
+
+    ;; Launch the Tab-bar, later:
+
+    (add-hook 'emacs-startup-hook #'awesome-tab-mode)
+
+    ())
 
 ;; ^ Links:
 ;;
@@ -5467,7 +5590,7 @@ search (upwards) for a named Code-Block. For example,
 ;;----------------------------------------------;;
 
 (use-package shell-pop
-    :disabled t
+    :disabled
 
     ;;--------------------------;;
 

@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+#
+# key         : time
+# name        : [sboo] a « time ».
+#
+# type        : snippet
+# condition   : (let ((KEY "time")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 16) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : e.g. « <time datetime="2016-01-20">20 Jan 2016</time> »
+#
+# --
+<time datetime="${1:`(sboo-yas-machine-readable-date)`}">${1:$(sboo-yas-human-readable-date :date yas-text)}</time>$0

@@ -923,6 +923,67 @@ e.g. this elisp call:
   ()) ;TODO
 
 ;;----------------------------------------------;;
+
+(cl-defun sboo-html-render-time-element-with-datetime-attribute (&key time)
+
+  "Return TIME formatted as « <time datetime=\"…\">…</time> ».
+
+Input:
+
+• nil or a `listp' of `numberp's (a Timestamp).
+  Defaults to `current-time'.
+
+Output:
+
+• a `stringp'.
+
+Example:
+
+• M-: (sboo-html-render-time-element-with-datetime-attribute '(2016 01 20))
+    ⇒ \"<time datetime=\\\"2016-01-20\\\">20 Jan 2016</time>\"
+
+Usage:
+
+• M-: (insert (format \"<p>Published on %s</p>.\" (sboo-html-render-time-element-with-datetime-attribute)))
+
+Links:
+
+• URL `https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time#Attributes'
+• URL `https://www.emacswiki.org/emacs/InsertingTodaysDate'
+• URL `http://ergoemacs.org/emacs/elisp_datetime.html'
+
+Related:
+
+• `format-time-string'
+• `sgml-tag'"
+
+  (interactive (list :time nil))
+
+  (let* ((TIME   (or time (current-time)))
+
+         (HUMAN-READABLE-TIME (format-time-string "%d %b %Y" TIME))
+
+         (MACHINE-READABLE-TIME (format-time-string "%Y-%m-%d" TIME))
+
+         (HTML-TIME (format "<time datetime=\"%s\">%s</time>" MACHINE-READABLE-TIME HUMAN-READABLE-TIME)))
+
+    HTML-TIME))
+
+;; ^ M-: (insert (format "<p>Published on %s</p>." (sboo-html-render-time-element-with-datetime-attribute)))
+;;   `inserts' <p>Published on <time datetime="2019-06-25">25 Jun 2019</time></p>
+
+;; ^ `format-time-string' Month Formats:
+;;
+;; ;; full month name:
+;; (format-time-string "%B")
+;; ⇒ "November"
+;;
+;; ;; abbreviated month name:
+;; M-: (format-time-string "%b")
+;; ⇒ "Nov"
+;;
+
+;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 
