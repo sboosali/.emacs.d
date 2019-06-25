@@ -52,13 +52,15 @@
 
     (defmacro sboo-custom-set (variable expression &optional comment)
 
-      "`custom-set-variables' wrapper."
+      "Singleton `custom-set-variables'."
       
-      (declare (indent 2) (doc-string 3))
+      (declare (debug (list ))
+               (indent 2)
+               (doc-string 3))
 
-      `(with-demoted-errors "[Warning] %s"
+      `(with-demoted-errors "[Customize] %s"
          (custom-set-variables
-          (list (quote ,variable) (quote ,expression) :eager nil ,comment))))) ;TODO handle variables, not just symbols
+          (list (quote ,variable) (quote ,expression) :eager nil ,comment)))))
 
   ;;--------------------------;;
 

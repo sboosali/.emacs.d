@@ -41,7 +41,7 @@
 
 ;; builtins:
 
-(eval-when-compile 
+(eval-when-compile
   (require 'cl-lib))
 
 ;;----------------------------------------------;;
@@ -79,7 +79,9 @@ Related:
 
 • `insert-char'"
 
-    (declare (indent 1) (doc-string 3))
+    (declare (debug nil)
+             (indent 1)
+             (doc-string 3))
 
     (let* ((NAME       name)
            (CHAR-VALUE char)
@@ -108,11 +110,68 @@ Related:
 ;; Variables -----------------------------------;;
 ;;----------------------------------------------;;
 
-(defvar sboo-key-compile
+(defvar sboo-key/keyboard-quit (kbd "<f10>")
 
-  (kbd "<print>")
+  "“Universal Key” to invoke a Quit Command.
 
-  "Key to invoke `compile'.")
+To be bound to:
+
+• `keyboard-quit'
+• `quit'
+
+In some `major-mode's, this key can be bound to a similar (but
+different) command. For example, `*-quit' in some `*-mode-map'.")
+
+;;----------------------------------------------;;
+
+(defvar sboo-key/copy (kbd "<print>")
+
+  "“Universal Key” to invoke a Clipboard Copy.
+
+To be bound to:
+
+• `copy-dwim'
+• `clipboard-kill-ring-save'
+• `kill-ring-save'")
+
+;;----------------------------------------------;;
+
+(defvar sboo-key/paste (kbd "<insert>")
+
+  "“Universal Key” to invoke a Clipboard Paste.
+
+To be bound to:
+
+• `clipboard-yank'
+• `x-clipboard-yank'
+• `yank'")
+
+;;----------------------------------------------;;
+
+(defvar sboo-key/jump (kbd "<Scroll_Lock>")
+
+  "“Universal Key” to invoke a Jump Command.
+
+To be bound to:
+
+• `sboo-jump'
+• `xref-find-definitions'")
+
+;;----------------------------------------------;;
+
+(defvar sboo-key/compile (kbd "<kp-delete>")
+
+  "“Universal Key” to invoke `sboo-compile'.
+
+To be bound to:
+
+• `sboo-compile'
+• `compile'
+• `recompile'
+
+In some `major-mode's, this key can be bound to a similar (but
+different) command. For example, `recompile' in
+`compilation-mode-map'.")
 
 ;;----------------------------------------------;;
 ;; Autoloads -----------------------------------;;
@@ -692,6 +751,18 @@ Inputs:
 
 ;;==============================================;;
 
+;;; Named Keybindings (‘sboo-key/*’):
+
+(progn
+
+  (global-set-key sboo-key/compile        #'compile)
+  (global-set-key sboo-key/jump           #'sboo-jump)
+  (global-set-key sboo-key/keyboard-quit  #'keyboard-quit)
+
+  ())
+
+;;==============================================;;
+
 ;;; Single-Character Keybindings (‘TAB’, ‘RET’, ‘<XF86*>’, etc)...
 
 ;;==============================================;;
@@ -714,15 +785,23 @@ Inputs:
 
 (progn
 
-  (global-set-key (kbd "<prior>") #'sboo-backward-defun)
-  (global-set-key (kbd "<next>")  #'sboo-forward-defun)
+  (global-set-key (kbd "<prior>") #'sboo-backward-defun) ; a.k.a. « Page Up ». 
+  (global-set-key (kbd "<next>")  #'sboo-forward-defun)  ; a.k.a. « Page Down ». 
 
-  (global-set-key sboo-key-compile      #'compile)
-  (global-set-key (kbd "<Scroll_Lock>") #'compile)
-  (global-set-key (kbd "<pause>")       #'sboo-press-C-g)
-
-  (global-set-key (kbd "<insert>") #'yank)
   ;;(global-set-key (kbd "<delete>") #'sboo-undefined)
+  ())
+
+;;----------------------------------------------;;
+
+(progn
+
+  (global-set-key sboo-key/copy
+                  (cond
+                    ((fboundp #'copy-dwim)                 #'copy-dwim)
+                    ((fboundp #'clipboard-kill-ring-save) #'clipboard-kill-ring-save)
+                    (_                                        #'yank)))
+
+  (global-set-key sboo-key/paste #'clipboard-yank)
 
   ())
 
@@ -762,12 +841,13 @@ Inputs:
 (global-set-key (kbd "<f7>") #'list-buffers) ; a.k.a. « C-x b ».
 (global-set-key (kbd "<f8>") #'find-file)    ; a.k.a. « C-x f ».
 
+
 ;;----------------------------------------------;;
 
-;;(global-set-key (kbd "<f9>")  nil)
-(global-set-key (kbd "<f10>") #'compile)                  ; Mnemonic: S-<f10> is Run/Debug in IntelliJ.
-(global-set-key (kbd "<f11>") #'pp-eval-expression)       ;
-(global-set-key (kbd "<f12>") #'execute-extended-command) ;
+;;(global-set-key (kbd "<f9>")  #')                           ; Reserved for ‘helm-command-prefix-key’.
+;;(global-set-key (kbd "<f10>") #')                          ; Reserved for ‘keyboard-quit’.
+(global-set-key (kbd "<f11>")           #'pp-eval-expression)       ;
+(global-set-key (kbd "<f12>")           #'execute-extended-command) ;
 
 ;;==============================================;;
 
@@ -1181,7 +1261,7 @@ Inputs:
 ;;(global-set-key (kbd "s-j") #')
   (global-set-key (kbd "s-k") #'sboo-mark-keymap)           ; Mar[K] Commands (i.e. « mar[K]-* »).
   (global-set-key (kbd "s-l") #'align-regexp)               ; a[L]ign
-  (global-set-key (kbd "s-m") #'sboo-mode-keymap)           ; [M]ode-specific commands.
+  (global-set-key (kbd "s-m") #'compile)                      ; co[M]pile.
   (global-set-key (kbd "s-n") #'sboo-navigate-keymap)       ; [N]avigation Commands.
   (global-set-key (kbd "s-o") #'find-file-at-point)         ; [O]pen file.
   (global-set-key (kbd "s-p") #'helm-show-kill-ring)        ; [P]aste from History.
@@ -1213,6 +1293,7 @@ Inputs:
 ;;(global-set-key (kbd "s-s") #'sboo-launch-shell)          ; "Shell"
 ;;(global-set-key (kbd "s-t") #'sboo-launch-term)           ; "Terminal"
 ;;(global-set-key (kbd "s-p") #'proced)
+;;(global-set-key (kbd "s-m") #'sboo-mode-keymap)           ; [M]ode-specific commands.
 
 ;;==============================================;;
 ;; « s-<SYMBOL> »
@@ -1303,6 +1384,22 @@ Inputs:
 
 ;(global-set-key (kbd "<apps>") 'list-buffers)
 ;(global-set-key (kbd "<menu>") 'list-buffers)
+
+;;==============================================;;
+;;; Toolbar “Key”-bindings...
+;;==============================================;;
+
+(with-demoted-errors "[sboo-init-keybindings] %s"
+;;(tool-bar-enable-clipboard)
+  ())
+
+;;==============================================;;
+;;; Menubar “Key”-bindings...
+;;==============================================;;
+
+(with-demoted-errors "[sboo-init-keybindings] %s"
+  (menu-bar-enable-clipboard)
+  ())
 
 ;;==============================================;;
 ;; Mode-Local Keybindings ======================;;
@@ -1405,9 +1502,7 @@ Inputs:
 
 (with-eval-after-load 'ido
 
-  (dolist (*MAP* (list ido-file-completion-map
-                       ido-file-dir-completion-map
-                       ))
+  (dolist (*MAP* (list ido-file-completion-map ido-file-dir-completion-map))
 
     (define-key *MAP* (kbd "<kp-left>")  #'backward-char)
     (define-key *MAP* (kbd "<kp-right>") #'forward-char)))
@@ -1417,33 +1512,44 @@ Inputs:
 (progn
 
   (defun sboo-set-run-key-to-eval-buffer ()
-    (local-set-key sboo-key-compile #'eval-buffer)
-    (local-set-key (kbd "<s>-p")    #'eval-buffer)
-    ())
+    "Bind `sboo-key/compile' (&al) to `eval-buffer'."
+    (let ((COMMAND #'eval-buffer)
+          (KEYS    (list sboo-key/compile (kbd "s-m"))))
+      (dolist (KEY KEYS)
+        (local-set-key KEY COMMAND))
+      `(,COMMAND . ,KEYS)))
 
-  (add-hook 'emacs-lisp-mode-hook
-            #'sboo-set-run-key-to-eval-buffer))
+  (add-hook 'emacs-lisp-mode-hook #'sboo-set-run-key-to-eval-buffer))
 
 ;;==============================================;;
 
-;;; `compilation-minor-mode-map'
+;;; ‹compilation-[minor-]mode-map›s:
 
 (when (require 'compile nil t)
 
-      (let ((*MAP* compilation-minor-mode-map))
+  (let ((*MAP* compilation-mode-map))
 
-        (define-key *MAP* (kbd "<kp-next>")  #'compilation-next-error)
-        (define-key *MAP* (kbd "<kp-prior>") #'compilation-previous-error)
+    (define-key *MAP* sboo-key/compile #'recompile)
 
-        ;; (define-key *MAP* (kbd "<kp-down>")  #'compilation-next-file)
-        ;; (define-key *MAP* (kbd "<kp-up>")    #'compilation-previous-file)
+    ())
 
-        ()))
+  (let ((*MAP* compilation-minor-mode-map))
 
-  ;; ^ provides these (single-keypress) keybindings:
-  ;; 
+    (define-key *MAP* (kbd "<kp-next>")  #'compilation-next-error)
+    (define-key *MAP* (kbd "<kp-prior>") #'compilation-previous-error)
 
-;; `compilation-minor-mode-map' is a parent of `compilation-mode-map'.
+    ;; (define-key *MAP* (kbd "<kp-down>")  #'compilation-next-file)
+    ;; (define-key *MAP* (kbd "<kp-up>")    #'compilation-previous-file)
+
+    ())
+
+  'compile)
+
+;; ^ Notes:
+;;
+;; • `compilation-minor-mode-map' is a parent of `compilation-mode-map'.
+;; • 
+;;
 
 ;;==============================================;;
 ;;; Notes --------------------------------------;;

@@ -1,4 +1,4 @@
-;;; sboo-commands.el --- Personal ‘commandp’s -*- coding: utf-8; lexical-binding: t -*-
+;;; sboo-commands.el --- My commands -*- coding: utf-8; lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -26,16 +26,51 @@
 
 ;;; Commentary:
 
-;; Personal ‘interactive’ ‘commandp’s.
+;; Personal ‘commandp’s (‘interactive’ ‘functionp’s).
 ;;
-;; (This `feature' is "pure" (it has declarations only, no settings)).
+;; You should be able to safely `require' this `featurep'
+;; into your own config (see the « Purity » and « Naming »
+;; sections of this Commentary for why).
 ;;
-;; Most commands are namespaced under `sboo-` or `xah-`
-;; (as are their non-`interactive' utilities).
+;; === Purity ===
 ;;
-;; See my `define-graceful-command` macro, for conveniently defining commands with fallbacks
-;; (when external packages haven't been installed and/or can't be loaded).
+;; This file is "pure". It has declarations only, no settings.
+;; i.e.:
 ;;
+;; • Declarations — `defvar's, `defcustom's, `defconst's,
+;;  `defun's, `defmacro's, etc.
+;; • Settings — no `global-set-key's, no `add-to-list's, etc.
+;;
+;; === Macros ===
+;;
+;; Macros provided (and used) include:
+;;
+;; • `defun-dwim' —
+;; • `define-graceful-command' — 
+;;
+;; === Commands ===
+;;
+;; Commands provided include:
+;;
+;; • 
+;;
+;; === Naming ===
+;;
+;; Most commands are namespaced under « sboo- »
+;; (or « xah- »), as are their non-`interactive' auxiliaries.
+;; All commands defined by `define-graceful-command' are namespaced personally.
+;; Exceptions include some “Do-What-I-Mean” commands defined by
+;;`defun-dwim', like:
+;;
+;; • `copy-dwim'
+;; • `kill-dwim'
+;; • `eval-dwim'
+;; • `indent-region'
+;; • `fill-dwim'
+;;
+;; === ===
+;;
+;; 
 ;;
 
 ;;; Code:
@@ -108,7 +143,7 @@ Notes:
 
 • “DWIM” abbreviates “Do-What-I-Mean”."
 
-    (declare (debug (&define name name name &optional stringp))
+    (declare (debug (&define name symbolp symbolp &optional stringp))
              (doc-string 4)
              (indent     4))
 
@@ -157,22 +192,37 @@ Notes:
 
 ;;----------------------------------------------;;
 
-(defmacro define-graceful-command (Name ExternalCommand BuiltinCommand &optional DocString)
+(eval-when-compile
 
-  `(defun ,Name ()
+  (defmacro define-graceful-command (Name ExternalCommand BuiltinCommand &optional DocString)
 
-     ,DocString
+    "`defun' a `commandp' which dynamically gracefully-degrades (given `fbound'edness).
 
-     (interactive) ;;TODO must expose, e.g. for helm-find-files, (interactive "P") ;; use cl-defun for :doc and :interactive
+Usage: for conveniently defining commands with fallbacks (when
+external packages haven't been installed and/or can't be loaded).
 
-     (let ((*command* (function ,ExternalCommand)))
+Related:
 
-    (if (and (commandp *command*)
-             (fboundp  *command*))
+• Safer (but heavier) analogue of `defalias'."
 
-      (call-interactively *command*)
+    (declare (debug (&define name symbolp symbolp &optional stringp))
+             (doc-string 4)
+             (indent     4))
 
-     (call-interactively (function ,BuiltinCommand))))))
+    `(defun ,Name ()
+
+       ,DocString
+
+       (interactive) ;;TODO must expose, e.g. for helm-find-files, (interactive "P") ;; use cl-defun for :doc and :interactive
+
+       (let ((*command* (function ,ExternalCommand)))
+
+         (if (and (commandp *command*)
+                  (fboundp  *command*))
+
+             (call-interactively *command*)
+
+           (call-interactively (function ,BuiltinCommand)))))))
 
 ;; ^ `defalias' for commands with graceful degradation.
 ;;
@@ -187,10 +237,42 @@ Notes:
 ;; DWIM ----------------------------------------;;
 ;;----------------------------------------------;;
 
-(with-demoted-errors "[Warning] %s" (defun-dwim eval-dwim   eval-region   eval-last-sexp))
-(with-demoted-errors "[Warning] %s" (defun-dwim kill-dwim   kill-region   kill-line))
-(with-demoted-errors "[Warning] %s" (defun-dwim fill-dwim   fill-region   fill-paragraph))
-(with-demoted-errors "[Warning] %s" (defun-dwim indent-dwim indent-region sboo-indent-defun-or-buffer))
+(progn
+  (with-demoted-errors "[Warning] %s" (defun-dwim eval-dwim   eval-region   eval-last-sexp))
+  (with-demoted-errors "[Warning] %s" (defun-dwim kill-dwim   kill-region   kill-line))
+  (with-demoted-errors "[Warning] %s" (defun-dwim fill-dwim   fill-region   fill-paragraph))
+  (with-demoted-errors "[Warning] %s" (defun-dwim indent-dwim indent-region sboo-indent-defun-or-buffer))
+  ())
+
+;;----------------------------------------------;;
+
+(progn
+
+  ;;
+
+  (defun sboo-copy-buffer (&optional buffer)
+
+    "Copy the contents of BUFFER (to the clipboard).
+
+Related:
+
+• Wraps `clipboard-kill-ring-save',
+  (which wraps `kill-ring-save'.)"
+
+    (interactive)
+
+    (let ((BUFFER (or buffer (current-buffer))))
+
+      (with-current-buffer BUFFER
+        (clipboard-kill-ring-save (point-min) (point-max) nil))))
+
+  ;;
+
+  (with-demoted-errors "[Warning] %s" (defun-dwim copy-dwim clipboard-kill-ring-save sboo-copy-buffer))
+
+  ;;
+
+  ())
 
 ;;----------------------------------------------;;
 ;; Thing at point ------------------------------;;
