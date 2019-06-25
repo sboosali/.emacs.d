@@ -901,26 +901,6 @@ Links:
 
     (list LEFT RIGHT KEY MODES)))
 
-;;----------------------------------------------;;
-;; Commands ------------------------------------;;
-;;----------------------------------------------;;
-
-(defun sboo-markdown-goto-h1 (&optional query)
-
-  "Go to an H1 with text QUERY.
-
-e.g. this elisp call:
-
-         (sboo-markdown-goto-h1 \"mark\")
-
-     will go to this markdown line:
-
-         # The Mark-Ring
-"
-
-  (interactive)
-
-  ()) ;TODO
 
 ;;----------------------------------------------;;
 
@@ -944,7 +924,7 @@ Example:
 
 Usage:
 
-• M-: (insert (format \"<p>Published on %s</p>.\" (sboo-html-render-time-element-with-datetime-attribute)))
+• M-: (insert (format \"<p>Published on %s</p>.\" (sboo-html-insert-time-element-with-datetime-attribute)))
 
 Links:
 
@@ -982,6 +962,56 @@ Related:
 ;; M-: (format-time-string "%b")
 ;; ⇒ "Nov"
 ;;
+
+;;----------------------------------------------;;
+;; Commands ------------------------------------;;
+;;----------------------------------------------;;
+
+(cl-defun sboo-html-insert-time-element-with-datetime-attribute (&key time)
+
+  "Insert TIME formatted as « <time datetime=\"…\">…</time> ».
+
+Input:
+
+• nil or a `listp' of `numberp's (a Timestamp).
+  When `called-interactively-p', defaults to `current-time'.
+
+Effects:
+
+• `insert's — into the `current-buffer'.
+
+Links:
+
+• URL `https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time#Attributes'
+
+Related:
+
+• Wraps `sboo-html-render-time-element-with-datetime-attribute'."
+
+  (interactive (list :time (current-time)))
+
+  (let* ((TEXT (sboo-html-render-time-element-with-datetime-attribute :time time)))
+
+    (insert TEXT)))
+
+;;----------------------------------------------;;
+
+(defun sboo-markdown-goto-h1 (&optional query)
+
+  "Go to an H1 with text QUERY.
+
+e.g. this elisp call:
+
+         (sboo-markdown-goto-h1 \"mark\")
+
+     will go to this markdown line:
+
+         # The Mark-Ring
+"
+
+  (interactive)
+
+  ()) ;TODO
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;
