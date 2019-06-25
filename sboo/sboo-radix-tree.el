@@ -70,7 +70,7 @@ Reducer for constructing a `radix-tree-p'."
 
 Inputs:
 
-• WORDS — a `sequenc-e' of `stringp's.
+• WORDS — a `sequencep' of `stringp's.
 
 Examples:
 
@@ -91,7 +91,7 @@ Links:
 
 Inputs:
 
-• FILEPATH — a `string p'.
+• FILEPATH — a `stringp'.
 
 Examples:
 
@@ -101,12 +101,10 @@ Links:
 
 • URL `http://justinhj.github.io/2018/10/24/radix-trees-dash-and-company-mode.html'"
 
-   (let* ((TEXT
-    (with-temp-buffer
-      (insert-file-contents-literally filepath)
-      (buffer-substring-no-properties (point-min) (point-max))))
-    (WORDS (split-string TEXT))
-    )
+  (let* ((TEXT  (with-temp-buffer
+                  (insert-file-contents-literally filepath)
+                  (buffer-substring-no-properties (point-min) (point-max))))
+         (WORDS (split-string TEXT)))
 
     (sboo-radix-tree-from-seq WORDS)))
 
@@ -128,24 +126,27 @@ Links:
 
 • URL `http://justinhj.github.io/2018/10/24/radix-trees-dash-and-company-mode.html'"
 
-      (progn
+  (progn
 
-   (save-excursion
- 
-     (let* ((BUFFER (find-file FILEPATH))
-            (TREE   (read BUFFER)))
- 
+    (save-excursion
+
+      (let* ((BUFFER (find-file FILEPATH))
+             (TREE   (read BUFFER)))
+
         (kill-buffer BUFFER)))
 
-       (when (radix-tree-p TREE)
-         TREE))))))
+    (when (radix-tree-p TREE)
+      TREE)))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;
 ;;----------------------------------------------;;
 
-;; 
+;; Links:
 ;;
+;; • URL `http://justinhj.github.io/2018/10/24/radix-trees-dash-and-company-mode.html'
+;; • URL `https://github.com/emacs-mirror/emacs/blob/master/lisp/emacs-lisp/radix-tree.el'
+;; • URL `https://en.wikipedia.org/wiki/Radix_tree'
 ;;
 
 ;;----------------------------------------------;;
