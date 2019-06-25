@@ -10833,6 +10833,107 @@ URL `https://emacs.stackexchange.com/questions/12360/how-to-make-private-elisp-m
 
 
 ========================================================================
+    (centaur-tabs-height 44
+      "Height of each Tab.")
+
+    (centaur-tabs-bar-height 50
+      "Height of the Tab-bar.")
+
+========================================================================
+
+  ())
+
+;;----------------------------------------------;;
+
+(progn
+
+  (defun sboo-copy-buffer (&optional buffer)
+
+    "Copy the contents of BUFFER (to the clipboard).\
+
+Related:
+
+• Wraps `clipboard-kill-ring-save'."
+
+    (interactive)
+
+    (let ((BUFFER (or buffer (current-buffer))))
+
+      (let* ((BUFFER-CONTENTS
+              (with-current-buffer BUFFER
+                (buffer-substring-no-properties (point-min) (point-max)))))
+
+        (clipboard-kill-ring-save BUFFER-CONTENTS))))
+
+  (with-demoted-errors "[Warning] %s" (defun-dwim copy-dwim clipboard-kill-ring-save sboo-copy-buffer))
+
+  ())
+
+
+========================================================================
+
+
+(cl-defun sboo-yas-machine-readable-date (&key time)
+
+  "Return TIME formatted like « YYYY-MM-DD ».
+
+Input:
+
+• nil or a `listp' of `numberp's (a Timestamp).
+  Defaults to `current-time'.
+
+Output:
+
+• a `stringp'.
+
+Example:
+
+• M-: (sboo-yas-machine-readable-date :time '(23825 56775 693364 288000))
+    ⇒ \"2019-06-25\""
+
+  (interactive (list :time nil))
+
+  (let* ((TIME (or time (current-time))))
+
+    (format-time-string "%Y-%m-%d" TIME)))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-yas-human-readable-date (&key time date)
+
+  "Return TIME formatted like « 20 Jan 2016 ».
+
+Input:
+
+• nil or a `listp' of `numberp's (a Timestamp).
+  Defaults to `current-time'.
+
+Output:
+
+• a `stringp'.
+
+Example:
+
+• M-: (sboo-yas-human-readable-date :time '(23825 56775 693364 288000))
+    ⇒ \"25 Jun 2019\"
+
+• M-: (sboo-yas-human-readable-date :date \"2019-06-25\")
+    ⇒ \"25 Jun 2019\"
+"
+
+  (interactive (list :time (current-time)
+                     :date nil))
+
+  (let* ((TIME (or time (current-time))))
+
+    (format-time-string "%d %b %Y" TIME)))
+
+;; M-: (sboo-yas-human-readable-date :date "2019-06-25")
+;;   ⇒ "25 Jun 2019"
+
+========================================================================
+
+
 
 ========================================================================
 

@@ -260,8 +260,7 @@ Output:
 
     • `car' — is a `bufferp'.
     • `cdr' — is an `integerp'.
-       a position with that buffer.
-"
+       a position with that buffer."
 
     (with-current-buffer (find-file-noselect sboo-english-dictionary-file)
 

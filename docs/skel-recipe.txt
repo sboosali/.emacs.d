@@ -1,0 +1,161 @@
+Copyright (C) 1999 by Tom Breton
+Author: Tom Breton <tob@world.std.com>
+Created: 19 Jan, 1999
+Version: 0.0
+
+This file is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.
+
+This file is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GNU Emacs; see the file COPYING.  If not, write to
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.
+
+A recipe for using skeleton.el
+==============================
+
+The package skeleton.el seems one of the more underused packages in
+the emacs distribution.  This is unfortunate, because even simple
+skeletons can be quite useful.
+
+In an effort to help this situation, I'm going to give you a simple
+recipe for making a skeleton.  
+
+I'm not belittling the skeleton.el docs.  They seem to be complete;
+there is a lot of helpful information in the function documentation
+strings; examples are included.  What they don't give you is a recipe.
+All the advanced features are covered, but the effect is to make you
+think that to use skeletons, you have to master all those features.
+You don't.
+ 
+The recipe I'm going to give you is essentially what I did for
+lisp-skels.el.  I'm not going to cover any advanced features.  That
+would defeat my purpose, which is to make skeleton.el more accessible.
+Once you've started using skeletons, it will be easy enuff to learn
+the advanced features when you need them.
+
+I'm going to use tehom-let-skel as an example.  The first thing to do
+is to write down the output you want, like this:
+
+(let 
+  ()
+  
+  )
+
+
+Then surround it with quote-marks:
+
+"(let 
+  ()
+  
+  )"
+
+If there were any characters that needed to be escaped, like '"', you
+would have had to escape them, which means putting \ in front of them.
+Now you are ready to start the skeleton proper, so write:
+
+(define-skeleton tehom-let-skel
+
+  )
+
+...and add a documentation string describing what it does, and the
+symbol "nil".
+
+(define-skeleton tehom-let-skel
+  "Insert a let in all its glory."
+  nil
+  )
+
+You probably want to know why you should put nil there.  That's
+because a skeleton starts with an interactor, which is something you
+don't need to understand in order to build a simple skeleton like this
+one.  The symbol nil acts like an interactor that does nothing.
+
+Then add what you wrote before, so it looks like this:
+
+(define-skeleton tehom-let-skel
+  "Insert a let in all its glory."
+  nil
+
+  "(let 
+  ()
+  
+  )"
+
+  )
+
+
+Now, this already works.  Try it in *scratch*. 
+
+But it probably doesn't do exactly what you want.  For one thing, you
+have no control over the formatting.  If you insert a let in the
+middle of a heavily indented function, it will indent just two spaces
+as you did before, instead of indenting properly.
+
+This is what the symbols \n and > are used for.  Everywhere there is a
+newline in the body string, you want a newline (\n) and indentation
+(>).  So first, separate out the newlines with quotation marks.  This
+will split your string into more strings, but that's not a problem.
+
+(define-skeleton tehom-let-skel
+  "Insert a let in all its glory."
+  nil
+  "(let"
+  "()"
+  
+  ")"
+  )
+
+Now every place there was a newline before, insert the newline symbol
+\n and the indentation mark >, so it looks like:
+
+(define-skeleton tehom-let-skel
+  "Insert a let in all its glory."
+  nil
+  \n >
+  "(let"
+  \n >
+  "()"
+  \n >
+  \n >
+  ")"
+  )
+
+There's one more symbol I'm going to teach you about, _.  It indicates
+the place in your skeleton that "stuff would go into".  If there are
+several places that more text would go into, it indicates the most
+important one.  In this case, it's the body of the let.  All you need
+to do is to add '_':
+
+(define-skeleton tehom-let-skel
+  "Insert a let in all its glory."
+  nil
+  \n >
+  "(let"
+  \n >
+  "()"
+  \n >
+  _
+  \n >
+  ")"
+  )
+
+
+What does that let you do?  Go into *scratch* and try this: First,
+copy the define-skeleton we just made and type a linefeed (C-j) to
+make emacs read it.  Then make some part of the buffer the active
+region -- any part.  You can do this by typing C-@ at the beginning of
+the region and moving the point to the end of it.  Without doing
+anything else, type ESC - and then M-x tehom-let-skel.  Neat, eh?
+
+Skeletons are useful, and I hope this file will let more people use
+them.
+
+skel-recipe.txt ends here

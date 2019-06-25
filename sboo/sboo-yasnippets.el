@@ -152,6 +152,98 @@ Examples:
     NAME))
 
 ;;----------------------------------------------;;
+
+(cl-defun sboo-yas-machine-readable-date (&key time)
+
+  "Return TIME formatted like « YYYY-MM-DD ».
+
+Inputs:
+
+• TIME — nil or a `listp' of `integerp's (a Timestamp).
+  Defaults to `current-time'.
+
+Output:
+
+• a `stringp'.
+
+Example:
+
+• M-: (sboo-yas-machine-readable-date :time '(23825 56775 693364 288000))
+    ⇒ \"2019-06-25\""
+
+  (interactive (list :time nil))
+
+  (let* ((TIME (or time (current-time))))
+
+    (format-time-string "%Y-%m-%d" TIME)))
+
+;;----------------------------------------------;;
+
+(cl-defun sboo-yas-human-readable-date (&key time date)
+
+  "Return TIME formatted like « 20 Jan 2016 ».
+
+Inputs:
+
+• TIME — nil or a `listp' of `integerp's (a Timestamp).
+  When `called-interactively-p', defaults to `current-time'.
+
+• DATE — nil or a `stringp'.
+
+Output:
+
+• a `stringp'.
+
+Example:
+
+• M-: (sboo-yas-human-readable-date :time '(23825 56775 693364 288000))
+    ⇒ \"25 Jun 2019\"
+
+• M-: (sboo-yas-human-readable-date :date \"2019-06-25\")
+    ⇒ \"25 Jun 2019\"
+
+Related:
+
+• Parses `sboo-yas-human-readable-date'."
+
+  (interactive (list :time (current-time)
+                     :date nil))
+
+  (if time
+      (format-time-string "%d %b %Y" time)
+
+    (error "TODO")))
+
+    ;TODO:
+    ;; (cl-destructuring-bind (_ _ _ DD MM YYYY _ _ _) (parse-time-string date)
+    ;;   (format "%d %b %Y" DD MM YYYY))))
+
+;; M-: (sboo-yas-human-readable-date :date "2019-06-25")
+;;   ⇒ "25 Jun 2019"
+
+;; `parse-time-string':
+;;
+;;   (parse-time-string STRING)
+;;
+;;   Parse the time-string STRING into (SEC MIN HOUR DAY MON YEAR DOW DST TZ).
+;;
+;; M-: (parse-time-string "2019-06-25")
+;;   ⇒ (nil nil nil 25 6 2019 nil nil nil)
+;;
+;;
+
+;; `cl-destructuring-bind':
+;;
+;;   (cl-destructuring-bind ARGS EXPR &rest BODY))
+;;
+;;   Parse the time-string STRING into (SEC MIN HOUR DAY MON YEAR DOW DST TZ).
+;;
+;; M-: (cl-destructuring-bind (_ _ _ DD MM YYYY _ _ _) (parse-time-string "2019-06-25") (list DD MM YYYY))
+;;   ⇒ (25 6 2019)
+;;
+;;
+
+;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 
