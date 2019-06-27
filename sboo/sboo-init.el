@@ -938,7 +938,7 @@ Related:
 ;;   • URL `https://www.emacswiki.org/emacs/reStructuredText'
 ;;
 
-;;==============================================;;
+;;----------------------------------------------;;
 
 (use-package image-file
 
@@ -958,7 +958,6 @@ Related:
 ;; ^ Links:
 ;;
 ;;   • URL `http://ergoemacs.org/emacs/emacs_view_images.html'
-;;   • URL `'
 ;;
 
 ;;----------------------------------------------;;
@@ -3882,9 +3881,20 @@ $0")
 
   ())
 
+;;----------------------------------------------;;
+
+(use-package nsis-mode
+
+  :commands (nsis-mode nsis-compile-and-run nsis-execute-buffer nsis-run-file)
+
+  :mode ("\.[Nn][Ss][HhIi]\'" . nsis-mode)
+
+  :config ())
+
 ;; ^ Links:
 ;;
-;;   • URL `'
+;;   • URL `https://github.com/mattfidler/nsis-mode'
+;;   • URL `www.nsi.org'
 ;;
 
 ;;----------------------------------------------;;

@@ -142,6 +142,15 @@ most have *Minimal Dependencies*, either:
 
 * `company-restclient.el`       — *Company Backend* for` restclient`. other requirements: `(require 'know-your-http-well)`.
 
+* `emacsql`                     — *EmacSQL* is a *DSL* to write *SQL* with *S-Exp*s <https://github.com/skeeto/emacsql>
+
+* `magin.el`                    — *DSL* for Git Ignore Files (`.gitignore`). <https://francismurillo.github.io/2017-01-25-A-DSL-For-Git-And-Projectile-Ignore-File/>
+
+* `projin.el`                   — *DSL* for Projectile Ignore Files (`.projectile`). <https://francismurillo.github.io/2017-01-25-A-DSL-For-Git-And-Projectile-Ignore-File/>
+
+* `nsis-mode.el`                — *Major Mode* for editing <abbrv title="Nullsoft Scriptable Install System"><i>NSIS</i></abbrv> (`.nsi`) files. *NSIS* is *DSL* for writing *Windows* Installers.
+<https://github.com/mattfidler/nsis-mode>
+
 *Vendored Utilities* include:
 
 * `s.el`          — *v1.12.0*
