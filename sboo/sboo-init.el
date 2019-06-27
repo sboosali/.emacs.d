@@ -4393,7 +4393,7 @@ Inputs:
        ;; ^ See `org-emphasis-alist':
        ;;
        ;;   •  « =verbatim= »
-       ;;   •  « +strike-through+ »
+       ;;   •  « +strike-through+ »s
        ;;
 
        ("%" "%" nil (bat-mode))
@@ -5695,28 +5695,11 @@ l
 
 ;;----------------------------------------------;;
 
-(use-package all-the-icons-dired
-  :disabled
-  :load-path "submodules/all-the-icons-dired"
+(use-package all-the-icons
+    :disabled t
+    :load-path "submodules/all-the-icons"
 
-  :after (:any all-the-icons icons-in-terminal)
-
-  ;;--------------------------;;
-
-  :commands (all-the-icons-dired-mode)
-
-  :hook (dired-mode . all-the-icons-dired-mode)
-
-  :config
-
-  ())
-
-;; ^ Links:
-;;
-;;   • URL `https://github.com/jtbm37/all-the-icons-dired'
-;;
-
-;;----------------------------------------------;;
+    :config ())
 
 ;; Installation:
 ;;
@@ -5726,10 +5709,53 @@ l
 ;;
 ;; M-: (insert (all-the-icons-icon-for-file "foo.hs"))
 ;; M-: (all-the-icons-insert-icons-for 'faicon 10 0.5)   ; height=10px, delay=500ms.
+;;
+
+;; Troubleshooting:
+;;
+;; URL `https://github.com/domtronn/all-the-icons.el/blob/master/README.md#troubleshooting'
+;;
+;; M-: (set-fontset-font t 'unicode (font-spec :name "Symbola") nil 'append)
+;;
+;; “Symbola is messing with your fontset, since it's a universal fallback font.”
+;;
+;; M-: (insert (all-the-icons-wicon "tornado")
+;;
+;; PROBLEM segfaults.
+;; SOLUTION? (nope)
+;;
+;;     $ ulimit -S -s unlimited; make emacs-run &
+;;
+;;
+;;
+;;
 
 ;; Notes:
 ;;
 ;; e.g. fontsets: 'faicon 'octicon 'alltheicon
+
+;;----------------------------------------------;;
+
+(use-package all-the-icons-dired
+    :disabled t
+    :load-path "submodules/all-the-icons-dired"
+
+    :after (:any all-the-icons icons-in-terminal)
+
+    ;;--------------------------;;
+
+    :commands (all-the-icons-dired-mode)
+
+    :hook (dired-mode . all-the-icons-dired-mode)
+
+    :config
+
+    ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/jtbm37/all-the-icons-dired'
+;;
 
 ;;----------------------------------------------;;
 
