@@ -1,0 +1,3036 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+defalist
+
+'hs H "lambda"
+'el E ""
+'bash "shell"
+'sh
+
+'py "snake"
+
+'x "coffee"
+
+associate File Extensions with Unicode Icons.
+
+  ")
+
+
+
+
+;;; Makefile
+
+# ‹mtg› Makefile
+
+### Notes:
+
+Targets (see « $ make help »):
+
+• ‹build› — 
+• ‹check› — 
+• ‹dist› — 
+• ‹install› — 
+• ‹all› — 
+• ‹› — 
+• ‹› — 
+• ‹› — 
+• ‹› — 
+
+required and/or generated Filepaths include:
+
+• ‹› — 
+• ‹› — 
+• ‹› — 
+• ‹› — 
+• ‹› — 
+• ‹› — 
+• ‹› — 
+• ‹› — 
+• ‹› — 
+
+optional Environment Variables include:
+
+• ‹$EMACS› — 
+• ‹› — 
+• ‹› — 
+• ‹› — 
+
+### Settings:
+
+### Constants:
+
+PKG=mtg
+
+# ^ (Elisp) Package Name.
+#
+# the name of each (Elisp) Library in this Multi-Library Package
+# should be prefixed. i.e. either ‹PKG-*.el› or ‹PKG.el› itself.
+#
+
+VERSION="$(shell sed -nre '/^;; Version:/ { s/^;; Version:[ \t]+//; p }' $(PKG).el)"
+
+# ^ Extract ‹ ;; Version: › Library Header.
+#
+# Why? Because then the package has a canonical
+# version.
+#
+
+### Variables:
+
+outdir ?=$(CURDIR)/out
+
+# ^ Output Directory — install the targets' outputs into this directory.
+
+tmpdir ?=$(CURDIR)/tmp
+
+# ^ Temporary Directory — run the targets' commands within this directory.
+
+srcdir ?=$(CURDIR)/lisp
+
+# ^ Source Directory — find lisp source files within this directory.
+ 
+EMACSLOADPATH ?= .:$(CURDIR)/lisp
+
+# ^  List of directories (colon-separated).
+#
+# the ‹EMACSLOADPATH› environment variable,
+# as well as the ‹-L› command-line option,
+# registers directories with the ‹load-path› elisp variable.
+#
+
+EFLAGS ?= --eval "(when (boundp 'load-prefer-newer) (setq load-prefer-newer t))" --eval "(setq byte-compile-error-on-warn t)" 
+
+# ^ Command-Line Options (not Arguments) for ‹emacs›.
+#
+# ‹EFLAGS› abbreviates “Emacs Flags”.
+#
+
+DISTFILE = mtg-mode-$(VERSION).tar.gz
+
+# ^ Distribution Tarball — Distribute this Multi-File Package as a versioned tarball.
+#
+# Why? Because:
+#
+# • Archiving simplifies downloading.
+# • Compression accelerates downloading.
+#   ‹ gzip -c9 › shrinks source files by ~90%.
+#
+
+### Programs:
+
+EMACS := $(shell which "$${EMACS}" 2> /dev/null || which "emacs" 2> /dev/null)
+
+EmacsVersion := $(shell "$(EMACS)" -Q --batch --eval '(princ emacs-version)')
+
+# ^ Respect ‹ $EMACS › Environment Variable, if present.
+#
+# Why? Because then the following invocations are equivalent:
+#
+# • $ export EMACS=/path/to/emacs && make
+# • $ EMACS=/path/to/emacs make
+# • $ make EMACS=/path/to/emacs
+#
+# Useful when:
+#
+# • ~/.bash_profile sets $EMACS
+#
+
+GZIP := gzip
+
+GZipVersion := $(GZIP) --version
+
+# ^ Compressor Program.
+
+TAR := tar
+
+TarVersion := $(TAR) --version
+
+# ^ Archiver Program.
+
+MKDIR ?= mkdir -p
+
+# ^ ‹mkdir› options:
+#
+# • ‹ -p › — Create parent directories.
+#
+
+### Files:
+
+EL  := $(wildcard $(PKG).el $(PKG)-*.el)
+ELC := $(EL:%.el=$(tmpdir)/%.elc)
+
+# ELC =$(EL:.el=.elc)
+
+### Derived Constants:
+
+EmacsBuild := EMACSLOADPATH=$(EMACSLOADPATH) emacs -Q --batch -f batch-byte-compile
+
+# ^ ‹emacs› options:
+#
+# • ‹ -f batch-byte-compile › — calls the ‹batch-byte-compile› Elisp Function
+#   on the following filepath(s?).
+#
+# • ‹ --batch › — non-interactive ‹emacs›.
+#
+# • ‹ -Q › — minimize/disable initializations. abbreviates “quiet”.
+#
+# • ‹ $EMACSLOADPATH › — 
+#
+
+GZipCompress := $(GZIP) --keep -c9
+
+# ^ ‹gzip› options:
+#
+# • ‹ -c9 › — Compress with maximum compression
+#   (i.e. Compression Level 9).
+#   Smaller output is paid for by longer runtime.
+#
+# • ‹ --keep › — “Don't delete input files during compression or decompression (i.e. keep them).”
+# • 
+#
+
+### File Targets:
+
+%.elc: %.el
+	$(EmacsBuild) $(EFLAGS) $<
+
+#
+
+$(EL_GZ): $(EL)
+
+	$(GZipCompress) $<
+
+#
+
+: $(EL)
+
+	$(GZipCompress) $<
+
+# 
+
+$(PKG)-autoloads.el: $(ELS)
+	@printf "Generating $@\n"
+	@printf "%s" "$$LOADDEFS_TMPL" > $@
+	@$(EMACS) -Q --batch --eval "(progn\
+	(setq make-backup-files nil)\
+	(setq vc-handled-backends nil)\
+	(setq default-directory (file-truename default-directory))\
+	(setq generated-autoload-file (expand-file-name \"$@\"))\
+	(setq find-file-visit-truename t)\
+	(update-directory-autoloads default-directory))"
+
+#
+
+$(outdir):
+
+	$(MKDIR)  $(outdir)
+
+$(tmpdir):
+
+	$(MKDIR)  $(tmpdir)
+
+$(tmpdir)/%.elc: $(srcdir)/%.el
+
+	$(MKDIR) $(dir $@)
+	$(MKDIR) 
+
+### PHONY Targets:
+
+build: $(ELC)
+
+.PHONY: build
+
+#
+
+check: $(ELC) $(TEST_ELC)
+
+.PHONY: check
+
+#
+
+dist: $(TGZ)
+
+	mv $^ $(outdir)
+
+.PHONY: dist 
+
+#
+
+You want to tar your files together and gzip the resulting tar file.
+
+tar -cvzf cvd.tar.gz cvd*.txt
+
+if you name the file with the extension .tgz, (short for tar gz), then Windows programs will recognize it as something that winzip etc can process as is.
+
+archiver such as tar or zip. GNU tar supports the -z option to invoke gzip transparently. gzip is designed as a complement to tar, not as a replacement
+
+#
+
+#
+
+
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EMACSLOADPATH ?= .:$(CURDIR)/lisp
+
+IFLAGS ?= $(addprefix -L,$(srcdir))
+
+# ^ Command-Line Options for ‹emacs› to include directories.
+#
+# ‹IFLAGS› abbreviates “Include Flags”.
+#
+# the ‹-L› option registers directories with the ‹load-path› variable.
+#
+
+
+
+(defun nsis-last-line-indent-line-p (&optional li-q is-id-q orphan-q)
+  "* Is the last line an indentation line?"
+  (let (ret)
+    (save-excursion
+      (when (or is-id-q orphan-q)
+        (beginning-of-line))
+      (when is-id-q
+        (set is-id-q (or (looking-at (eval-when-compile (format "[ \t]*%s" nsis-indent-deindent-keywords)))
+                         (looking-at (eval-when-compile (format "[ \t]*%s" nsis-end-keywords))))))
+      (when orphan-q
+        (set orphan-q (looking-at (eval-when-compile (format "[ \t]*%s" nsis-indent-orphans)))))
+      (nsis-goto-last-line li-q)
+      (setq ret (looking-at (eval-when-compile (format "[ \t]*%s" nsis-start-keywords))))
+      (unless ret
+        (setq ret (looking-at (eval-when-compile (format "[ \t]*%s" nsis-indent-deindent-keywords))))))
+    (symbol-value 'ret)))
+
+(defun nsis-current-line-deindent-p ()
+  "Current line a deindent?"
+  (save-excursion
+    (beginning-of-line)
+    (or
+     (looking-at (eval-when-compile (format "[ \t]*%s" nsis-end-keywords)))
+     (looking-at (eval-when-compile (format "[ \t]*%s" nsis-indent-deindent-keywords))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Indention function
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq nsis-end-keywords
+      (eval-when-compile
+        (replace-regexp-in-string "@" "\\<!insertmacro[ \t]+.*?END[ \t]*$"
+                                  (replace-regexp-in-string "'" "\\>"
+                                                            (replace-regexp-in-string "`" "\\<"
+                                                                                      (regexp-opt (append
+                                                                                                   (mapcar (lambda(x)
+                                                                                                             (concat "`" x "'")
+                                                                                                             
+                                                                                                           (remove-if-not (lambda(x) (string-match "End$" x))
+                                                                                                                          nsis-syntax-reserved-word))
+                                                                                                   '("`!endif'" "`!macroend'" "${EndIf}"
+                                                                                                     "${EndSelect}" "${LoopWhile}"
+                                                                                                     "${LoopUntil}" "${EndUnless}"
+                                                                                                     "${Loop}"
+                                                                                                     "@"
+                                                                                                     "${EndWhile}"
+                                                                                                     "${Next}"
+                                                                                                     "${EndSwitch}")) t) nil t) nil t) nil t))
+      ;;"* Regular expression of nsis ending keywords"
+      
+(setq nsis-start-keywords
+      (eval-when-compile
+        (replace-regexp-in-string "@" "\\<!insertmacro[ \t]+.*?BEGIN[ \t]*$"
+                                  (replace-regexp-in-string "'" "\\>"
+                                                            (replace-regexp-in-string "`" "\\<"
+                                                                                      (regexp-opt
+                                                                                       
+                                                                                       (append (mapcar (lambda(x) (concat "`" (substring x 0 -3) "'"))
+                                                                                                       (remove-if-not (lambda(x) (string-match "End$" x))
+                                                                                                                      nsis-syntax-reserved-word))
+                                                                                               '("`!if'" "`!ifdef'" "`!ifndef'"
+                                                                                                 "`!ifmacrodef'"
+                                                                                                 "`!ifmacrondef'"
+                                                                                                 "`!macro'"
+                                                                                                 "@"
+                                                                                                 "${If}" "${IfNot}" "${Unless}"
+                                                                                                 "${Select}" "${Switch}"
+                                                                                                 "${Do}" "${DoWhile}"
+                                                                                                 "${DoUntil}" "${While}"
+                                                                                                 "${For}" "${ForEach}"
+                                                                                                 ;;                                                                                                 "${RecFindOpen}" "${RecFindFirst}"
+                                                                                                 
+                                                                                                 )) t) nil t) nil t) nil t))
+      ;;"* Regular expression of nsis beginning keywords"
+      
+(setq nsis-indent-deindent-keywords
+      (eval-when-compile
+        (replace-regexp-in-string "@" "^[ \t]*[^-+!$0-9\n \t;#\"][^ \t\n]*?:[ \t]*\\($\\|[#;]\\|/[*].*?[*]/[ \t]*$\\|/[*].*?$\\)\\|^[ \t]*\"[^-+!$0-9\n \t;#][^ \t\n]*?:\"[ \t]*\\($\\|[#;]\\|/[*].*?[*]/[ \t]*$\\|/[*].*?$\\)"
+                                  (regexp-opt
+                                   '( "`!elseif'"
+                                      "@"
+                                      "${AndIf}" "${AndIfNot}" "${AndUnless}" "${OrIf}"
+                                      "${OrIfNot}" "${OrUnless}" "${ElseIf}" "${ElseIfNot}"
+                                      "${ElseUnless}" "${Else}" "${CaseElse}" "${Default}" "${Case2}"
+                                      "${Case3}" "${Case4}" "${Case5}" "${Case}"
+                                      ;;                                      "${RecFindNext}" "${RecFindClose}"
+                                      ) t) nil t))
+                                        ;"Regular expression of indent-deindent keywords statements for indent-deindent-keywords "
+      
+
+(setq nsis-indent-orphans
+      (eval-when-compile
+        (replace-regexp-in-string "@" "^[ \t]*[^-+!$0-9\n \t;#\"][^ \t\n]*?:[ \t]*\\($\\|[#;]\\|/[*].*?[*]/[ \t]*$\\|/[*].*?$\\)\\|^[ \t]*\"[^-+!$0-9\n \t;#][^ \t\n]*?:\"[ \t]*\\($\\|[#;]\\|/[*].*?[*]/[ \t]*$\\|/[*].*?$\\)"
+                                  (regexp-opt
+                                   '( "@"
+                                      "${CaseElse}" "${Default}" "${Case2}"
+                                      "${Case3}" "${Case4}" "${Case5}" "${Case}"
+                                      "${Case}"
+                                      ) t
+                                        ) nil t))
+                                        ;"Regular expression of indent/deindent expression that are not used to calculate the last indentation level."
+      
+
+(defun nsis-continuation-line-p ()
+  "* Is this a nsi continuation line?"
+  (save-excursion
+    (beginning-of-line)
+    (backward-char 1)
+    (skip-chars-backward " \t")
+    (eq (char-before (point)) ?\\)))
+
+(defun nsis-last-line-indentation (&optional orphan)
+  "Last line's indentation"
+  (let (ret)
+    (save-excursion
+      (nsis-goto-last-line 'ret orphan)
+      (symbol-value 'ret))))
+
+
+(defmacro nsis-set-indent-count (count)
+  "Subroutine to set indentation key"
+  `(cond
+    ((looking-at  ,(eval-when-compile (format "[ \t]*%s" nsis-indent-orphans))))
+    ((looking-at ,(eval-when-compile (format "[ \t]*%s" nsis-end-keywords)))
+     (unless (= ,count 0)
+       (setq ,count (+ ,count 1))))
+    ((looking-at ,(eval-when-compile (format "[ \t]*%s" nsis-start-keywords)))
+     (unless (= ,count 0)
+       (setq ,count (- ,count 1))))))
+
+(defun nsis-goto-last-line (&optional li-q orphan)
+  "Go to the last line of code -- ignore continuation lines.  Set li-q to the current-indentation when requested."
+  (if orphan
+      (progn
+        (let (count)
+          (nsis-goto-last-line li-q)
+          (setq count 1)
+          (nsis-set-indent-count count)
+          (while (and (not (save-excursion
+                             (beginning-of-line)
+                             (or (bobp)
+                                 (progn
+                                   (skip-chars-backward " \t\n")
+                                   (bobp))))) (not (= count 0)))
+            (nsis-goto-last-line li-q)
+            (nsis-set-indent-count count))))
+    (while (re-search-backward "^[ \t]*\n\\=" nil t))
+    (forward-line -1)
+    (beginning-of-line)
+    (let ((mlc (nsis-in-multiline-comment-p))) ;; Ignore multi-line comments.
+      (while mlc
+        (goto-char mlc)
+        (beginning-of-line)
+        (setq mlc (nsis-in-multiline-comment-p))
+        ))
+    (while (re-search-backward "[\\\\][ \t]*\n\\=" nil t) ;; Ignore continuation lines.
+      (beginning-of-line)
+      
+    (while (looking-at "[ \t]*$")
+      (forward-line -1)
+      (beginning-of-line))
+    (when li-q
+      (set li-q (current-indentation)))))
+
+(defun nsis-last-line-indent-line-p (&optional li-q is-id-q orphan-q)
+  "* Is the last line an indentation line?"
+  (let (ret)
+    (save-excursion
+      (when (or is-id-q orphan-q)
+        (beginning-of-line))
+      (when is-id-q
+        (set is-id-q (or (looking-at (eval-when-compile (format "[ \t]*%s" nsis-indent-deindent-keywords)))
+                         (looking-at (eval-when-compile (format "[ \t]*%s" nsis-end-keywords))))))
+      (when orphan-q
+        (set orphan-q (looking-at (eval-when-compile (format "[ \t]*%s" nsis-indent-orphans)))))
+      (nsis-goto-last-line li-q)
+      (setq ret (looking-at (eval-when-compile (format "[ \t]*%s" nsis-start-keywords))))
+      (unless ret
+        (setq ret (looking-at (eval-when-compile (format "[ \t]*%s" nsis-indent-deindent-keywords))))))
+    (symbol-value 'ret)))
+
+(defun nsis-current-line-deindent-p ()
+  "Current line a deindent?"
+  (save-excursion
+    (beginning-of-line)
+    (or
+     (looking-at (eval-when-compile (format "[ \t]*%s" nsis-end-keywords)))
+     (looking-at (eval-when-compile (format "[ \t]*%s" nsis-indent-deindent-keywords))))))
+
+(defun nsis-font-lock-fontify-region-function (begin end)
+  "Fontify ")
+
+(defun nsis-comment-p ()
+  "*Are we in a comment?"
+  (save-match-data (or (looking-back "[;#].*") (nsis-in-multiline-comment-p))))
+
+(defun nsis-in-multiline-comment-p ()
+  "* Are we in a multi-line comment?"
+  (save-match-data (nsis-is-between (regexp-quote "/*") (regexp-quote "*/") t)))
+
+(defun nsis-is-between (first last &optional eof last-q)
+  "Returns true of the carat is between the first and last .
+
+If eof is true, then the last position is:
+   (1) the position of the variable last
+   (2) the position of the next variable first
+   (3) the end of the buffer.
+If eof is nil, then the last position is:
+   (1) the position of the next variable last.
+Returns first position.
+"
+  (let (
+        (first-posB nil)
+        (last-posF nil)
+        (between 't)
+        (case-fold-search 't))
+    (save-excursion
+      (if (re-search-backward first nil t)
+          (setq first-posB (point))
+        (setq between nil)))
+    (if between
+        (save-excursion
+          (if (re-search-forward last nil t)
+              (setq last-posF (point))
+            ;; 
+            ;; Last not found, look for first.
+            ;;
+            (if eof
+                (progn
+                  (if (re-search-forward first nil t)
+                      (setq last-posF (point))
+                    ;;
+                    ;; First not found, set to end of buffer.
+                    ;;
+                    (setq last-posF (point-max))))
+              ;;
+              ;; Eof not true.  
+              ;;
+              (setq between nil)))))
+    (if (and (not eof) between)
+        (save-excursion
+          (if (re-search-forward first nil t)
+              (if (< (point) last-posF)
+                  (setq between nil)))))
+    (if between
+        (save-excursion
+          (if (re-search-backward last nil t)
+              (if (> (point) first-posB)
+                  (setq between nil)))))
+    (when between
+      (setq between first-posB)
+      (when last-q
+        (set last-q last-posF)
+        ))
+    between))
+
+(defun nsis-indent-line-function ()
+  "nsis indent-line function"
+  (interactive)
+  (let ((curi (current-indentation))
+        li
+        is-id
+        orphan
+        fli)
+    (save-excursion
+      (cond
+       ((save-excursion
+          (beginning-of-line)
+          (or (bobp)
+              (progn
+                (skip-chars-backward " \t\n")
+                (bobp)))) ;; First line is indented to zero.
+        (setq fli 0))
+       ((nsis-continuation-line-p) ;; Add 4 spaces to indentation
+        ;;                (message "Continuation line.")
+        (setq li (nsis-last-line-indentation))
+        (unless (= (+ (* 2 nsis-indent-level) li) curi)
+          (setq fli (+ (* 2 nsis-indent-level) li))))
+       ((nsis-in-multiline-comment-p) ;; Check for multi-line comments and strings
+        ;; Do nothing.
+        ;;(message "Multiline comment -- No indentation support")
+        
+       ((nsis-last-line-indent-line-p 'li 'is-id 'orphan) ;; Last line indicates we should indent
+        ;;(message "indent: %s,%s,%s" li is-id orphan)
+        
+        (if (and is-id (not orphan)) ;; Actually indent/deindent line, keep same indentation.
+            (unless (= li curi) ;; Change the indentation appropriately.
+              (setq fli li))
+          (if orphan
+              (save-excursion
+                (nsis-goto-last-line 'li t)
+                (setq li (+ nsis-indent-level li))
+                (unless (= li curi) ;; Last line was an orphan too, keep the same indentation
+                  (setq fli li)))
+            (unless (= (+ nsis-indent-level li) curi) ;; Indent
+              (setq fli (+ li nsis-indent-level))))))
+       ((nsis-current-line-deindent-p) ;; Deindentation is possible
+        (setq orphan (string-match (eval-when-compile (format "^[ \t]*%s" nsis-indent-orphans)) (match-string 0)))
+        (setq li (nsis-last-line-indentation t))
+        (when orphan
+          (setq li (+ li nsis-indent-level)))
+        (setq li (max 0 li))
+        (unless (= li curi)
+          (setq fli li))
+        ;;(message "deindent: %s,%s,%s,%s" orphan li curi fli)
+        
+       (t ;; Keep last indentation
+        ;;        (message "Keep Last Indentation")
+        (setq li (nsis-last-line-indentation))
+        ;;        (message "Keep last indentation: %s" li)
+        (unless (= li curi)
+          (setq fli li)))))
+    (when fli
+      (indent-line-to fli)
+      (when (looking-at "[ \t]*$")
+        (goto-char (match-end 0))))))
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Makefile
+
+# ‹mtg-mode› Makefile
+
+### Settings:
+
+### Constants:
+
+PACKAGE=mtg
+MODE=mtg-mode
+
+# ^ Elisp Package Name.
+#
+# each (Elisp) Library in this Multi-Library Package
+# should be prefixed. i.e. ‹PKG-*.el›, or ‹PKG.el› itself.
+#
+
+VERSION="$(shell sed -nre '/^;; Version:/ { s/^;; Version:[ \t]+//; p }' mtg-mode.el)"
+
+# ^ Extract ‹ ;; Version: › Library Header.
+#
+# Why? Because then the package has a canonical
+# version.
+#
+
+### Variables:
+
+outdir ?=$(CURDIR)/out
+
+# ^ Output Directory — install the targets' outputs into this directory.
+
+tmpdir?=$(CURDIR)/tmp
+
+# ^ Temporary Directory — run the targets': commands within this directory.
+ 
+EFLAGS ?= --eval "(when (boundp 'load-prefer-newer) (setq load-prefer-newer t))" --eval "(setq byte-compile-error-on-warn t)" 
+
+# ^ Command-Line Options (not Arguments) for ‹emacs›.
+ 
+DISTFILE = mtg-mode-$(VERSION).tar.gz
+
+# ^ Distribution Tarball — Distribute this Multi-File Package as a versioned tarball.
+#
+# Why? Because:
+#
+# • Archiving simplifies downloading.
+# • Compression accelerates downloading.
+#   ‹ gzip -c9 › shrinks source files by ~90%.
+#
+
+### Programs:
+
+EMACS := $(shell which "$${EMACS}" 2> /dev/null || which "emacs" 2> /dev/null)
+
+EmacsVersion := $(shell "$(EMACS)" -Q --batch --eval '(princ emacs-version)')
+
+# ^ Respect ‹ $EMACS › Environment Variable, if present.
+#
+# Why? Because then the following invocations are equivalent:
+#
+# • $ export EMACS=/path/to/emacs && make
+# • $ EMACS=/path/to/emacs make
+# • $ make EMACS=/path/to/emacs
+#
+# Useful when:
+#
+# • ~/.bash_profile sets $EMACS
+#
+
+GZIP := gzip
+
+GZipVersion := $(GZIP) --version
+
+# ^ Compressor Program.
+
+TAR := tar
+
+TarVersion := $(TAR) --version
+
+# ^ Archiver Program.
+
+### Files:
+
+EL  =$(wildcard mtg-*.el)
+ELC =$(EL:.el=.elc)
+
+### Derived Constants:
+
+EmacsBuild := emacs -Q --batch -f batch-byte-compile
+
+GZipCompress := $(GZIP) --keep -c9
+
+# ^ ‹gzip› options:
+#
+# • ‹ -c9 › — Compress with maximum compression
+#   (i.e. Compression Level 9).
+#   Smaller output is paid for by longer runtime.
+#
+# • ‹ --keep › — “Don't delete input files during compression or decompression (i.e. keep them).”
+# • 
+#
+
+### File Targets:
+
+%.elc: %.el
+	$(EmacsBuild) $(EFLAGS) $<
+
+#
+
+$(EL_GZ): $(EL)
+
+	$(GZipCompress) $<
+
+#
+
+: $(EL)
+
+	$(GZipCompress) $<
+
+# 
+
+$(PKG)-autoloads.el: $(ELS)
+	@printf "Generating $@\n"
+	@printf "%s" "$$LOADDEFS_TMPL" > $@
+	@$(EMACS) -Q --batch --eval "(progn\
+	(setq make-backup-files nil)\
+	(setq vc-handled-backends nil)\
+	(setq default-directory (file-truename default-directory))\
+	(setq generated-autoload-file (expand-file-name \"$@\"))\
+	(setq find-file-visit-truename t)\
+	(update-directory-autoloads default-directory))"
+
+#
+
+$(outdir):
+
+	mkdir -p  $(outdir)
+
+$(tmpdir):
+
+	mkdir -p  $(tmpdir)
+
+### PHONY Targets:
+
+build: $(ELC)
+
+.PHONY: build
+
+#
+
+check: $(ELC) $(TEST_ELC)
+
+.PHONY: check
+
+#
+
+dist: $(TGZ)
+
+	mv $^ $(outdir)
+
+.PHONY: dist 
+
+#
+
+You want to tar your files together and gzip the resulting tar file.
+
+tar -cvzf cvd.tar.gz cvd*.txt
+
+if you name the file with the extension .tgz, (short for tar gz), then Windows programs will recognize it as something that winzip etc can process as is.
+
+archiver such as tar or zip. GNU tar supports the -z option to invoke gzip transparently. gzip is designed as a complement to tar, not as a replacement
+
+#
+
+#
+
+
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+out/
+tmp/
+
+
+
+-/out
+-/tmp
+
+
+
+
+
+
+;;; Makefile
+
+# ‹mtg-mode› Makefile
+
+### Settings:
+
+### Constants:
+
+VERSION="$(shell sed -nre '/^;; Version:/ { s/^;; Version:[ \t]+//; p }' mtg-mode.el)"
+
+# ^ Extract ‹ ;; Version: › Library Header.
+#
+# Why? Because then the package has a canonical
+# version.
+#
+
+### Variables:
+
+outdir ?=$(CURDIR)/out
+
+# ^ Output Directory — install the targets' outputs into this directory.
+
+tmpdir?=$(CURDIR)/tmp
+
+# ^ Temporary Directory — run the targets': commands within this directory.
+ 
+EFLAGS ?= --eval "(when (boundp 'load-prefer-newer) (setq load-prefer-newer t))" --eval "(setq byte-compile-error-on-warn t)" 
+
+# ^ Command-Line Options (not Arguments) for ‹emacs›.
+ 
+DISTFILE = mtg-mode-$(VERSION).tar.gz
+
+# ^ Distribution Tarball — Distribute this Multi-File Package as a versioned tarball.
+#
+# Why? Because:
+#
+# • Archiving simplifies downloading.
+# • Compression accelerates downloading.
+#   ‹ gzip -c9 › shrinks source files by ~90%.
+#
+
+### Programs:
+
+EMACS := $(shell which "$${EMACS}" 2> /dev/null || which "emacs" 2> /dev/null)
+
+EmacsVersion := $(shell "$(EMACS)" -Q --batch --eval '(princ emacs-version)')
+
+# ^ Respect ‹ $EMACS › Environment Variable, if present.
+#
+# Why? Because then the following invocations are equivalent:
+#
+# • $ export EMACS=/path/to/emacs && make
+# • $ EMACS=/path/to/emacs make
+# • $ make EMACS=/path/to/emacs
+#
+# Useful when:
+#
+# • ~/.bash_profile sets $EMACS
+#
+
+GZIP := gzip
+
+GZipVersion := $(GZIP) --version
+
+# ^ Compressor Program.
+
+TAR := tar
+
+TarVersion := $(TAR) --version
+
+# ^ Archiver Program.
+
+### Files:
+
+EL  =$(wildcard mtg-*.el)
+ELC =$(EL:.el=.elc)
+
+### Derived Constants:
+
+EmacsBuild := emacs -Q --batch -f batch-byte-compile
+
+GZipCompress := $(GZIP) --keep -c9
+
+# ^ ‹gzip› options:
+#
+# • ‹ -c9 › — Compress with maximum compression
+#   (i.e. Compression Level 9).
+#   Smaller output is paid for by longer runtime.
+#
+# • ‹ --keep › — “Don't delete input files during compression or decompression (i.e. keep them).”
+# • 
+#
+
+### File Targets:
+
+%.elc: %.el
+	$(EmacsBuild) $(EFLAGS) $<
+
+#
+
+$(EL_GZ): $(EL)
+
+	$(GZipCompress) $<
+
+#
+
+: $(EL)
+
+	$(GZipCompress) $<
+
+#
+
+$(outdir):
+
+	mkdir -p  $(outdir)
+
+$(tmpdir):
+
+	mkdir -p  $(tmpdir)
+
+### PHONY Targets:
+
+build: $(ELC)
+
+.PHONY: build
+
+#
+
+check: $(ELC) $(TEST_ELC)
+
+.PHONY: check
+
+#
+
+dist: $(TGZ)
+
+	mv $^ $(outdir)
+
+.PHONY: dist 
+
+#
+
+You want to tar your files together and gzip the resulting tar file.
+
+tar -cvzf cvd.tar.gz cvd*.txt
+
+if you name the file with the extension .tgz, (short for tar gz), then Windows programs will recognize it as something that winzip etc can process as is.
+
+archiver such as tar or zip. GNU tar supports the -z option to invoke gzip transparently. gzip is designed as a complement to tar, not as a replacement
+
+#
+
+#
+
+
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(use-package ace-jump-mode
+  :hook prog-mode)
+
+(use-package ace-jump-mode
+  :hook (prog-mode . ace-jump-mode))
+
+(use-package ace-jump-mode
+  :commands ace-jump-mode
+  :init
+  (add-hook 'prog-mode-hook #'ace-jump-mode))
+
+:;
+
+(use-package ace-jump-mode
+  :hook (prog-mode text-mode))
+
+(use-package ace-jump-mode
+  :hook ((prog-mode text-mode) . ace-jump-mode))
+
+(use-package ace-jump-mode
+  :hook ((prog-mode . ace-jump-mode)
+         (text-mode . ace-jump-mode)))
+
+(use-package ace-jump-mode
+  :commands ace-jump-mode
+  :init
+  (add-hook 'prog-mode-hook #'ace-jump-mode)
+  (add-hook 'text-mode-hook #'ace-jump-mode))
+
+
+
+
+ '(:disabled
+    :load-path
+    :requires
+    :defines
+    :functions
+    :preface
+    :if :when :unless
+    :no-require
+    :catch
+    :after
+    :custom
+    :custom-face
+    :bind
+    :bind*
+    :bind-keymap
+    :bind-keymap*
+    :interpreter
+    :mode
+    :magic
+    :magic-fallback
+    :hook
+    ;; Any other keyword that also declares commands to be autoloaded (such as
+    ;; :bind) must appear before this keyword.
+    :commands
+    :init
+    :defer
+    :demand
+    :load
+    ;; This must occur almost last; the only forms which should appear after
+    ;; are those that must happen directly after the config forms.
+    :config)
+
+
+
+(defvar centaur-tabs-hide-tab-function 'centaur-tabs-hide-tab
+  "Function to hide tab.
+This fucntion accepet tab name, tab will hide if this function return ni.")
+
+(defvar centaur-tabs-current-tabset-function nil
+  "Function called with no argument to obtain the current tab set.
+This is the tab set displayed on the tab bar.")
+
+(defvar centaur-tabs-tab-label-function nil
+  "Function that obtains a tab label displayed on the tab bar.
+The function is passed a tab and should return a string.")
+
+(defvar centaur-tabs-select-tab-function nil
+  "Function that select a tab.
+The function is passed a tab, and should make it the
+selected tab.")
+
+(defvar centaur-tabs-buffer-list-function 'centaur-tabs-buffer-list
+  "Function that returns the list of buffers to show in tabs.
+That function is called with no arguments and must return a list of
+buffers.")
+
+(defvar centaur-tabs-buffer-groups-function 'centaur-tabs-buffer-groups
+  "Function that gives the group names the current buffer belongs to.
+It must return a list of group names, or nil if the buffer has no
+group.  Notice that it is better that a buffer belongs to one group.")
+
+(defvar centaur-tabs-adjust-buffer-order-function 'centaur-tabs-adjust-buffer-order
+  "Function to adjust buffer order after switch tab.
+Default is `centaur-tabs-adjust-buffer-order', you can write your own rule.")
+
+;; Separators
+(defvar centaur-tabs-style-left nil)
+(defvar centaur-tabs-style-right nil)
+
+;
+
+
+(defun centaur-tabs--make-xpm (face width height)
+  "Create an XPM bitmap via FACE WIDTH and HEIGHT.
+Taken from doom-modeline."
+  (when (and (display-graphic-p)
+	     (image-type-available-p 'xpm))
+    (propertize
+     " " 'display
+     (let ((data (make-list height (make-list width 1)))
+	   (color (or (face-background face nil t) "None")))
+       (ignore-errors
+	 (create-image
+	  (concat
+	   (format
+	    "/* XPM */\nstatic char * percent[] = {\n\"%i %i 2 1\",\n\". c %s\",\n\"  c %s\","
+	    (length (car data)) (length data) color color)
+	   (apply #'concat
+		  (cl-loop with idx = 0
+			   with len = (length data)
+			   for dl in data
+			   do (cl-incf idx)
+			   collect
+			   (concat
+			    "\""
+			    (cl-loop for d in dl
+				     if (= d 0) collect (string-to-char " ")
+				     else collect (string-to-char "."))
+			    (if (eq idx len) "\"};" "\",\n")))))
+	  'xpm t :ascent 'center))))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  (let* ((FILTER (or filter)))
+
+    (cl-loop for CHAR in FILTER
+
+             for CHAR-KIND = (cl-case CHAR
+(?\\" 'quote)
+(?\( 'open-paren)
+(?\) 'close-paren)
+(_ nil))
+
+
+(defun mtg-search-parse-filter (filter)
+
+  "Parse the search-FILTER into a plist of search-constraints.
+
+Inputs:
+
+• FILTER — a `stringp'.
+
+Output:
+
+• a `listp' of `keywordp's and `atomp's (a plist)."
+
+  (let ((must-have ())
+        (must-not-have ())
+        (after nil)
+        (matches ())
+        (not-matches ())
+        (limit nil)
+        (feeds ()))
+
+  (let* (
+
+(UNQUOTED-FILTER )
+
+                  (?\"
+                   (let ((STRING (substring element 1))
+
+(TOKENIZED-FILTER (cl-loop for TOKEN in filter
+
+  ;TODO; split the string on whitespace, while preserving (horizontal) whitespace within quotation marks. see `csv-split-string' (`csv-mode''s parser)?
+
+)
+
+    (cl-loop for TOKEN in FILTER-TOKENS
+
+             for type = (aref TOKEN 0)
+
+             do (cl-case type
+
+                  (?+
+                   (let ((symbol (intern (substring element 1))))
+                     (unless (eq '## symbol)
+                       (push symbol must-have))))
+
+                  (?-
+                   (let ((symbol (intern (substring element 1))))
+                     (unless (eq '## symbol)
+                       (push symbol must-not-have))))
+
+                  (?@ (setf after (elfeed-time-duration (substring element 1))))
+
+                  (?! (let ((re (substring element 1)))
+                        (when (elfeed-valid-regexp-p re)
+                          (push re not-matches))))
+                  (?# (setf limit (string-to-number (substring element 1))))
+                  (?= (let ((url (substring element 1)))
+                        (push url feeds)))
+                  (otherwise (when (elfeed-valid-regexp-p element)
+                               (push element matches)))))
+
+    `(,@(when after
+          (list :after after))
+      ,@(when must-have
+          (list :must-have must-have))
+      ,@(when must-not-have
+          (list :must-not-have must-not-have))
+      ,@(when matches
+          (list :matches matches))
+      ,@(when not-matches
+          (list :not-matches not-matches))
+      ,@(when limit
+          (list :limit limit))
+      ,@(when feeds
+          (list :feeds feeds)))))
+
+
+
+
+
+
+(defsubst csv-end-of-field ()
+  "Skip forward over one field."
+  (skip-chars-forward " ")
+  (if (eq (char-syntax (following-char)) ?\")
+      (goto-char (scan-sexps (point) 1)))
+  (skip-chars-forward csv--skip-regexp))
+
+(defsubst csv-beginning-of-field ()
+  "Skip backward over one field."
+  (skip-syntax-backward " ")
+  (if (eq (char-syntax (preceding-char)) ?\")
+      (goto-char (scan-sexps (point) -1)))
+  (skip-chars-backward csv--skip-regexp))
+
+
+
+(defun csv-split-string
+  (string &optional separators subexp allowbeg allowend)
+  "Splits STRING into substrings where there are matches for SEPARATORS.
+Each match for SEPARATORS is a splitting point.
+The substrings between the splitting points are made into a list
+which is returned.
+If SEPARATORS is absent, it defaults to \"[ \\f\\t\\n\\r\\v]+\".
+SUBEXP specifies a subexpression of SEPARATORS to be the splitting
+point\; it defaults to 0.
+If there is a match for SEPARATORS at the beginning of STRING, we do
+not include a null substring for that, unless ALLOWBEG is non-nil.
+Likewise, if there is a match at the end of STRING, we do not include
+a null substring for that, unless ALLOWEND is non-nil.
+Modifies the match data; use `save-match-data' if necessary."
+  (or subexp (setq subexp 0))
+  (let ((rexp (or separators "[ \f\t\n\r\v]+"))
+	(start 0)
+	notfirst
+	(list nil))
+    (while (and (string-match rexp string
+			      (if (and notfirst
+				       (= start (match-beginning subexp))
+				       (< start (length string)))
+				  (1+ start) start))
+		(< (match-beginning subexp) (length string)))
+      (setq notfirst t)
+      (or (and (not allowbeg) (eq (match-beginning subexp) 0))
+	  (and (eq (match-beginning subexp) (match-end subexp))
+	       (eq (match-beginning subexp) start))
+	  (push (substring string start (match-beginning subexp)) list))
+      (setq start (match-end subexp)))
+    (or (and (not allowend) (eq start (length string)))
+	(push (substring string start) list))
+    (nreverse list)))
+
+
+
+
+
+(defun load-theme-and-init (theme)
+  "Load THEME and call `post-theme-init'."
+  (interactive
+   (list
+    (intern (completing-read "Load custom theme: "
+                             (mapcar 'symbol-name
+                                     (custom-available-themes))))))
+  (unless (custom-theme-name-valid-p theme)
+    (error "Invalid theme name `%s'" theme))
+  (load-theme theme)
+  (post-theme-init theme))
+
+
+(use-package thingatpt
+  :defer 1
+  :bind (("M-s ." . my-isearch-forward-symbol-at-point)
+         ("M-s ," . my-isearch-forward-word-at-point))
+  :init
+  (defun my-isearch-forward-word-at-point ()
+    "Search for word at point."
+    (interactive)
+    (let ((word (thing-at-point 'word t))
+          (bounds (bounds-of-thing-at-point 'word)))
+      (if word
+          (progn
+            (isearch-mode t nil nil nil t)
+            (when (< (car bounds) (point))
+              (goto-char (car bounds)))
+            (isearch-yank-string word))
+        (user-error "No word at point"))))
+
+  (defun my-isearch-forward-symbol-at-point ()
+    "Search for symbol at point."
+    (interactive)
+    (let ((symbol (thing-at-point 'symbol t))
+          (bounds (bounds-of-thing-at-point 'symbol)))
+      (if symbol
+          (progn
+            (isearch-mode t nil nil nil 'isearch-symbol-regexp)
+            (when (< (car bounds) (point))
+              (goto-char (car bounds)))
+            (isearch-yank-string symbol))
+        (user-error "No symbol at point")))))
+
+
+
+
+
+
+
+
+
+
+
+
+(defun xref-conf-install-python-local ()
+  "Install my `xref' config for `python-mode' in the current buffer."
+  (interactive)
+  (setq-local xref-find-function #'python-xref-find)
+  (setq-local xref-identifier-completion-table-function
+	      ;; ugly hack
+	      ;; bug: user gets 2 prompts - first `read-string', then
+	      ;; `completing-read' with previous input as only candidate
+	      (lambda () (list (read-string "Find: ")))))
+
+(defun python-xref-find (action id)
+  "Get a list of xref obejcts.
+ACTION determines what to look for: defintions, references or apropos.
+ID is the identifier being searched."
+  (pcase action
+    (`definitions
+      (python--xref-find-definitions id))
+    (`references
+     (python--xref-find-references id))
+    (`apropos
+     nil)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+ (let ((result (cl-loop with allbufs = (memq 'helm-shadow-boring-buffers
+                                              (helm-attr
+                                               'filtered-candidate-transformer
+                                               helm-source-buffers-list))
+                         for b in (if allbufs
+                                      (helm-attr 'candidates)
+                                    (helm-skip-boring-buffers
+                                     (helm-attr 'candidates)
+                                     helm-source-buffers-list))
+                         maximize (length b) into len-buf
+                         maximize (length (helm-buffer--format-mode-name b))
+                         into len-mode
+                         finally return (cons len-buf len-mode))))
+
+
+
+
+
+
+
+(defcustom recentf-menu-filter nil
+  "Function used to filter files displayed in the recentf menu.
+A nil value means no filter.  The following functions are predefined:
+- `recentf-sort-ascending'
+    Sort menu items in ascending order.
+- `recentf-sort-descending'
+    Sort menu items in descending order.
+- `recentf-sort-basenames-ascending'
+    Sort menu items by filenames sans directory in ascending order.
+- `recentf-sort-basenames-descending'
+    Sort menu items by filenames sans directory in descending order.
+- `recentf-sort-directories-ascending'
+    Sort menu items by directories in ascending order.
+- `recentf-sort-directories-descending'
+    Sort menu items by directories in descending order.
+- `recentf-show-basenames'
+    Show filenames sans directory in menu items.
+- `recentf-show-basenames-ascending'
+    Show filenames sans directory in ascending order.
+- `recentf-show-basenames-descending'
+    Show filenames sans directory in descending order.
+- `recentf-relative-filter'
+    Show filenames relative to `default-directory'.
+- `recentf-arrange-by-rule'
+    Show sub-menus following user defined rules.
+- `recentf-arrange-by-mode'
+    Show a sub-menu for each major mode.
+- `recentf-arrange-by-dir'
+    Show a sub-menu for each directory.
+- `recentf-filter-changer'
+    Manage a menu of filters.
+The filter function is called with one argument, the list of menu
+elements used to build the menu and must return a new list of menu
+elements (see `recentf-make-menu-element' for menu element form)."
+  :group 'recentf
+
+
+
+
+
+https://www.gnu.org/software/emacs/manual/html_node/tramp/File-name-completion.html
+
+For example, type C-x C-f / s <TAB>, Tramp completion choices show up as
+
+     
+  sbin/ 	  scp: 	  scpx: 	  sftp: 	  sg:
+     
+  smb: 	  srv/ 	  ssh: 	  sshx: 	  su:
+     
+  sudo: 	  sys/
+     
+
+‘ssh:’ is a possible completion for the respective method, and ‘sbin/’ stands for the directory /sbin on your local host.
+
+Type s h : for the minibuffer completion to ‘/ssh:’. Typing <TAB> shows host names Tramp extracts from ~/.ssh/config file, for example.
+
+     
+  ssh:127.0.0.1: 	  ssh:192.168.0.1:
+     
+  ssh:[::1]: 	  ssh:localhost:
+     
+  ssh:melancholia.danann.net: 	  ssh:melancholia:
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## What's a Searchbar?
+
+
+* a.k.a. Continuous Search
+* a.k.a. 
+* a.k.a. Real-Time Search
+* a.k.a. Online Search
+* a.k.a. 
+* a.k.a. 
+
+##
+
+
+defun helm-buffers--pattern-sans-filters (&optional separator)
+  (cl-loop for p in (helm-mm-split-pattern helm-pattern)
+           unless (member (substring p 0 1) '("*" "/" "@" "!"))
+           collect p into lst
+           finally return (mapconcat 'identity lst (or separator " "))))
+
+
+
+
+# `mtg.el`
+
+`mtg` is a *Multi-Library Package* for editing MTG cards, searching through all MTG cards, and parsing MTG cards/decklists.
+
+## Links
+
+* <https://github.com/sboosali/mtg.el>
+* <>
+* <>
+
+## Multi-Library Package
+
+`mtg` is a *Multi-Library Package*, with these *Elisp Libraries*:
+
+* `mtg.el`
+* `mtg-types.el`
+* `mtg-mode.el`
+* `mtg-query.el`
+* `mtg-company.el`
+
+## Completion
+
+### Examples
+
+### `mtg-company`
+
+*Company Backend* for *MTG Cards*.
+
+## Search
+
+### Syntax
+
+*Operator* characters:
+
+* `*` — e.g. `*`. a *Prefix Operator*.
+* `@` — e.g. `@`. a *Prefix Operator*.
+* `!` — e.g. `!`. a *Prefix Operator*.
+* `~` — e.g. `~`. a *Prefix Operator*.
+* `%` — e.g. `%`. a *Prefix Operator*.
+* `#` — e.g. `#`. a *Prefix Operator*.
+* `\\` — e.g. `\}`. an *Infix Operator*.
+* `^` — e.g. `^`. a *Prefix Operator*.
+
+* ` ` — e.g. ` `. an *Infix Operator*. Whitespace separates
+* `,` — e.g. `,`. an *Infix Operator*.
+* `;` — e.g. `;`. an *Infix Operator*.
+* `/` — e.g. `/`. an *Infix Operator*.
+* `|` — e.g. `|`. an *Infix Operator*.
+* `&` — e.g. `&`. an *Infix Operator*.
+* `+` — e.g. `+`. an *Infix Operator*.
+* `_` — e.g. `_`. an *Infix Operator*.
+
+* `?` — e.g. `?`. a *Suffix Operator*.
+* `` — e.g. `$`. a *Suffix Operator*.
+
+Grouping characters:
+
+* `()` — e.g. `()`. anything within parentheses is an arbitrary *S-Expression*. it's how you embed *Elisp* into *MTG Search DSL*. For example, 
+* `[]` — e.g. `[]`. 
+* `{}` — e.g. `{}`. 
+* `"` — e.g. `""`. 
+
+__Non__-Operator characters:
+
+* `-` — 
+* `'` — 
+* letters
+* digits
+
+Default *MTG Variables* (add your own via `mtg-defvar`):
+
+* `NAME` — 
+* `TYPES` — 
+* `COST` — 
+* `CMC` — 
+* `` — 
+* `` — 
+* `` — 
+* `` — 
+* `` — 
+* `` — 
+* `` — 
+* `` — 
+* `` — 
+* `POWER` — 
+* `TOUGHNESS` — 
+* `LOYALTY` — 
+
+### Extensions
+
+`mtg-defvar` defines an *MTG Variable*. 
+
+``` elisp
+(mtg-defvar NAME FORM)
+```
+
+
+
+*MTG Variables* aren't *Elisp Variables*, but are “bound” as *Elisp Variables* within an *MTG Form*. By convention, they are uppercase (to match the default *MTG Variables*, and to distinguish themselves visually from *Elisp Variable*) For example:
+
+``` elisp
+(mtg-defvar SIZE
+  (mtg-cond 
+    (creature (+ power toughness))
+    (planeswalker loyalty)
+    (_ nil)))
+
+(mtg-query nil
+  (> CMC SIZE))
+```
+
+### Examples
+
+* the `^ancestral *instant @draw` pattern — narrows to Card-Draw Instants. i.e. cards:
+
+    - whose Card Name starts with *Ancestral*.
+    - whose Card Type includes *Instant*.
+    - whose Rules Text includes *draw* case-insensitive and between word-boundaries. (e.g. *Draw ...* and *“... draw.”* both match, but *drawn* doesn't match).
+
+* the `*elf,druid 1/ elf|elves` pattern — narrows to, for example, `Llanowar Elves` and `Elves of Deep Shadow`. i.e. cards:
+
+   - whose Card Name includes either the word *Elf* (singular) or *Elves* (plural), or both.
+   - whose Card Type includes both *Elf* and *Druid*.
+   - whose Power is exactly `1` (and whose Toughness can be anything.)
+
+### Tips
+
+For names or text with whitespace, to group them under a single operator (i.e. as one “word”) either:
+
+* capitalize each word, strip out commas, then squish them together.
+
+    - e.g. `Advent of the Wurm` becomes `AdventOfTheWurm` (*NOTE* `of` and `the` become capitalized.). 
+    - e.g. `first strike` becomes `FirstStrike` (*NOTE* or even just `firststrike`, since by default, all keywords can be recognized by single-word aliases.)
+
+* surround with quotations:
+
+    - e.g. `"first strike"`.
+
+### `mtg-helm`
+
+## Notes
+
+>
+
+
+
+
+(define-key helm-map (kbd "C-/")  #'helm-select-action) ; list Actions. Mnemonic: ‹/› shares a key with ‹?›.
+(define-key helm-map (kbd "C-h h")  #'helm-select-action) ; list Actions. Mnemonic: ‹h› for "help".
+
+
+
+
+
+;; "the Company Transformer option `company-sort-by-backend-importance'"
+
+
+
+(defun example/company-mode/ company-transformer-python (candidates)
+
+  "Deprioritize (lexically-)private methods.
+
+URL `https://emacs.stackexchange.com/questions/12360/how-to-make-private-python-methods-the-last-company-mode-choices'."
+
+  (let" ((deleted))
+    (mapcar #'(lambda (c)
+        (if (or (string-prefix-p "_" c) (string-prefix-p "._" c))
+            (progn
+              (add-to-list 'deleted c)
+              (setq candidates (delete c candidates)))))
+        candidates) 
+    (append candidates (nreverse deleted))))
+
+(defun my-python-conf()
+  (setq-local company-transformers
+          (append company-transformers '(company-transform-python))))
+
+
+following has worked well for me:
+
+(defun python--private-lessp (x y)
+  (cond
+   ((and (string-prefix-p "_" x)
+         (not (string-prefix-p "_" y))) nil)
+   ((and (string-prefix-p "_" y)
+         (not (string-prefix-p "_" x))) t)
+   (t (string-lessp x y))))
+
+(defun company-transform-python (candidates)
+  "De-prioritize internal/private Python variables (e.g. 
+  'var._blah') in completion list ordering.
+
+  See `company-transformers'."
+  (seq-sort-by 'company-strip-prefix 'python--private-lessp
+               candidates))
+
+(add-hook 'python-mode-hook 'company-transform-python)
+(add-hook 'inferior-python-mode-hook 'company-transform-python)
+
+
+return the text to be completed.  It must be
+text immediately before point.  Returning nil from this command passes
+control to the next backend.  The function should return `stop' if it
+should complete but cannot (e.g. when in the middle of a symbol).
+Instead of a string, the backend may return a cons (PREFIX . LENGTH)
+where LENGTH is a number used in place of PREFIX's length when
+comparing against `company-minimum-prefix-length'.  LENGTH can also
+be just t, and in the latter case the test automatically succeeds
+
+
+
+
+
+
+
+
+
+(defun example/company-mode/ company-transformer-python (candidates)
+
+  "Deprioritize (lexically-)private methods.
+
+URL `https://emacs.stackexchange.com/questions/12360/how-to-make-private-python-methods-the-last-company-mode-choices'."
+
+  (let" ((deleted))
+    (mapcar #'(lambda (c)
+        (if (or (string-prefix-p "_" c) (string-prefix-p "._" c))
+            (progn
+              (add-to-list 'deleted c)
+              (setq candidates (delete c candidates)))))
+        candidates) 
+    (append candidates (nreverse deleted))))
+
+(defun my-python-conf()
+  (setq-local company-transformers
+          (append company-transformers '(company-transform-python))))
+
+
+
+
+
+;;; Eldoc
+
+;; 
+
+(defun mtg-eldoc (&optional point)
+
+  (let* ((POINT (or point (point))))
+
+    ())
+
+;;
+
+(defun mtg-eldoc-argument-case (string)
+
+   "`eldoc-argument-case' for `mtg-mode'.
+
+Inflect and fontify STRING for `eldoc-mode'."
+
+  (let* ((STRING (upcase string))
+)
+   (propertize STRING 'face 'font-lock-variable-name-face)))
+
+;;
+
+ (setq-local eldoc-argument-case #'mtg-eldoc-argument-case)
+
+
+
+
+
+
+
+(defun mtg-eldoc-argument-case (string)
+
+   "Inflect and fontify STRING for 
+ `eldoc mode'."
+
+   (propertize (upcase string) 'face 'font-lock-variable-name-face))
+
+ (setq-local eldoc-argument-case #'mtg-eldoc-argument-case)
+
+
+
+
+
+move-to-window-line count
+This function moves point with respect to the text currently displayed in the selected window. It moves point to the beginning of the screen line count screen lines from the top of the window; zero means the topmost line. If count is negative, that specifies a position −count lines from the bottom (or the last line of the buffer, if the buffer ends above the specified screen position); thus, count of −1 specifies the last fully visible screen line of the window.
+
+If count is nil, then point moves to the beginning of the line in the middle of the window. If the absolute value of count is greater than the size of the window, then point moves to the place that would appear on that screen line if the window were tall enough. This will probably cause the next redisplay to scroll to bring that location onto the screen.
+
+
+(when (require 'fix-word nil :no-error)
+
+(fix-word-define-command sboo-upcase-words #'upcase)
+  "`upcase' under `fix-word'.")
+
+(global-set-key (kbd "M-u") #'fix-word-upcase)
+(global-set-key (kbd "M-l") #'fix-word-downcase)
+(global-set-key (kbd "M-c") #'fix-word-capitalize)
+
+  ())
+
+;; ^ URL `https://github.com/mrkkrp/fix-word'
+
+
+
+
+
+
+(defun yas--add-template (table template)
+  "Store in TABLE the snippet template TEMPLATE.
+KEY can be a string (trigger key) of a vector (direct
+keybinding)."
+  (let ((name (yas--template-name template))
+        (key (yas--template-key template))
+
+
+
+
+
+(defun save-current-kbd-macro-to-dot-emacs (name)
+  "Save the current macro as named function definition inside
+your initialization file so you can reuse it anytime in the
+future."
+  (interactive "SSave Macro as: ")
+  (name-last-kbd-macro name)
+  (save-excursion 
+    (find-file-literally user-init-file)
+    (goto-char (point-max))
+    (insert "\n\n;; Saved macro\n")
+    (insert-kbd-macro name)
+    (insert "\n")))
+
+
+
+
+
+
+
+(dolist (HOOK '(comint-exec-hook term-exec-hook)
+(add-hook HOOK #'sboo-process-disable-query-on-exit))
+
+;; ^ Don't ask when quitting shells & terminals.
+
+
+
+
+
+e.g. `define-prefix-command` expansion:
+
+``` elisp
+(define-prefix-command super-map)
+
+→ (progn
+    (defvar super-map (make-sparse-keymap))
+    (defun super-map (interactive) ...))
+```
+
+
+
+
+
+;; ^ `goto-map':
+;;
+;; • is a `keymapp' for the ‹M-g› Prefix Key.
+;; • binds ‹M-g› to `goto-line' (by default).
+;; • binds ‹› to `goto-char'.
+;; • binds ‹› to `goto-'.
+;; • binds ‹› to `goto-'.
+;; • binds ‹› to `goto-'.
+;; • binds ‹› to `goto-'.
+;; • binds ‹› to `goto-'.
+;; • binds ‹› to `goto-'.
+;; • binds ‹› to `goto-'.
+;; • binds ‹› to `goto-'.
+;; 
+;; 
+
+
+
+
+
+
+
+
+http://endlessparentheses.com/ispell-and-abbrev-the-perfect-auto-correct.html
+
+As of today, the code in the post will search backwards for a typo, instead of just correcting the current word. So you can invoke it without trouble even if the typo happened several words ago.
+
+
+
+
+
+
+
+
+/u/spirosboosalis:
+
+>prune the bloat
+
+that's probably correct long-term, but I kind of like the bloat, I like programming against the standard / built-in libraries whenever possible. in that I've removed external dependencies from most of my packages, and replaced them with programming utilities like `cl-lib`, `seq`, `map`, `subr-x` and editor-specific utilities like `thingatpt`, functions like `isearch-forwars-symbol-at-point`, etc. it feels nice to be able to provide a user with a single file and no other dependencies to drop onto their `load-path`, even with the existence of a package manager.
+
+(unless said bloat is too obscure for me, and these are actually the "stable apis" you were talking about, some of the stuff I'm talking about does seem to have been intentionally added or improved in the past three major releases; in which case what's an example of the bloat?)
+
+btw, do you have a link to their statement?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://www.cyberciti.biz/faq/linux-how-to-find-if-processor-is-64-bit-or-not/
+
+ARM64, a.k.a. AArch64, a.k.a. ARMv8.
+
+(mapcar #'getconf "UNAME_MACHINE" "GETCONF_LONG_BIT" "LONG_BIT")
+
+is64 ; equals "64"
+is32 ; startswith "32" 
+
+
+
+
+
+
+
+
+
+(eval-after-load 'ox-html
+  ;; If you prefer to use ~ for <code> tags. Replace "code" with
+  ;; "verbatim" here, and replace "~" with "=" below.
+  '(push '(code . "<kbd>%s</kbd>") org-html-text-markup-alist))
+
+(define-key org-mode-map "\C-ck" #'endless/insert-key)
+(defun endless/insert-key (key)
+  "Ask for a key then insert its description.
+Will work on both org-mode and any mode that accepts plain html."
+  (interactive "kType key sequence: ")
+  (let* ((orgp (derived-mode-p 'org-mode))
+         (tag (if orgp "~%s~" "<kbd>%s</kbd>")))
+    (if (null (equal key "\C-m"))
+        (insert 
+         (format tag (help-key-description key nil)))
+      ;; If you just hit RET.
+      (insert (format tag ""))
+      (forward-char (if orgp -1 -6)))))
+
+
+
+
+
+
+
+ (cl-defun sboo-dired (&key directory)
+
+  "Launch `dired' recursively.
+
+Inputs:
+
+• DIRECTORY — a `stringp'.
+  Filepath.
+  Defaults to `default-directory'.
+
+Effects:
+
+• Launches a `dired-mode' buffer.
+
+Related:
+
+• Wraps `dired'.
+
+Links:
+
+• URL `https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired-and-Find.html'"
+
+  (interactive)
+
+  (let* ((DIRECTORY (or directory default-directory))
+(SWITCHES '(""))
+)
+
+  (dired DIRECTORY SWITCHES)))
+
+
+
+
+
+(defcustom endless/important-files 
+
+  '("master.tex" "AndroidManifest.xml" "init.org")
+
+  "List of files which dired should focus by default."
+
+  :type '(repeat string))
+
+;;
+
+(defun my-dired-goto-important-file ()
+
+  "Go to an important file in the current dired buffer."
+
+  (let ((candidates endless/important-files)
+        (matched nil))
+    (while (and candidates (null matched))
+      (setq matched (dired-goto-file
+                     (expand-file-name (pop candidates)))))
+    (unless matched
+      (endless/goto-elisp-file))))
+
+;;
+
+(add-hook 'dired-initial-position-hook
+          ;; Append so we run after `save-place'
+          #'my-dired-goto-important-file 'append)
+
+
+
+
+
+
+
+(require 'compile)
+
+(defun c/register-compilation-error-regexp () 
+  (with-eval-after-load 'compilation-mode
+      (add-to-list 'compilation-error-regexp-alist '("^Assertion failed: .*, file \\(.*?\\), line \\([0-9]+\\)." 1 2))))
+
+(add-hook 'c-mode-common-hook #'c/register-compilation-error-regexp)
+
+
+
+
+(defun remove-dos-eol ()
+  "Do not show ^M in files containing mixed UNIX and DOS line endings."
+  (interactive)
+  (setq buffer-display-table (make-display-table))
+  (aset buffer-display-table ?\^M []))
+
+
+
+
+
+
+
+  "Align columns by .
+URL `https://github.com/WaYdotNET/.emacs.d/blob/master/function.el'"
+
+
+
+
+
+
+
+
+
+(idk if emacs counts `provide-theme`d themes as packages, but) i'd add at least a homepage package header, like:
+
+    ;; Author: nickav
+    ;; Homepage: https://github.com/nickav/naysayer-theme.el
+
+above the license. that way i can vendor it in:
+
+    wget https://raw.githubusercontent.com/nickav/naysayer-theme.el/master/naysayer-theme.el
+
+(in the spirit of Jon Blow), without losing track of its origin. sure, you can google it, but that's an extra step.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(cl-defun mtg-table/clean-text (text &key width)
+
+  "Return TEXT as a valid Table Entry (for `tabulated-list-mode').
+
+Inputs:
+
+• TEXT — a `stringp'. 
+• WIDTH — an `integerp' or nil. 
+
+Transformations include:
+
+• Replace newlines with “|” (i.e. a vertical bar).
+• Truncate to a `string-width' of WIDTH, with “…” (i.e. ellipses)."
+
+  (let* ((TEXT-ONELINE   (replace ?\n " | " ( text)))
+         (TEXT-TRUNCATED (truncate TEXT-ONELINE ?…))
+       
+
+    TEXT-TRUNCATED))
+
+
+
+
+
+
+
+
+
+
+      (buffer-substring (point) (save-excursion (skip-chars-backward mtg-syntax-card-name-charset-regexp) (point)))
+
+
+
+
+
+(defun company-grab-line (regexp &optional expression)
+  "Return a match string for REGEXP if it matches text before point.
+If EXPRESSION is non-nil, return the match string for the respective
+parenthesized expression in REGEXP.
+Matching is limited to the current line."
+  (let ((inhibit-field-text-motion t))
+    (company-grab regexp expression (point-at-bol))))
+
+(defun company-grab-symbol ()
+  "If point is at the end of a symbol, return it.
+Otherwise, if point is not inside a symbol, return an empty string."
+  (if (looking-at "\\_>")
+      (buffer-substring (point) (save-excursion (skip-syntax-backward "w_")
+                                                (point)))
+    (unless (and (char-after) (memq (char-syntax (char-after)) '(?w ?_)))
+      "")))
+
+(defun company-grab-word ()
+  "If point is at the end of a word, return it.
+Otherwise, if point is not inside a symbol, return an empty string."
+  (if (looking-at "\\>")
+      (buffer-substring (point) (save-excursion (skip-syntax-backward "w")
+                                                (point)))
+    (unless (and (char-after) (eq (char-syntax (char-after)) ?w))
+      "")))
+
+
+
+
+
+
+
+
+(cl-defstruct mtg-query
+
+  ())
+
+;; 
+
+(defun forward-mtg-card-name (&optional count)
+
+  ())
+
+(put 'mtg-card-name 'forward-op #'forward-mtg-card-name)
+
+;; 
+
+(defun mtg-helm-search (&optional text)
+
+  "Helm-Command to search `current-buffer' for a symbol."
+
+  (interactive "sText to Search for: ')
+
+  (let* ((TEXT (or text (thing-at-point 'mtg-card-name))
+  (DEFAULT TEXT)
+  
+
+  (let ((helm-maybe-use-default-as-input t))
+
+    (helm :sources '(mtg-helm-search-source)
+          :buffer "*Helm MTG Card Search*"
+          :default DEFAULT))))
+
+;; 
+
+(defvar mtg-helm-search-source 
+
+  (let* ((CANDIDATES ())
+  
+
+      `((name . "Printed MTG Cards")
+        (candidates . ,CANDIDATES)
+        (action . #'mtg-helm-search-action)))
+
+  "Helm-Source for `mtg-helm-search'.")
+
+;; 
+
+(defun mtg-helm-search-action (candidate)
+
+  "Helm-action for `mtg-helm-search', goto to CANDIDATE."
+
+  (let* (( ())
+  
+
+  ( candidate)))
+
+;; 
+
+(defun mtg-helm-parse-query (text)
+
+  "Parse TEXT into an `mtg-helm-query'.
+
+M-: (mtg-helm-parse-query \"^ancestral *instant @draw\")
+   → '(:name-prefix \"ancestral\" :type-has \"instant\" :rules-has-word \"draw\")
+
+"
+
+  (let* (( ())
+  
+
+    (make-mtg-query )))
+
+;; 
+
+
+
+
+
+
+
+
+(setq company-box-icons-unknown 'fa_question_circle)
+
+(setq company-box-icons-elisp
+   '((fa_tag :face font-lock-function-name-face) ;; Function
+     (fa_cog :face font-lock-variable-name-face) ;; Variable
+     (fa_cube :face font-lock-constant-face) ;; Feature
+     (md_color_lens :face font-lock-doc-face))) ;; Face
+
+(setq company-box-icons-yasnippet 'fa_bookmark)
+
+
+
+
+
+
+
+sboo-radix-tree.el
+
+(require 'radix-tree)
+(require 'seq)
+
+(defun sboo-radix-tree-insert-true (tree word)
+
+  "Specialized `radix-tree-insert'.
+
+Reducer for constructing a `radix-tree-p'."
+
+  (radix-tree-insert tree word t))
+
+(defun sboo-radix-tree-from (words)
+
+  "Return a `radix-tree-p' with WORDS.
+
+Examples:
+
+• M-: (sboo-radix-tree-from '("application" "appetizer" "applicative" "apple"))
+  → (("app" ("l" ("icati" ... ...) ("e" . t)) ("etizer" . t)))
+"
+
+  (seq-reduce #'sboo-radix-tree-insert-true words radix-tree-empty))
+
+
+
+
+
+
+(require 'radix-tree)
+(require 'seq)
+
+(defun example/radix-tree-insert-true-reduce (tree word &optional value)
+  (radix-tree-insert tree word t))
+
+(seq-reduce #'example/radix-tree-insert-true-reduce '("application" "appetizer" "applicative" "apple") radix-tree-empty)
+
+;; → (("app" ("l" ("icati" ... ...) ("e" . t)) ("etizer" . t)))
+
+
+
+
+
+
+
+
+  :disabled (bound-and-true-p sboo-$1-p)
+
+  :disabled (sboo-package-disabled-p '$1)
+
+
+
+
+
+
+
+
+
+
+
+
+Here is what I had in mind (lisp/init-helm.el):
+
+(with-eval-after-load 'helm
+  (setq helm-mode-line-string "")
+  (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
+  (define-key global-map (kbd "C-c m") 'helm-imenu)
+  (define-key global-map (kbd "C-x b") 'helm-buffers-list))
+
+(with-eval-after-load 'helm-command
+  (global-set-key (kbd "M-x") 'helm-M-x))
+
+(with-eval-after-load 'helm-projectile
+  (helm-projectile-on))
+
+
+
+
+e.g. `shell-command`:
+
+``` elisp
+(defun run-eslint ()
+
+  "Run program `eslint' upon `current-buffer'. 
+
+URL `https://hackeryarn.com/post/cli-in-emacs/'."
+
+  (interactive)
+
+  (let* ((CURRENT-BUFFER (or (current-buffer) (read-buffer "Buffer (for ‘eslint’): "))
+       (CURRENT-FILE (buffer-name CURRENT-BUFFER))
+      
+
+    (shell-command (mapconcat #'identity (list "eslint" "--fix" CURRENT-FILE))))
+```
+
+
+
+
+
+
+REPL
+
+(cl-defun expresso-eval (&key eval peek type load reset cd env quit help &rest invocations)
+
+  "Eval an Expresso expression or Expresso REPL command.
+
+Inputs:
+
+• EVAL  — a `stringp' or `bufferp' (or nil);
+  a `bufferp' is converted to a `stringp'
+  via `buffer-substring-no-properties'.
+  an Expresso expression.
+  Evaluates EVAL, strictly/deeply
+  (i.e. to Head-Normal Form).
+  Wraps « ... », 
+  (i.e. no subcommand / no leading colon).
+
+• PEEK  — a `stringp' or `bufferp' (or nil);
+  a `bufferp' is converted to a `stringp'
+  via `buffer-substring-no-properties'.
+  an Expresso expression.
+  Evaluates EVAL, lazily 
+  (i.e. to Weak Head-Normal Form).
+  Wraps « :peek ... »
+  (i.e. the namesake subcommand in the Expresso REPL).
+
+• TYPE  — a `stringp' or `bufferp' (or nil);
+  a `bufferp' is converted to a `stringp'
+  via `buffer-substring-no-properties'.
+  an Expresso “term”.
+  Either an Expresso value-level expression;
+  or a type-level expression.
+  typechecks TYPE.
+  Wraps « :type ... ».
+
+• LOAD  — a `stringp' or `bufferp' (or nil);
+  `stringp' is a (readable) filepath;
+  `bufferp' may be a non-File Buffer.
+  imports LOAD, loading all definitions;
+  TODO import record expression as a module.
+  Wraps « :load ... ».
+
+• RESET — a `booleanp'.
+  unload all definitions.
+  Wraps « :reset ».
+
+• CD    — a `stringp' or `bufferp' (or nil);
+  `stringp' is a (readable) directory filepath;
+  `bufferp' is a File Buffer,
+  whose `default-directory' provides the value of CD.
+  Changes the REPL's current working directory.
+  Wraps « :cd ... ».
+
+• ENV   — a `booleanp'.
+  If ENV is non-nil,
+  return all loaded bindings,
+  as an alist; i.e. a `listp' of `consp's,
+ .whose `car' and `cdr' are both a `stringp'.
+  Wraps « :env ».
+
+• HELP  — a `booleanp'.
+  If HELP is non-nil,
+  return a `bufferp' (in `help-mode')
+  with the Expreaso REPL's help/usage message.
+  Wraps « :help ».
+
+• QUIT  — a `booleanp'.
+  If QUIT is non-nil, quit the REPL.
+  Wraps « :quit ».
+
+Examples:
+
+• M-: (expresso-eval :help t)
+    → #<buffer *Expresso REPL Help*>
+
+• M-: (expresso-eval :type "map")
+    → \"map :: forall a b. (a -> b) -> [a] -> [b]\"
+
+• M-: (expresso-eval :peek \"({x,y}: {x = x * 2, y = y * 2}) {x = 1, y = 2}\")
+    → \"{x = <Thunk>, y = <Thunk>}\"
+
+• M-: (expresso-eval :eval \"({x,y}: {x = x * 2, y = y * 2}) {x = 1, y = 2}\")
+    → \"{x = 2, y = 4}\"
+
+• M-: (expresso-eval :eval "map (x: x + 1) [1,2,3]")
+    → \"[2,3,4]\"
+
+• M-: (expresso-eval :load \"./Example.x\" :cd \"./lib\")
+    → \"...\"
+    ; « :load » always gets run after « :cd » has been run.
+
+• M-: (expresso-eval :env t)
+    → '((\"map\" . "forall a b. (a -> b) -> [a] -> [b]\") ...)
+
+• M-: (expresso-eval :quit t)
+    → nil
+
+Notes (re Inputs):
+
+• Only one “Returning Keyword-Argument” should be given,
+ with zero-or-more “Effectful Keyword-Arguments”.
+
+• The “Returning Keyword-Arguments” are:
+
+• The “Effectful Keyword-Arguments” are:
+
+• One-or-More Keyword-Arguments,
+  whether “Returning” or “Effectful”,
+  must be given.
+
+• Keyword-Arguments are unordered
+  (just like any `cl-defun').
+
+• Multi-Line strings & buffers 
+  are automatically wrapped within « :{ ... :} ».
+
+Links:
+
+• URL `https://github.com/willtim/Expresso/blob/0.1.2.0/src/Repl.hs#L51'"
+
+ (let* (
+    
+
+  ())
+
+
+
+(defun expresso-eval (&key eval peek type load reset cd env quit help)
+
+  "Eval an Expresso expression or Expresso REPL command.
+
+Inputs:
+
+• EVAL  — a `stringp' or nil.
+  an Expresso expression.
+  evaluates EVAL, strictly/deeply
+  (i.e. to Head-Normal Form).
+
+• PEEK  — a `stringp' or nil.
+   an Expresso expression.
+   evaluates EVAL, lazily 
+   (i.e. to Weak Head-Normal Form).
+
+• TYPE  — a `stringp' or nil.
+  an Expresso “term”:
+  either an Expresso value-level expression;
+  or a type-level expression.
+  typechecks TYPE.
+
+• LOAD  — a `stringp' or nil.
+  a filepath.
+  TODO import record expression as a module.
+  imports LOAD, loading all definitions.
+
+• RESET — a `booleanp'.
+  unload all definitions.
+
+• CD    — a `stringp' or nil.
+  a filepath.
+  changes the current working directory
+  of the interpreter.
+
+• ENV   — a `booleanp'.
+  if ENV is non-nil,
+  return all loaded bindings
+
+• QUIT  — a `booleanp'.
+  if QUIT is non-nil, quit the interpreter.
+
+• HELP  — a `booleanp'.
+  if HELP is non-nil,
+  return a help/usage message.
+       
+Examples:
+
+• M-: (expresso-eval :help t)
+    → \"...\"
+
+• M-: (expresso-eval :type "map")
+    → \"\"
+
+• M-: (expresso-eval :eval "map (x: x + 1) [1,2,3]")
+    → \"[2,3,4]\"
+
+• M-: (expresso-eval :load \"./Example.x\")
+    → \"...\"
+• M-: (expresso-eval :env t)
+    → '(\"map :: ...\" ...)
+
+• M-: (expresso-eval :quit t)
+    → \"...\"
+
+Links:
+
+• URL `https://github.com/willtim/Expresso/blob/0.1.2.0/src/Repl.hs#L51'"
+
+ (when-let* ((NAME-AT-POINT (expresso-name-at-point))
+  (SIGNATURE-AT-POINT (ignore-errors (expresso-eval `(:type ,NAME-AT-POINT))))
+    
+
+   (when SIGNATURE-AT-POINT
+      (with-temp-buffer BUFFER
+         (insert SIGNATURE-AT-POINT)
+         (expresso-propertize-buffer)
+         (buffer-string)))))
+
+
+
+
+(defun expresso-eldoc
+
+ (let* ((SIGNATURE (ignore-errors (expresso-eval (list :type-of (expresso-name-at-point)))))
+    
+
+
+
+
+(progn
+
+;; bind Control+MouseWheel to increase/decrease font size (on Linux):
+
+  (global-set-key (kbd "<C-mouse-4>") #'text-scale-increase)  ; MouseWheel ScrollUp
+  (global-set-key (kbd "<C-mouse-5>") #'text-scale-decrease)  ; MouseWheel ScrollDown
+
+  ;; ^ URL `http://ergoemacs.org/emacs/emacs_mouse_wheel_config.html'
+
+  ())
+
+
+
+  (let* ((GET-NAME sboo-scratch-name-function)
+    (NAME (funcall GET-NAME))
+   
+
+(defun sboo-new-scratch-file  (&optional mode-or-ext name)
+
+  "New Scratch-File named NAME in mode MODE-OR-EXT.
+
+Inputs:
+
+• MODE-OR-EXT — a `stringp' or `symbolp'.
+  If a `symbolp' — the `major-mode' of the buffer created.
+  If a `stringp' — the file-extension of the file created,
+  from which the `major-mode' may be guessed.
+
+• NAME — a `stringp'.  
+
+Variables:
+
+• `sboo-scratch-name-function'
+
+Resources:
+
+• Writes to `sboo-scratch-directory'.
+
+Links:
+
+• URL `"
+
+  (interactive ())
+
+
+
+
+  '( ...
+    ;; Escape sequences in strings
+    (puppet-match-valid-escape 1 'puppet-escape-sequence t)
+  ...)
+
+(defun puppet-match-valid-escape (limit)
+  "Match a valid escape sequence before LIMIT."
+  (puppet-match-property 'puppet-escape 'double-quoted limit))
+
+(defun puppet-match-property (property context limit)
+  "Match a PROPERTY in CONTEXT before LIMIT.
+
+PROPERTY is the text property to look for.  CONTEXT is one of
+`single-quoted', `double-quoted', `comment' or nil, or a list
+with any of these symbols.  The expansion will only match if it
+is in any given CONTEXT.  nil means no specific syntactic context."
+  (when (symbolp context)
+    (setq context (list context)))
+  (let* ((pos (next-single-char-property-change (point) property nil limit)))
+    (when (and pos (> pos (point)))
+      (goto-char pos)
+      (let* ((value (get-text-property pos property)))
+        (if (and value (memq (car value) context))
+            (progn (set-match-data (cdr value)) t)
+          (puppet-match-property property context limit))))))
+
+
+
+(defun puppet-match-valid-expansion (limit)
+  "Match a valid expansion before LIMIT.
+
+A valid expansion is a variable expansion in a double-quoted
+string."
+  (let ((valid-contexts '(double-quoted)))
+    (when puppet-fontify-variables-in-comments
+      (push 'comment valid-contexts))
+    (puppet-match-property 'puppet-expansion valid-contexts limit)))
+
+(defun puppet-match-invalid-expansion (limit)
+  "Match an invalid expansion before LIMIT.
+
+An invalid expansion is a variable expansion in a single-quoted
+string."
+  (puppet-match-property 'puppet-expansion 'single-quoted limit))
+
+
+
+
+(defvar puppet-font-lock-keywords
+  `(
+    ;; Keywords
+    (,(puppet-rx (symbol keyword)) 0 font-lock-keyword-face)
+    ;; Data Types
+    (,(puppet-rx (symbol data-type)) 0 font-lock-type-face)
+    ;; Variables
+    (,(puppet-rx "$" (symbol variable-name)) 0 font-lock-variable-name-face)
+    ;; Class and type declarations
+    (,(puppet-rx (symbol (or "class" "define" "plan"))
+                 (one-or-more space)
+                 (group (symbol resource-name)))
+     1 font-lock-type-face)
+    ;; Node declarations
+    (,(puppet-rx (symbol "node")
+                 (one-or-more space)
+                 (group node-name))
+     1 font-lock-type-face)
+    ;; Resource usage, see
+    ;; http://docs.puppetlabs.com/puppet/latest/reference/lang_resources.html
+    (,(puppet-rx (group (repeat 0 2 "@") ; Virtual and exported resources
+                        (symbol resource-name))
+                 (zero-or-more space) "{")
+     1 font-lock-type-face)
+    ;; Resource defaults, see
+    ;; http://docs.puppetlabs.com/puppet/latest/reference/lang_defaults.html
+    (,(puppet-rx (group (symbol cap-resource-name)) (zero-or-more space) "{")
+     1 font-lock-type-face)
+    ;; Resource references, see
+    ;; http://docs.puppetlabs.com/puppet/latest/reference/lang_datatypes.html#resource-references
+    (,(puppet-rx (group (symbol cap-resource-name)) (zero-or-more space) "[")
+     1 font-lock-type-face)
+    ;; Resource collectors, see
+    ;; http://docs.puppetlabs.com/puppet/latest/reference/lang_collectors.html
+    (,(puppet-rx (group (symbol cap-resource-name)) (zero-or-more space)
+                 (optional "<")         ; Exported collector
+                 "<|")
+     1 font-lock-type-face)
+    ;; Negation
+    ("!" 0 font-lock-negation-char-face)
+    ;; Builtin meta parameters
+    (,(puppet-rx (group (symbol builtin-metaparam)) (zero-or-more space) "=>")
+     1 font-lock-builtin-face)
+    ;; Built-in functions
+    (,(puppet-rx (symbol builtin-function)) 0 font-lock-builtin-face)
+    ;; Type arguments to some special built-in functions
+    (,(puppet-rx (symbol (or "contain" "include" "require"))
+                 (one-or-more space)
+                 (group (symbol resource-name)))
+     1 font-lock-type-face)
+    ;; Variable expansions in strings and comments
+    (puppet-match-valid-expansion 1 font-lock-variable-name-face t)
+    (puppet-match-invalid-expansion 1 font-lock-warning-face t)
+    ;; Escape sequences in strings
+    (puppet-match-valid-escape 1 'puppet-escape-sequence t)
+    ;; Regexp literals
+    (puppet-match-regexp-literal (1 'puppet-regular-expression-literal t)
+                                 (2 'puppet-regular-expression-literal t)
+                                 (3 'puppet-regular-expression-literal t)))
+  "Font lock keywords for Puppet Mode.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;###autoload
+(defun company-yasnippet (command &optional arg &rest ignore)
+  "`company-mode' backend for `yasnippet'.
+
+This backend should be used with care, because as long as there are
+snippets defined for the current major mode, this backend will always
+shadow backends that come after it.  Recommended usages:
+
+* In a buffer-local value of `company-backends', grouped with a backend or
+  several that provide actual text completions.
+
+  (add-hook 'js-mode-hook
+            (lambda ()
+              (set (make-local-variable 'company-backends)
+                   '((company-dabbrev-code company-yasnippet)))))
+
+* After keyword `:with', grouped with other backends.
+
+  (push '(company-semantic :with company-yasnippet) company-backends)
+
+* Not in `company-backends', just bound to a key.
+
+  (global-set-key (kbd \"C-c y\") 'company-yasnippet)
+"
+  (interactive (list 'interactive))
+  (cl-case command
+    (interactive (company-begin-backend 'company-yasnippet))
+    (prefix
+     ;; Should probably use `yas--current-key', but that's bound to be slower.
+     ;; How many trigger keys start with non-symbol characters anyway?
+     (and (bound-and-true-p yas-minor-mode)
+          (company-grab-symbol)))
+    (annotation
+     (concat
+      (unless company-tooltip-align-annotations " -> ")
+      (get-text-property 0 'yas-annotation arg)))
+    (candidates (company-yasnippet--candidates arg))
+    (no-cache t)
+    (post-completion
+     (let ((template (get-text-property 0 'yas-template arg))
+           (prefix-offset (get-text-property 0 'yas-prefix-offset arg)))
+       (yas-expand-snippet (yas--template-content template)
+                           (- (point) (length arg) prefix-offset)
+                           (point)
+                           (yas--template-expand-env template))))))
+
+(provide 'company-yasnippet)
+;;; company-yasnippet.el ends here
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEMPLATES
+
+;; 
+
+(defvar mtg-cards-by--table nil
+
+  "MTG Cards, indexed by Card .")
+
+
+
+
+
+
+
+
+
+
+
+ELFEED
+
+(defun elfeed-search-parse-filter (filter)
+  "Parse the elements of a search filter into a plist."
+  (let ((must-have ())
+        (must-not-have ())
+        (after nil)
+        (matches ())
+        (not-matches ())
+        (limit nil)
+        (feeds ()))
+    (cl-loop for element in (split-string filter)
+             for type = (aref element 0)
+             do (cl-case type
+                  (?+
+                   (let ((symbol (intern (substring element 1))))
+                     (unless (eq '## symbol)
+                       (push symbol must-have))))
+                  (?-
+                   (let ((symbol (intern (substring element 1))))
+                     (unless (eq '## symbol)
+                       (push symbol must-not-have))))
+                  (?@ (setf after (elfeed-time-duration (substring element 1))))
+                  (?! (let ((re (substring element 1)))
+                        (when (elfeed-valid-regexp-p re)
+                          (push re not-matches))))
+                  (?# (setf limit (string-to-number (substring element 1))))
+                  (?= (let ((url (substring element 1)))
+                        (push url feeds)))
+                  (otherwise (when (elfeed-valid-regexp-p element)
+                               (push element matches)))))
+    `(,@(when after
+          (list :after after))
+      ,@(when must-have
+          (list :must-have must-have))
+      ,@(when must-not-have
+          (list :must-not-have must-not-have))
+      ,@(when matches
+          (list :matches matches))
+      ,@(when not-matches
+          (list :not-matches not-matches))
+      ,@(when limit
+          (list :limit limit))
+      ,@(when feeds
+          (list :feeds feeds)))))
+
+;;
+
+(defun elfeed-valid-regexp-p (regexp)
+  "Return t if REGEXP is a valid REGEXP."
+  (ignore-errors
+    (prog1 t
+      (string-match-p regexp ""))))
+
+;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EOF

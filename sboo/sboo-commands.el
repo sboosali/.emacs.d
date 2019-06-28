@@ -3344,6 +3344,22 @@ URL `https://emacs.stackexchange.com/questions/34661/replace-whole-words-in-stri
   (replace-regexp-in-string (concat "\\b" what "\\b")  with in))
 
 ;;----------------------------------------------;;
+
+(defun sboo-reformat-region (beg end)
+
+  "Reformat region (between BEG and END) by filling then indenting.
+
+URL `https://emacs.stackexchange.com/questions/12148/how-to-pretty-format-code-auto-insert-newlines-indent-etc'"
+
+  (interactive "*r")
+
+  (fill-region beg end)
+
+  (indent-region beg end)
+
+  ())
+
+;;----------------------------------------------;;
 ;; Re-Exports ----------------------------------;;
 ;;----------------------------------------------;;
 

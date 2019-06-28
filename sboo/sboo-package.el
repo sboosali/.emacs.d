@@ -50,7 +50,29 @@
   (require 'cl-lib))
 
 ;;----------------------------------------------;;
-;; Functions -----------------------------------;;
+;;; Variables ----------------------------------;;
+;;----------------------------------------------;;
+
+(defconst sboo-package-directory
+
+  (file-name-as-directory (sboo-file "packages"))
+
+  "Directory with single-file ‹.el› packages and/or multi-file ‹.tar› packages.")
+
+;;----------------------------------------------;;
+;;; Functions ----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-package-install-file (&optional file)
+
+  "`package-install-file' a single-file ‹.el› package or multi-file ‹.tar› package.
+
+Completion: defaults to `sboo-package-directory'."
+
+  (let* ((FILE (or file (read-file-name "Package File: " sboo-package-directory nil t))))
+
+    (package-install-file FILE)))
+
 ;;----------------------------------------------;;
 
 (defun sboo-ensure-package (package)

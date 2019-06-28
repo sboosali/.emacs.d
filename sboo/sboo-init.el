@@ -121,6 +121,23 @@
      (message "Enable `debug-on-error'."))))
 
 ;;----------------------------------------------;;
+;; Constants: Bootstrapping --------------------;;
+;;----------------------------------------------;;
+
+(defconst sboo-current-directory
+
+  (file-name-directory (or load-file-name buffer-file-name))
+
+  "Runtime Directory with « sboo-*.el » files.
+
+=== Implementation ===
+
+• variable `load-file-name'   — non-nil when evaluated under `load-file'.
+• variable `buffer-file-name' — non-nil when evaluated under `eval-buffer'.
+
+URL `http://ergoemacs.org/emacs/elisp_relative_path.html'")
+
+;;----------------------------------------------;;
 ;; Settings (early) ----------------------------;;
 ;;----------------------------------------------;;
 
@@ -987,23 +1004,25 @@ Related:
 
 (use-package lisp-mode
 
-  :commands (check-parens)
+    :commands (check-parens)
 
-  :config
+    :config
 
-  (dolist (MODE '(lisp-mode
-                  emacs-lisp-mode
-                  inferior-emacs-lisp-mode
-                  inferior-lisp-mode
-                  lisp-interaction-mode))
+    (dolist (MODE '(lisp-mode
+                    emacs-lisp-mode
+                    inferior-emacs-lisp-mode
+                    inferior-lisp-mode
+                    lisp-interaction-mode))
 
-    (font-lock-add-keywords MODE
-     '(("(\\(lambda\\)\\>"
-        (0 (ignore
-            (compose-region (match-beginning 1) (match-end 1) ?λ))))
-       )))
+      (font-lock-add-keywords MODE
+                              '(("(\\(lambda\\)\\>"
+                                 (0 (ignore
+                                     (compose-region (match-beginning 1) (match-end 1) ?λ))))
+                                )))
 
     ())
+
+;; M-: (setq emacs-lisp-mode-hook '(highlight-cl-add-font-lock-keywords sboo-company-elisp-setup eldoc-mode superword-mode sboo-set-run-key-to-eval-buffer))
 
 ;;----------------------------------------------;;
 
@@ -2869,7 +2888,7 @@ $0")
 
   :delight (flycheck-mode " 🛸")
 
-  :hook ((emacs-lisp-mode . flycheck-mode))
+  ;; :hook ((emacs-lisp-mode . flycheck-mode))
 
   :bind (
          :map emacs-lisp-mode-map
