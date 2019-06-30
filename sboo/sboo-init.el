@@ -2642,11 +2642,16 @@ Links:
   (use-package company
     :load-path "vendored/company-mode"
 
- ;; :delight (company-mode " ©")
+    ;;------------------------;;
+
+    :commands (company-complete-common-or-cycle
+               company-diag
+               company-mode)
 
     ;;------------------------;;
 
-    :commands (company-complete-common-or-cycle company-mode company-diag)
+    :bind (("<backtab>" . company-complete-common-or-cycle)
+           )
 
     ;;------------------------;;
 
@@ -2657,6 +2662,10 @@ Links:
            (python-mode     . sboo-company-python-setup)
            (javascript-mode . sboo-company-javascript-setup)
            (text-mode       . sboo-company-text-setup))
+
+    ;;------------------------;;
+
+    :delight (company-mode " ©")
 
     ;;------------------------;;
 
@@ -3603,6 +3612,7 @@ $0")
 
   :bind (:map markdown-mode-map
               ("TAB" . dabbrev-expand)
+              ("C-c !" . sboo-markdown-mark-h1)  ; Mnemonic: « C-c » is the Personal Keymap; « ! » shares a key with « 1 », referencing « <h1> ».
          :map gfm-mode-map
               ("TAB" . dabbrev-expand)
          )
@@ -3617,6 +3627,10 @@ $0")
   ;;--------------------------;;
 
   :config
+
+  (when (require 'sboo-markdown nil :no-error)
+
+    ())
 
   (dolist (ASSOCIATION '(("lisp"   . lisp-mode)
                          ("scheme" . scheme-mode)
@@ -3991,6 +4005,34 @@ $0")
 ;;   • URL `https://github.com/NicolasPetton/pass'
 ;;
 
+;;==============================================;;
+
+(use-package gmail-message-mode
+
+  :commands (gmail-message-mode)
+
+  :init (setq gmm/auto-mode-list t)
+
+  :config ())
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/Malabarba/gmail-mode/'
+;;   • URL `http://www.emacswiki.org/emacs/Edit_with_Emacs'
+;;
+
+;;----------------------------------------------;;
+
+(use-package ham-mode
+
+  :mode (".*email\\'" . ham-mode)
+
+  :config ())
+
+;; "HAM" abbreviates "Html As Markdown".
+;;
+;; URL `https://github.com/Malabarba/ham-mode/'
+
 ;;----------------------------------------------;;
 ;;; External Packages: Editing -----------------;;
 ;;----------------------------------------------;;
@@ -4213,6 +4255,8 @@ Related:
 
   :bind (:map selected-keymap
 
+              ;; Symbols:
+
            ;;   ("`" . typo-)
               ("!" . shell-command-on-region)      ; mnemonic is « M-! ».
            ;; ("@" . )
@@ -4235,13 +4279,7 @@ Related:
            ;; ("/" . )
            ;; ("\\" . )
 
-           ;;   ("<left>"  . sboo-extend-selection-leftward)
-           ;;   ("<right>" . sboo-extend-selection-rightward)
-
-           ;; ("<home>"  . )
-           ;; ("<end>"   . )
-              ("<prior>" . move-text-up)           ; from `move-text'.
-              ("<next>"  . move-text-down)         ; from `move-text'.
+              ;; Letters:
 
               ("a" . sboo-register-append-region)
            ;; ("b" . )
@@ -4271,6 +4309,16 @@ Related:
               ("x" . cua-cut-region)               ; Mnemonic is ‹C-x›.
            ;; ("y" . )
            ;; ("z" . undo)
+
+              ;; Non-Graphical Characters:
+
+           ;;   ("<left>"  . sboo-extend-selection-leftward)
+           ;;   ("<right>" . sboo-extend-selection-rightward)
+
+           ;; ("<home>"  . )
+           ;; ("<end>"   . )
+              ("<prior>" . move-text-up)           ; from `move-text'.
+              ("<next>"  . move-text-down)         ; from `move-text'.
 
               )
 
@@ -4367,6 +4415,8 @@ Inputs:
 
      `(
 
+       ;; Ascii Characters...
+
        ("`" "`" nil ,(append MARKDOWN-MODES '(haskell-mode haddock-mode)))
 
        ;; ^ Syntax for code blocks (e.g. « `pandoc` »), in Markdown and Haddocks.
@@ -4445,13 +4495,21 @@ Inputs:
        ;;     c.f. « M-; » runs `comment-dwim' across langauges.
        ;;
 
+       ;; Unicode Characters...
+
+       ("“" "”" "“" ())
+       ("‘" "’" "‘" ())
+       ("«" "»" "«" ())
+       ("‹" "›" "‹" ())
+       ("「" "」" "「" ())
+
        ("¿" "?" "?" (text-mode))
        ("¡" "!" "!" (text-mode))
 
        ;; ^ Spanish-language Inverted Question/Exclamation Marks.
        ;;   URL `https://en.wikipedia.org/wiki/Inverted_question_and_exclamation_marks'
 
-       ;;     ‹ ›  « »
+       ;;SKELETON ("" "" "" ())
 
        )))
 
@@ -6060,7 +6118,10 @@ l
 ;; ^ `refine' — a TUI for editing Elisp variables
 ;;   (particularly Lists, like Hooks).
 ;;
-;; e.g. call `refine' on `prog-mode-hook'.
+;; e.g. call `refine' on `prog-mode-hook':
+;;
+;;      M-: (refine 'prog-mode-hook)
+;;
 ;;
 
 ;; ^ Links:

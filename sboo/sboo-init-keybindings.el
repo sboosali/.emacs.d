@@ -148,6 +148,31 @@ To be bound to:
 
 ;;----------------------------------------------;;
 
+(defvar sboo-key/expand (kbd "TAB")             ; <tab>
+
+  "“Universal Key” to invoke an Expansion.
+
+To be bound to:
+
+• `dabbrev-expand'
+• `yas-next-field-or-maybe-expand'")
+
+backtab company-complete-common-or-cycle
+
+;;----------------------------------------------;;
+
+(defvar sboo-key/complete (kbd "S-TAB")         ; <backtab>
+
+  "“Universal Key” to invoke a Completion.
+
+To be bound to:
+
+• `dabbrev-completion'
+• `complete-symbol-at-point'
+• `company-complete-common-or-cycle'")
+
+;;----------------------------------------------;;
+
 (defvar sboo-key/jump (kbd "<Scroll_Lock>")
 
   "“Universal Key” to invoke a Jump Command.
@@ -767,12 +792,37 @@ Inputs:
 
 ;;==============================================;;
 
-(global-set-key (kbd "TAB") #'dabbrev-expand) ; Shadows `indent-according-to-mode'.
-;(global-set-key (kbd "TAB") #'dabbrev-completion)
+(progn ; Completion/Expansion:
 
-(global-set-key (kbd "<backtab>") #'dabbrev-completion)
+  (global-set-key (kbd "TAB")       #'dabbrev-expand)      ; Shadows `indent-according-to-mode'.
+  (global-set-key (kbd "<backtab>") #'completion-at-point) ; 
 
-;; ^ `<backtab>' is (translated from?) `<S-TAB>'.
+  ;; ^ `<tab>':
+  ;;
+  ;; • `TAB' ≡ `<tab>'
+  ;;
+
+  ;; ^ `<backtab>':
+  ;;
+  ;; • `<backtab>' ≡ `<S-iso-lefttab>' (≡ `S-TAB'?)
+  ;;
+
+  (define-key text-mode-map (kbd "<bachtab>") #'dabbrev-completion)  ; 
+  (define-key prog-mode-map (kbd "<backtab>") #'completion-at-point)
+
+  ;; ^ `dabbrev-completion':
+  ;;
+  ;; • is like `dabbrev-expand', but prompts with a menu,
+  ;;   instead of inserting the first candidate.
+  ;;
+
+  ;; ^ `completion-at-point':
+  ;;
+  ;; • bound to ‘M-<TAB>’ (a.k.a. ‘C-M-i’) in `prog-mode's.
+  ;;  `<M-TAB>' (a.k.a. “Alt-Tab” is already a global shortcut).
+  ;;
+
+  ())
 
 ;;==============================================;;
 
@@ -1136,11 +1186,13 @@ Inputs:
   ;; (define-key key-translation-map (kbd "s-M-u") (kbd ""))
   ;; (define-key key-translation-map (kbd "s-M-v") (kbd ""))
   ;; (define-key key-translation-map (kbd "s-M-w") (kbd ""))
-  ;; (define-key key-translation-map (kbd "s-M-x") (kbd ""))
+  (define-key key-translation-map (kbd "s-M-x") (kbd "❌"))
   ;; (define-key key-translation-map (kbd "s-M-y") (kbd ""))
   ;; (define-key key-translation-map (kbd "s-M-z") (kbd ""))
 
   ;;--------------------------;;
+
+  ;; Graphical Characters...
 
   ;; (define-key key-translation-map (kbd "s-M-`")         (kbd ""))
   (define-key key-translation-map (kbd "s-M-1")         (kbd "①"))
@@ -1155,16 +1207,34 @@ Inputs:
   (define-key key-translation-map (kbd "s-M-0")         (kbd "∅"))
   (define-key key-translation-map (kbd "s-M-\-")        (kbd "—"))
   (define-key key-translation-map (kbd "s-M-=")         (kbd "≡"))
-  (define-key key-translation-map (kbd "s-M-[")         (kbd "【"))
+
+  (define-key key-translation-map (kbd "s-M-[")         (kbd "「"))
   ;; (define-key key-translation-map (kbd "s-M-{")         (kbd ""))
-  (define-key key-translation-map (kbd "s-M-]")         (kbd "】"))
+
+  (define-key key-translation-map (kbd "s-M-]")         (kbd ""))
   ;; (define-key key-translation-map (kbd "s-M-}")         (kbd ""))
-  ;; (define-key key-translation-map (kbd "s-M-\\")        (kbd ""))
+
+  (define-key key-translation-map (kbd "s-M-\\")        (kbd "λ"))
   (define-key key-translation-map (kbd "s-M-|")         (kbd "▮"))
-  (define-key key-translation-map (kbd "s-M-'")         (kbd "”"))
+
+  ;; (define-key key-translation-map (kbd "s-M-;")         (kbd ""))
+  (define-key key-translation-map (kbd "s-M-:")         (kbd "::"))
+
+  (define-key key-translation-map (kbd "s-M-'")         (kbd "‘"))
   (define-key key-translation-map (kbd "s-M-\"")        (kbd "“"))
-  (define-key key-translation-map (kbd "s-M-,")         nil)            ; (See `sboo-insert-angle-quote-left' below).
-  (define-key key-translation-map (kbd "s-M-.")         nil)            ; (See `sboo-insert-angle-quote-right' below).
+
+  (define-key key-translation-map (kbd "s-M-,")         (kbd "‹"))
+  ;; (define-key key-translation-map (kbd "s-M-<")         (kbd ""))
+
+  (define-key global-map          (kbd "s-M-.")         (kbd "«"))
+  ;; (define-key global-map          (kbd "s-M->")         (kbd ""))
+
+  (define-key global-map          (kbd "s-M-/")         (kbd "✓"))
+
+  ;;--------------------------;;
+
+  ;; Non-Graphical Characters...
+
   ;; (define-key key-translation-map (kbd "s-M-/")         (kbd ""))
   (define-key key-translation-map (kbd "s-M-<up>")      (kbd "↑"))
   (define-key key-translation-map (kbd "s-M-<down>")    (kbd "↓"))
@@ -1173,14 +1243,13 @@ Inputs:
 
   ;;--------------------------;;
 
+  ;; Shifted (Non-Graphical) Characters...
+
   (define-key key-translation-map (kbd "s-M-S-<right>") (kbd "↪"))
 
 ;; (define-key key-translation-map (kbd "s-M-")         (kbd ""))
 
   ;;--------------------------;;
-
-  (define-key global-map          (kbd "s-M-,")         #'sboo-insert-angle-quote-left)
-  (define-key global-map          (kbd "s-M-.")         #'sboo-insert-angle-quote-right)
 
   ())
 
