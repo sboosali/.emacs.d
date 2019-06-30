@@ -49,8 +49,15 @@
   (require 'seq)
   (require 'cl-lib))
 
+;;----------------------------------------------;;
+;;; Variables ----------------------------------;;
+;;----------------------------------------------;;
 
+(defvar pacupacu/replace-from-to-separator (char-to-string 20))
 
+;;----------------------------------------------;;
+;;; Commands -----------------------------------;;
+;;----------------------------------------------;;
 
 (defun pacupacu/replace-convert-to-sexp-and-kill-new-rx (beg end)
 
@@ -70,14 +77,9 @@ URL `https://www.reddit.com/r/emacs/comments/36qbzn/comment/crgapy8'"
                             pacupacu/replace-from-to-separator)))
     (kill-new (prin1-to-string
                (pacupacu//replace-convert-to-sexp (rx-to-string (read (car strs)))
-                                            (cadr strs))))))
+                                                  (cadr strs))))))
 
 ;;
-
-(defvar pacupacu/replace-from-to-separator (char-to-string 20))
-
-(defun pacupacu//replace-convert-to-sexp (regexp to)
-  `(replace-regexp ,regexp (query-replace-compile-replacement ,to t)))
 
 (defun pacupacu/replace-convert-to-sexp-and-kill-new (beg end)
   (interactive "r")
@@ -86,7 +88,12 @@ URL `https://www.reddit.com/r/emacs/comments/36qbzn/comment/crgapy8'"
     (kill-new (prin1-to-string
                (pacupacu//replace-convert-to-sexp (car strs) (cadr strs))))))
 
-;;
+;;----------------------------------------------;;
+;;; Functions ----------------------------------;;
+;;----------------------------------------------;;
+
+(defun pacupacu//replace-convert-to-sexp (regexp to)
+  `(replace-regexp ,regexp (query-replace-compile-replacement ,to t)))
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

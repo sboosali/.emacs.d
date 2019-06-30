@@ -397,8 +397,6 @@ Defaults to `sboo-comment-h2-default'.")
 
   "Lookup `sboo-comment-length-alist', defaulting to `sboo-comment-length-default'."
 
-  (interactive)
-
   (let* ((LENGTH (sboo-comment-alist-get sboo-comment-length-alist :mode major-mode :default sboo-comment-length-default))
          )
     LENGTH))
@@ -408,8 +406,6 @@ Defaults to `sboo-comment-h2-default'.")
 (defun sboo-comment-h1-infix-char ()
 
   "Lookup `sboo-comment-infix-character-alist', defaulting to `sboo-comment-default-h1-infix-char'."
-
-  (interactive)
 
   (let* ((CHAR (sboo-comment-alist-get sboo-comment-infix-character-alist :mode major-mode :default sboo-comment-default-h1-infix-char))
          )
@@ -421,8 +417,6 @@ Defaults to `sboo-comment-h2-default'.")
 
   "Lookup `sboo-comment-infix-character-alist', defaulting to `sboo-comment-default-h2-infix-char'."
 
-  (interactive)
-
   (let* ((CHAR (sboo-comment-alist-get sboo-comment-infix-character-alist :mode major-mode :default sboo-comment-default-h2-infix-char))
          )
     CHAR))
@@ -433,8 +427,6 @@ Defaults to `sboo-comment-h2-default'.")
 
   "Lookup `sboo-comment-prefix-string-alist', defaulting to `sboo-comment-prefix-string-default'."
 
-  (interactive)
-
   (let* ((STRING (sboo-comment-alist-get sboo-comment-prefix-string-alist :mode major-mode :default sboo-comment-prefix-string-default))
          )
     STRING))
@@ -444,8 +436,6 @@ Defaults to `sboo-comment-h2-default'.")
 (defun sboo-comment-suffix-string ()
 
   "Lookup `sboo-comment-suffix-string-alist', defaulting to `sboo-comment-suffix-string-default'."
-
-  (interactive)
 
   (let* ((STRING (sboo-comment-alist-get sboo-comment-suffix-string-alist :mode major-mode :default sboo-comment-suffix-string-default))
          )
@@ -530,13 +520,74 @@ Output:
 
 • a `stringp'."
 
-  (let* ((PROMPT (format "%s: " prompt))
+  (let* ((PROMPT  (format "%s: " prompt))
+         (INITIAL (or initial (thing-at-point 'word) (thing-at-point 'symbol)))
          )
 
-    (read-string PROMPT initial history)))
+    (read-string PROMPT INITIAL history)))
 
 ;;----------------------------------------------;;
-;; Commands ------------------------------------;;
+;;; Commands -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-comment-insert-header (text) ;TODO if not at `bolp', newline (no indent).
+
+  "Insert a comment section header labeled TEXT.
+
+TEXT gets padded to `sboo-comment-length-default'.
+
+Related:
+
+• `sboo-comment-insert-h2'"
+
+  (interactive (list
+                (sboo-comment-read-string :prompt "Text")
+                ))
+
+  (let* ((COMMENT (sboo-comment-alist-get sboo-comment-h2-alist :mode major-mode :default sboo-comment-h2-default))
+
+         (LENGTH         (sboo-comment-length))
+         (PREFIX         (sboo-comment-prefix-string))
+         (SUFFIX         (sboo-comment-suffix-string))
+         (PADDING-CHAR   (sboo-comment-h2-infix-char))
+
+         (TEXT          (sboo-comment--capitalize text))
+         (TEXT-PREFIX   (concat PREFIX " " TEXT " "))
+         (LINE          (concat (truncate-string-to-width TEXT-PREFIX
+                                                          (- LENGTH (length SUFFIX))
+                                                          nil
+                                                          PADDING-CHAR
+                                                          (char-to-string PADDING-CHAR))
+                                SUFFIX))
+         )
+
+    (progn
+      (insert COMMENT "\n")
+      (insert LINE    "\n")
+      (insert COMMENT "\n")
+      ())))
+
+;; ^ NOTES:
+;;
+;; (truncate-string-to-width STR END-COLUMN &optional START-COLUMN PADDING ELLIPSIS)
+;;
+;; e.g.:
+;;
+;; M-: (truncate-string-to-width "-- Example " (- 24 1) nil ?- "---")
+;;   ⇒ "-- Example ------------"
+;;
+;; M-: (string-width "\n")
+;;   ⇒ 0
+;;
+;; M-: (string-bytes "\x100")
+;;   ⇒ 2
+;;
+;; M-: (length "\n")
+;;   ⇒ 1
+;;
+;; 
+;;
+
 ;;----------------------------------------------;;
 
 (defun sboo-comment-insert-h1 ()
@@ -602,66 +653,6 @@ Related:
       (insert sboo-comment-h3-default))
 
     (insert "\n")))
-
-;;----------------------------------------------;;
-
-(defun sboo-comment-insert-header (text) ;TODO if not at `bolp', newline (no indent).
-
-  "Insert a comment section header labeled TEXT.
-
-TEXT gets padded to `sboo-comment-length-default'.
-
-Related:
-
-• `sboo-comment-insert-h2'"
-
-  (interactive (list
-                (sboo-comment-read-string :prompt "Text")
-                ))
-
-  (let* ((COMMENT (sboo-comment-alist-get sboo-comment-h2-alist :mode major-mode :default sboo-comment-h2-default))
-
-         (LENGTH         (sboo-comment-length))
-         (PREFIX         (sboo-comment-prefix-string))
-         (SUFFIX         (sboo-comment-suffix-string))
-         (PADDING-CHAR   (sboo-comment-h2-infix-char))
-
-         (TEXT          (sboo-comment--capitalize text))
-         (TEXT-PREFIX   (concat PREFIX " " TEXT " "))
-         (LINE          (concat (truncate-string-to-width TEXT-PREFIX
-                                                          (- LENGTH (length SUFFIX))
-                                                          nil
-                                                          PADDING-CHAR
-                                                          (char-to-string PADDING-CHAR))
-                                SUFFIX))
-         )
-
-    (progn
-      (insert COMMENT "\n")
-      (insert LINE    "\n")
-      (insert COMMENT "\n")
-      ())))
-
-;; ^ NOTES:
-;;
-;; (truncate-string-to-width STR END-COLUMN &optional START-COLUMN PADDING ELLIPSIS)
-;;
-;; e.g.:
-;;
-;; M-: (truncate-string-to-width "-- Example " (- 24 1) nil ?- "---")
-;;   ⇒ "-- Example ------------"
-;;
-;; M-: (string-width "\n")
-;;   ⇒ 0
-;;
-;; M-: (string-bytes "\x100")
-;;   ⇒ 2
-;;
-;; M-: (length "\n")
-;;   ⇒ 1
-;;
-;; 
-;;
 
 ;;----------------------------------------------;;
 ;; Utilities -----------------------------------;;

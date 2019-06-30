@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
 #
-# key         : defun
-# name        : [sboo] Declare a (verbose) function, via « defun ».
+# key         : dfn
+# name        : [sboo] Declare a (documented) function, via « defun ».
 # condition   : (let ((KEY "defun")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-wrap-around-region t))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
@@ -19,7 +19,12 @@ Inputs:
 
 Output:
 
-• a \`${9:boolean}p'."
+• a \`${9:boolean}p'.
+
+Examples:
+
+• M-: ($2-$1)
+    ↪ nil"
 
   (let* ()
 
