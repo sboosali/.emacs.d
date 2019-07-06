@@ -1,3 +1,16 @@
+===================================================
+
+;; ①
+;;
+;; ②
+;;
+;; ③ 
+;;
+;; ④ 
+;;
+;; ⑤ 
+;;
+
 =================================================
 
 (defvar mtg-company-card-name-characters
@@ -1579,6 +1592,191 @@ Related:
 ;; •
 ;;
 ;;
+
+;;; Commentary:
+
+;; Editor for “Magic: The Gathering”.
+;;
+;; Features include:
+;;
+;; • ‘mtg-mode’  — Major Mode for editing custom MTG Cards.
+;; • ‘mtg-query’ — Search Engine for MTG Cards 
+;; • ‘mtg-json’  — 
+;; • ‘mtg-’      — 
+;; • ‘mtg-’      — 
+;; 
+;; Integrations include:
+;;
+;; • ‘helm-mtg’    — ‘helm’ integration: Helm TUIs for .
+;; • ‘company-mtg’ — ‘company’ integration: Company Backends for card names/types/keywords/….
+;; • ‘yas-mtg’     — ‘yasnippet’ integration: Snippets for phrases/cycles/….
+;; •
+;;
+;; ‘mtg-mode’ features:
+;;
+;; • Write custom cards conveniently:
+;;
+;;    • Completion — for card names/types/keywords/….
+;; 
+;;        • 
+;;        • 
+;; 
+;;    ↪ Benefits of completion include:
+;; 
+;;        • Type fewer characters.
+;;        • Make fewer mistakes.
+;;        • 
+;;        • 
+;; 
+;;    • Skeletons — 
+;;
+;;        • 
+;;        • 
+;; 
+;; • Export your custom set for:
+;;
+;;     • [✓] MTGJSON          — as a ‹.json› file (a.k.a. a JSON Object), with the schema.
+;;     • [✓] Magic Set Editor — as a ‹.tar› file (a.k.a. a Tar Archive), with the ‹.mse-set› schema.
+;;     • [✓] /r/custommagic   — as a ‹.md› file (a.k.a. Markdown), in Reddit-flavored Markdown, with the Subreddit-specific pseudo-links.
+;;     • [❌] MTG Salvation    — as a ‹.bb› file (a.k.a. BBCode). 
+;;
+;; • Render your custom set for:
+;;
+;;     • [✓] websites   — as a ‹.html› file (a.k.a. a Web Page), that's beautifully styled and completely standalone.
+;;     • [❌] printers   — as a ‹.pdf› file (?),
+;;
+;;         • HTML Styling    — via SVG mana symbols, the “Belern” font, and appropriate Bold/Italic (e.g. italics for flavor/remdinder text).
+;;         • Standalone HTML — all assets (e.g. artwork PNGs, CSS symbols) are embedded (via “Data URIs” and inline <style>s).
+;;           Thus, no 
+;;
+;;
+;; •
+;;
+;; • 
+;;
+;; • 
+;;
+;; • 
+;;
+;; • 
+;;
+;; ‘mtg-query’ features:
+;;
+;; ① DSL .
+;;   e.g. « %u *instant` » finds
+;;
+;; ② No Installation — This file embeds most data.
+;;
+;;    The current version of this file has all data (except coprighted artwork) for all cards from “Alpha/Beta/Unlimited” to “War Of The Spark”.
+;;
+;;    Thus, as long as Emacs knows where ‘mtg.el’ is (i.e. via your ‘load-path’) and is able to run it (i.e. to ‘load’ it,.
+;;    you can immediately begin searching through (the snapshot of) all printed cards.; without downloading anything else, without being required to put the right file in the right place, without losing track of any files, etc.
+;;    . 
+;; 
+;; ③ Extensibility — Emacs
+;;
+;;    • Data Extensibility — Search through custom cards by registering them
+;;
+;;    • Query Extensibility — Write your own predicates. e.g. square e.g. lupine.
+;; 
+;;
+;; 
+;;
+;; 
+;;
+;; ④ 
+;;
+;; ⑤ 
+;;
+;;
+;;
+;; ‘helm-mtg’ features:
+;;
+;; • 
+;;
+;; •
+;;
+;; •
+;;
+;; ‘company-mtg’ features:
+;;
+;; • Annotations — Unlike ‘mtg-complete/*’, Company can annotate candidates. For example:
+;;
+;;        • Card Names  — are annotated with a summary of the card (color, type, cost).
+;;        • Keywords    — are annotated with their Reminder Text.
+;;        • Set Codes   — are annotated with their full names (e.g. « AN “Arabian Nights” »).
+;;
+;;   Completion was is helpful for
+;;   Disambiguating between:
+;;
+;;        • Different Legends — e.g. ‹Borborygmus› vs ‹Borborygmus Enraged›. e.g. ‹Yagmoth's Bargain› vs ‹Yagmoth's Will›.
+;;        • Similar Names    — are annotated with a summary of the card (color, type, cost).
+;;        • Types    — are annotated with .
+;;        • Sets     — are annotated with their full names (e.g. « AN “Arabian Nights” »).
+;;
+;;
+;;   [Author's Note] I post a lot about MTG (on forums and with my group chat).
+;;                   Way before this package, I wrote my own MTG Company Backend for card names,
+;;                   Its usefulness was one of the inspirations for everthing else.
+;;
+;; •
+;;
+;; •
+;;
+;; •
+;;
+;; ‘yas-mtg’ features:
+;;
+;; • — Unlike ‘mtg-skeleton/*’:
+;;
+;;        • 
+;;        • 
+;;        • 
+;;        • 
+;; 
+;; •
+;;
+;; •
+;;
+;; Links:
+;;
+;; • MTGJSON          — URL `https://mtgjson.com/'
+;; • Magic Set Editor — URL `http://magicseteditor.sourceforge.net/'
+;; • /r/custommagic   — URL `https://www.reddit.com/r/custommagic'
+;; • MTG Salvation    — URL `https://www.mtgsalvation.com/forums/magic-fundamentals/custom-card-creation'
+;;
+;; 
+
+
+==============================================
+
+
+;;==============================================;;
+
+(cl-defstruct (mtg-
+               (:constructor mtg--create)
+               (:copier      nil))
+
+  abbreviation (name ""))
+
+;; M-: (mtg--create :abbreviation ' :name "")
+;;  ⇒ #s(mtg- )
+
+==============================================
+
+
+;;----------------------------------------------;;
+;;; MTG Edit (Major) Mode ----------------------;;
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+;;; MTG Query (Major) Mode ---------------------;;
+;;----------------------------------------------;;
+
+;;----------------------------------------------;;
+;;; MTG Table (Major) Mode ---------------------;;
+;;----------------------------------------------;;
+
 
 ==============================================
 

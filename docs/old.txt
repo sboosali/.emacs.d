@@ -11048,8 +11048,59 @@ backtab company-complete-common-or-cycle
 
 complete-symbol-at-point
 
+
+
+========================================================================
+
+``` elisp
+M-: (with-temp-buffer (sql-interactive-mode) (derived-mode-p 'comint-mode))
+  ; 
+  ↪ '
+```
+
+ (cl-loop for c in '(91 94 32 9 10 93) do (message "%S" (char-to-string c)))
+
+(outline-regexp . "^;;;_\\([,. ]+\\)")
+
+";;;\\(;* [^ 	
+]\\|###autoload\\)\\|("
+
+(rx ";;;" (or (and (0+ ";") (char blank))
+              "###autoload"))
+               "[^ 	
+]\\|###autoload\\)\\|(")
+
+
+(with-eval-after-load 'haskell-mode
+
+  (defconst sboo-default-haskell-page-regexp
+
+    (rx-to-string `(or ,haskell-ds-start-keywords-re))
+
+    "Matches pages, declarations, and TODO.
+
+a `regexpp'."))
+
+
+
+
 ;;----------------------------------------------;;
 
+(defun sboo-elisp-page-regexp ()
+
+  "Accessor for `sboo-elisp-page-regexp'."
+
+  (let* ((STATIC-REGEXP  sboo-elisp-page-regexp)
+         (DYNAMIC-REGEXP (rx-to-string `(or ,(and (boundp 'page-delimiter) page-delimiter)
+                                            ,(and (boundp 'outline-regexp) outline-regexp))))
+         )
+
+    (rx-to-string `(or ,STATIC-REGEXP ,DYNAMIC-REGEXP))))
+
+
+
+
+========================================================================
 
 
 ========================================================================
