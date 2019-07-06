@@ -649,37 +649,154 @@ TODO handle “dir/dir/file.ext:line:column”."
     (call-interactively #'find-file)))
 
 ;;----------------------------------------------;;
-;; Text Motion ---------------------------------;;
+;;; Text Motion
 ;;----------------------------------------------;;
+
+(defconst sboo-default-page-regexp
+
+  (rx (char ""))
+
+  "Matches pages and headers.
+
+a `regexpp'.
+
+Matches:
+
+• an ASCII Page a.k.a. the “Form Feed” \(i.e. «  »\). c.f. ‘page-delimiter’.")
+
+;;----------------------------------------------;;
+
+;; (defconst sboo-default-text-page-regexp
+
+;;   (rx (1+ "*"))
+
+;;   "Matches pages and headers.
+
+;; a `regexpp'.
+
+;; Matches:
+
+;; • an Outline Header \(e.g. « ** »\). c.f. ‘outline-regexp’.")
+
+;;----------------------------------------------;;
+
+(with-eval-after-load 'elisp-mode
+
+  (defconst sboo-default-elisp-page-regexp
+
+    (rx ;(or )
+        (and ";;;" (or (and (0+ ";") (? (char blank)))
+                       "###autoload")))
+
+    "Matches pages, headers, and autoloads.
+
+a `regexpp'.
+
+Matches:
+
+• an Emacs-Lisp Library Comment Header \(e.g. « ;;; Code: »\) or \(e.g. « ;;;; Mode: »\).
+• an Emacs-Lisp Autoload Pragma \(e.g. « ;;;###autoload »\)."))
+
+;;----------------------------------------------;;
+
+(with-eval-after-load 'haskell-mode
+
+  (defconst sboo-default-haskell-page-regexp
+
+    (rx-to-string `(or ,haskell-ds-start-keywords-re))
+
+    "Matches pages, declarations, and TODO.
+
+a `regexpp'."))
+
+;;----------------------------------------------;;
+
+(defconst sboo-default-markdown-page-regexp
+
+  (rx "#" blank)
+
+  "Matches TODO
+
+a `regexpp'.")
+
+;;==============================================;;
+
+(defgroup sboo-page nil
+
+  "Personal navigation/editing for the “page” Text Object."
+
+  :prefix 'sboo
+
+  :group 'text
+  :group 'sboo)
+
+;;==============================================;;
 
 (defcustom sboo-page-regexp
 
-  (rx-to-string `(or (regexp ,page-delimiter)))
+  sboo-default-page-regexp
 
-  "Matches a “Form Feed” page \(i.e. «  »\).
+  "How to match “pages” and/or “headers” in a generic document.
 
-a `regexpp'."
+a `regexpp'.
+
+Defaults to `sboo-default-page-regexp'."
 
   :type 'regexp
 
   :safe #'stringp
-  :group 'sboo)
+  :group 'sboo-page)
 
 ;;----------------------------------------------;;
 
-(defcustom sboo-page-or-elisp-header-regexp
+(defcustom sboo-elisp-page-regexp
 
-  (rx-to-string `(or (regexp ,page-delimiter)
-                     (and bol ";;;" blank (char alnum))))
+  sboo-default-elisp-page-regexp
 
-  "Matches a “Form Feed” page \(i.e. «  »\) or comment header \(e.g. « ;;; Code: »\).
+  "How to match “pages” and/or “headers” in ‘emacs-lisp-mode’.
 
-a `regexpp'."
+a `regexpp'.
+
+Defaults to `sboo-default-elisp-page-regexp'."
 
   :type 'regexp
 
   :safe #'stringp
-  :group 'sboo)
+  :group 'sboo-page)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-haskell-page-regexp
+
+  sboo-default-haskell-page-regexp
+
+  "How to match “pages” and/or “headers” in ‘haskell-mode’.
+
+a `regexpp'.
+
+Defaults to `sboo-default-haskell-page-regexp'."
+
+  :type 'regexp
+
+  :safe #'stringp
+  :group 'sboo-page)
+
+;;----------------------------------------------;;
+
+(defcustom sboo-markdown-page-regexp
+
+  sboo-default-markdown-page-regexp
+
+  "How to match “pages” and/or “headers” in ‘markdown-mode’.
+
+a `regexpp'.
+
+Defaults to `sboo-default-markdown-page-regexp'."
+
+  :type 'regexp
+
+  :safe #'stringp
+  :group 'sboo-page)
 
 ;;==============================================;;
 
@@ -694,7 +811,7 @@ Inputs:
 
 Effects:
 
-• Move `point' — to next `sboo-page-or-elisp-header-regexp'.
+• Move `point' — to next `sboo-page-regexp-according-to-mode'.
 
 Related:
 
@@ -704,7 +821,7 @@ Related:
   (interactive "P")
 
   (let* ((COUNT  (or count +1))
-         (REGEXP (sboo-page-or-elisp-header-regexp))
+         (REGEXP (sboo-page-regexp-beginning-of-line (sboo-page-regexp-according-to-mode)))
          )
     (progn
 
@@ -729,7 +846,7 @@ Inputs:
 
 Effects:
 
-• Move `point' — to prior `sboo-page-or-elisp-header-regexp'.
+• Move `point' — to prior `sboo-page-regexp-according-to-mode'.
 
 Related:
 
@@ -738,7 +855,7 @@ Related:
   (interactive "P")
 
   (let* ((COUNT  (or count +1))
-         (REGEXP (sboo-page-or-elisp-header-regexp))
+         (REGEXP (sboo-page-regexp-beginning-of-line (sboo-page-regexp-according-to-mode)))
          )
     (progn
 
@@ -749,18 +866,71 @@ Related:
 
 ;;==============================================;;
 
-(defun sboo-page-or-elisp-header-regexp ()
+(defun sboo-page-regexp-beginning-of-line (&optional regexp)
 
-  "Accessor for `sboo-page-or-elisp-header-regexp'."
+  "Match a line which starts with either a page (‘page-delimiter’) or a header (REGEXP)."
 
-  (let* ()
+  (if regexp
 
-    (if (parent-mode-is-derived-p major-mode 'emacs-lisp-mode)
-        sboo-page-or-elisp-header-regexp
-      sboo-page-regexp)))
+      (rx-to-string `(and bol (or (regexp ,sboo-default-page-regexp)
+                                  (regexp ,regexp))))
+
+  "^"))
 
 ;;----------------------------------------------;;
-;; Projectile.
+
+(defun sboo-page-regexp-according-to-mode ()
+
+  "`sboo-page-regexp'."
+
+  (let* ((REGEXP (cond ((parent-mode-is-derived-p major-mode 'emacs-lisp-mode)
+                        (sboo-elisp-page-regexp))
+
+                       ;; ((parent-mode-is-derived-p major-mode 'haskell-mode)
+                       ;;  (sboo-haskell-page-regexp))
+
+                       (t
+                        sboo-page-regexp))))
+
+    REGEXP))
+
+;;----------------------------------------------;;
+
+(defun sboo-page-dynamic-regexp ()
+
+  "Return a regexp which matches pages (‘page-delimiter’) or headers (‘outline-regexp’)."
+
+  (let* ((PAGE-DELIMITER-REGEXP (if (boundp 'page-delimiter) page-delimiter ""))
+         (OUTLINE-REGEXP        (if (boundp 'outline-regexp) outline-regexp ""))
+         )
+
+    (let* ((STATIC-REGEXP  sboo-default-page-regexp)
+           (DYNAMIC-REGEXP (rx-to-string `(or ,PAGE-DELIMITER-REGEXP, OUTLINE-REGEXP)))
+           )
+
+      DYNAMIC-REGEXP)))
+
+;;----------------------------------------------;;
+
+(defun sboo-elisp-page-regexp ()
+
+  "Accessor for `sboo-elisp-page-regexp'."
+
+  (let* ((STATIC-REGEXP  sboo-elisp-page-regexp)
+         )
+
+    STATIC-REGEXP))
+
+;; (defun sboo-elisp-page-regexp ()
+;;   "Accessor for `sboo-elisp-page-regexp'."
+;;   (let* ((STATIC-REGEXP  sboo-elisp-page-regexp)
+;;          (DYNAMIC-REGEXP (rx-to-string `(or ,(and (boundp 'page-delimiter) page-delimiter)
+;;                                             ,(and (boundp 'outline-regexp) outline-regexp))))
+;;          )
+;;     (rx-to-string `(or ,STATIC-REGEXP ,DYNAMIC-REGEXP))))
+
+;;----------------------------------------------;;
+;;; Projectile
 ;;----------------------------------------------;;
 
 (defun sboo-projectile-find-file ()
@@ -1499,6 +1669,54 @@ Notes:
          )
 
     SYMBOL))
+
+;;==============================================;;
+
+(cl-defun sboo-list-active-minor-modes (&key buffer interactive)
+
+  "Return the currently-active Minor Modes in BUFFER.
+
+Inputs:
+
+• BUFFER — a `bufferp' or `stringp'.
+
+Output: a `listp' of `symbolp's.
+
+Related:
+
+• calls `minor-mode-alist'"
+
+  (interactive (list :buffer      (current-buffer)
+                     :interactive t))
+
+  (let* ((BUFFER      (or buffer (current-buffer)))
+         (INTERACTIVE (or interactive (called-interactively-p)))
+
+         (MINOR-MODES (with-current-buffer BUFFER
+
+                        (cl-loop for (COMMAND . LIGHTER) in minor-mode-alist
+                           collect COMMAND)))
+         )
+
+    (if INTERACTIVE
+
+        (let* ((HELP-BUFFER (get-buffer-create *Minor Mode Help*)))
+
+          (with-current-buffer HELP-BUFFER
+            (cl-loop for SYMBOL in MINOR-MODES
+                 with STRING = (symbol-name SYMBOL)
+                 do (insert STRING "\n")))
+
+          (switch-to-buffer HELP-BUFFER t))
+
+      MINOR-MODES)))
+
+;; ^ e.g...
+;;
+;; M-: (sboo-list-active-minor-modes)
+;;
+;; M-x sboo-list-active-minor-modes
+;;
 
 ;;==============================================;;
 
