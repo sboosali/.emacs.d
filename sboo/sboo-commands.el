@@ -678,47 +678,6 @@ Matches:
 
 ;; • an Outline Header \(e.g. « ** »\). c.f. ‘outline-regexp’.")
 
-;;----------------------------------------------;;
-
-(with-eval-after-load 'elisp-mode
-
-  (defconst sboo-default-elisp-page-regexp
-
-    (rx ;(or )
-        (and ";;;" (or (and (0+ ";") (? (char blank)))
-                       "###autoload")))
-
-    "Matches pages, headers, and autoloads.
-
-a `regexpp'.
-
-Matches:
-
-• an Emacs-Lisp Library Comment Header \(e.g. « ;;; Code: »\) or \(e.g. « ;;;; Mode: »\).
-• an Emacs-Lisp Autoload Pragma \(e.g. « ;;;###autoload »\)."))
-
-;;----------------------------------------------;;
-
-(with-eval-after-load 'haskell-mode
-
-  (defconst sboo-default-haskell-page-regexp
-
-    (rx-to-string `(or ,haskell-ds-start-keywords-re))
-
-    "Matches pages, declarations, and TODO.
-
-a `regexpp'."))
-
-;;----------------------------------------------;;
-
-(defconst sboo-default-markdown-page-regexp
-
-  (rx "#" blank)
-
-  "Matches TODO
-
-a `regexpp'.")
-
 ;;==============================================;;
 
 (defgroup sboo-page nil
@@ -729,6 +688,106 @@ a `regexpp'.")
 
   :group 'text
   :group 'sboo)
+
+;;----------------------------------------------;;
+
+(with-eval-after-load 'elisp-mode
+
+  ;;
+
+  (defconst sboo-default-elisp-page-regexp
+
+    (rx ;(or )
+     (and ";;;" (or (and (0+ ";") (? (char blank)))
+                    "###autoload")))
+
+    "Matches pages, headers, and autoloads.
+
+a `regexpp'.
+
+Matches:
+
+• an Emacs-Lisp Library Comment Header \(e.g. « ;;; Code: »\) or \(e.g. « ;;;; Mode: »\).
+• an Emacs-Lisp Autoload Pragma \(e.g. « ;;;###autoload »\).")
+
+  ;;
+
+  (defcustom sboo-elisp-page-regexp
+
+    sboo-default-elisp-page-regexp
+
+    "How to match “pages” and/or “headers” in ‘emacs-lisp-mode’.
+
+a `regexpp'.
+
+Defaults to `sboo-default-elisp-page-regexp'."
+
+    :type 'regexp
+
+    :safe #'stringp
+    :group 'sboo-page))
+
+;;----------------------------------------------;;
+
+(with-eval-after-load 'haskell-mode
+
+  ;;
+
+  (defconst sboo-default-haskell-page-regexp
+
+    (rx-to-string `(or ,haskell-ds-start-keywords-re))
+
+    "Matches pages, declarations, and TODO.
+
+a `regexpp'.")
+
+  ;;
+
+  (defcustom sboo-haskell-page-regexp
+
+    sboo-default-haskell-page-regexp
+
+    "How to match “pages” and/or “headers” in ‘haskell-mode’.
+
+a `regexpp'.
+
+Defaults to `sboo-default-haskell-page-regexp'."
+
+    :type 'regexp
+
+    :safe #'stringp
+    :group 'sboo-page))
+
+;;----------------------------------------------;;
+
+(with-eval-after-load 'markdown-mode
+
+  ;;
+
+  (defconst sboo-default-markdown-page-regexp
+
+    (rx "#" blank)
+
+    "Matches TODO
+
+a `regexpp'.")
+
+  ;;
+
+  (defcustom sboo-markdown-page-regexp
+
+    sboo-default-markdown-page-regexp
+
+    "How to match “pages” and/or “headers” in ‘markdown-mode’.
+
+a `regexpp'.
+
+Defaults to `sboo-default-markdown-page-regexp'."
+
+    :type 'regexp
+
+    :safe #'stringp
+    :group 'sboo-page))
 
 ;;==============================================;;
 
@@ -741,57 +800,6 @@ a `regexpp'.")
 a `regexpp'.
 
 Defaults to `sboo-default-page-regexp'."
-
-  :type 'regexp
-
-  :safe #'stringp
-  :group 'sboo-page)
-
-;;----------------------------------------------;;
-
-(defcustom sboo-elisp-page-regexp
-
-  sboo-default-elisp-page-regexp
-
-  "How to match “pages” and/or “headers” in ‘emacs-lisp-mode’.
-
-a `regexpp'.
-
-Defaults to `sboo-default-elisp-page-regexp'."
-
-  :type 'regexp
-
-  :safe #'stringp
-  :group 'sboo-page)
-
-;;----------------------------------------------;;
-
-(defcustom sboo-haskell-page-regexp
-
-  sboo-default-haskell-page-regexp
-
-  "How to match “pages” and/or “headers” in ‘haskell-mode’.
-
-a `regexpp'.
-
-Defaults to `sboo-default-haskell-page-regexp'."
-
-  :type 'regexp
-
-  :safe #'stringp
-  :group 'sboo-page)
-
-;;----------------------------------------------;;
-
-(defcustom sboo-markdown-page-regexp
-
-  sboo-default-markdown-page-regexp
-
-  "How to match “pages” and/or “headers” in ‘markdown-mode’.
-
-a `regexpp'.
-
-Defaults to `sboo-default-markdown-page-regexp'."
 
   :type 'regexp
 
