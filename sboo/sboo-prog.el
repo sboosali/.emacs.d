@@ -69,9 +69,10 @@
 
 (defvar sboo-prog-mode-hooks
 
-        '( #'sboo-color-long-lines
-           #'sboo-color-comment-keywords
-         )
+  '( ;; #'sboo-prog/auto-fill-comments-mode
+     ;; #'sboo-color-long-lines
+     ;; #'sboo-color-comment-keywords
+    )
 
   "Commands for `prog-mode-hook' (i.e. all program files).")
 
@@ -179,6 +180,22 @@ See `sboo-prog-comment-keywords' (e.g. NOTE and TODO)."
                                  1
                                  font-lock-warning-face
                                  prepend)))))
+
+;;----------------------------------------------;;
+
+(defun sboo-prog/auto-fill-comments-mode ()
+
+  "Automatically ‘fill’ comments, but not code.
+
+URL `https://www.emacswiki.org/emacs/AutoFillMode'"
+
+  (interactive)
+
+  (progn
+
+    (setq-local comment-auto-fill-only-comments t)
+
+    (auto-fill-mode +1)))
 
 ;;----------------------------------------------;;
 

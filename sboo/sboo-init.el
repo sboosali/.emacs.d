@@ -989,7 +989,16 @@ Related:
 
     (prettify-symbols-unprettify-at-point 'right-edge "“Unprettify” a symbol if ‘point’ is ① at it or ② just after it.")
 
-    :config ())
+    :config
+
+    (when (require 'sboo-prog nil :no-error)
+
+      (dolist (HOOK sboo-prog-mode-hooks)
+        (add-hook 'prog-mode-hook HOOK))
+
+      ())
+
+    ())
 
 ;;==============================================;;
 
@@ -1298,12 +1307,6 @@ Related:
 
 (when (require 'sboo-make nil :no-error)
   (add-hook 'makefile-mode-hook #'sboo-show-trailing-whitespace))
-
-;;----------------------------------------------;;
-
-;; (when (require 'sboo-prog-mode nil :no-error)
-;;   (dolist (HOOK sboo-prog-mode-hooks)
-;;     (add-hook 'prog-mode-hook HOOK)))
 
 ;;----------------------------------------------;;
 
@@ -2110,9 +2113,9 @@ Links:
 
   ;;--------------------------;;
 
-  :hook ((text-mode     . flyspell-mode)
-         (markdown-mode . flyspell-mode)
-         )
+  ;; :hook ((text-mode     . flyspell-mode)
+  ;;        (markdown-mode . flyspell-mode)
+  ;;        )
 
   ;;--------------------------;;
 
@@ -2450,13 +2453,32 @@ Links:
 ;; ^ URL `https://github.com/skeeto/emacs-memoize'
 
 ;;----------------------------------------------;;
-;; External Packages: Completion ---------------;;
+
+(require 'html-to-markdown nil :no-error)
+
+;; ^ `html-to-markdown'…
+;;
+;; Provides:
+;;
+;; • `html-to-markdown'
+;; • `html-to-markdown-string'
+;;
+;; URL `https://github.com/Malabarba/html-to-markdown#html-to-markdown-converter-written-in-emacs-lisp'
+;;
+
+;;----------------------------------------------;;
+;;; External Packages: Completion (Helm) -------;;
+;;----------------------------------------------;;
+
+;; Primary Helm Packages...
+
 ;;----------------------------------------------;;
 
 (use-package helm-config
     :demand t
 
-    :load-path ("submodules/helm" "submodules/async")
+    :load-path "vendor/helm"
+    ;; :load-path ("submodules/helm" "submodules/async")
 
     ;;------------------------;;
 
@@ -2490,7 +2512,7 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package helm
-    :load-path "vendored/helm"
+    :load-path "vendor/helm"
 
     :after helm-config
 
@@ -2567,40 +2589,12 @@ Links:
 
 ;; (use-package helm-mode
 ;;   :config
-;;   (helm-mode 1))
-
-;;----------------------------------------------;;
-
-(use-package helm-font
-
-  :commands (helm-ucs helm-select-xfont)
-
-  )
-
-;;----------------------------------------------;;
-
-(use-package helm-sys
-
-  :commands (helm-top)
-
-  )
-
-;;----------------------------------------------;;
-
-(use-package helm-dabbrev
-
-  :commands (helm-dabbrev)
-
-  )
-
-;;----------------------------------------------;;
-
-(use-package helm-google
-  :commands helm-google)
+;;   (helm-mode +1))
 
 ;;----------------------------------------------;;
 
 (use-package helm-buffers
+  :load-path "vendor/helm"
 
   :commands (helm-buffers-list)
 
@@ -2614,12 +2608,18 @@ Links:
 
   (dolist (MODE '(picture-mode artist-mode))
     (add-to-list 'helm-buffers-favorite-modes MODE))
-                                           
-  )
+
+  ())
+
+;; ^ ‘helm-buffers’:
+;;
+;; URL `https://github.com/emacs-helm/helm'
+;;
 
 ;;----------------------------------------------;;
 
 (use-package helm-files
+  :load-path "vendor/helm"
 
   :commands (helm-find-files)
 
@@ -2633,14 +2633,395 @@ Links:
 
   )
 
+;; ^ ‘helm-files’:
+;;
+;; URL `https://github.com/emacs-helm/helm'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-font
+    :load-path "vendor/helm"
+
+    :commands (helm-ucs helm-select-xfont)
+
+    :custom
+
+    (helm-ucs-recent-size 999 "‘helm-ucs’ — remember more previously-chosen characters")
+
+    :config ())
+
+;; ^ ‘helm-font’:
+;;
+;; • ‘helm-ucs’ — *Helm* ‘insert-char’ (“:source”'s the ‘ucs-names’).
+;;
+;; • ‘helm-select-xfont’ — *Helm TUI* for *Fonts* (“:source”'s the ‘x-list-fonts’).
+;;
+;; URL `https://github.com/emacs-helm/helm'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-ring
+    :load-path "vendor/helm"
+
+    :commands (helm-show-kill-ring helm-all-mark-rings)
+
+    :custom
+
+    (helm-kill-ring-threshold 4 "‘helm-show-kill-ring’ — ignoores fewer short clipboard-entries")
+
+    :config ())
+
+;; ^ ‘helm-ring’:
+;;
+;; • ‘helm-show-kill-ring’ — *Helm TUI* for *Clipboard History* (“:source”'s the ‘kill-ring’).
+;;
+;; • ‘helm-all-mark-rings’ — *Helm TUI* for *Position History* (“:source”'s the ‘mark-ring’).
+;;
+;; URL `https://github.com/emacs-helm/helm'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-grep
+    :load-path "vendor/helm"
+
+    :commands (helm-do-grep-ag)
+
+    :config ())
+
+;; ^ ‘helm-grep’:
+;;
+;; • ‘helm-grep’ — 
+;;
+;; URL `https://github.com/emacs-helm/helm'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-find 
+    :load-path "vendor/helm"
+
+    :commands (helm-find)
+
+    :config ())
+
+;; ^ ‘helm-find’:
+;;
+;; • ‘helm-find’ — 
+;;
+;; URL `https://github.com/emacs-helm/helm'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-dabbrev
+  :load-path "vendor/helm"
+
+  :commands (helm-dabbrev)
+
+  )
+
+;; ^ ‘helm-dabbrev’:
+;;
+;; URL `https://github.com/emacs-helm/helm'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-sys
+  :load-path "vendor/helm"
+
+  :commands (helm-top)
+
+  )
+
+;; ^ ‘helm-sys’:
+;;
+;; URL `https://github.com/emacs-helm/helm'
+;;
+
 ;;==============================================;;
+
+;;; Secondary Helm Packages...
+
+;;----------------------------------------------;;
+
+(use-package helm-descbinds
+    :demand t
+
+    :commands (helm-descbinds-mode)
+
+    :config
+
+    (helm-descbinds-mode +1)
+
+    ())
+
+;; ^ `helm-descbinds':
+;;
+;; • is a Helm TUI for `describe-bindings'.
+;;
+;; • its Helm Actions include:
+;;
+;;     • Execute the command.
+;;     • Describe the command.
+;;     • Find the command.
+;;
+;; URL `https://github.com/emacs-helm/helm-descbinds'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-describe-modes
+    :demand t
+
+    :commands (helm-describe-modes)
+
+    :config
+
+    (global-set-key [remap describe-mode] #'helm-describe-modes)
+
+    ())
+
+;; ^ `helm-describe-modes':
+;;
+;; • is a Helm TUI for `describe-mode'.
+;;
+;; • its Helm Sources include:
+;;
+;;     • Current `major-mode'. 
+;;     • Currently-Active `minor-mode's.
+;;     • Inactive `minor-mode's.
+;;
+;; URL `https://github.com/emacs-helm/helm-describe-modes'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-navi
+
+    :commands (helm-navi helm-navi-headings)
+
+    :delight (helm-navi-mode)
+
+    ;;------------------------;;
+
+    :preface (require 'outline)
+
+    :config
+
+    (setf (cdr (assoc :ALL (cdr (assoc "emacs-lisp" navi-keywords))))
+          "^[[:space:]]*(\\(use-package\\|\\(cl-\\)\\{0,1\\}def[a-z]+\\)\\*? ")
+
+    ;; ^ Add ‘use-package’ lines to `navi-keywords':
+    ;;
+    ;; Quickly navigate to individual Package Configurations with ‘helm-navi’.
+    ;;
+
+    :config ())
+
+;; ^ `helm-navi' provides:
+;;
+;; • `helm-navi' — for all ‘navi-mode’ keywords and all ‘outshine’ headings.
+;;
+;; • `helm-navi-headings' — for all ‘outshine’ headings.
+;;
+;;
+;; URL `https://github.com/emacs-helm/helm-navi'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-wikipedia
+
+    :commands (helm-wikipedia-suggest)
+
+    :config ())
+
+;; ^ `helm-wikipedia':
+;;
+;; URL `https://github.com/emacs-helm/helm-wikipedia'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-eww
+
+    :commands (helm-eww
+               helm-eww-buffers
+               helm-eww-bookmarks
+               helm-eww-history)
+
+    :config ())
+
+;; ^ `helm-eww' merges:
+;;
+;; • `helm-eww-buffers'
+;; • `helm-eww-bookmarks'
+;; • `helm-eww-history'
+;;
+;; URL `https://github.com/emacs-helm/helm-eww'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-system-packages
+
+  :commands (helm-system-packages)
+
+  :custom
+
+  (helm-system-packages-candidate-limit 0 "‹0› means: Unlimited.")
+  (helm-system-packages-use-symbol-at-point-p t "Guess input from `symbol-at-point'.")
+;; (helm-system-packages-force-package-manager 'dpkg)
+
+  :config
+
+  ())
+
+;; URL `https://github.com/emacs-helm/helm-system-packages'
+
+;;----------------------------------------------;;
+
+(use-package helm-dictionary
+    :demand t
+
+    :commands (helm-dictionary)
+
+    :config
+
+    ;;(setq helm-dictionary-database "")
+
+    ())
+
+;; ^ `helm-dictionary':
+;;
+;; • is a Helm TUI for Natural-Language Dictionaries, including Translation Dictionaries.
+;;
+;; • searches via Regexps. e.g.:
+;;
+;;     • « \b » — to search for complete words, denote Word Boundaries by surrounding with « \b »’s. e.g. « \bhouse\b » includes phrases like « White House », but excludes words like « household » and « workhouse ».
+;;
+;; URL `https://github.com/emacs-helm/helm-dictionary'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-pass
+
+    :commands (helm-pass)
+
+    :config ())
+
+;; ^ `helm-pass':
+;;
+;; • is a Helm TUI for program ‘pass’.
+;;
+;; URL `https://github.com/emacs-helm/helm-pass'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-firefox
+
+    :commands (helm-firefox)
+
+    :config ())
+
+;; ^ `helm-firefox':
+;;
+;; • is a Helm TUI for *Browser Bookmarks* (of program ‘firefox’).
+;;
+;; URL `https://github.com/emacs-helm/helm-firefox'
+;;
+
+;;==============================================;;
+
+;;; Tertiary Helm Packages...
+
+;;----------------------------------------------;;
+
+(use-package helm-swoop
+
+  :commands (helm-swoop helm-multi-swoop)
+
+  :bind (("<f2>"   . helm-swoop)
+         ("S-<f2>" . helm-multi-swoop)
+         )
+
+  :custom
+
+  (helm-swoop-speed-or-color nil "« nil » means: boost the Invoke-Speed (slightly), lose any Text-Color.")
+
+  (helm-swoop-use-fuzzy-match t "Fuzzily-Match.")
+
+  ;; ^ fuzzy matching means: TODO.
+
+  (helm-swoop-split-direction 'split-window-horizontally "Horizontally or Vertically.")
+
+  ;;TODO:
+  ;; helm-swoop-pre-input-function #'symbol-at-point-or-helm-swoop-pattern
+  ;; ;; ^ if there is no symbol at the cursor, use the last used words instead.
+  ;; ;; `helm-swoop-pattern' holds the last used words.
+
+  ())
+
+;; ^ ‘helm-swoop’:
+;;
+;; • ‘helm-swoop’ is like ‘helm-occur’.
+;;
+;; URL `https://github.com/ShingoFukuyama/helm-swoop'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-google
+
+    :commands (helm-google)
+
+    :custom
+
+    (helm-google-default-engine 'google)
+
+    :config ())
+
+;; ^ ‘helm-google’:
+;;
+;; URL `https://framagit.org/steckerhalter/helm-google'
+;;
+
+;;----------------------------------------------;;
+
+(use-package helm-flyspell
+
+  :commands (helm-flyspell-correct)
+
+  :bind (:map flyspell-mode-map
+              ("s-SPC" . helm-flyspell-correct)
+              ("<f9>"  . helm-flyspell-correct)
+         )
+
+  :config ())
+
+;; ^ ‘helm-flyspell’:
+;;
+;; URL `https://github.com/pronobis/helm-flyspell'
+;;
+
+;;----------------------------------------------;;
+;;; External Packages: Completion (Company) ----;;
+;;----------------------------------------------;;
+
+;; Primary Company Packages...
 
 (when (require 'sboo-company nil :no-error)
 
   ;;------------------------;;
 
   (use-package company
-    :load-path "vendored/company-mode"
+    :load-path "vendor/company-mode"
 
     ;;------------------------;;
 
@@ -2775,7 +3156,7 @@ Links:
 ;; External Packages: Templates ----------------;;
 ;;----------------------------------------------;;
 
-(when (require 'sboo-yasnippets nil :no-error)
+(when (require 'sboo-yass nil :no-error)
 
   (use-package yasnippet
 
@@ -2817,7 +3198,7 @@ Links:
 # name        : [sboo] a « $2 ».
 #
 # type        : snippet
-# condition   : (let ((KEY "$1")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
+# condition   : (let ((KEY "$1")) (condition-case nil (sboo-yas-column-p :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 #
 # commentary  : 
@@ -2848,7 +3229,7 @@ $0")
 
       (yas-recompile-all)
       (yas-reload-all force)
-      (load "sboo-yasnippets" :no-error :no-message))
+      (load "sboo-yass" :no-error :no-message))
 
     ;;------------------------;;
 
@@ -2882,6 +3263,18 @@ $0")
 ;;   • URL `https://joaotavora.github.io/yasnippet/snippet-expansion.html'
 ;;   • URL `https://github.com/haskell/haskell-snippets'
 ;;
+
+;;==============================================;;
+
+;;; Secondary Company Packages...
+
+;;----------------------------------------------;;
+
+;;==============================================;;
+
+;;; Tertiary Company Packages...
+
+;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
 ;; External Packages: Programming --------------;;
@@ -3725,10 +4118,9 @@ $0")
 
   ())
 
-;; ^ `json-mode' registers:
+;; ^ `json-mode' registers (via ‘autoload’):
 ;;
 ;;     ;; Well formatted JSON files almost always begin with “{” or “[”.
-;;     ;;;###autoload
 ;;     (add-to-list 'magic-fallback-mode-alist '("^[{[]$" . json-mode))
 ;;
 
@@ -4852,38 +5244,6 @@ search (upwards) for a named Code-Block. For example,
 
 ;;----------------------------------------------;;
 
-(use-package helm-swoop
-
-  :commands (helm-swoop helm-multi-swoop)
-
-  :bind (("<f2>"   . helm-swoop)
-         ("S-<f2>" . helm-multi-swoop)
-         )
-
-  :custom
-
-  (helm-swoop-speed-or-color nil "« nil » means: boost the Invoke-Speed (slightly), lose any Text-Color.")
-
-  (helm-swoop-use-fuzzy-match t "Fuzzily-Match.")
-
-  ;; ^ fuzzy matching means: TODO.
-
-  (helm-swoop-split-direction 'split-window-horizontally "Horizontally or Vertically.")
-
-  ;;TODO:
-  ;; helm-swoop-pre-input-function #'symbol-at-point-or-helm-swoop-pattern
-  ;; ;; ^ if there is no symbol at the cursor, use the last used words instead.
-  ;; ;; `helm-swoop-pattern' holds the last used words.
-
-  )
-
-;; ^ Links:
-;;
-;;   • URL `https://github.com/ShingoFukuyama/helm-swoop'
-;;
-
-;;----------------------------------------------;;
-
 (use-package avy)
 
 ;; ^ Links:
@@ -5183,23 +5543,6 @@ search (upwards) for a named Code-Block. For example,
 ;; ^ Links:
 ;;
 ;;   • URL `https://github.com/alphapapa/navi'
-;;
-
-;;----------------------------------------------;;
-
-(use-package helm-navi
-
-  :commands (helm-navi)
-
-  :delight (helm-navi-mode)
-
-  :preface (require 'outline)
-
-  :config ())
-
-;; ^ Links:
-;;
-;;   • URL `https://github.com/emacs-helm/helm-navi'
 ;;
 
 ;;----------------------------------------------;;
@@ -5982,24 +6325,6 @@ l
 
 ;;----------------------------------------------;;
 ;;; External Packages: Spell-Checking:
-;;----------------------------------------------;;
-
-(use-package helm-flyspell
-
-  :commands (helm-flyspell-correct)
-
-  :bind (:map flyspell-mode-map
-              ("s-SPC" . helm-flyspell-correct)
-              ("<f9>"  . helm-flyspell-correct)
-         )
-
-  :config ())
-
-;; ^ Links:
-;;
-;;   • URL `https://github.com/pronobis/helm-flyspell'
-;;
-
 ;;----------------------------------------------;;
 
 (use-package synosaurus
