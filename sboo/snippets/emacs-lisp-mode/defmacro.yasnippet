@@ -2,7 +2,7 @@
 #
 # key         : defmacro
 # name        : [sboo] a verbose « defmacro » declaration.
-# condition   : (let ((KEY "defmacro")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 2) (void-function (= (current-column) (string-width KEY)))))
+# condition   : (let ((KEY "defmacro")) (condition-case nil (sboo-yas-column-p :key KEY :indentation 2) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'auto) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #

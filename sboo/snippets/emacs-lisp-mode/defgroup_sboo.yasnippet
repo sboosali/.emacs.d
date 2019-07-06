@@ -4,7 +4,7 @@
 # name        : [sboo] personal « defgroup » declaration.
 #
 # type        : snippet
-# condition   : (let ((KEY "defgroup/sboo")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 4) (void-function (= (current-column) (string-width KEY)))))
+# condition   : (let ((KEY "defgroup/sboo")) (condition-case nil (sboo-yas-column-p :key KEY :indentation 4) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 #
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 

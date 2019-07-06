@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+#
+# key         : out
+# name        : [sboo] Docstring Section like « Output: a `TYPE-p' … ».
+#
+# type        : snippet
+# condition   : (let ((KEY "out")) (condition-case nil (and (sboo-yas-inside-doc-p) (sboo-yas-column-p :key KEY :indentation 4)) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  :
+#
+# --
+
+Output: a `${1:booleang}p'.$0

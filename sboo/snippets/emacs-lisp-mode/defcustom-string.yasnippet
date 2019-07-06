@@ -2,7 +2,7 @@
 #
 # key         : defstring
 # name        : a « defcustom » declaration for « :string » types.
-# condition   : (let ((KEY "defstring")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# condition   : (let ((KEY "defstring")) (condition-case nil (sboo-yas-column-p :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-wrap-around-region t) (yas-indent-line 'fixed))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #

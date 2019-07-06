@@ -3,7 +3,7 @@
 # key         : dl
 # name        : [sboo] Definition List element, i.e. « <dl> <dt></dt> <dd></dd> </dl> ».
 # type        : snippet
-# condition   : (let ((KEY "dl")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 12) (void-function (= (current-column) (string-width KEY)))))
+# condition   : (let ((KEY "dl")) (condition-case nil (sboo-yas-column-p :key KEY :indentation 12) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #

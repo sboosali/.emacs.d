@@ -1,4 +1,4 @@
-;;; sboo-yasnippets.el --- -*- lexical-binding: t -*-
+;;; sboo-yas.el --- My ‘yasnippet’ utilities -*- lexical-binding: t -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -26,6 +26,35 @@
 
 ;;; Commentary:
 
+;; Personal ‘yasnippet’ utilities for scripting Snippets.
+;;
+;; ‘sboo-yas-*’ functions include:
+;;
+;; • For the ‹# condition:› Snippet Header:
+;;
+;; • ‘sboo-yas-column-p’
+;; • ‘sboo-yas-inside-comment-p’
+;; • ‘sboo-yas-inside-string-p’
+;; • ‘sboo-yas-inside-doc-p’
+;;
+;; • For inserting the current file(/module/package/library)-name:
+;;
+;; • ‘sboo-yas-get-elisp-namespace’
+;; • ‘sboo-yas-get-basemame’
+;;
+;; • For inserting timestamps:
+;;
+;; • ‘sboo-yas-date-for-created-header’
+;; • ‘sboo-yas-human-readable-date’
+;; • ‘sboo-yas-machine-readable-date’
+;;
+;; Links:
+;;
+;; • URL `https://joaotavora.github.io/yasnippet/snippet-development.html' 
+;; • URL `'
+;;
+;; 
+
 ;;; Code:
 
 ;;----------------------------------------------;;
@@ -45,11 +74,52 @@
 ;; Utilities -----------------------------------;;
 ;;----------------------------------------------;;
 
+(cl-defun sboo-yas-column-p (&key key (indentation 4))
+
+  "A predicate for a `yasnippet' « condition: » property.
+
+Inputs:
+
+• KEY — the `yasnippet' key (to be expanded).
+
+Output:
+
+• a boolean — Compares `current-column' against the `string-width' of KEY.
+
+Example (yasnippet header):
+
+    # -*- mode: snippet -*-
+    # key         : defcustom
+    # condition   : (let ((KEY \"defcustom\")) (condition-case nil (sboo-yas-column-p :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+    # --
+
+Notes (implementation):
+
+• `string-width' — the number of columns the string is displayed across (in the current buffer). TAB chars display across `tab-width' columns.
+
+Links:
+
+• Info node `(elisp) Handling Errors'."
+
+  (let* ((COLUMN      (current-column))
+         (LENGTH      (string-width key))
+         )
+
+    (and (equal (thing-at-point 'symbol) key)
+
+         (or (= LENGTH COLUMN)
+
+        (when (and indentation (numberp indentation) (> indentation 0))
+          (and (>= (- COLUMN LENGTH) 0)
+               (<= (- COLUMN LENGTH) indentation)))))))
+
+;;----------------------------------------------;;
+
 (defun sboo-yas-get-basemame (&optional name)
 
   "Extract the namespace of an elisp file named NAME.
 
-Imput:
+Inputs:
 
 • NAME — a `stringp'.
   defaults to `buffer-file-name' or `buffer-name'.
@@ -63,7 +133,7 @@ Output:
 Examples:
 
 • M-: (sboo-yas-get-basemame)
-     → \"sboo-yasnippets\")"
+     → \"sboo-yas\")"
 
   (let* ((FILENAME (or name (buffer-file-name) (buffer-name)))
          (BASENAME (file-name-base FILENAME))
@@ -74,7 +144,7 @@ Examples:
 ;; ^ e.g.:
 ;;
 ;; • M-: (sboo-yas-get-basemame)
-;;     → "sboo-yasnippets"
+;;     → "sboo-yas"
 ;;
 
 ;;----------------------------------------------;;
@@ -83,8 +153,8 @@ Examples:
 
   "Extract the namespace of an elisp file named NAME.
 
-Imput:
-
+Inputs:
+
 • NAME — a `stringp'.
   defaults to `buffer-file-name' or `buffer-name'.
   a file's basename. 
@@ -98,7 +168,7 @@ Output:
 Examples:
 
 • M-: (sboo-yas-get-elisp-namespace)
-     → \"sboo-yasnippets\")
+     → \"sboo-yas\")
 • M-: (sboo-yas-get-elisp-namespace \"xyz.el\")
      → \"xyz\")
 • M-: (sboo-yas-get-elisp-namespace \"~/xyz-mode\")
@@ -115,7 +185,7 @@ Examples:
 ;; ^ e.g.:
 ;;
 ;; • M-: (sboo-yas-get-elisp-namespace)
-;;     → "sboo-yasnippets"
+;;     → "sboo-yas"
 ;; • M-: (sboo-yas-get-elisp-namespace "xyz.el")
 ;;     → "xyz"
 ;; • M-: (sboo-yas-get-elisp-namespace "~/xyz-mode")
@@ -128,7 +198,7 @@ Examples:
 
   "Extract the namespace of a personal configuration file.
 
-Imput:
+Inputs:
 
 • NAME — a `stringp'.
   defaults to `buffer-file-name' or `buffer-name'.
@@ -151,7 +221,7 @@ Examples:
 
     NAME))
 
-;;----------------------------------------------;;
+;;==============================================;;
 
 (cl-defun sboo-yas-machine-readable-date (&key time)
 
@@ -243,6 +313,32 @@ Related:
 ;;
 ;;
 
+;;==============================================;;
+
+(define-inline sboo-yas-inside-comment-p ()
+
+  "Whether `point' is within a Comment (w.r.t. the Syntax Table)."
+
+  (if (nth 4 (syntax-ppss)) t nil))
+
+;;----------------------------------------------;;
+
+(define-inline sboo-yas-inside-string-p ()
+
+  "Whether `point' is within a String (w.r.t. the Syntax Table)."
+
+  (if (nth 6 (syntax-ppss)) t nil))
+
+;;----------------------------------------------;;
+
+(define-inline sboo-yas-inside-doc-p ()
+
+  "Whether `point' is within a Docstring.
+out
+TODO improve heuristic from String-or-Comment."
+
+  (or (sboo-yas-inside-string-p) (sboo-yas-inside-comment-p)))
+
 ;;----------------------------------------------;;
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
@@ -321,8 +417,8 @@ Output:
 Example:
 
 • M-: (sboo-yas-file-name-for-first-line)
-    ; /home/sboo/.emacs.d/sboo/sboo-yasnippets.el
-    ⇒ \"sboo-yasnippets\"
+    ; /home/sboo/.emacs.d/sboo/sboo-yas.el
+    ⇒ \"sboo-yas\"
 
 Links:
 
@@ -425,6 +521,6 @@ Related:
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
 
-(provide 'sboo-yasnippets)
+(provide 'sboo-yas)
 
-;;; sboo-yasnippets.el ends here
+;;; sboo-yas.el ends here

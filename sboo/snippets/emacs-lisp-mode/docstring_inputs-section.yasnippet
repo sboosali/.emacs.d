@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+#
+# key         : in
+# name        : [sboo] Docstring Section like « Inputs: • NAME — a `TYPE-p' … ».
+#
+# type        : snippet
+# condition   : (let ((KEY "in")) (condition-case nil (and (sboo-yas-inside-doc-p) (sboo-yas-column-p :key KEY :indentation 4)) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+#
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+# commentary  : 
+#
+# --
+
+Inputs:
+
+• ${1:NAME} — a `${2:string}p'.$0

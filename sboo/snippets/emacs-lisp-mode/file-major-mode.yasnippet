@@ -2,7 +2,7 @@
 #
 # key         : major
 # name        : [sboo] a « define-derived-mode » file (a major mode).
-# condition   : (let ((KEY "major")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# condition   : (let ((KEY "major")) (condition-case nil (sboo-yas-column-p :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil) (FILENAME (file-name-nondirectory (buffer-file-name))) (FEATURE (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))) (MODE (string-remove-suffix "-mode" (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 # type        : snippet

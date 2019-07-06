@@ -3,7 +3,7 @@
 # key         : iqc
 # name        : [sboo] an « import qualified » for « Control._ ».
 # type        : snippet
-# condition   : (let ((KEY "iqc")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# condition   : (let ((KEY "iqc")) (condition-case nil (sboo-yas-column-p :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #

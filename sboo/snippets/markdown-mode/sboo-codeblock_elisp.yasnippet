@@ -4,7 +4,7 @@
 # name        : [sboo] an « elisp » codeblock.
 #
 # type        : snippet
-# condition   : (let ((KEY "elisp")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# condition   : (let ((KEY "elisp")) (condition-case nil (sboo-yas-column-p :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-indent-line 'fixed) (yas-wrap-around-region t))
 #
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 

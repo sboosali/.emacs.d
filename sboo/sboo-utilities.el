@@ -478,49 +478,6 @@ Laws:
 
 ;TODO URL `http://ergoemacs.org/emacs/elisp_change_brackets.html'.
 
-;;----------------------------------------------;;
-;; Utilities: yasnippet ------------------------;;
-;;----------------------------------------------;;
-
-(cl-defun sboo-yasnippet-condition (&key key (indentation 4))
-
-  "A predicate for a `yasnippet' « condition: » property.
-
-Inputs:
-
-• KEY — the `yasnippet' key (to be expanded).
-
-Output:
-
-• a boolean — Compares `current-column' against the `string-width' of KEY.
-
-Example (yasnippet header):
-
-    # -*- mode: snippet -*-
-    # key         : defcustom
-    # condition   : (let ((KEY \"defcustom\")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
-    # --
-
-Notes (implementation):
-
-• `string-width' — the number of columns the string is displayed across (in the current buffer). TAB chars display across `tab-width' columns.
-
-Links:
-
-• Info node `(elisp) Handling Errors'."
-
-  (let* ((COLUMN      (current-column))
-         (LENGTH      (string-width key))
-         )
-
-    (and (equal (thing-at-point 'symbol) key)
-
-         (or (= LENGTH COLUMN)
-
-        (when (and indentation (numberp indentation) (> indentation 0))
-          (and (>= (- COLUMN LENGTH) 0)
-               (<= (- COLUMN LENGTH) indentation)))))))
-
 ;;==============================================;;
 
 (cl-defun sboo-serialize (&key data file)

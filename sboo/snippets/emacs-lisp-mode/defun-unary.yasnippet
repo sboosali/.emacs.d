@@ -2,7 +2,7 @@
 #
 # key         : defunary
 # name        : [sboo] Declare a (verbose) function, via « defun ».
-# condition   : (let ((KEY "defunary")) (condition-case nil (sboo-yasnippet-condition :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
+# condition   : (let ((KEY "defunary")) (condition-case nil (sboo-yas-column-p :key KEY :indentation 6) (void-function (= (current-column) (string-width KEY)))))
 # expand-env  : ((yas-wrap-around-region t))
 # contributor : Spiros Boosalis <samboosalis@gmail.com> 
 #
