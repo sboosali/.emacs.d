@@ -2107,9 +2107,9 @@ Links:
   :bind (("M-<f9>"    . sboo-flyspell-prior-error)
          ("C-<f9>"    . sboo-flyspell-next-error))
 
-  :bind (:map text-mode-map
-              ("<kp-up>"   . sboo-flyspell-check-first-word)
-              ("<kp-down>" . sboo-flyspell-check-next-word))
+  ;; :bind (:map text-mode-map
+  ;;             ("<kp-up>"   . sboo-flyspell-check-first-word)
+  ;;             ("<kp-down>" . sboo-flyspell-check-next-word))
 
   ;;--------------------------;;
 
@@ -4006,6 +4006,8 @@ $0")
   :bind (:map markdown-mode-map
               ("TAB" . dabbrev-expand)
               ("C-c !" . sboo-markdown-mark-h1)  ; Mnemonic: « C-c » is the Personal Keymap; « ! » shares a key with « 1 », referencing « <h1> ».
+              ("<prior>" . markdown-backward-same-level)
+              ("<next>"  . markdown-forward-same-level)
          :map gfm-mode-map
               ("TAB" . dabbrev-expand)
          )

@@ -1780,7 +1780,90 @@ Related:
 
 ==============================================
 
+(defvar mtg-query-mode-syntax-table
 
+  (let ((TABLE (make-syntax-table))
+        )
+
+    ;; Prefix (Unary) Operators:
+
+    (modify-syntax-entry ?\` "'"   TABLE)
+    (modify-syntax-entry ?\~ "'"   TABLE)
+
+    (modify-syntax-entry ?\! "'"   TABLE)
+    (modify-syntax-entry ?\@ "'"   TABLE)
+    (modify-syntax-entry ?\# "< p" TABLE)
+    ;; ^ « # » is also a “comment-starter”.
+    (modify-syntax-entry ?\% "'"   TABLE)
+    (modify-syntax-entry ?\& ". p" TABLE)
+    ;; ^ « & » is also an Infix Operator (Conjunction).
+    (modify-syntax-entry ?\| ". p" TABLE)
+    ;; ^ « | » is also an Infix Operator (Disjunction).
+    (modify-syntax-entry ?\* "'"   TABLE)
+
+    (modify-syntax-entry ?\^ "_ p" TABLE)
+    ;; ^ « ^ », semantically a regexp (match the Beginning-of-Word);
+    ;;   syntactically, symbol within a words;
+    ;;   is also an “expression-prefix”.
+    (modify-syntax-entry ?\$ "_ p" TABLE)
+    ;; ^ « $ », semantically a regexp (match the End-of-Word);
+    ;;   syntactically, symbol within a words;
+    ;;   is also an “expression-prefix”.
+
+    ;; « - » is punctuation (as an operator),
+    ;; but « -- » is a comment-starter:
+
+    (modify-syntax-entry ?\- ". 123" TABLE)
+
+    ;; « " » is a string delimiter:
+
+    (modify-syntax-entry ?\" "\"" TABLE)
+
+    ;; Brackets (i.e. parens, curly braces, square braces):
+
+    (modify-syntax-entry ?\( "()"    TABLE)
+    (modify-syntax-entry ?\) ")("    TABLE)
+    (modify-syntax-entry ?\[ "(]"    TABLE)
+    (modify-syntax-entry ?\] ")["    TABLE)
+    (modify-syntax-entry ?\{ "(}1nb" TABLE) ; « "n" » means: Multi-Line Coments can be nested.
+    (modify-syntax-entry ?\} "){4nb" TABLE)
+
+    ;; Whitespace (i.e. spaces, tabs, newlines) is conventional:
+
+    (modify-syntax-entry ?\  " " TABLE)
+    (modify-syntax-entry ?\t " " TABLE)
+    (modify-syntax-entry ?\n ">" TABLE)
+    ;; ^ « \n » is a “comment-ender”.
+
+    ;;
+
+    TABLE)
+
+  "MTG Query Mode's `syntax-table-p'.
+
+For example, the hyphen character (i.e. « - ») in MTG Query Mode plays several roles:
+
+• a punctuation character (« - ») — e.g. `(2 - 3)` or `(xs --. y)`.
+• the characters of a (single-line) *start-of-comment* sequence (« -- ») — e.g. « -- ... ».
+• the second character of a (multi-line) *start-of-comment* sequence (« {- ») — e.g. « {- ... ».
+• the first character of a (multi-line) *end-of-comment* sequence (« -} ») — e.g. « ... -} ».
+
+These roles (punctuation and single-line comment and multi-line comment) are represented by this Syntax Entry:
+
+    (modify-syntax-entry ?- \". 123\" `mtg-query-mode-syntax-table')")
+
+
+==============================================
+
+# `mtg`
+
+the `mtg` package provides libraries for editing custom *MTG* cards, for searching through all *MTG* cards, parsing MTG cards/decklists, and more.
+
+the `mtg` package provides libraries for editing custom *MTG* cards (with syntax-highlighting, completion, abbreviation expansions like `etb<TAB>`, embedded images, *Magic Set Editor* importing/exporting, etc), for searching efficiently through all *MTG* cards (with regular expressions, extensible predicates, etc), and more.
+
+
+
+==============================================
 
 
 

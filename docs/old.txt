@@ -11098,6 +11098,17 @@ a `regexpp'."))
     (rx-to-string `(or ,STATIC-REGEXP ,DYNAMIC-REGEXP))))
 
 
+(progn
+  (global-set-key (kbd "<kp-up>")    #'sboo-prior-definition)
+  (global-set-key (kbd "<kp-down>")  #'sboo-next-definition))
+
+
+(use-package flyspell
+
+
+  :bind (:map text-mode-map
+              ("<kp-up>"   . sboo-flyspell-check-first-word)
+              ("<kp-down>" . sboo-flyspell-check-next-word))
 
 
 ========================================================================

@@ -1082,8 +1082,8 @@ Inputs:
   (global-set-key (kbd "<kp-right>") #'next-buffer))
 
 (progn
-  (global-set-key (kbd "<kp-up>")    #'sboo-prior-definition)
-  (global-set-key (kbd "<kp-down>")  #'sboo-next-definition))
+  (global-set-key (kbd "<kp-up>")    #'sboo-page-backward)
+  (global-set-key (kbd "<kp-down>")  #'sboo-page-forward))
 
 (progn
   (global-set-key (kbd "<kp-home>")  #'set-mark-command)
