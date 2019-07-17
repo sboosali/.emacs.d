@@ -1,0 +1,28 @@
+# -*- mode: snippet -*-
+#
+# key         : defimgvar
+# name        : [sboo] Declare a « defimage » and its namesake « defvar ».
+# condition   : (let ((KEY "defimgvar")) (condition-case nil (sboo-yas-column-p :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(progn
+
+  (defimage ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}-image
+
+    '(())
+
+    "Image for $1."
+
+    :group '$2-images)
+
+  ;;
+
+  (defvar $1-$2-image '$1-$2
+
+    "a(n ‘imagep’) ‘symbolp’. Defaults to (its namesake) image \`$1-$2'."))
+
+$0

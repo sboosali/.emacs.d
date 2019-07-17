@@ -334,7 +334,7 @@ Related:
 (define-inline sboo-yas-inside-doc-p ()
 
   "Whether `point' is within a Docstring.
-out
+
 TODO improve heuristic from String-or-Comment."
 
   (or (sboo-yas-inside-string-p) (sboo-yas-inside-comment-p)))

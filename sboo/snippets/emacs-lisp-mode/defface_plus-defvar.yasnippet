@@ -1,0 +1,28 @@
+# -*- mode: snippet -*-
+#
+# key         : deffacevar
+# name        : [sboo] Declare a « defface » and its namesake « defvar ».
+# condition   : (let ((KEY "deffacevar")) (condition-case nil (sboo-yas-column-p :key KEY :indentation 0) (void-function (= (current-column) (string-width KEY)))))
+# expand-env  : ((yas-wrap-around-region 'nil))
+# contributor : Spiros Boosalis <samboosalis@gmail.com> 
+#
+# --
+;;----------------------------------------------;;
+
+(progn
+
+  (defface ${2:`(condition-case _ (sboo-yas-get-elisp-namespace) ((error) "sboo"))`}-${1:name}-face
+
+    '((t :inherit font-lock-$1-face))
+
+    "Face for $1."
+
+    :group '$2-faces)
+
+  ;;
+
+  (defvar $1-$2-face '$1-$2
+
+    "a (‘facep’) ‘symbolp’. Defaults to (its namesake) face \`$1-$2'."))
+
+$0
