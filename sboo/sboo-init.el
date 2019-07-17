@@ -4956,13 +4956,16 @@ Inputs:
 
 (use-package expand-region
 
-  :delight (expand-region-mode "")
+    :load-path "vendor/expand-region"
 
-  :bind (:map sboo-mark-keymap
-              ("e" . expand-region)
-              )
+    ;;-------------------------;;
 
-  :config ())
+    :commands (er/expand-region)
+
+    :bind (:map text-mode-map ("<kp-add>" . er/expand-region))
+    :bind (:map prog-mode-map ("<kp-add>" . er/expand-region))
+
+    :config ())
 
 ;; ^ Links:
 ;;
