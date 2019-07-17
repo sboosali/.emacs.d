@@ -157,8 +157,6 @@ To be bound to:
 • `dabbrev-expand'
 • `yas-next-field-or-maybe-expand'")
 
-backtab company-complete-common-or-cycle
-
 ;;----------------------------------------------;;
 
 (defvar sboo-key/complete (kbd "S-TAB")         ; <backtab>
@@ -209,9 +207,9 @@ different) command. For example, `recompile' in
 ;; Commands ------------------------------------;;
 ;;----------------------------------------------;;
 
-(progn
+;; (progn
 
-  ;;--------------------------;;
+;;   ;;--------------------------;;
 
   (unless (fboundp #'forward-defun)
     (defun forward-defun (&optional count)
@@ -225,33 +223,33 @@ different) command. For example, `recompile' in
       (let* ((COUNT (* -1 (or count +1))))
         (forward-thing 'defun COUNT))))
 
-  ;;--------------------------;;
+;;   ;;--------------------------;;
 
-  (defvar-local sboo-forward-defun-function #'forward-defun)
+;;   (defvar-local sboo-forward-defun-function #'forward-defun)
 
-  (defvar-local sboo-backward-defun-function #'backward-defun)
+;;   (defvar-local sboo-backward-defun-function #'backward-defun)
 
-  ;;--------------------------;;
+;;   ;;--------------------------;;
 
-  (defun sboo-forward-defun ()
+;;   (defun sboo-forward-defun ()
 
-    "Invokes `sboo-forward-defun-function'."
+;;     "Invokes `sboo-forward-defun-function'."
 
-    (interactive)
+;;     (interactive)
 
-    (call-interactively sboo-forward-defun-function))
+;;     (call-interactively sboo-forward-defun-function))
 
-  (defun sboo-backward-defun ()
+;;   (defun sboo-backward-defun ()
 
-    "Invokes `sboo-backward-defun-function'."
+;;     "Invokes `sboo-backward-defun-function'."
 
-    (interactive)
+;;     (interactive)
 
-    (call-interactively sboo-backward-defun-function))
+;;     (call-interactively sboo-backward-defun-function))
 
-  ;;--------------------------;;
+;;   ;;--------------------------;;
 
-  ())
+;;   ())
 
 ;;==============================================;;
 
@@ -794,8 +792,8 @@ Inputs:
 
 (progn ; Completion/Expansion:
 
-  (global-set-key (kbd "TAB")       #'dabbrev-expand)      ; Shadows `indent-according-to-mode'.
-  (global-set-key (kbd "<backtab>") #'completion-at-point) ; 
+  (global-set-key (kbd "TAB")   #'dabbrev-expand)      ; Shadows `indent-according-to-mode'.
+  (global-set-key (kbd "S-TAB") #'completion-at-point) ; 
 
   ;; ^ `<tab>':
   ;;
@@ -807,8 +805,8 @@ Inputs:
   ;; • `<backtab>' ≡ `<S-iso-lefttab>' (≡ `S-TAB'?)
   ;;
 
-  (define-key text-mode-map (kbd "<bachtab>") #'dabbrev-completion)  ; 
-  (define-key prog-mode-map (kbd "<backtab>") #'completion-at-point)
+  (define-key text-mode-map (kbd "S-TAB") #'dabbrev-completion)  ; 
+  (define-key prog-mode-map (kbd "S-TAB") #'completion-at-point)
 
   ;; ^ `dabbrev-completion':
   ;;
@@ -835,10 +833,9 @@ Inputs:
 
 (progn
 
-  (global-set-key (kbd "<prior>") #'sboo-backward-defun) ; a.k.a. « Page Up ». 
-  (global-set-key (kbd "<next>")  #'sboo-forward-defun)  ; a.k.a. « Page Down ». 
+  (global-set-key (kbd "<prior>") #'backward-defun) ; a.k.a. « Page Up ». 
+  (global-set-key (kbd "<next>")  #'forward-defun)  ; a.k.a. « Page Down ». 
 
-  ;;(global-set-key (kbd "<delete>") #'sboo-undefined)
   ())
 
 ;;----------------------------------------------;;
@@ -1224,10 +1221,10 @@ Inputs:
   (define-key key-translation-map (kbd "s-M-\"")        (kbd "“"))
 
   (define-key key-translation-map (kbd "s-M-,")         (kbd "‹"))
-  ;; (define-key key-translation-map (kbd "s-M-<")         (kbd ""))
+  (define-key key-translation-map (kbd "s-M-<")         (kbd "«"))
 
-  (define-key global-map          (kbd "s-M-.")         (kbd "«"))
-  ;; (define-key global-map          (kbd "s-M->")         (kbd ""))
+  (define-key global-map          (kbd "s-M-.")         (kbd "…"))
+  (define-key global-map          (kbd "s-M->")         (kbd "↪"))
 
   (define-key global-map          (kbd "s-M-/")         (kbd "✓"))
 
@@ -1245,7 +1242,11 @@ Inputs:
 
   ;; Shifted (Non-Graphical) Characters...
 
-  (define-key key-translation-map (kbd "s-M-S-<right>") (kbd "↪"))
+  (define-key key-translation-map (kbd "s-M-S-<up>")      (kbd "⇑"))
+  (define-key key-translation-map (kbd "s-M-S-<down>")    (kbd "⇓"))
+  (define-key key-translation-map (kbd "s-M-S-<left>")    (kbd "⇐"))
+  (define-key key-translation-map (kbd "s-M-S-<right>")   (kbd "⇒"))
+
 
 ;; (define-key key-translation-map (kbd "s-M-")         (kbd ""))
 
