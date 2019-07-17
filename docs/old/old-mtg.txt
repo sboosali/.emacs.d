@@ -1866,5 +1866,3562 @@ the `mtg` package provides libraries for editing custom *MTG* cards (with syntax
 ==============================================
 
 
+;; ^ M-: (defconst sboo-mtg-card-name-list (mtg-data/card-names 'list))
+;;
+;;       (sboo-mtg-card-name-list)
+
+(defface mtg-card-name '((t :underline t :inherit (mtg-card font-lock-constant-face)))
+  "Face for MTG Card Names."
+  :group 'mtg-faces)
+
+
 
 ==============================================
+
+================================================================================
+
+
+;;----------------------------------------------;;
+
+Four colors
+Most decks do not have four full colors. As with three color enemies, if they reach this many colors, it's a shard with a splash of another color. So you're more likely to see something like "American splash black" instead of "Yore".
+
+Names for four-color identities come from one of two sources:
+
+The names of the Nephilims from Guildpact.
+The names of the four-colour “guild identities” defined during Commander 2016's design.
+Reference the one color the four-color combination is missing, thus Non-(color).
+So the four colour identities' names are:
+
+ Blue + black + red + green = Glint-Eye, or Chaos, or Non-white
+ Black + red + green + white = Dune (or Dune-Brood), or Aggression, or Non-blue
+ Red + green + white + blue = Ink-Treader, or Altruism, or Non-black
+ Green + white + blue + black = Witch (or Witch-Maw), or Growth, or Non-red
+White + blue + black + red = Yore (or Yore-Tiller), or Artifice, or Non-green
+
+;;----------------------------------------------;;
+
+(defcustom mtg-super-types-list
+
+  '(basic
+    legendary
+    snow
+    ongoing
+    world)
+
+  "Known Super-Types.
+
+`listp' of `symbolp's."
+
+  :type '(repeat (symbol :tag "Supertype"))
+
+  :safe #'listp
+  :group 'mtg)
+
+;;----------------------------------------------;;
+
+(defcustom mtg-card-types-list
+
+  '(instant        ; ?🗲
+    sorcery
+    land
+    artifact
+    enchantment
+    creature
+    planeswalker
+    conspiracy)
+
+  "Known Card-Types.
+
+`listp' of `symbolp's."
+
+  :type '(repeat (symbol :tag "Card type"))
+
+  :safe #'listp
+  :group 'mtg)
+
+;;----------------------------------------------;;
+
+(defcustom mtg-spell-subtypes-list
+
+  '(
+
+   )
+
+  "Known Subtypes for spells (i.e. instants and sorceries).
+
+a `listp' of `symbolp's."
+
+  :type '(repeat (symbol :tag "Subtype"))
+
+  :safe #'listp
+  :group 'mtg)
+
+;;----------------------------------------------;;
+
+(defcustom mtg-land-subtypes-list
+
+  '(
+
+   )
+
+  "Known Subtypes for lands.
+
+a `listp' of `symbolp's."
+
+  :type '(repeat (symbol :tag "Subtype"))
+
+  :safe #'listp
+  :group 'mtg)
+
+;;----------------------------------------------;;
+
+(defcustom mtg-artifact-subtypes-list
+
+  '(
+
+   )
+
+  "Known Subtypes for artifacts.
+
+a `listp' of `symbolp's."
+
+  :type '(repeat (symbol :tag "Subtype"))
+
+  :safe #'listp
+  :group 'mtg)
+
+;;----------------------------------------------;;
+
+(defcustom mtg-enchantment-subtypes-list
+
+  '(
+
+   )
+
+  "Known Subtypes for enchantments.
+
+a `listp' of `symbolp's."
+
+  :type '(repeat (symbol :tag "Subtype"))
+
+  :safe #'listp
+  :group 'mtg)
+
+;;----------------------------------------------;;
+
+(defcustom mtg-creature-subtypes-list
+
+  '(
+
+   )
+
+  "Known Subtypes for creatures.
+
+a `listp' of `symbolp's."
+
+  :type '(repeat (symbol :tag "Subtype"))
+
+  :safe #'listp
+  :group 'mtg)
+
+;;----------------------------------------------;;
+
+(defcustom mtg-planeswalker-subtypes-list
+
+  '(
+
+   )
+
+  "Known Subtypes for planeswalkers.
+
+a `listp' of `symbolp's."
+
+  :type '(repeat (symbol :tag "Subtype"))
+
+  :safe #'listp
+  :group 'mtg)
+
+;;----------------------------------------------;;
+
+(defcustom mtg-subtypes-alist
+
+  '(
+    (spell        . mtg-spell-subtypes-list)
+    (land         . mtg-land-subtypes-list)
+    (artifact     . mtg-artifact-subtypes-list)
+    (enchantment  . mtg-enchantment-subtypes-list)
+    (creature     . mtg-creature-subtypes-list)
+    (planeswalker . mtg-planeswalker-subtypes-list)
+   )
+
+  "Known Subtypes, by Card-Type.
+
+an association `listp':
+
+• from `symbolp'
+• to EITHER a `listp' of `symbolp's OR a `symbolp' thereof.
+
+`mtg-subtypes-alist' represents both ‘instant’ and ‘sorcery’
+(which are in `mtg-card-types-list') as ‘spell’
+(which isn't in `mtg-card-types-list')."
+
+  :type '(alist :key-type   (symbol :tag "Card type")
+                :value-type (choice (variable :tag "List Variable")
+                                    (repeat (symbol :tag "Subtypes"))))
+
+  :safe #'listp
+  :group 'mtg)
+
+
+
+
+
+
+
+
+
+(defcustom mtg-rules-keywords-list
+
+  '(
+    absorb
+    affinity
+    afflict
+    aftermath
+    amplify
+    annihilator
+    ascend
+    aura-swap
+    awaken
+    banding
+    battle-cry
+    bestow
+    bloodthirst
+    bushido
+    buyback
+    cascade
+    champion
+    changeling
+    cipher
+    conspire
+    convoke
+    crew
+    cumulative-upkeep
+    cycling
+    dash
+    deathtouch
+    defender
+    delve
+    dethrone
+    devoid
+    devour
+    double-strike
+    dredge
+    echo
+    embalm
+    emerge
+    enchant
+    entwine
+    epic
+    equip
+    escalate
+    eternalize
+    evoke
+    evolve
+    exalted
+    exploit
+    extort
+    fabricate
+    fading
+    fear
+    first-strike
+    flanking
+    flash
+    flashback
+    flying
+    forecast
+    fortify
+    frenzy
+    fuse
+    graft
+    gravestorm
+    haste
+    haunt
+    hexproof
+    hidden-agenda
+    hideaway
+    horsemanship
+    improvise
+    indestructible
+    infect
+    ingest
+    intimidate
+    kicker
+    landwalk
+    level-up
+    lifelink
+    living-weapon
+    madness
+    melee
+    menace
+    miracle
+    modular
+    morph
+    myriad
+    ninjutsu
+    offering
+    outlast
+    overload
+    partner
+    persist
+    phasing
+    poisonous
+    protection
+    provoke
+    prowess
+    prowl
+    rampage
+    reach
+    rebound
+    recover
+    reinforce
+    renown
+    replicate
+    retrace
+    ripple
+    scavenge
+    shadow
+    shroud
+    skulk
+    soulbond
+    soulshift
+    splice
+    split-second
+    storm
+    sunburst
+    surge
+    suspend
+    totem-armor
+    trample
+    transfigure
+    transmute
+    tribute
+    undaunted
+    undying
+    unearth
+    unleash
+    vanishing
+    vigilance
+    wither
+    )
+
+  "Known Keywords (in rules text).
+
+A `symbolp' `listp'.
+
+URL ‘https://mtgjson.com/json/Keywords.json’"
+
+  :type '(repeat (symbol :tag "Keyword"))
+
+  :safe #'listp
+  :group 'mtg)
+
+
+
+
+
+;;==============================================;;
+
+(defconst mtg-known-card-names-count (length mtg-known-card-names)
+
+  "How many unique card names there are known to be.
+
+a `natnump'.
+
+~20,000.")
+
+;; ^ 19,310
+
+;;----------------------------------------------;;
+
+(defconst mtg-known-longest-card-name-length
+
+  (seq-reduce (lambda (*LENGTH* *STRING*) (max *LENGTH* (length *STRING*)))
+                mtg-known-card-names
+                0)
+
+  "How long is the longest known card name (in English).
+
+a `natnump'.
+
+~30.")
+
+;; ^ 33
+
+;;----------------------------------------------;;
+
+(defun mtg--xfont-by-name (font-name)
+
+  "Lookup an XFont which matches FONT-NAME.
+
+Inputs:
+
+• FONT-NAME — a `stringp'.
+
+Output:
+
+• a `stringp' or `fontp'.
+
+Examples:
+
+• M-: (mtg--xfont-by-name \"Beleren\")
+    ↪ nil
+
+• M-: (mtg--xfont-by-name \"Not A Font Name\")
+    ↪ nil"
+
+  (when (fboundp 'x-list-fonts)
+    (car-safe
+     (condition-case e                  ; catch "Invalid font name" error.
+         (x-list-fonts font-name)
+       (error '())))))
+
+
+
+(defvar mtg-beleren-font-family)
+
+(defface mtg-card
+
+    `((t :family ,mtg-beleren-font-family))
+
+    "")
+
+;; ^ See function ‘font-family-list’.
+
+
+
+
+(defcustom mtg-paragraph-start
+
+  (rx (or "" (0+ (regexp "[ 	]") eol)))
+
+
+
+
+;;==============================================;;
+;; Paragraphs:
+
+(defcustom mtg-paragraph-start
+
+  (rx (or "\f" (and (0+ (char blank)) eol)))
+
+  "`paragraph-start' for `mtg-mode'.
+
+a ‘stringp’ or nil."
+
+  :type '(regexp)
+  :safe #'stringp
+  :group 'mtg)
+
+;;----------------------------;;
+
+(defcustom mtg-paragraph-separate
+
+  (rx (and (0+ (char space))) eol)
+
+  "`paragraph-separate' for `mtg-mode'.
+
+a ‘stringp’ or nil."
+
+  :type '(regexp)
+  :safe #'stringp
+  :group 'mtg)
+
+
+
+(defun mtg--regexp-opt (strings)
+
+  "Return a regular expression matching anything in STRINGS.
+
+Inputs:
+
+• STRINGS — a `listp' of `stringp's.
+
+Output:
+
+• a `regexp'.
+  Matches a syntactic symbol (see Info Node `(emacs) ') which is in STRINGS.
+
+Examples:
+
+• M-: (mtg--regexp-opt '(\"abc\" \"123\"))
+      \"\\_<\\(123\\|abc\\)\\_>\"
+
+Notes:
+
+• Boundaries are respected.
+  i.e. the output doesn't match substrings
+  within a word or symbol, only the entire string.
+
+Related:
+
+• Calls `regexp-opt'"
+
+  (let* ((STRINGS (identity strings))
+         )
+    (regexp-opt STRINGS 'symbols)))
+
+
+;;----------------------------------------------;;
+(define-abbrev-table 'emacs-lisp-mode-abbrev-table ()
+  "Abbrev table for Emacs Lisp mode.
+It has `lisp-mode-abbrev-table' as its parent."
+  :parents (list lisp-mode-abbrev-table))
+
+;;;###autoload
+(defconst mtg-mode-abbrev-table
+
+  (let ((TABLE (make-abbrev-table))
+        )
+
+    (abbrev- "cmc" "converted mana cost"     TABLE)
+    (abbrev- "etb"  "enters the battlefield" TABLE)
+    (abbrev- "ueot" "until end of turn"      TABLE)
+
+    TABLE)
+
+  "Mtg Mode's `abbrev-table-p'.
+
+")
+
+================================================================================
+
+
+
+================================================================================
+
+SYNTAX
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+README
+
+* `mtg-query` — Search Engine for *Magic: The Gathering* cards, with a powerful (and extensible) query language.
+* `mtg-mode` — Major Mode for editing and rendering custom *Magic: The Gathering* cards.
+
+## Files
+
+* `./lisp/*.el` — Elisp Source Files.
+* `./test/*.el` — Emacs Unit Tests.
+* `./data/*.{json,el}.gz` — MTG Data.
+* `./img/*.gif` — *Animated GIFs*.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MAKEFILE
+
+#
+
+EMACS ?= emacs
+
+EMACSLOADPATH ?= -L./lisp
+
+#
+
+PKG := mtg
+
+SUMMARY := "'
+
+# ^ Extract, from the very first line of the Package File,
+#   text between « --- » (or bol) and « -*- » (or eol).
+
+# 
+
+SRCDIR := ./lisp
+
+SOURCES := $(sort $(wildcard ./$(SRCDIR)/*$(PKG)*.el))
+OBJECTS := $(EL:.el=.elc)
+
+# ^ e.g. 
+#
+# ≈ (mtg.el mtg-mode.el …)
+# ≈ (mtg.elc mtg-mode.elc …)
+#
+
+TESTDIR  := ./test
+TESTFILE := $(TESTDIR)/test-$(PKG).el
+
+BENCHDIR  := ./bench
+BENCHFILE := $(BENCHDIR)/bench-$(PKG).el
+
+#
+
+EmacsRun   := $(EMACS) -Q --batch
+EmacsEval  := $(EMACS) --eval
+
+EmacsBuild := $(EMACS) -Q --batch -L$(SRCDIR)
+EmacsCheck := $(EMACS) -Q --batch -L$(SRCDIR) -L$(DIR) --load ert
+
+EmacsBench := $(EMACS) -Q --batch -L$(SRCDIR) -L$(BENCHDIR) --load benchmark
+
+#
+
+# ‹*.el› → ‹*.elc›
+
+%.el: %.elc
+
+	$(EmacsBuild) -f batch-byte-compile $^
+
+#
+
+build: bytecompile
+
+.PHONY: build
+
+#
+
+check: ert
+
+.PHONY: check
+
+#
+
+bytecompile: $(SOURCES)
+
+	$(EmacsBuild) -f batch-byte-compile $^
+
+.PHONY: bytecompile
+
+#
+
+ert: $(TESTFILE)
+
+	$(EmacsCheck) --load $< -f ert-run-tests-batch-and-exit 
+
+.PHONY: ert
+
+#
+
+bench: $(BENCHFILE)
+
+	$(EmacsBench) --load "bench-$(PKG).el" -f batch-byte-compile 
+	$(EmacsBench) --load "bench-$(PKG).elc" -f batch-benchmark-mtg
+
+.PHONY: bench
+
+#
+
+elpa: *.el
+	@ver=`grep -o "Version: .*" history.el | cut -c 10-`; \
+	dir=history-$$ver; \
+	mkdir -p "$$dir"; \
+	cp `git ls-files '*.el' | xargs` history-$$ver; \
+	echo "(define-package \"history\" \"$$version\" \
+	\"Modular in-buffer completion framework\")" \
+	> "$$dir"/history-pkg.el; \
+	tar cvf history-$$ver.tar "$$dir"
+
+.PHONY: elpa
+
+#
+
+release:
+
+	git fetch && \
+	git diff remotes/origin/master --exit-code && \
+	git tag -a -m "Release" release-$(VERSION) && \
+	# woger lua-l lua-mode lua-mode "release $(VERSION)" "Emacs major mode for editing Lua files" release-notes-$(VERSION) http://github.com/immerrr/lua-mode/ && \
+
+	git push origin master
+	@echo 'Send update to ELPA!'
+
+.PHONY: release
+
+
+
+
+
+
+
+
+test/
+
+(ert-deftest ert-test/mismatch ()
+
+       (should (eql (cl-mismatch "" "") nil))
+       (should (eql (cl-mismatch "" "a") 0))
+       (should (eql (cl-mismatch "a" "a") nil))
+       (should (eql (cl-mismatch "ab" "a") 1))
+       (should (eql (cl-mismatch "Aa" "aA") 0))
+       (should (eql (cl-mismatch '(a b c) '(a b d)) 2)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TESTS
+
+touch .emacs
+e .emacs
+
+;; Init...
+
+(setq user-init-file (or load-file-name (buffer-file-name)))
+(setq user-emacs-directory (file-name-directory user-init-file))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BENCHMARKS
+
+;; -*- lexical-binding: t; -*-
+
+;; This is free and unencumbered software released into the public domain.
+
+;;; Commentary:
+
+;; $ emacs -Q -batch -f batch-byte-compile jit-bench.el
+;; $ emacs -Q -batch -l jit-bench.elc -f benchmark-batch
+
+;;; Code:
+
+(require 'cl-lib)
+
+(defmacro measure-time (&rest body)
+  "Measure and return the running time of the code block."
+  (declare (indent defun))
+  (garbage-collect)
+  (let ((start (make-symbol "start")))
+    `(let ((,start (float-time)))
+       ,@body
+       (- (float-time) ,start))))
+
+;; Test harness
+
+(cl-defun make-random-entry (&key state (min 1) (max 5))
+  (cl-loop repeat (+ min (cl-random (1+ (- max min)) state))
+           for letter = (+ ?A (cl-random 26 state))
+           collect (intern (format "%c" letter))))
+
+(cl-defun make-random-database (&key state (count 100000))
+  (cl-loop repeat count collect (make-random-entry :state state)))
+
+(cl-defun benchmark-mtg (f &optional (n 10) (tags '(A B C D E F)))
+  (let* ((state (copy-sequence [cl-random-state-tag -1 30 267466518]))
+         (db (make-random-database :state state)))
+    (cl-loop repeat n
+             sum (measure-time
+                   (funcall f db tags))
+             into total
+             finally return (/ total (float n)))))
+
+;; Benchmark candidates:
+
+(defun memq-count (db tags)
+  (cl-loop for entry in db count
+           (cl-loop for tag in tags
+                    when (memq tag entry)
+                    return t)))
+
+(defun member-count (db tags)
+  (cl-loop for entry in db count
+           (cl-loop for tag in tags
+                    when (member tag entry)
+                    return t)))
+
+(defalias 'memq-alias 'memq)
+
+(defun memq-alias-count (db tags)
+  (cl-loop for entry in db count
+           (cl-loop for tag in tags
+                    when (memq-alias tag entry)
+                    return t)))
+
+(defun my-memq (needle haystack)
+  (cl-loop for element in haystack
+           when (eq needle element)
+           return t))
+
+(defun my-memq-count (db tags)
+  (cl-loop for entry in db count
+           (cl-loop for tag in tags
+                    when (my-memq tag entry)
+                    return t)))
+
+(defun jit-count (db tags)
+  (let* ((lexical-binding (eval-when-compile lexical-binding))
+         (memq-list (cl-loop for tag in tags collect `(memq ',tag entry)))
+         (function `(lambda (db)
+                      (cl-loop for entry in db
+                               count (or ,@memq-list))))
+         (compiled (byte-compile function)))
+    (funcall compiled db)))
+
+(defun benchmark-mtg-batch ()
+  (let ((funcs (list 'memq-count
+                     'member-count
+                     'memq-alias-count
+                     'my-memq-count
+                     'jit-count)))
+    (princ (format "%s\nlexical-binding = %s\n"
+                   (version) (eval-when-compile lexical-binding)))
+    (dolist (func funcs)
+      (princ (format "%-16s %0.3fs\n" func (benchmark func 100))))))
+
+;;; jit-bench-el ends here
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;; IMPORTS...
+
+;; `helm':
+
+(progn
+  (declare-function helm              "helm")
+  (declare-function helm-marked-candidates "helm")
+  (declare-function helm-build-sync-source "helm"))
+
+;; `projectile':
+
+(declare-function projectile-project-root "projectile")
+
+;; Configs...
+
+(require 'mtg)
+
+
+;;; Makefile:
+
+EmacsLint := $(Emacs) -Q --batch -f elisp-lint-files-batch
+
+DISTFILE := $(PKG)-$(VERSION).tgz
+
+dist:
+	rm -f $(DISTFILE)
+	git archive --format=tgz "--prefix=$(PKG)/" "--output=$(outdir)/$(DISTFILE)" "v$(VERSION)"
+
+checklint: build
+	$(EmacsLint) $(EL)
+
+.PHONY: checklint
+
+checkconf:
+	$(Emacs) -q --load .emacs
+
+.PHONY: checkconf
+
+# checkdocs:
+# .PHONY: checkdocs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+HELM (MTG-QUERY)
+
+
+
+;;; Helm MTG — Query Cards...
+
+;; Namespace: ‘mtg-helm/query-card/*’
+;;
+
+;; Features: 
+;;
+;; • Highlighted Matches — highlight which part(s) of each result was matched by the query. e.g. if you search for « @flying » (i.e. “flying in the rules text”), then “flying” is (1) highlighted in each result, including multiple instances of the word (thus, the user can easily distinguish, for example, “flying” as a keyword on its own line, versus “flying” in the middle of a sentence; and (2) is always present, despite truncation (thus, even if flying comes at the end of several paragraphs rules text, the text before the search term is truncated (which isn't the default), so that the text of the search term is preserved.
+;;
+
+;; Constants (MTG Query):
+
+(defconst mtg-helm/query-card/buffer-name-format
+
+  "*Helm MTG * Query Cards * %s *"
+
+  "Format for `mtg-helm/query-card/buffer-name'.")
+
+;;
+
+
+;;
+
+(defconst mtg-card-default-providers-list
+
+  '("Wizards")
+
+  "Default “Providers” of MTG Cards.
+
+“Wizards” is the only official publisher.
+
+Extended by `mtg-card-extra-providers-list '.")
+
+;; Macros (MTG Query):
+
+;; Variables (MTG Query):
+
+(defvar-local mtg-current-query nil)
+
+;;
+
+(defvar mtg-helm/query-card/history '())
+
+;; Helm Commands (MTG Query):
+
+;;;###autoload
+(defun mtg-helm/query-cards ()
+
+  (helm :sources '(mtg-helm/query-card/default-source)
+
+  :buffer (mtg-helm/query-card/buffer-name)
+
+  :prompt 'mtg-helm/query-card/prompt
+
+  :history 'mtg-helm/query-card/history-list
+
+  :mode-line mtg-helm/query-card/mode-line
+
+  :group 'helm-mtg-query))
+
+;;
+
+    :multiline t
+
+    :multimatch nil
+
+;;
+
+(defsubst mtg-helm/query-card/buffer-name ()
+
+  (let* ((PROVIDERS-LIST  (or nil mtg-card-providers-list-default))
+         (PROVIDERS-STRING (string-join PROVIDERS-LIST "/")))
+
+    (mtg-helm/query-card/buffer-name-format PROVIDERS-STRING)))
+
+;;
+
+;;
+
+(defun mtg-helm/query-card/modeline-function ()
+
+  "Display (current) printings count & unqiues count in Modeline."
+
+  ())
+
+;;
+
+;; Helm Sources (MTG Query):
+
+(defvar mtg-helm/query-card/default-source
+
+  (helm-build-sync-source :candidates '()
+
+  :init #'mtg-helm/query-card/initialize
+ 
+  :action 'mtg-helm/query-card/actions
+
+  :persistent-action #'mtg-helm/query-card/persistent-action
+
+  :match #'mtg-helm/query-cards/matcher
+
+  :fuzzy-match nil
+
+  :allow-dups nil
+
+  :requires-pattern mtg-helm/query-card/requires-pattern
+
+  :persistent-help "TODO"
+)
+
+  "Source of officially-printed MTG Cards, for `mtg-helm/query-cards'.")
+
+;;
+
+(defun mtg-helm/query-cards/matcher (candidate)
+
+  (unless mtg-current-query
+    (setq-local mtg-current-query (mtg-parse-query helm-pattern)))
+
+  (let* ((QUERY mtg-current-query))
+
+    ()))
+
+;; Helm Actions (MTG Query):
+
+(defvar mtg-helm/query-card/default-action-help "")
+
+;; (defvaralias 'mtg-helm/query-card/default-action-help ')
+
+(defalias 'mtg-helm/query-card/default-action #')
+
+;;
+
+(defcustom mtg-helm/query-card/actions
+
+  (helm-make-actions mtg-helm/query-card/default-action-help #'mtg-helm/query-card/default-action
+
+    "Copy name(s), newline-separated" #'mtg-helm/query-card/copy-names-action
+    "Insert name(s), one-per-line" #'mtg-helm/query-card/insert-names-action
+
+    "Copy whole card(s), newline-separated" #'mtg-helm/query-card/copy-cards-action
+    "Insert whole card(s), one-per-line" #'mtg-helm/query-card/insert-cards-action
+
+    "View card image(s), i.e. with artwork" #'mtg-helm/query-card/view-images-action
+
+  ;; non-custom Card Provider only:
+
+    "Browse non-custom card(s), with Scryfall" #'mtg-helm/query-card/browse-scryfall-action
+    "Browse non-custom card(s), with Gatherer" #'mtg-helm/query-card/browse-gatherer-action
+
+  ;; multiple Candidates only:
+
+    "Define cards as a new Named Card List, e.g. so you can write a « ~stuff » query." #'mtg-helm/query-card/new-named-card-list-action
+
+    )
+
+  "Action List for `helm-mtg/card-names'."
+
+  :type '(alist :key-type string :value-type function)
+
+  :group 'helm-mtg-query)
+
+;;
+
+defun mtg-helm/query-card/default-persistent-action
+
+;;
+
+defun mtg-helm/query-card/persistent-action
+
+;; Customization Groups (MTG Query):
+
+(defgroup helm-mtg-query nil
+
+  :prefix "helm-mtg/")
+  :group 'helm-mtg)
+
+;; Customizable Variables (MTG Query):
+
+(defconst helm-mtg/card-names/prompt 
+
+  "MTG Query: "
+
+  "`helm-requires-pattern' for `mtg-helm/query-cards'."
+
+  :type (string)
+  :safe #'stringp
+
+  :group 'helm-mtg-query)
+
+;;
+
+(defcustom mtg-helm/query-card/requires-pattern 2
+
+  "`helm-requires-pattern' for `mtg-helm/query-cards'."
+
+  :type (integer)
+  :safe #'atom
+
+  :group 'helm-mtg-query)
+
+;;
+
+(defcustom mtg-helm/query-card/history-list
+
+  'mtg-helm/query-card/history
+
+  "List Variable with Minibuffer History for `mtg-helm/query-card'."
+
+  :type (variable :tag "List Variable")
+  :safe #'symbolp
+
+  :group 'helm-mtg-query)
+
+;;
+
+(defcustom mtg-helm/query-card/mode-line
+
+  "① Press ‹F1› to... ② Press ‹C-j› to copy the selected/marked names. ③ Press ‹TAB› to list all actions."
+
+  "`helm-mode-line' for `mtg-helm/query-cards'.")
+
+;;
+
+(defcustom mtg-helm/query-card/mtgjson-uri
+
+  "mtg.json"
+
+  "URI from which to read or fetch the MTGJSON data that populate `mtg-helm/query-card' candidates.
+
+Valid Types:
+
+• a `stringp'
+• a `symbol', whose `symbol-value' is a Valid Type."
+
+  :type (choice (file     :tag "File")
+                (string   :tag "URL")
+                (variable :tag "URI Variable"))
+  :safe #'stringp
+
+  :group 'helm-mtg-query)
+
+;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; MTG Helm — Card Names...
+
+;; Commands (Card Names):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TYPES
+
+
+make-mtg-edition
+
+ (BLOCK (mtg-edition/intern-block .block))
+
+ (CODE (mtg-edition/intern-code .code))
+
+mtg-edition/intern-block
+
+mtg-edition/intern-code
+
+
+
+
+
+;;; Error Types:
+
+(progn
+
+  (define-error 'mtg-error "Unknown MTG error")
+
+  ;;
+
+  (defconst mtg-error 'mtg-error
+
+    "Parent Error for all MTG Error Types.
+
+=== MTG Error Types ===
+
+an MTG Error Type is an Error Type whose Parent Error Types include (transitively) symbol ‘mtg-error’. the standard MTG Error Types include:
+
+• symbol ‘mtg-error’
+• symbol ‘mtg-error-’
+• symbol ‘mtg-error-’
+• symbol ‘mtg-error-’
+• symbol ‘mtg-error-’
+• symbol ‘mtg-error-’
+• symbol ‘mtg-error-’
+• symbol ‘mtg-error-’
+• symbol ‘mtg-error-’
+
+new MTG Error Types can be registered via `define-mtg-error' (or ‘define-error’)."))
+
+;;
+
+(defun mtg-error (&optional type data)
+
+  "‘signal’ an MTG Error.
+
+=== Signature ===
+
+Inputs:
+
+• TYPE — a `symbolp', an MTG Error Type (see variable ‘mtg-error’).
+• DATA — an `objectp'. TYPE-specific, ‘format’table data (also see function ‘signal’).
+
+Output: ‘signal’ doesn't return.
+
+=== Examples ===
+
+M-: (mtg-error)
+
+M-: (mtg-error ')
+
+M-: (mtg-error ')"
+
+  (signal ))
+
+;;
+
+(defmacro define-mtg-error (error-name message &rest parent-error-symbols)
+
+  "‘define-error’ for variable ‘mtg-error’s.
+
+=== Examples ===
+
+M-: (pp-macroexpand (define-mtg-error mtg-data \"No data\"))
+
+ ;; (define-error 'mtg-data \"[MTG] No data\" mtg-error)
+
+"
+
+  (let* ((MESSAGE (concat "[MTG] " message))
+
+  (CHILD-ERROR-SYMBOL (quote error-name))
+
+  (PARENT-ERROR-SYMBOLS (cons mtg-error parent-error-symbols)))
+
+    `(define-error ,CHILD-ERROR-SYMBOL ,MESSAGE ,PARENT-ERROR-SYMBOLS)))
+
+;;
+
+(define-mtg-error 'mtg-data "Data is unavailable or invalid. See function ‘mtg-fetch’ (via « M-x describe-function RET mtg-fetch RET »).")
+
+;;
+
+
+
+
+
+
+defstruct mtg-multiverse
+
+"An MTG Multiverse is one-or-more MTG Sets and/or (standalone) MTG Cards.
+
+=== Examples ===
+
+Multiverses include:
+
+• ✓ Wizards Multiverse — Official sets/cards from  WOTC (Wizards of the Coast®).
+• ❌ Reddit Multiverse — [TODO] Thousands of custom cards from /r/custommagic, with hundreds of unique mechanics.
+• ✓ Example Multiverse — Tutorial for writing your own custom set with ‘mtg.el’.
+
+Within this package, all non-custom cards (i.e. those officially printed/spoiled by WOTC, at the time which this version of the package was released) are grouped under the “Wizards Multiverse”.
+
+The “Example Multiverse” is a tutorial for ‘mtg.el’ (updated and tested against each release of the package). It groups a few sets/cards and a keyword, as a simple example of developing your own custom format (it's located at « ../examples/mtg-example-multiverse.el »."
+
+The “Reddit Multiverse” has thousands of custom cards from /r/custommagic, hundreds of custom key words, and a few mature custom sets (e.g. Cyberpunk, Lorado). These are designed / developed / illustrated by many different people and/or collaboratively (sometimes their templating is edited for clarity or validity by myself, Sam Boosalis a.k.a. /u/spriosboosalis). Some cards are popular ones (e.g. by upvotes, by references); some are controversial ones (e.g. with many comments); and some are particularly interesting (to myself).
+
+=== Laws ===
+
+each Multiverse can be considered independent from each other Multiverse: each must be internally consistent, but can be externally inconsistent. For example, while my own custom Multiverse respects the namespace of the Wizards Multiverse, Wizards may later print a card with the same name as a card of mine; ‘mtg.el’ still works (e.g. ‘helm-mtg’ has a Helm Source for each registered ‘helm-mtg-multiverses’).
+
+these “Multiverse Laws” include:
+
+• Multiverse Namespace — each unique Card must have a unique Card Name. i.e. no other Card in a Multiverse can have an identical Card Name with another Card while differing with in any Rules Fields; e.g. different printings of a card can have different flavor text, but not different rules text."
+
+
+
+
+;;
+
+(defmacro let-mtg-card value &rest body)
+  ""
+  (let-struct 'mtg-card value @body))
+
+
+uuid
+e.g. "7eb0f276-5e32-5a1e-acfd-9b0ddc19b845"
+A universal unique id (v5) generated by MTGJSON. Each entry is unique.
+
+text
+e.g. "Reach (This creature can block creatures with flying.)\nDeathtouch (Any amount of damage this deals to a creature is enough to destroy it.)"
+Rules text of the card.
+
+names
+e.g. ["Nicol Bolas, the Ravager","Nicol Bolas, the Arisen"]
+Names of each face on the card. Meld cards are listed in the order of CardA, Meld, CardB.
+
+printings
+e.g. ["M19","PM19"]
+List of sets the card was printed in, in uppercase.
+
+side
+e.g. "a"
+Identifier of the side. Used on cards with multiple faces, such as flip, split, transform cards. Can be a, b, or c.
+
+
+
+
+(defconst mtg-default-card-layouts
+
+'( normal, split, flip, transform, meld, leveler, saga, planar, scheme, vanguard, token, emblem, augment, aftermath, host)
+
+(deflist mtg-card-layouts
+
+mtg-default-card-layouts
+
+
+
+
+
+
+
+(require 'let-alist)
+
+;;
+
+(defalias 'mtg--deep-dot-search #let-alist--deep-dot-search)
+
+;;
+
+(defun mtg--access-sexp (symbol variable)
+  "Return a sexp used to access SYMBOL inside VARIABLE."
+  (let* ((clean (mtg--remove-dot symbol))
+         (name (symbol-name clean)))
+    (if (string-match "\\`\\." name)
+        clean
+      (mtg--list-to-sexp
+       (mapcar #'intern (nreverse (split-string name "\\.")))
+       variable))))
+
+(defun mtg--list-to-sexp (list var)
+  "Turn symbols LIST into recursive calls to `cdr' `assq' on VAR."
+  `(cdr (assq ',(car list)
+              ,(if (cdr list) (mtg--list-to-sexp (cdr list) var)
+                 var))))
+
+
+(let-mtg-card )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; SEQ.EL
+
+;; ‘seq.el’ integration for ‘mtg’ types.
+
+
+
+
+;;; Basic seq functions that have to be implemented by new sequence types
+(cl-defgeneric seq-elt (sequence n)
+  "Return Nth element of SEQUENCE."
+  (elt sequence n))
+
+;; Default gv setters for `seq-elt'.
+;; It can be a good idea for new sequence implementations to provide a
+;; "gv-setter" for `seq-elt'.
+(cl-defmethod (setf seq-elt) (store (sequence array) n)
+  (aset sequence n store))
+
+(cl-defmethod (setf seq-elt) (store (sequence cons) n)
+  (setcar (nthcdr n sequence) store))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; MAP.EL
+
+;; ‘map.el’ integration for ‘mtg’ types.
+
+;; (cl-defstruct mtg-card
+
+(defconst mtg-card-keys
+
+  (cl-loop for (NAME . _) in (cl-struct-slot-info 'mtg-card) collect NAME)
+
+  "")
+
+
+— Function: cl-struct-sequence-type struct-type
+This function returns the underlying data structure for struct-type, which is a symbol. It returns record, vector or list, or nil if struct-type is not actually a structure.
+
+— Function: cl-struct-slot-info struct-type
+This function returns a list of slot descriptors for structure struct-type. Each entry in the list is (name . opts), where name is the name of the slot and opts is the list of slot options given to defstruct. Dummy entries represent the slots used for the struct name and that are skipped to implement :initial-offset.
+
+— Function: cl-struct-slot-offset struct-type slot-name
+Return the offset of slot slot-name in struct-type. The returned zero-based slot index is relative to the start of the structure data type and is adjusted for any structure name and :initial-offset slots. Signal error if struct struct-type does not contain slot-name.
+
+— Function: cl-struct-slot-value struct-type slot-name inst
+Return the value of slot slot-name in inst of struct-type. struct and slot-name are symbols. inst is a structure instance. This routine is also a setf place. Can signal the same errors as cl-struct-slot-offset.
+
+;; (cl-defmethod seq- ((seq mtg-card)) 
+;; (cl-defmethod map- ((map mtg-card))
+
+
+
+
+
+
+(cl-defgeneric map-into (map type)
+  "Convert the map MAP into a map of type TYPE.")
+
+(cl-defmethod map-into (map (_type (eql list))) (map-pairs map))
+
+(cl-defmethod map-into (map (_type (eql alist))) (map-pairs map))
+
+(cl-defmethod map-into (map (_type (eql plist)))
+  (let ((plist '()))
+    (map-do (lambda (k v) (setq plist `(,k ,v ,@plist))) map)
+    plist))
+
+(cl-defmethod map-into (map (_ (eql card)))
+  (map-pairs map))
+
+;;
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map-insert (map key value))
+
+(cl-defmethod map-put! (map key value))
+
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map-empty-p ((map mtg-card))
+  nil)
+
+(cl-defmethod map-contains-key ((map mtg-card) key)
+  (cl-case key ))
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+(cl-defmethod map- ((map mtg-card))
+  ())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; JSON
+
+(cl-defun mtg-intern (string)
+
+  "‘intern’ STRING, idiomatically.
+
+Inputs:
+
+• STRING — a ‘stringp’.
+
+Output:
+
+• a ‘symbolp’.
+• Separators (including: whitespace, underscore, forward/backward slashes, etc) are replaced with hyphens.
+• Casing is normalized (to ‘downcase’).
+
+Examples:
+
+• M-: (mtg-intern \"Merfolk Looter\")
+  → 'merfolk-looter
+• M-: (mtg-intern \"from_the_vault\")
+  → 'from-the-vault"
+
+  (let* ((STRING (replace (downcase string))))
+
+    (intern STRING)))
+
+;; M-: (mtg-intern "from_the_vault")
+;; 'from-the-vault
+
+;;
+
+(cl-defun mtg-json/mtgjson/parse-multiverse (object &key)
+
+  "Parse an MTG Multiverse from OBJECT, w.r.t. URL ‘https://mtgjson.com/files/all-sets/’."
+
+Inputs:
+
+• OBJECT — a ‘mapp’.
+
+Output:
+
+• an `mtg-multiverse-p'.
+
+Calls:
+
+• `mtg-json/mtgjson/parse-edition'."
+
+  (let* (())
+
+    ()))
+
+;;
+
+;;
+
+(cl-defun mtg-json/mtgjson/parse-edition (object &key)
+
+  "Parse an MTG Edition from OBJECT, w.r.t. URL ‘https://mtgjson.com/structures/set/’."
+
+Inputs:
+
+• OBJECT — a ‘mapp’.
+
+Output:
+
+• an `mtg-edition-p'.
+
+Calls:
+
+• `mtg-json/mtgjson/parse-card'."
+
+  (let* ((ALIST (map-into 'list object))
+
+  (let-alist ALIST
+
+  (let* ((CARDS
+
+  (cl-loop for CARD in (seq-into 'list .cards)
+
+(TRANSLATED-SET-NAMES (mtg-json/mtgjson/parse-edition-name-translations .translations)  ; Translated set name by
+
+  (SIZE  (or .baseSetSize (length CARDS)))
+
+  (KIND (mtg-intern .type)  ; the kind of edition. ; e.g.; archenemy, box, core, commander, draft_innovation, duel_deck, expansion, from_the_vault, funny, masters, masterpiece, memorabilia, spellbook, planechase, premium_deck, promo, starter, token, treasure_chest or vanguard.
+
+  (VERSION (concat .meta.version  ; SemVer specification of the MTGJSON build.
+  "-"
+.meta.date)  ; ISO-8601 date of the MTGJSON build.
+  )))
+
+(make-mtg-edition 
+
+ :name  .name
+ :code  .code
+ :kind  KIND
+ :block .block
+ :date  .releaseDate  ; e.g. "2019-01-25" ; Release date in ISO-8601 format for the set.
+ :size  SIZE
+
+ :translations TRANSLATED-SET-NAMES ; Translated set name by language.
+
+ :version VERSION
+
+ :cards CARDS))))
+
+;;
+
+;;
+
+(cl-defun mtg-json/mtgjson/parse-card (object &key edition)
+
+  "Parse an MTG Card from OBJECT.
+
+Inputs:
+
+• OBJECT  — a ‘mapp’.
+  w.r.t. URL ‘https://mtgjson.com/structures/card/’.
+• EDITION — a ‘stringp’ or ‘symbolp’, or nil.
+  the MTG Edition which OBJECT was within, if any.
+
+Output:
+
+• an `mtg-card-p', with an `mtg-card-printing-p'."
+
+  (let* (
+
+(CMC .convertedManaCost)
+
+(TRANSLATIONS (... .foreignData))
+
+(FRAME (make-mtg-card-frame :version .frameVersion
+:effect  .frameEffect))
+
+(PRINTING (make-mtg-card-printing 
+
+:edition EDITION-NAME
+:rarity .rarity
+
+:border .borderColor
+:frame FRAME
+
+:artist .artist
+
+:translations TRANSLATIONS))
+
+(CARD
+
+(make-mtg-card
+
+:colors   .colors
+:colorids .colorIdentity
+
+;;
+
+:cmc CMC
+
+;;
+
+:legalities LEGALITIES
+
+:rulings RULINGS
+
+:printings (list PRINTING))))
+
+  CARD)))
+
+;;
+
+;;
+
+;;
+
+(cl-defun mtg-json/mtgjson/parse-token (object &key)
+
+  "Parse an MTG Token from OBJECT, w.r.t. URL ‘https://mtgjson.com/structures/token/’ ."
+
+Inputs:
+
+• OBJECT — a ‘mapp’.
+
+Output:
+
+• an `mtg-edition-p'.
+
+Calls:
+
+• `mtg-json/mtgjson/parse-card'."
+
+  (let* ((ALIST (map-into 'list object))
+
+  (let-alist ALIST
+
+)))
+
+::
+
+
+
+
+  
+rarity
+Rarity. Can be: basic, common, uncommon, rare or mythic
+
+layout
+Type of card layout. Can be: normal, split, flip, transform, meld, leveler, saga, planar, scheme, vanguard, token, double_faced_token, emblem, augment, aftermath or host. (If normal, it is usually omitted.)
+
+
+frameEffect
+Values can be: colorshifted, compasslanddfc, devoid, draft, legendary, miracle, mooneldrazidfc, nyxtouched, originpwdfc, sunmoondfc or tombstone.
+
+
+frameVersion
+of the card frame style. Can be: 1993, 1997, 2003, 2015 or future.
+
+
+
+Chinese Simplified
+Type
+string
+Example
+"乙太之乱"
+Description
+Translation in Chinese Simplified.
+Property#
+Chinese Traditional
+Type
+string
+Example
+"乙太之亂"
+Description
+Translation in Chinese Traditional.
+Property#
+French
+Type
+string
+Example
+"La révolte éthérique"
+Description
+Translation in French.
+Property#
+German
+Type
+string
+Example
+"Äther-Rebellion"
+Description
+Translation in German.
+Property#
+Italian
+Type
+string
+Example
+"Rivolta dell’Etere"
+Description
+Translation in Italian.
+Property#
+Japanese
+Type
+string
+Example
+"霊気紛争"
+Description
+Translation in Japanese.
+Property#
+Korean
+Type
+string
+Example
+"에테르 봉기"
+Description
+Translation in Korean.
+Property#
+Portuguese (Brazil)
+Type
+string
+Example
+"Revolta do Éter"
+Description
+Translation in Portuguese (Brazil).
+Property#
+Russian
+Type
+string
+Example
+"«Эфирный Бунт»"
+Description
+Translation in Russian.
+Property#
+Spanish
+Type
+string
+Example
+"La revuelta del éter"
+Description
+Translation in Spanish.
+
+;;
+
+(json-false nil)
+(json-null  nil)
+
+;; ^ ‘json-null’ & ‘json-false’
+;;
+;; • in JSON, for optional fields under the MTGJSON schema, these coincide:
+: «null» values, «false» values, and absent keys.
+;;   in Elisp, we represent this equivalence by letting both ‘json-null’ and ‘json-false’ be nil, and by returning nil when looking up keys which aren't in the ‘listp’ / ‘hash-table-p’.
+;;
+;;
+
+
+
+;;
+
+(cl-defun mtg-json/parse-multiverse (object &key)
+
+  "Parse OBJECT into an MTG Multiverse.
+
+Inputs:
+
+• OBJECT — a `hash-table-p'. [TODO a ‘mapp’]
+  (See `mtg-json/schema').
+
+Output: an `mtg-multiverse-p'.
+
+Calls `mtg-json/parse-set'."
+
+  (let* (())
+
+    ()))
+
+;;
+
+
+(cl-defun mtg-json/parse-edition (object &key)
+
+  "Parse OBJECT into an MTG Edition (a.k.a. “MTG Set”).
+
+Inputs:
+
+• OBJECT — a `hash-table-p'. [TODO a ‘mapp’]
+  (See `mtg-json/schema').
+
+Output: an `mtg-set-p'.
+
+Calls `mtg-json/parse-card'."
+
+  (let* (())
+
+  (cl-loop for (KEY . VALUE) in OBJECT by #'
+
+    ()))
+
+;;
+
+(cl-defun mtg-json/parse-card (alist &key)
+
+  "Parse ALIST into an MTG Card.
+
+Inputs:
+
+• OBJECT — a `listp', an “alist”. [TODO a ‘sequence-p’]
+  (See `mtg-json/schema').
+
+Output: an `mtg-card-p'.
+
+Calls `make-mtg-card'."
+
+  (let-alist ALIST
+
+    (make-mtg-card :name .name
+: .
+: .
+: .
+: .
+: .
+: .
+: .
+: .
+: .
+: .
+: .
+: .
+: .
+: .
+:translations .
+:rulings .
+)))
+
+;;
+
+
+defalist mtg-json-schema-edition-alist
+
+
+;;
+
+defalist mtg-json-schema-card-alist
+
+`(
+(:name         . name)
+:translations . (foreignData . ,#'mtg-json/parse-translations)
+:rulings      . (rulings . ,#'mtg-json/parse-rulings)
+
+Maps `keywordp's to `symbolp's:
+
+* the ‘car’s are the “Kwarglist” of `make-mtg-card' (i.e. its `keywordp'-based Arglist).
+
+* the ‘cdr’s are Json Keys of the ultimate / penultimate objects in `mtg-json-file' (where ‘json-key-type’ is symbol ‘symbol’)?
+
+defalist mtg-json-card-translation-schema-alist
+
+;;
+
+
+NAME —
+
+COST —
+
+TYPES —
+
+COLORS —
+
+RULES —
+
+POWER —
+
+TOUGHNESS —
+
+LOYALTY —
+
+FACES —
+
+SIDES —
+
+RARITY —
+
+EDITION —
+
+FLAVOR —
+
+ARTIST —
+
+CMC a.k.a. CONVERTEDMANACOST —
+
+CARDTYPES —
+
+SUBTYPES —
+
+SUPERTYPES —
+
+CI a.k.a COLORIDENTITY —
+
+;;
+
+defalist mtg-json-card-ruling-schema-alist
+
+(:ruling . text) ; e.g. "When Nicol Bolas’s enters-the-battlefield triggered ability resolves, first the next opponent in turn order (or, if it’s an opponent’s turn, that opponent) chooses a card in their hand without revealing it, then each other opponent in turn order does the same. Then all the chosen cards are discarded at the same time."
+(:date   . date) ; e.g. "2018-07-13"
+
+URL `https://mtgjson.com/structures/rulings/'
+
+;;
+
+defalist mtg-json-card-translation-schema-alist
+
+URL `https://mtgjson.com/structures/foreign-data/'
+
+'((foreignData name)         . name)       ; e.g. "Palladia-Mors, die Verwüsterin"
+
+'((foreignData text)         . rules))       ; e.g. "Fliegend, Wachsamkeit, verursacht Trampelschaden Palladia-Mors, die Verwüsterin, hat Fluchsicherheit, falls sie noch keinen Schaden zugefügt hat."
+
+'((foreignData flavorText)   . flavor))       ; e.g. "Schwester von Nicol Bolas. Überlebende des Krieges der Drachenältesten. Die bösartigste ihrer Art."
+
+'((foreignData multiverseId) . multiverse)  ; e.g. 447637
+
+'((foreignData language)     . language))       ; e.g. "German"
+
+;;
+
+defalist mtg-json-card-legality-schema-alist
+
+URL `https://mtgjson.com/structures/legalities/'
+
+;;
+
+
+
+(require 'unicode-progress-reporter)
+
+  (cl-loop with PROGRESS-REPORTER = (make-progress-reporter
+                      "collecting ucs names"
+                      0 (length names))
+
+        and do (progress-reporter-update PROGRESS-REPORTER count))
+
+        finally (progress-reporter-done PROGRESS-REPORTER)))
+
+
+
+
+
+
+(defun helm-ucs-collect-symbols-alist (names)
+  "Collect ucs symbols from the NAMES list."
+  (cl-loop with pr = (make-progress-reporter
+                      "collecting ucs names"
+                      0 (length names))
+           for (n . v) in names
+           for count from 1
+           for xcode = (format "#x%x:" v)
+           for len = (length xcode)
+           for diff = (- (car helm-ucs--max-len) len)
+           for code = (format "(#x%x): " v)
+           for char = (propertize (format "%c" v)
+                                  'face 'helm-ucs-char)
+           unless (or (string= "" n)
+                      ;; `char-displayable-p' return a font object or
+                      ;; t for some char that are displayable but have
+                      ;; no special font (e.g 10) so filter out char
+                      ;; with no font.
+                      (not (fontp (char-displayable-p (read xcode)))))
+           collect
+           (concat code (make-string diff ? )
+                   char "  " n)
+           and do (progress-reporter-update pr count)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; SEARCH
+
+(cl-defstruct mtg-card-match (:include mtg-card))
+
+(cl-defstruct mtg-card-result (:include mtg-card))
+
+;;
+
+
+(cl-defmacro let-mtg-card (card &rest body)
+  "`let-alist' for  `mtg-card-p's.
+  `())
+
+;;
+
+;; e.g. ‘helm-buffers--pattern-sans-filters’:
+;;
+(defun helm-buffers--pattern-sans-filters (&optional separator)
+  (let* ((SEPARATOR (or separator " ")))
+    (cl-loop for PATTERN-MATCHING o in (helm-mm-split-pattern helm-pattern)
+           unless (member (substring PATTERN 0 1) '("*" "/" "@" "!"))
+           collect PATTERN into LIST
+           finally return (string-join LIST SEPARATOR))))
+;;
+
+;;
+
+(defun mtg-match-card-p (query card)
+
+  "Whether QUERY matches CARD.
+
+Inputs:
+
+• QUERY — an `mtg-query-p'.
+• CARD  — a `mtg-card-p'.
+
+Output: a `booleanp'.
+
+Related:
+
+• `mtg-match-card-p' is faster than `mtg-match-card-p', but less informative.
+
+Naming:
+
+• `mtg-match-card' is to `mtg-match-card-p' as `string-match' is to `string-match-p'."
+
+(let-mtg-query QUERY (.mtg-query-name)
+
+ (let-mtg-card CARD (.mtg-card-name)
+
+  (or (and .mtg-query-name (string-match-p .mtg-query-name .mtg-card-name))
+
+      (and .mtg-query- (string-match-p .mtg-query- .mtg-card- ))
+
+      (and .mtg-query- (string-match-p .mtg-query- .mtg-card- ))
+
+      (and .mtg-query- (string-match-p .mtg-query- .mtg-card- ))
+
+      (and .mtg-query- (string-match-p .mtg-query- .mtg-card- ))
+
+
+
+
+
+
+
+  ())
+
+
+;      (and .mtg-query- (string-match-p .mtg-query- .mtg-card- ))
+
+
+;;
+
+(defmacro cnf (var list)
+  (cl-loop for e in list
+           collect `(and (= 0 (% ,var ,e)) ,e) into conditions
+           finally return `(or ,@conditions)))
+
+(defun detect-unrolled (x)
+  (with-detect x (2 3 5 7 11 13 17 19 23 29 31)))
+
+;;
+
+(defun mtg-match-card (card query)
+
+  "Match QUERY against CARD.
+
+Inputs:
+
+• CARD  — a `mtg-card-p'.
+• QUERY — an `mtg-query-p'.
+
+Output is either:
+
+• nil     — i.e. QUERY doesn't match CARD.
+• non-nil — i.e. /How/ QUERY matched CARD. Returns a copy of CARD, whose:
+
+    • `stringp' fields may be `propertize'd  to annotate a matching sub-QUERY (in particular, with the semantic property ‘mtg-match’, which may be converted to display properties via `facep's like face ‘highlight’ or face ‘underline’).
+
+    • `integerp' fields may be ...
+
+    • `listp' fields may be ...
+
+Related:
+
+• `mtg-match-card' is more informative than `mtg-match-card-p', but slower.
+•
+
+Naming:
+
+• `mtg-match-card' is to `mtg-match-card-p' as `string-match' is to `string-match-p'."
+
+copy-mtg-card
+
+
+  ())
+
+;;
+
+(defsubst mtg-card-providers-list ()
+
+  (append mtg-default-card-providers-list mtg-extra-card-providers-list)
+
+  "Known “Providers” of MTG Cards.
+
+See:
+
+• `mtg-extra-card-providers-list'.
+• `mtg-default-card-providers-list'."
+
+
+;;
+
+(defcustom mtg-extra-card-providers-list
+
+  '()
+
+  "Additional “Providers” of MTG Cards.
+
+Extends `mtg-default-card-providers-list'.
+
+Register a provider to group their Custom MTG Cards. 
+
+Different providers should be mutually exclusive (i.e. each card should be provided by a single provider), but can represent any scope/level Examples include: an individual designer, cards that are or were in a custom cube, a weekly design contest, a Custom Card forum, etc."
+
+  :group 'mtg-cards)
+
+;;
+
+(cl-defun mtg-parse-query (query &key)
+
+  "Parse QUERY into an `mtg-query-p'.
+
+Inputs:
+
+• QUERY — a `stringp'.
+  User Input in the MTG Query format.
+  (TODO see Info Node `MTG Query'.)
+  
+Output: an `mtg-query-p'."
+
+  (let* (())
+
+    ()))
+
+;;
+
+(defcustom mtg-displayed-newline-default
+
+  "|"
+
+  "How newlines are displayed for cards rendered on one-line.
+
+See `mtg-display-card'.)
+
+;;
+
+(cl-defun mtg-display-card (card &key width displayed-newline no-properties-p no-unicode-p)
+
+  "Display CARD on one-line, prettily.
+
+Output: a `stringp'.
+
+Inputs:
+
+• CARD — an `mtg-card-p'.
+
+• WIDTH — an optional, positive `integerp'.
+  Output should be have a `string-width' of WIDTH or less, via:
+
+    • Abbreviate — Replace longer phrases with their abbreviations
+      e.g. “c.m.c.” for “converted mana cost”; e.g. “ueot” for “until end of turn”.
+    • Truncate — If WIDTH is still too short, replace the suffixes of MTG Text Fields (including: Rules Text, Card Name, Flavor Text) with ellipses.
+
+• DISPLAYED-NEWLINE — a `stringp' or `characterp'.
+  Output has newlines. Thus, newline characters are replaced with DISPLAYED-NEWLINE.
+  Defaults (when nil) to `mtg-displayed-newline-default' (which defaults to “|”, i.e. the VERTICAL BAR).
+
+• NO-PROPERTIES-P — a `booleanp'.
+  Output is `propertize'd (i.e. colored, bolded, etc) unless NO-PROPERTIES-P is non-nil.
+
+• NO-UNICODE-P — a `booleanp'.
+  Output has Non-Ascii Characters unless NO-UNICODE-P is non-nil (i.e. Output has only Ascii Characters if NO-UNICODE-P is nil).
+  Unicode Characters can look better and be more concise."
+
+  (let* ((DISPLAYED-NEWLINE (or displayed-newline mtg-displayed-newline-default)))
+
+    ()))
+
+
+;;
+
+;; URL `https://scryfall.com/docs/syntax'
+;;
+;; URL `https://magic.wizards.com/en/articles/archive/making-magic/historic-story-2018-04-09'
+;;
+;; URL `https://nullprogram.com/blog/2016/12/11/'
+;;
+
+;; * Scryfall Syntax:
+;; 
+;;
+;; ** Regular Expressions:
+;;
+;; You can use forward slashes // instead of quotes with the type:, t:, oracle:, o:, flavor:, ft:, and name: keywords to match those parts of a card with a regular expression.
+
+Scryfall supports many regex features such as .*?, option groups (a|b), brackets [ab], character classes \d, \w, and anchors (?!), \b, ^, and $.
+
+Forward slashes inside your regex must be escaped with \/.
+;; 
+;;
+;; 
+;; ** Shortcuts / Nicknames (/ Aliases / Abbreviations):
+;;
+;; The search system includes a few convenience shortcuts for common card sets:
+
+You can find some interesting land groups with is:bikeland (alias cycleland, bicycleland), is:bounceland (alias karoo), is:canopyland (alias canland), is:checkland, is:dual, is:fastland, is:fetchland, is:filterland, is:gainland, is:painland, is:scryland, is:shadowland, is:shockland, is:storageland, is:creatureland, is:triland, and is:tangoland (alias battleland)
+
+You can find all Masterpiece Series cards with is:masterpiece
+;;
+;;
+;; ** Text Search:
+;;
+;; Use the o: or oracle: keywords to find cards that have specific phrases in their text box.
+;;
+;; You can put quotes " " around text with punctuation or spaces.
+;;
+;; You can use ~ in your text as a placeholder for the card’s name.
+;;
+;; This keyword usually checks the current Oracle text for cards, so it uses the most up-to-date phrasing available. For example, “dies” instead of “is put into a graveyard”.
+;;
+;; Use the fo: operator to search full Oracle text only, which includes reminder text.
+;;
+;;
+;; ** Card Names, Exact:
+;;
+;; If you prefix words or quoted phrases with ! you will find cards with that exact name only.
+;; 
+;; This is still case-insensitive.
+;;
+;; 
+;; ** Named Predicates (e.g. Multi-Faced Cards, “Batches”):
+;;
+;; > You can find cards that have more than one face with is:split (split cards), is:flip (flip cards), is:transform (cards that transform), is:meld (cards that meld), and is:leveler (cards with Level Up)
+;;
+;; Find cards that are cast as spells with is:spell. Find permanent cards with is:permanent, historic cards with is:historic, modal effects with is:modal, and vanilla creatures with is:vanilla.
+;; 
+;; 
+;; ** Color:
+;;
+;; > You can find cards that are a certain color using the c: or color: keyword, and cards that are a certain color identity using the id: or identity: keywords.
+;;
+;; Both sets of keywords accepts full color names like blue or the abbreviated color letters w, u, r, b and g.
+;;
+;; You can use many nicknames for color sets: all guild names (e.g. azorius), all shard names (e.g. bant), all wedge names (e.g. abzan), and the four-color nicknames chaos, aggression, altruism, growth, artifice are supported.
+;;
+;; Use c or colorless to match colorless cards, and m or multicolor to match multicolor cards.
+;;
+;; 
+;; ** Types:
+;;
+;; > Find cards of a certain card type with the t: or type: keywords. You can search for any supertype, card type, or subtype.
+;;
+;; 
+;; ** Mana:
+;;
+;; > Use the m: or mana: keyword to search for cards that have certain symbols in their mana costs.
+;;
+;; This keyword uses the official text version of mana costs set forth in the Comprehensive Rules. For example, {G} represents a green mana.
+;;
+;; Shorthand for is allowed for symbols that aren’t split: G is the same as {G}
+;;
+;; However, you must always wrap complex/split symbols like {2/G} in braces.
+;;
+;; You can find cards of a specific converted mana cost with cmc, comparing with a numeric expression (>, <, =, >=, <=, and !=)
+;;
+;; You can filter cards that contain hybrid mana symbols with is:hybrid or Phyrexian mana symbols with is:phyrexian
+;;
+;; >You can use numeric expressions (>, <, =, >=, <=, and !=) to find cards with certain power, power/pow, toughness, toughness/tou, total power and toughness, pt/powtou, or starting loyalty, loyalty/loy.
+;;
+;;
+;; ** Rarity:
+;; 
+;; Use r: or rarity: to find cards by their print rarity. You can search for common, uncommon, rare, mythic. You can also use comparison operators like < and >=.
+;;
+;; Use new:rarity to find reprint cards printed at a new rarity for the first time. You can find cards that have ever been printed in a given rarity using in: (for example, in:rare to find cards that have ever been printed at rare.)
+;; 
+;;
+;; ** Sets/Blocks:
+;;
+;;
+;; ** Format/Legality:
+;;
+;; Use the f: or format: keywords to find cards that are legal in a given format.
+
+You can also find cards that are explicitly banned in a format with the banned: keyword and restricted with the restricted: keyword.
+
+The current supported formats are: standard, modern, legacy, vintage, commander, future (future Standard), pauper, frontier, penny (Penny Dreadful), duel (Duel Commander), and oldschool (Old School 93/94).
+
+You can use is:commander to find cards that can be your commander.
+
+Finally, you can find cards on the Reserved List with is:reserved.
+;;
+;;
+;; ** Dates / Reprints:
+;;
+;;
+;; ** Languages:
+;;
+;;
+;; ** Artist/Flavor/Watermark:
+;;
+;; Search for cards illustrated by a certain artist with the a:, art:, or artist: keywords.
+
+Search for words in a card’s flavor text using the ft: or flavor: keywords.
+
+Search for a card’s affiliation watermark using the wm: or watermark: keywords, or match all cards with watermarks using has:watermark.
+
+For any of these, you can wrap statements with spaces or punctuation in quotes " ".
+
+You can find cards being printed with new illustrations using new:art, being illustrated by a particular artist for the first time with new:artist, and with brand-new flavor text using new:flavor.
+;;
+;;
+;;
+;; ** Border/Frame/Foil/Resolution:
+;;
+;; Use the border: keyword to find cards with a black, white, silver, or borderless border.
+
+You can find cards with a specific frame editiong using frame:1993, frame:1997, frame:2003, frame:2015, and frame:future. You can also search for particular frame-effects, such as frame:legendary, frame:colorshifted, frame:tombstone, frame:nyxtouched.
+
+You can find cards with full art using is:full.
+
+new:frame will find cards printed in a specific frame for the first time.
+
+Each card is available in non-foil, in foil, or in both. You can find prints available in each with is:nonfoil and is:foil, or is:foil is:nonfoil to find prints (like most booster cards) available in both.
+
+You can find cards in our database with high-resolution images using is:hires.
+;;
+;;
+;; ** Logical Negation:
+;;
+All keywords except for include can be negated by prefixing them with a hyphen (-). This inverts the meaning of the keyword to reject cards that matched what you’ve searched for.
+
+The is: keyword has a convenient inverted mode not: which is the same as -is:. Conversely, -not: is the same as is:.
+
+Loose name words can also be inverted with -
+;;
+;;
+;; Syntax for Display/Layout of Search Results:
+;;
+You can enter your display options for searches as keywords rather than using the controls on the page.
+
+Select how duplicate results are eliminated with unique:cards, unique:prints (previously ++), or unique:art (also @@).
+
+Change how results are shown with display:grid, display:checklist, display:full, or display:text.
+
+Change how results are sorted with order:artist, order:cmc, order:power, order:toughness, order:set, order:name, order:usd, order:tix, order:eur, order:rarity, order:color, order:released, order:spoiled, or order:edhrec.
+
+Select what printings of cards to preferentially show with prefer:oldest, prefer:newest, prefer:usd-low or prefer:usd-high (and the equivalents for tix and eur), or prefer:promo.
+
+Change the order of the sorted data with direction:asc or direction:desc.
+;;
+;;
+
+
+
+;; ‘mtg.el’ “Batches”:
+;; 
+;; Named Predicates:
+;;
+• Spell — Instant, Sorcery.
+• Permanent — Land, Creature, Artifact, Enchantment, Planeswalker.
+• Historic — Artifact, Legendary, Saga. (interestingly: Legendary is a super type, Artifact is a card type, and Saga is a sub type.)
+•
+• Arbor — Treefolk, Forest. ("Arbor" is *Latin* for "Tree".)
+• Lupine — Wolf, Werewolf (+ Wolves and/or Werewolves). ("Lupine" is *Latin* for "Wolfy".)
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+;;
+
+;; Example Queries:
+;;
+• « @SUBTYPE » — I used this to find most “Lords”, for the « ~lord » query. « SUBTYPE » is a variable, interpolated with any subtypes of the current card. For example, it finds all ‹Elves› that talk about other ‹Elves› in their Rules Text. When matching an ‹Elf› ‹Warrior›, « @SUBTYPE » expands to « (match-rules-text (rx-mtg (or "Elf" "Elves" "Warrior" "Warriors")) ». It finds “Generalized Lords” like ‹Eladamri, Lord of Leaves› (i.e. not just « TYPE [creatures] [you control] get +1/+1 »). NOTE it doesn't find, for example, ‹Soraya the Falconer›, which is a “‹Bird› Lord” that's a ‹Human›.
+;;
+• « @(rx-mtg (words (any TYPE) (| "or" "and" "and/or") (any TYPE))) » — I used this to find new “Batches”, for type queries like « *arbor » or « *lupine », and for text queries like « @arbor » or « @lupine ». e.g « *arbor » matches both ‹Dryad Arbor› and ‹Doran›; e.g « @arbor » matches ‹Treefolk Harbinger›.
+;;
+• Ambassadors — c.f. ‹Ambassador Oak›: “When ~ enters the battlefield, create a 1/1 green Elf Warrior creature token.”. 
+;;
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+;;
+
+
+(defconst mtg-normalize-card-name-regexp
+"[-,' \f\t\n\r\v]+"
+
+  "Regexp for splitting / joining in `mtg-normalize-card-name'.
+
+Extends `split-string-default-separators' with punctuation for proper nouns (in English).")
+
+(defvar mtg-card-name-obarray
+
+  "‘obarray’ for interning Card Names.")
+
+
+(defun mtg-intern-card-name (name)
+
+"‘intern’s NAME (a Card Name) in `mtg-card-name-obarray'.
+
+Inputs a `stringp'. Outputs a `symbolp'.
+
+e.g...
+
+M-: (mtg-intern-card-name \"Kiki-Jiki, Mirror Breaker\")
+  'mtg/kiki-jiki-mirror-breaker"
+
+  (let* ((STRING (mtg-qualify-card-name (mtg-normalize-card-name name))))
+
+  (intern STRING mtg-card-name-obarray)))
+
+
+(defun mtg-normalize-card-name (name)
+
+"Normalizes NAME (a Card Name).
+
+Inputs a `stringp'. Outputs a `stringp'."
+
+  (downcase (join-string (save-match-data (split-string name mtg-normalize-card-name-regexp)) :omit-nulls ) "-")))
+
+
+(defun mtg-qualify-card-name (name)
+
+"Qualify NAME (a Card Name) under a package-specific (nonstandard) namespace.
+
+Qualifies with symbol ‘mtg/’."
+
+Inputs a `stringp'. Outputs a `stringp'."
+
+  (declare (pure t))
+ 
+  (concat "mtg/" name))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; RX
+
+;; 
+
+;;
+
+(defun rx-and (form)
+  "Parse and produce code from FORM.
+FORM is of the form `(and FORM1 ...)'."
+  (rx-check form)
+  (rx-group-if
+   (mapconcat (lambda (x) (rx-form x ':)) (cdr form) nil)
+   (and (memq rx-parent '(* t)) rx-parent)))
+
+
+
+(define-arx url-rx
+
+    '((http     (seq bos (group "http") "://") )
+
+      (https    (seq bos (group "https") "://") )
+
+      (https?   (seq bos (group "http" (optional "s")) "://") )
+
+      (protocol (seq bos (group (1+ (not (any ":")))) "://"))
+
+      (host     (group (1+ (not (any "/")))))
+
+      (path     (group "/" (1+ (not (any "?")))))
+
+      (query    (seq "?" (group (1+ (not (any "#"))))))
+
+      (fragment (seq "#" (group (1+ anything))))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+JIT
+
+(let ((lexical-binding t))
+  (byte-compile #'foo))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; Eldoc
+
+;; 
+
+;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; Toolbar:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; Menubar:
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; Syntax
+
+(defvar lua-sexp-alist '(("then" . "end")
+                      ("function" . "end")
+                      ("do" . "end")
+                      ("repeat" . "until")))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; Indentation
+
+(defun lua-indent-line ()
+  "Indent current line for Lua mode.
+Return the amount the indentation changed by."
+  (let (indent
+        (case-fold-search nil)
+        ;; save point as a distance to eob - it's invariant w.r.t indentation
+        (pos (- (point-max) (point))))
+    (back-to-indentation)
+    (if (lua-comment-or-string-p)
+        (setq indent (lua-calculate-string-or-comment-indentation)) ;; just restore point position
+      (setq indent (max 0 (lua-calculate-indentation nil))))
+
+    (when (not (equal indent (current-column)))
+      (delete-region (line-beginning-position) (point))
+      (indent-to indent))
+
+    ;; If initial point was within line's indentation,
+    ;; position after the indentation.  Else stay at same point in text.
+    (if (> (- (point-max) pos) (point))
+        (goto-char (- (point-max) pos)))
+
+    indent))
+
+;;
+
+(defun lua-calculate-string-or-comment-indentation ()
+  "This function should be run when point at (current-indentation) is inside string"
+  (if (and (lua-string-p) (not lua-indent-string-contents))
+      ;; if inside string and strings aren't to be indented, return current indentation
+      (current-indentation)
+
+    ;; At this point, we know that we're inside comment, so make sure
+    ;; close-bracket is unindented like a block that starts after
+    ;; left-shifter.
+    (let ((left-shifter-p (looking-at "\\s *\\(?:--\\)?\\]\\(?1:=*\\)\\]")))
+      (save-excursion
+        (goto-char (lua-comment-or-string-start-pos))
+        (+ (current-indentation)
+           (if (and left-shifter-p
+                    (looking-at (format "--\\[%s\\["
+                                        (match-string-no-properties 1))))
+               0
+             lua-indent-level))))))
+
+;;
+
+(defun lua-calculate-indentation (&optional parse-start)
+  "Return appropriate indentation for current line as Lua code."
+  (save-excursion
+    (let ((continuing-p (lua-is-continuing-statement-p))
+          (cur-line-begin-pos (line-beginning-position)))
+      (or
+       ;; when calculating indentation, do the following:
+       ;; 1. check, if the line starts with indentation-modifier (open/close brace)
+       ;;    and if it should be indented/unindented in special way
+       (lua-calculate-indentation-override)
+
+       (when (lua-forward-line-skip-blanks 'back)
+         ;; the order of function calls here is important. block modifier
+         ;; call may change the point to another line
+         (let* ((modifier
+                 (lua-calculate-indentation-block-modifier cur-line-begin-pos)))
+           (+ (current-indentation) modifier)))
+
+       ;; 4. if there's no previous line, indentation is 0
+       0))))
+
+;;
+
+
+
+;;
+
+
+
+
+
+
+
+
+;;; Abbrev
+
+(defvar lua-mode-abbrev-table nil
+  "Abbreviation table used in lua-mode buffers.")
+
+(define-abbrev-table 'lua-mode-abbrev-table
+  '(("end"    "end"    lua-indent-line :system t)
+    ("else"   "else"   lua-indent-line :system t)
+    ("elseif" "elseif" lua-indent-line :system t)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; Skeletons
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; COMPANY
+
+;; URL `http://sixty-north.com/blog/a-more-full-featured-company-mode-backend.html'
+
+;;
+
+(defconst mtg-words-default
+
+  '()
+
+  "Default list of all words used among Card Names, Rules Text, and Super/Sub/Card Types.")
+
+;;
+
+(defun company-mtg/doc-buffer (candidate)
+
+"`:doc-buffer' for `company-mtg'."
+
+  (pcase candidate
+(NAME . KIND)
+
+    (company-doc-buffer "")))
+
+;;
+
+;;
+
+(defun mtg-company/propertize-card (text initials summary)
+
+  (propertize text :initials initials :summary summary))
+
+;; M-: (example/propertize-biography "alan" "AMT" "Alan Mathison Turing, OBE, FRS (/ˈtjʊərɪŋ/ tewr-ing; 23 June 1912 – 7 June 1954) was a British mathematician, logician, cryptanalyst, philosopher, pioneering computer scientist, mathematical biologist, and marathon and ultra distance runner.")
+
+#("alan" 0 1 (:initials "AMT"
+              :summary  "Alan Mathison Turing, OBE, FRS (/ˈtjʊərɪŋ/ tewr-ing; 23 June 1912 – 7 June 1954) was a British mathematician, logician, cryptanalyst, philosopher, pioneering computer scientist, mathematical biologist, and marathon and ultra distance runner."))
+
+(defun mtg-company/render-annotation (text)
+
+  "Render TEXT, extract `mtg-company/propertize-card' props."
+
+  (format " [%s]" (get-text-property 0 :initials text)))
+
+
+
+;; Imports...
+
+(require 'company)
+
+;; Constants...
+
+(defconst sample-completions
+
+  '(#("alan" 0 1
+      (:initials
+      "AMT"
+      :summary
+      (concat "Alan Mathison Turing, OBE, FRS (/ˈtjʊərɪŋ/ "
+              "tewr-ing; 23 June 1912 – 7 June 1954) was a "
+              "British mathematician, logician, cryptanalyst, "
+              "philosopher, pioneering computer scientist, "
+              "mathematical biologist, and marathon and ultra "
+              "distance runner.")))
+
+    #("john" 0 1
+      (:initials
+      "JVN"
+      :summary
+      (concat "John von Neumann (/vɒn ˈnɔɪmən/; December 28, "
+              "1903 – February 8, 1957) was a Hungarian and "
+              "American pure and applied mathematician, physicist, "
+              "inventor and polymath.")))
+
+    #("ada" 0 1
+      (:initials
+      "AAK"
+      :summary
+      (concat "Augusta Ada King, Countess of Lovelace (10 December "
+              "1815 – 27 November 1852), born Augusta Ada Byron "
+              "and now commonly known as Ada Lovelace, was an "
+              "English mathematician and writer chiefly known for "
+              "her work on Charles Babbage's early mechanical "
+              "general-purpose computer, the Analytical Engine.")))
+
+    #("don" 0 1
+      (:initials
+      "DEK"
+      :summary
+      (concat "Donald Ervin Knuth (/kəˈnuːθ/[1] kə-nooth; born "
+              "January 10, 1938) is an American computer "
+              "scientist, mathematician, and Professor Emeritus "
+              "at Stanford University.")))))
+
+;; Functions...
+
+(defun sample-annotation (s)
+
+  (format " [%s]" (get-text-property 0 :initials s)))
+
+;;
+
+(defun sample-meta (s)
+
+  (get-text-property 0 :summary s))
+
+;;
+
+(defun sample-fuzzy-match (prefix candidate)
+
+  (cl-subsetp (string-to-list prefix)
+              (string-to-list candidate)))
+
+;; Company Backend...
+
+(defun company-sample-backend (command &optional arg &rest ignored)
+
+  "Company Backend sample with Fuzzy Matching, Popup Menu annotations, and Echo Area metadata."
+
+  (interactive (list 'interactive))
+
+  (case command
+
+    (interactive (company-begin-backend 'company-sample-backend))
+
+    (prefix (and (eq major-mode 'fundamental-mode)
+                (company-grab-symbol)))
+
+    (candidates
+    (remove-if-not
+      (lambda (c) (sample-fuzzy-match arg c))
+      sample-completions))
+
+    (annotation (sample-annotation arg))
+
+    (meta (sample-meta arg))
+
+    (no-cache 't)))
+
+;;
+
+
+
+
+
+
+
+
+
+;; Capitalization in Card Names:
+;;
+;; • Articles, like “the”, are lowercase, unless they're the very first word, e.g.:
+;;
+;;     • « The Abyss »
+;;     • « Advice from the Fae »
+;;
+;;
+;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; HELM:
+
+;; Helm MTG — All Names...
+
+;; Helm Commands (MTG Names):
+
+
+(defun helm-mtg/names ()
+
+  "Helm Command for all names of Cards/Sets/Keywords/Artists/Colors/Formats/…
+
+Merges these Helm Sources:
+
+• `helm-mtg/-names/default-source'
+• `helm-mtg/card-names/default-source'
+• `helm-mtg/edition-names/default-source'
+• `helm-mtg/keyword-names/default-source'
+• `helm-mtg/subtype-names/default-source'
+• `helm-mtg/cardtype-names/default-source'
+• `helm-mtg/supertype-names/default-source'
+•
+• `helm-mtg/color-names/default-source'
+• `helm-mtg/rarity-names/default-source'
+`helm-mtg/card-layout-names/default-source'
+• `helm-mtg/card-frame-names/default-source'
+• `helm-mtg/artist-names/default-source'
+• `helm-mtg/watermark-names/default-source'
+•
+• `helm-mtg/block-names/default-source'
+• `helm-mtg/format-names/default-source'"
+
+(helm :sources '()
+
+ :buffer "*Helm MTG Names*"))
+
+
+
+
+(defconst helm-mtg/card-name-prompt "Card Name: ")
+
+(defvar 'helm-mtg/card-name-history '())
+
+(defcustom helm-mtg/card-name-actions
+
+  '(("" . t)
+    ("" . t))
+
+  "Action List for `helm-mtg/card-names'."
+
+  :type '(alist :key-type string :value-type function)
+
+  :group 'helm-mtg)
+
+
+(defun helm-mtg/card-names-initialize ()
+
+;;TODO append to a Text Register, move it to the Kill Ring (i.e. Clipboard) as either (1) a different (non-persistent) action or (2) as a finalizer before `helm-quit'.
+
+  )
+
+
+(defun helm-mtg/card-names-persistent-action (_)
+
+;;TODO append to a Text Register, move it to the Kill Ring (i.e. Clipboard) as either (1) a different (non-persistent) action or (2) as a finalizer before `helm-quit'.
+
+  )
+
+
+;;;###autoload
+(defun helm-mtg/card-names ()
+
+(helm :sources 
+
+ :buffer "*Helm MTG Card Names*"
+
+ :prompt 'helm-mtg/card-name-prompt
+
+ :init #'helm-mtg/card-names-initialize
+
+ :mode-line "① Press ‹F1› to... ② Press ‹C-j› to copy the selected/marked names. ③ Press ‹TAB› to list all actions."
+
+ :persistent-help "?"
+
+ :history 'helm-mtg/card-name-history
+ 
+  :persistent-action #'helm-mtg/card-names-persistent-action
+
+  :action 'helm-mtg/card-name-actions
+
+  :group 'helm-mtg)
+
+
+
+    :multiline t
+
+    :multimatch nil
+
+    :requires-pattern 2
+
+
+
+(defun mtg-helm//get-selected-or-marked-candidates (&optional _candidate)
+
+  "Get both the Selected Candidate and any Marked Candidates.
+
+Related:
+
+* `helm-get-selection' 
+* `helm-marked-candidates'"
+
+  (let* ((SELECTED (helm-get-selection))
+
+         (MARKED (helm-marked-candidates))
+
+    (cons SELECTED MARKED)))
+
+
+
+;; TODO *Source*-specific help via `(helm :message helm-mtg/card-names-source-help-string)`; displayed under ‹C-h m› and ‹C-c ?›.
+
+
+
+
+(defun helm-delete-backward-no-update (arg)
+  "Disable update and delete ARG chars backward.
+Update is reenabled when idle 1s."
+  (interactive "p")
+  (with-helm-alive-p
+    (unless helm--suspend-update-interactive-flag
+      (helm-suspend-update 1))
+    (backward-delete-char arg)
+    (run-with-idle-timer
+     1 nil
+     (lambda ()
+       (unless helm--suspend-update-interactive-flag
+         (helm-suspend-update -1)
+         (helm-check-minibuffer-input)
+         (helm-force-update))))))
+(put 'helm-delete-backward-no-update 'helm-only t)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; Effects
+
+
+
+
+
+
+
+TODO
+
+different naming conventions:
+
+mtg-json-schema-edition-alist
+mtg-edition-json-schema-alist
+mtg-json/schema-edition-alist
+mtg-json/edition-schema-alist
+mtg-json-set-schema-alist
+mtg-set-json-schema-alist
+mtg-json-schema-set-alist
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+
+
+
+
+
+
+
+
+================================================================================
