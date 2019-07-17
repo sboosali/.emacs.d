@@ -729,13 +729,13 @@ Defaults to `sboo-default-elisp-page-regexp'."
 
 ;;----------------------------------------------;;
 
-(with-eval-after-load 'haskell-mode
+(with-eval-after-load 'haskell
 
   ;;
 
   (defconst sboo-default-haskell-page-regexp
 
-    (rx-to-string `(or ,haskell-ds-start-keywords-re))
+    (regexp-opt '("data" "type" "class") 'symbols)
 
     "Matches pages, declarations, and TODO.
 
@@ -757,6 +757,11 @@ Defaults to `sboo-default-haskell-page-regexp'."
 
     :safe #'stringp
     :group 'sboo-page))
+
+;;
+
+(with-eval-after-load 'haskell-decl-scan
+  (setq sboo-default-haskell-page-regexp haskell-ds-start-keywords-re))
 
 ;;----------------------------------------------;;
 
@@ -3547,7 +3552,7 @@ Related:
 ;;----------------------------------------------;;
 
 ;;----------------------------------------------;;
-;; Miscellanea ---------------------------------;;
+;;; Miscellanea --------------------------------;;
 ;;----------------------------------------------;;
 
 (defun sboo-replace-whole-words (from-string to-string)
@@ -3586,7 +3591,55 @@ URL `https://emacs.stackexchange.com/questions/12148/how-to-pretty-format-code-a
   ())
 
 ;;----------------------------------------------;;
-;; Re-Exports ----------------------------------;;
+
+(defun sboo-sort-lines-by (beg end &optional key reverse)
+
+  "Sort region (between BEG and END) by KEY.
+
+Inputs (Arguments):
+
+• BEG — a ‘number-or-marker-p’.
+• END — a ‘number-or-marker-p’.
+
+Inputs (Options):
+
+• KEY — either a ‘functionp’ (from ‘stringp’s to ‘stringp’s),
+  or a ‘listp’ (an S-Expression, i.e. a “tree” of ‘symbolp’s).
+
+    • the ‘functionp’ is ‘funcal’led (with a line of text).
+    • the ‘listp’ is ‘eval’uated (with ‘point’ at the line of text [TODO??]).
+
+• REVERSE — a ‘booleanp’. Whether the Sort Order is ‘reverse’d.
+
+Usage (interactively):
+
+• M-x sboo-sort-lines-by RET length RET
+
+Usage (programmatically):
+
+• M-: (defun sboo-sort-lines-by-length (beg end) (interactive \"*r\\n\") (sboo-sort-lines-by beg end #'length))
+
+Laws:
+
+• (sboo-sort-lines-by BEG END nil REVERSE) ≡ (‘sort-lines’ REVERSE BEG END)
+
+Related:
+
+• ‘sort-lines’
+• ‘sort-words’
+• ‘sort-fields’
+
+• URL ‘’"
+
+  (interactive "*r\na")
+  ;; (interactive "*r\nx")
+
+  (sort-lines reverse beg end)
+
+  ())
+
+;;----------------------------------------------;;
+;;; Re-Exports ---------------------------------;;
 ;;----------------------------------------------;;
 
 (require 'sboo-english)
