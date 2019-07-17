@@ -2966,7 +2966,7 @@ Links:
   ;; ;; ^ if there is no symbol at the cursor, use the last used words instead.
   ;; ;; `helm-swoop-pattern' holds the last used words.
 
-  ())
+  :config ())
 
 ;; ^ ‘helm-swoop’:
 ;;
@@ -3156,9 +3156,7 @@ Links:
 ;; External Packages: Templates ----------------;;
 ;;----------------------------------------------;;
 
-(when (require 'sboo-yass nil :no-error)
-
-  (use-package yasnippet
+(use-package yasnippet
 
     :demand
 
@@ -3185,7 +3183,7 @@ Links:
     (yas-indent-line 'fixed
                      "Indent the snippet to the current column (of the snippet, not the file into which the snippet is being inserted).")
 
-    (yas-snippet-dirs `(,sboo-snippets-directory)
+    (yas-snippet-dirs '(sboo-snippets-directory)
                       "Register personal snippets.")
 
     (yas-trigger-symbol "↣"
@@ -3219,7 +3217,7 @@ $0")
 
     ;;------------------------;;
 
-    :config
+    :preface
 
     (defun sboo-yas-reload (&optional force)
 
@@ -3229,7 +3227,14 @@ $0")
 
       (yas-recompile-all)
       (yas-reload-all force)
-      (load "sboo-yass" :no-error :no-message))
+      (load "sboo-yas" :no-error :no-message))
+
+    ;;------------------------;;
+
+    :config
+
+    (when (require 'sboo-yas nil :no-error)
+      ())
 
     ;;------------------------;;
 
@@ -3253,7 +3258,7 @@ $0")
 
     ;;------------------------;;
 
-    ()))
+    ())
 
 ;; ^ Links:
 ;;
@@ -6326,7 +6331,7 @@ l
 ;;
 
 ;;----------------------------------------------;;
-;;; External Packages: Spell-Checking:
+;;; External Packages: Spell-Checking ----------;;
 ;;----------------------------------------------;;
 
 (use-package synosaurus
@@ -6416,6 +6421,25 @@ l
 
 ;;----------------------------------------------;;
 ;;; External Packages: Miscellaneous -----------;;
+;;----------------------------------------------;;
+
+(use-package sboo-increment
+
+    :commands (sboo-increment-dwim sboo-decrement-dwim)
+
+    :bind (("C-c -" . sboo-decrement-dwim)
+           ("C-c =" . sboo-increment-dwim))
+
+    :config ())
+
+;; ^ ‘sboo-increment’ (a.k.a. “increment-number-at-point”).
+;;
+;; • 
+;;
+;; • URL `https://emacsredux.com/blog/2013/07/25/increment-and-decrement-integer-at-point'
+;; • URL `https://www.emacswiki.org/emacs/IncrementNumber'
+;;
+
 ;;----------------------------------------------;;
 
 (use-package htmlize
