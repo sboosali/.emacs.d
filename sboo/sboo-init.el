@@ -4498,18 +4498,19 @@ $0")
 
   ;;--------------------------;;
 
-  :bind ((("C--" . string-inflection-all-cycle)
-          )
-         :map sboo-edit-keymap
-              ("-" . string-inflection-all-cycle)
+  :bind (("C-c C-`" . string-inflection-all-cycle)
+         ("C-c `"   . string-inflection-all-cycle))
+
+  :bind (:map sboo-edit-keymap
+              ("`" . string-inflection-all-cycle)
          :map java-mode-map
-              ("C--" . string-inflection-java-style-cycle)
+              ("C-c `" . string-inflection-java-style-cycle)
          :map python-mode-map
-              ("C--" . string-inflection-python-style-cycle)
+              ("C-c `" . string-inflection-python-style-cycle)
          :map ruby-mode-map
-              ("C--" . string-inflection-ruby-style-cycle)
+              ("C-c `" . string-inflection-ruby-style-cycle)
          :map haskell-mode-map
-              ("C--" . sboo-string-inflection-haskell-style-cycle)
+              ("C-c `" . sboo-string-inflection-haskell-style-cycle)
         )
 
   ;;--------------------------;;
@@ -4656,19 +4657,19 @@ Related:
 
               ;; Symbols:
 
-           ;;   ("`" . typo-)
-              ("!" . shell-command-on-region)      ; mnemonic is « M-! ».
+              ("`" . string-inflection-all-cycle)  ; Mnemonic a contextual abbreviation of « C-c ` ».
+              ("!" . shell-command-on-region)      ; Mnemonic is « M-! ».
            ;; ("@" . )
               ("#" . comment-or-uncomment-region)
            ;; ("$" . )
-              ("%" . query-replace)                ; mnemonic is « M-% ».
+              ("%" . query-replace)                ; Mnemonic is « M-% ».
            ;; ("^" . )
            ;; ("&" . )
            ;; ("*" . )
            ;; ("(" . )
            ;; (")" . )
-              ("-" . string-inflection-all-cycle)
-           ;; ("=" . )
+              ("-" . er/contract-region) ; Mnemonic ‹-› is the minus-sign.
+              ("=" . er/expand-region)   ; Mnemonic ‹=› shares a key with the plus-sign.
            ;; ("[" . )
            ;; ("]" . )
               (":" . comment-or-uncomment-region)
@@ -4720,6 +4721,11 @@ Related:
               ("<next>"  . move-text-down)         ; from `move-text'.
 
               )
+
+  ;; [Old]
+  ;;
+  ;;   ("`" . typo-)
+  ;;
 
   ;;--------------------------;;
 
@@ -4831,7 +4837,8 @@ Inputs:
        ;; ^ Syntax for emphasis, in Markdown.
        ;;   i.e. « * » for « <em> », and « ** » for « <strong> ».
 
-       ("_" "_" nil ,MARKDOWN-MODES)
+       ("__" "__" "_" ,MARKDOWN-MODES)
+       ("__" "__" "-" ,MARKDOWN-MODES)
 
        ;; ^ Syntax for emphasis, in Markdown.
        ;;   i.e. « _ » for « <em> », and « __ » for « <strong> ».
@@ -4910,6 +4917,12 @@ Inputs:
 
        ;;SKELETON ("" "" "" ())
 
+       ;; [Old]
+       ;;
+       ;; ("__" "__" "_" ,MARKDOWN-MODES)
+       ;; ("__" "__" "-" ,MARKDOWN-MODES)
+       ;;
+
        )))
 
   (when (bound-and-true-p sboo-html-wrap-region-table)
@@ -4960,16 +4973,25 @@ Inputs:
 
     ;;-------------------------;;
 
-    :commands (er/expand-region)
+    :commands (er/expand-region er/contract-region)
 
-    :bind (:map text-mode-map ("<kp-add>" . er/expand-region))
-    :bind (:map prog-mode-map ("<kp-add>" . er/expand-region))
+    :bind (:map text-mode-map
+                ("<f10>"         . er/expand-region)
+                ("<kp-subtract>" . er/contract-region)
+                ("<kp-add>"      . er/expand-region))
+    :bind (:map prog-mode-map
+                ("<f10>"         . er/expand-region)
+                ("<kp-subtract>" . er/contract-region)
+                ("<kp-add>"      . er/expand-region))
 
     :config ())
 
 ;; ^ Links:
 ;;
-;;   • URL `https://github.com/magnars/expand-region.el'
+;;   • URL ‘https://github.com/magnars/expand-region.el’
+;;   • URL ‘https://endlessparentheses.com/where-do-you-bind-expand-region.html’
+;;   • URL ‘’
+;;
 ;;
 
 ;;----------------------------------------------;;

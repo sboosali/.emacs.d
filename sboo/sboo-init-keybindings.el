@@ -896,6 +896,11 @@ Inputs:
 (global-set-key (kbd "<f11>")           #'pp-eval-expression)       ;
 (global-set-key (kbd "<f12>")           #'execute-extended-command) ;
 
+;;----------------------------------------------;;
+
+;;(global-set-key (kbd "<f9>")  #')                           ; Reserved for ‘helm-command-prefix-key’.
+;;(global-set-key (kbd "<f10>") #')                          ; Reserved for ‘keyboard-quit’.
+
 ;;==============================================;;
 
 ;;; Meta Keybindings (`M-*')...
@@ -1329,7 +1334,7 @@ Inputs:
   (global-set-key (kbd "s-h") #'helm-apropos)               ; [H]elp
   (global-set-key (kbd "s-i") #'sboo-insert-keymap)         ; [I]nsertion Commands.
 ;;(global-set-key (kbd "s-j") #')
-  (global-set-key (kbd "s-k") #'sboo-mark-keymap)           ; Mar[K] Commands (i.e. « mar[K]-* »).
+  (global-set-key (kbd "s-k") #'describe-key)               ; "Key"
   (global-set-key (kbd "s-l") #'align-regexp)               ; a[L]ign
   (global-set-key (kbd "s-m") #'compile)                      ; co[M]pile.
   (global-set-key (kbd "s-n") #'sboo-navigate-keymap)       ; [N]avigation Commands.
@@ -1359,6 +1364,7 @@ Inputs:
 ;;(global-set-key (kbd "s-i") #'sboo-insert)                ; [I]nsert
 ;;(global-set-key (kbd "s-i") #'imenu)
 ;;(global-set-key (kbd "s-k") #'describe-key)               ; "Key"
+;;(global-set-key (kbd "s-k") #'sboo-mark-keymap)           ; Mar[K] Commands (i.e. « mar[K]-* »).
 ;;(global-set-key (kbd "s-r") #'xref-find-references)       ; "References"
 ;;(global-set-key (kbd "s-s") #'sboo-launch-shell)          ; "Shell"
 ;;(global-set-key (kbd "s-t") #'sboo-launch-term)           ; "Terminal"

@@ -3629,7 +3629,7 @@ Related:
 • ‘sort-words’
 • ‘sort-fields’
 
-• URL ‘’"
+• URL ‘https://stackoverflow.com/questions/30697523/how-to-get-emacs-to-sort-lines-by-length’"
 
   (interactive "*r\na")
   ;; (interactive "*r\nx")
