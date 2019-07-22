@@ -558,8 +558,11 @@ Merges:
       (define-key selected-keymap (kbd ">") #'sboo-blockquote-toggle-region))
 
     (progn
-      (setq-local sboo-forward-defun-function #'markdown-forward-page)
+      (setq-local sboo-forward-defun-function  #'markdown-forward-page)
       (setq-local sboo-backward-defun-function #'markdown-backward-page))
+
+    (setq-local imenu-auto-rescan nil)
+    ;; ^ ‘nil’ means: Imenu never rescans the (file-)buffer.
 
     ()))
 

@@ -1045,8 +1045,12 @@ Related:
   ;;      starts the Modeline, and thus shouldn't have leading whitespace.
   ;;
 
-  :hook ((emacs-lisp-mode . superword-mode)
-         )
+  :hook ((emacs-lisp-mode . superword-mode))
+
+  :bind (:map emacs-lisp-mode-map
+              (("<kp-up>"   . sboo-backward-page-or-header)
+               ("<kp-down>" . sboo-forward-page-or-header))
+              )
 
   :config
 
@@ -1061,7 +1065,7 @@ Related:
 
     ;;--------------------------;;
 
-    :hook (sh-mode . flycheck-mode)
+    :hook ((sh-mode . flycheck-mode))
 
     ;; ^ ShellCheck (a Bash Linter) is a builtin FlyCheck checker.
 
@@ -4009,8 +4013,9 @@ $0")
   ;;--------------------------;;
 
   :bind (:map markdown-mode-map
-              ("TAB" . dabbrev-expand)
-              ("C-c !" . sboo-markdown-mark-h1)  ; Mnemonic: « C-c » is the Personal Keymap; « ! » shares a key with « 1 », referencing « <h1> ».
+              ("TAB"     . dabbrev-expand)
+              ("S-RET"   . markdown-insert-list-item)
+              ("C-c !"   . sboo-markdown-mark-h1)         ; Mnemonic: « C-c » is the Personal Keymap; « ! » shares a key with « 1 », referencing « <h1> ».
               ("<prior>" . markdown-backward-same-level)
               ("<next>"  . markdown-forward-same-level)
          :map gfm-mode-map
@@ -4021,8 +4026,9 @@ $0")
 
   :custom
 
-  (markdown-command "multimarkdown" "")  ;; TODO `pandoc'
-  (imenu-auto-rescan nil "non-`nil' means: Imenu always rescans the (file-)buffer.")
+  (markdown-command                    "multimarkdown" "")  ;; TODO `pandoc'
+  (markdown-gfm-use-electric-backquote t)
+  (markdown-indent-on-enter            'indent-and-new-item "Whether ‘markdown-enter-key’ performs ‘markdown-insert-list-item’ (as well as ‘markdown-indent-line’).")
 
   ;;--------------------------;;
 

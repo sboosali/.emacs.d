@@ -888,11 +888,10 @@ Inputs:
 (global-set-key (kbd "<f7>") #'list-buffers) ; a.k.a. « C-x b ».
 (global-set-key (kbd "<f8>") #'find-file)    ; a.k.a. « C-x f ».
 
-
 ;;----------------------------------------------;;
 
 ;;(global-set-key (kbd "<f9>")  #')                           ; Reserved for ‘helm-command-prefix-key’.
-;;(global-set-key (kbd "<f10>") #')                          ; Reserved for ‘keyboard-quit’.
+;;(global-set-key (kbd "<f10>") #')                           ; Reserved for ‘keyboard-quit’.
 (global-set-key (kbd "<f11>")           #'pp-eval-expression)       ;
 (global-set-key (kbd "<f12>")           #'execute-extended-command) ;
 
@@ -1103,7 +1102,7 @@ Inputs:
 ;;(global-set-key (kbd "<kp-enter>")    #')
 ;;(global-set-key (kbd "<kp-add")       #')
 
-;;(global-set-key (kbd "<kp-divide>")   #')
+(global-set-key (kbd "<kp-divide>")   #'helm-semantic-or-imenu)
 (global-set-key (kbd "<kp-multiply>") #'sboo-dired)
 (global-set-key (kbd "<kp-subtract>") #'sboo-find-file)
 
@@ -1332,7 +1331,7 @@ Inputs:
   (global-set-key (kbd "s-f") #'describe-function)          ; "Function"
 ;;(global-set-key (kbd "s-g") #')
   (global-set-key (kbd "s-h") #'helm-apropos)               ; [H]elp
-  (global-set-key (kbd "s-i") #'sboo-insert-keymap)         ; [I]nsertion Commands.
+  (global-set-key (kbd "s-i") #'helm-semantic-or-imenu)     ; [I]menu.
 ;;(global-set-key (kbd "s-j") #')
   (global-set-key (kbd "s-k") #'describe-key)               ; "Key"
   (global-set-key (kbd "s-l") #'align-regexp)               ; a[L]ign
@@ -1362,6 +1361,7 @@ Inputs:
 ;;(global-set-key (kbd "s-e") #'eval-dwim)                  ; "Eval"
 ;;(global-set-key (kbd "s-h") #'helm-command-prefix)        ; "Helm"
 ;;(global-set-key (kbd "s-i") #'sboo-insert)                ; [I]nsert
+;;(global-set-key (kbd "s-i") #'sboo-insert-keymap)         ; [I]nsertion Commands.
 ;;(global-set-key (kbd "s-i") #'imenu)
 ;;(global-set-key (kbd "s-k") #'describe-key)               ; "Key"
 ;;(global-set-key (kbd "s-k") #'sboo-mark-keymap)           ; Mar[K] Commands (i.e. « mar[K]-* »).

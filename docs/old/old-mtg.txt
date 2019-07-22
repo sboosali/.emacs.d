@@ -2711,7 +2711,645 @@ Customize the appearence of `mtg-mode'."
 
 
 
+(progn
 
+  (defface mtg-mplantin-italic `((t :family ,mtg-fonts/mplantin-italic :inherit mtg-card))
+    "Face for MTG Text in the italicized MPlantin font.
+
+Generally, the bottom of the card:
+i.e. the textbox (including Reminder Text, and emphasized Flavor Text or quotation-attributions).
+
+Inherits face ‘mtg-card’.
+
+See variable ‘mtg-mplantin-italic-font’."
+    :group 'mtg-faces)
+
+  (when (bound-and-true-p mtg-mplantin-italic-font)
+    (unless (mtg--set-face-font 'mtg-mplantin-italic mtg-mplantin-italic-font)
+      ))
+
+
+
+;;----------------------------------------------;;
+
+(defconst mtg-known-land-subtypes
+
+  '(plains island swamp mountain forest
+    desert gate lair locust
+    tower mine power-plant urza\'s)
+
+  "Known Subtypes.
+
+a ‘listp’ of ‘symbolp’s.
+
+Notes:
+
+• plains island swamp mountain forest — are the Basic Land Types.
+• “urza's”, “tower”, “mine”, “power-plant” — come from an awkward Rules Update of the Urza Lands (a.k.a. Tron Lands).
+
+URL ‘https://mtgjson.com/json/CardTypes.json’ (circa 2019-07).")
+
+
+
+
+;;==============================================;;
+
+(defconst mtg-known-cardtypes
+
+  '("Instant" "Sorcery" "Artifact" "Enchantment" "Land" "Creature" "Planeswalker")
+
+  "Known Cardtypes.
+
+a ‘listp’ of ‘symbolp’s.
+
+URL ‘https://mtgjson.com/json/CardTypes.json’ (circa 2019-07).")
+
+;;----------------------------------------------;;
+
+(defconst mtg-known-supertypes
+
+  '("Basic" "Legendary" "Ongoing" "Snow" "World")
+
+  "Known Supertypes.
+
+a ‘listp’ of ‘symbolp’s.
+
+URL ‘https://mtgjson.com/json/CardTypes.json’ (circa 2019-07).")
+
+;;----------------------------------------------;;
+
+(defconst mtg-known-spell-subtypes
+
+  '("Arcane" "Trap")
+
+  "Known Spell (i.e. Instant/Sorcery) Subtypes.
+
+a ‘listp’ of ‘symbolp’s.
+
+Notes:
+
+• the set of Instant Subtypes and the set of Sorcery Subtypes are equivalent in the Comp Rules.
+
+URL ‘https://mtgjson.com/json/CardTypes.json’ (circa 2019-07).")
+
+(defvaralias 'mtg-known-instant-subtypes 'mtg-known-spell-subtypes)
+
+(defvaralias 'mtg-known-sorcery-subtypes 'mtg-known-spell-subtypes)
+
+;;----------------------------------------------;;
+
+(defconst mtg-known-artifact-subtypes
+
+  '("Clue" "Contraption" "Equipment" "Fortification" "Treasure" "Vehicle")
+
+  "Known Artifact Subtypes.
+
+a ‘listp’ of ‘symbolp’s.
+
+Notes:
+
+• Equipment is the most frequent Artifact Subtype.
+• Clue and Treasure are only on tokens (i.e. not on any card)
+• Fortification and Contraption are mentioned once on Futureshifted cards.
+
+URL ‘https://mtgjson.com/json/CardTypes.json’ (circa 2019-07).")
+
+;;
+
+(defconst mtg-known-enchantment-subtypes
+
+  '("Aura" "Cartouche" "Curse" "Saga" "Shrine")
+
+  "Known Enchantment Subtypes.
+
+a ‘listp’ of ‘symbolp’s.
+
+Notes:
+
+• Aura is the most frequent Enchantment Subtype.
+
+URL ‘https://mtgjson.com/json/CardTypes.json’ (circa 2019-07).")
+
+;;----------------------------------------------;;
+
+(defconst mtg-known-land-subtypes
+
+  '("Plains" "Island" "Swamp" "Mountain" "Forest"
+    "Desert" "Gate" "Lair" "Locust"
+    "Tower" "Mine" "Power-Plant" "Urza's")
+
+  "Known Subtypes.
+
+a ‘listp’ of ‘symbolp’s.
+
+Notes:
+
+• plains island swamp mountain forest — are the Basic Land Types.
+• “urza's”, “tower”, “mine”, “power-plant” — come from an awkward Rules Update of the Urza Lands (a.k.a. Tron Lands).
+
+URL ‘https://mtgjson.com/json/CardTypes.json’ (circa 2019-07).")
+
+;;----------------------------------------------;;
+
+(defconst mtg-known-planeswalker-subtypes
+
+  '(
+    "Ajani"
+    "Aminatou"
+    "Angrath"
+    "Arlinn"
+    "Ashiok"
+    "Bolas"
+    "Chandra"
+    "Dack"
+    "Daretti"
+    "Davriel"
+    "Domri"
+    "Dovin"
+    "Elspeth"
+    "Estrid"
+    "Freyalise"
+    "Garruk"
+    "Gideon"
+    "Huatli"
+    "Jace"
+    "Jaya"
+    "Karn"
+    "Kasmina"
+    "Kaya"
+    "Kiora"
+    "Koth"
+    "Liliana"
+    "Nahiri"
+    "Narset"
+    "Nissa"
+    "Nixilis"
+    "Ral"
+    "Rowan"
+    "Saheeli"
+    "Samut"
+    "Sarkhan"
+    "Sorin"
+    "Tamiyo"
+    "Teferi"
+    "Teyo"
+    "Tezzeret"
+    "Tibalt"
+    "Ugin"
+    "Venser"
+    "Vivien"
+    "Vraska"
+    "Will"
+    "Windgrace"
+    "Xenagos"
+    "Yanggu"
+    "Yanling"
+    )
+
+  "Known Planeswalker Subtypes.
+
+a ‘listp’ of ‘symbolp’s.
+
+URL ‘https://mtgjson.com/json/CardTypes.json’ (circa 2019-07).")
+
+;;----------------------------------------------;;
+
+(defconst mtg-known-creature-subtypes
+
+  '(
+    "Advisor"
+    "Aetherborn"
+    "Ally"
+    "Angel"
+    "Antelope"
+    "Ape"
+    "Archer"
+    "Archon"
+    "Army"
+    "Artificer"
+    "Assassin"
+    "Assembly-Worker"
+    "Atog"
+    "Aurochs"
+    "Avatar"
+    "Azra"
+    "Badger"
+    "Barbarian"
+    "Basilisk"
+    "Bat"
+    "Bear"
+    "Beast"
+    "Beeble"
+    "Berserker"
+    "Bird"
+    "Blinkmoth"
+    "Boar"
+    "Bringer"
+    "Brushwagg"
+    "Camarid"
+    "Camel"
+    "Caribou"
+    "Carrier"
+    "Cat"
+    "Centaur"
+    "Cephalid"
+    "Chimera"
+    "Citizen"
+    "Cleric"
+    "Cockatrice"
+    "Construct"
+    "Coward"
+    "Crab"
+    "Crocodile"
+    "Cyclops"
+    "Dauthi"
+    "Demon"
+    "Deserter"
+    "Devil"
+    "Dinosaur"
+    "Djinn"
+    "Dragon"
+    "Drake"
+    "Dreadnought"
+    "Drone"
+    "Druid"
+    "Dryad"
+    "Dwarf"
+    "Efreet"
+    "Egg"
+    "Elder"
+    "Eldrazi"
+    "Elemental"
+    "Elephant"
+    "Elf"
+    "Elk"
+    "Eye"
+    "Faerie"
+    "Ferret"
+    "Fish"
+    "Flagbearer"
+    "Fox"
+    "Frog"
+    "Fungus"
+    "Gargoyle"
+    "Germ"
+    "Giant"
+    "Gnome"
+    "Goat"
+    "Goblin"
+    "God"
+    "Golem"
+    "Gorgon"
+    "Graveborn"
+    "Gremlin"
+    "Griffin"
+    "Hag"
+    "Harpy"
+    "Hellion"
+    "Hippo"
+    "Hippogriff"
+    "Homarid"
+    "Homunculus"
+    "Horror"
+    "Horse"
+    "Hound"
+    "Human"
+    "Hydra"
+    "Hyena"
+    "Illusion"
+    "Imp"
+    "Incarnation"
+    "Insect"
+    "Jackal"
+    "Jellyfish"
+    "Juggernaut"
+    "Kavu"
+    "Kirin"
+    "Kithkin"
+    "Knight"
+    "Kobold"
+    "Kor"
+    "Kraken"
+    "Lamia"
+    "Lammasu"
+    "Leech"
+    "Leviathan"
+    "Lhurgoyf"
+    "Licid"
+    "Lizard"
+    "Manticore"
+    "Masticore"
+    "Mercenary"
+    "Merfolk"
+    "Metathran"
+    "Minion"
+    "Minotaur"
+    "Mole"
+    "Monger"
+    "Mongoose"
+    "Monk"
+    "Monkey"
+    "Moonfolk"
+    "Mutant"
+    "Myr"
+    "Mystic"
+    "Naga"
+    "Nautilus"
+    "Nephilim"
+    "Nightmare"
+    "Nightstalker"
+    "Ninja"
+    "Noggle"
+    "Nomad"
+    "Nymph"
+    "Octopus"
+    "Ogre"
+    "Ooze"
+    "Orb"
+    "Orc"
+    "Orgg"
+    "Ouphe"
+    "Ox"
+    "Oyster"
+    "Pangolin"
+    "Pegasus"
+    "Pentavite"
+    "Pest"
+    "Phelddagrif"
+    "Phoenix"
+    "Pilot"
+    "Pincher"
+    "Pirate"
+    "Plant"
+    "Praetor"
+    "Prism"
+    "Processor"
+    "Rabbit"
+    "Rat"
+    "Rebel"
+    "Reflection"
+    "Rhino"
+    "Rigger"
+    "Rogue"
+    "Sable"
+    "Salamander"
+    "Samurai"
+    "Sand"
+    "Saproling"
+    "Satyr"
+    "Scarecrow"
+    "Scion"
+    "Scorpion"
+    "Scout"
+    "Serf"
+    "Serpent"
+    "Servo"
+    "Shade"
+    "Shaman"
+    "Shapeshifter"
+    "Sheep"
+    "Siren"
+    "Skeleton"
+    "Slith"
+    "Sliver"
+    "Slug"
+    "Snake"
+    "Soldier"
+    "Soltari"
+    "Spawn"
+    "Specter"
+    "Spellshaper"
+    "Sphinx"
+    "Spider"
+    "Spike"
+    "Spirit"
+    "Splinter"
+    "Sponge"
+    "Squid"
+    "Squirrel"
+    "Starfish"
+    "Surrakar"
+    "Survivor"
+    "Tetravite"
+    "Thalakos"
+    "Thopter"
+    "Thrull"
+    "Treefolk"
+    "Trilobite"
+    "Triskelavite"
+    "Troll"
+    "Turtle"
+    "Unicorn"
+    "Vampire"
+    "Vedalken"
+    "Viashino"
+    "Volver"
+    "Wall"
+    "Warrior"
+    "Weird"
+    "Werewolf"
+    "Whale"
+    "Wizard"
+    "Wolf"
+    "Wolverine"
+    "Wombat"
+    "Worm"
+    "Wraith"
+    "Wurm"
+    "Yeti"
+    "Zombie"
+    "Zubera"
+  )
+
+  "Known Creature Subtypes.
+
+a ‘listp’ of ‘symbolp’s.
+
+Notes:
+
+• « (length mtg-known-creature-subtypes) » is currently .
+
+URL ‘https://mtgjson.com/json/CardTypes.json’ (circa 2019-07).")
+
+;;----------------------------------------------;;
+
+(defconst mtg-known-subtypes
+
+  (append mtg-known-spell-subtypes
+          mtg-known-artifact-subtypes
+          mtg-known-enchantment-subtypes
+          mtg-known-land-subtypes
+          mtg-known-planeswalker-subtypes
+          mtg-known-creature-subtypes)
+
+  "Known Subtypes (of any known Cardtype).
+
+a ‘listp’ of ‘symbolp’s.
+
+Merges the ‘mtg-known-*-subtypes’ of all ‘mtg-known-cardtypes’.
+
+URL ‘https://mtgjson.com/json/CardTypes.json’ (circa 2019-07).")
+
+;;----------------------------------------------;;
+
+(defconst mtg-known-types
+
+  (append mtg-known-cardtypes
+          mtg-known-supertypes
+          mtg-known-subtypes)
+
+  "Known Card/Super/Sub Types.
+
+a ‘listp’ of ‘symbolp’s.
+
+Merges:
+
+• ‘mtg-known-cardtypes’
+• ‘mtg-known-supertypes’
+• ‘mtg-known-subtypes’
+
+URL ‘https://mtgjson.com/json/CardTypes.json’ (circa 2019-07).")
+
+
+
+;;----------------------------------------------;;
+
+(defun mtg-type-regexp ()
+
+  "Return a `regexp' matching any MTG Type.
+
+Customize:
+
+• Variable `mtg-types'"
+
+  (let* ((STRINGS
+          (cl-loop for SYMBOL in mtg-known-types
+             with STRING = (symbol-name SYMBOL)
+             collect STRING)))
+
+    (mtg--regexp-opt STRINGS)))
+
+(defcustom mtg-symbol-alist
+
+  `(
+    (tap . ,(mtg-symbol-create :name 'tap :abbreviation 'T :image 'mtg-tap-symbol-svg-image :char 'mtg-tap-symbol-char))
+
+))
+
+================================================================================
+
+;;----------------------------------------------;;
+;;; Functions ----------------------------------;;
+;;----------------------------------------------;;
+
+;;(cl-loop for STRING in mtg-data/card-names-vector do (intern STRING))
+
+(defun mtg-convert-mana-cost (mana-cost)
+
+  "Return the Converted Mana Cost of MANA-COST.
+
+Inputs:
+
+• MANA-COST — a ‘symbolp’ ‘listp’.
+
+Output:
+
+• a ‘natnump’."
+
+  (cl-loop for MANA-SYMBOL in mana-cost
+     with CONVERTED-MANA-SYMBOL = (mtg-convert-mana-symbol MANA-SYMBOL)
+     sum CONVERTED-MANA-SYMBOL))
+
+;;----------------------------------------------;;
+
+(defun mtg-convert-mana-symbol (mana-symbol)
+
+  "Return the Converted Mana Cost of MANA-SYMBOL (a singleton Mana Cost).
+
+Inputs:
+
+• MANA-SYMBOL — a ‘symbolp’.
+
+Output:
+
+• a ‘natnump’.
+  Defaults to ‘1’ for unknown MANA-SYMBOLS."
+
+  (or (get mana-symbol 'cmc) 1))
+
+================================================================================
+
+;;==============================================;;
+
+(defconst mtg-font-lock-keywords/builtin-keyword
+
+  `(,(mtg-builtin-keyword-regexp) . mtg-keyword)
+
+  "Highlighting MTG Keywords.")
+
+;;----------------------------------------------;;
+
+(defconst mtg-font-lock-keywords/builtin-ability-word
+
+  `(,(mtg-builtin-ability-word-regexp) . mtg-ability-word)
+
+  "Highlighting MTG Ability-Words.")
+
+;;----------------------------------------------;;
+
+(defconst mtg-font-lock-keywords/builtin-type
+
+  `(,(mtg-builtin-type-regexp) . mtg-type-face)
+
+  "Highlighting MTG Types.")
+
+;;----------------------------------------------;;
+
+(defconst mtg-font-lock-keywords/shebang
+
+  `(,(rx buffer-start "#!" (0+ not-newline) eol)
+     (0 font-lock-comment-face))
+
+  "Highlighting the “shebang line” (e.g. « #!/bin/env mtg »).")
+
+;;----------------------------------------------;;
+
+(defconst mtg-font-lock-keywords
+
+  (list mtg-font-lock-keywords/builtin-keyword
+        mtg-font-lock-keywords/builtin-ability-word
+        mtg-font-lock-keywords/builtin-type
+        mtg-font-lock-keywords/shebang
+        mtg-font-lock-keywords/
+        mtg-font-lock-keywords/
+        )
+
+  "`font-lock-keywords' for `mtg-mode'.
+
+a `listp' associating `stringp's with `facep's (generally).
+
+(For “Search-based Fontification”,
+a.k.a. “Keyword-based Syntax-Highlighting”).")
+
+;;----------------------------------------------;;
+
+(defconst mtg-font-lock-defaults
+
+  (let ((mtg-font-lock-keywords-only             nil)  ; both Syntactic Fontification and Search-Based Fontification.
+        (mtg-font-lock-keywords-case-fold-search t)    ; Case-Sensitive.
+        )
+    `(mtg-font-lock-keywords ,mtg-font-lock-keywords-only ,mtg-font-lock-keywords-case-fold-search))
+
+  "`font-lock-defaults' for `mtg-mode'.")
+
+
+================================================================================
+
+
+
+
+
+================================================================================
 
 ================================================================================
 
