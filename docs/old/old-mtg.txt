@@ -3345,7 +3345,350 @@ a.k.a. “Keyword-based Syntax-Highlighting”).")
 
 ================================================================================
 
+(let ((DOWNCASED (if (bound-and-true-p mtg-known-english-card-name-downcased-words)
+                       mtg-known-english-card-name-downcased-words
+                     '("a" "an" "and" "as" "at" "but" "by" "for" "from" "in" "into" "of" "on" "or" "the" "to" "upon" "with" "en" "il" "le" "o'"))))
 
+    (defconst mtg-rx-constituents
+
+      `(
+        ;;----------------------;;
+
+        (mtg-symbol             . ,(rx "{" (1+ (any alpha digit ?/ )) "}"))
+
+        (mtg-capitalized-word   . ,(rx word-start (1+ (any alpha "- ")) word-end))
+
+        (mtg-downcased-word     . ,(rx word-start (1+ (any lower "- ")) word-end))
+
+        (mtg-type               . ,(rx word-start (1+ (syntax word)) word-end)) 
+
+        ;; ^ e.g.. “Urza's” is a valid subtype.
+        ;; Sub/Card/Super Types are syntactically identical, they're single words.
+
+        (mtg-keyword            . ,(rx word-start mtg-capitalized-word word-end (1+ mtg-downcased-word)))
+
+        ;; ^ e.g. ‹Flying›, ‹First strike›.
+
+        (mtg-rarity             . ,(rx "(" (any alpha) ")"))
+
+        (mtg-edition            . ,(rx "(" (1+ (any upper digit)) ")"))
+
+        (mtg-card-name-word     . ,(rx word-start (or (or ,@DOWNCASED) (: (char upper) (0+ (char alpha digit)))) word-end))
+
+        (mtg-rules-line         . (char "?" "\n"))
+
+        ;; ^ in Rules Text, newlines and semicolons are equivalent.
+        ;;
+        ;; (c.f. ‹Cryptic Command›'s original printing versus its recent printings).
+        ;;
+
+        ;;----------------------;;
+
+        (mtg-rules-keywords     . ,(rx (1+ (any alpha "- ")))) ; (mtg-keyword))
+
+        ;;
+
+        (mtg-card-name          . ,(rx word-start (1+ mtg-card-name-word) word-end))
+
+        (mtg-card-names         . ,(rx word-start mtg-card-name (? (: symbol-start "//" symbol-end) (? mtg-card-name)) word-end))
+
+        (mtg-mana-cost          . ,(rx symbol-start (1+ mtg-symbol) symbol-end))
+
+        (mtg-typeline           . ,(rx word-start (1+ mtg-type) (? (: symbol-start "—" symbol-end) (? (0+ mtg-type))) word-end)) 
+        ;; ^ One-or-More Cardtypes/Supertypes, then (optionally) a long-dash, then (optionally) Zero-or-More Subtypes.
+
+        (mtg-rules-text         . ,(rx ))
+
+        ;;----------------------;;
+
+        ;; (mtg-known-color        . ,(rx word-start (or ,@mtg-known-colors) word-end))
+        ;; (mtg-known-symbol       . ,(rx "{" (or ,@mtg-known-symbols) "}"))
+        ;; ;;(mtg-known-symbol     . ,(rx "{" (1+ (any upper digit ?/)) "}"))
+        ;; (mtg-known-mana-symbol  . ,(rx "{" (or ,@mtg-known-mana-symbols) "}"))
+        ;; (mtg-known-rarity       . ,(rx "(" (or ,@mtg-known-rarities) ")"))
+        ;; (mtg-known-edition      . ,(rx "(" (or ,@mtg-known-editions) ")"))
+
+        ;;
+        ))
+
+    ;; `((block-start          . ,(rx symbol-start
+    ;;                                (or "def" "class" "if" "elif" "else" "try"
+    ;;                                    "except" "finally" "for" "while" "with")
+    ;;                                symbol-end))
+    ;;   (decorator            . ,(rx line-start (* space) ?@ (any letter ?_)
+    ;;                                (* (any word ?_))))
+    ;;   (defun                . ,(rx symbol-start (or "def" "class") symbol-end))
+    ;;   (if-name-main         . ,(rx line-start "if" (+ space) "__name__"
+    ;;                                (+ space) "==" (+ space)
+    ;;                                (any ?' ?\") "__main__" (any ?' ?\")
+    ;;                                (* space) ?:))
+    ;;   (symbol-name          . ,(rx (any letter ?_) (* (any word ?_))))
+    ;;   (open-paren           . ,(rx (or "{" "[" "(")))
+    ;;   (close-paren          . ,(rx (or "}" "]" ")")))
+    ;;   (simple-operator      . ,(rx (any ?+ ?- ?/ ?& ?^ ?~ ?| ?* ?< ?> ?= ?%)))
+    ;;   ;; FIXME: rx should support (not simple-operator).
+    ;;   (not-simple-operator  . ,(rx
+    ;;                             (not
+    ;;                              (any ?+ ?- ?/ ?& ?^ ?~ ?| ?* ?< ?> ?= ?%))))
+    ;;   ;; FIXME: Use regexp-opt.
+    ;;   (operator             . ,(rx (or "+" "-" "/" "&" "^" "~" "|" "*" "<" ">"
+    ;;                                    "=" "%" "**" "//" "<<" ">>" "<=" "!="
+    ;;                                    "==" ">=" "is" "not")))
+    ;;   ;; FIXME: Use regexp-opt.
+    ;;   (assignment-operator  . ,(rx (or "=" "+=" "-=" "*=" "/=" "//=" "%=" "**="
+    ;;                                    ">>=" "<<=" "&=" "^=" "|=")))
+    ;;   (string-delimiter . ,(rx (and
+    ;;                             ;; Match even number of backslashes.
+    ;;                             (or (not (any ?\\ ?\' ?\")) point
+    ;;                                 ;; Quotes might be preceded by a escaped quote.
+    ;;                                 (and (or (not (any ?\\)) point) ?\\
+    ;;                                      (* ?\\ ?\\) (any ?\' ?\")))
+    ;;                             (* ?\\ ?\\)
+    ;;                             ;; Match single or triple quotes of any kind.
+    ;;                             (group (or  "\"" "\"\"\"" "'" "'''"))))))
+
+    "Additional Mtg specific sexps for `mtg-rx'")
+
+================================================================================
+
+;;==============================================;;
+;; Regular Expressions...
+
+;;----------------------------------------------;;
+
+(defconst mtg-rx/newline (rx (any "\n;")))
+
+(defconst mtg-rx/not-newline (rx (not (any "\n;"))))
+
+(defconst mtg-rx/dash (rx (: symbol-start (or "--" "—") symbol-end)))
+
+(defconst mtg-rx/bullet (rx (: symbol-start (any "*•") symbol-end)))
+
+;;
+
+(defconst mtg-rx/numeral (rx (1+ (any digit "0-9" "-+*" "÷×√"))))
+
+(defconst mtg-rx/power-toughness (rx-to-string `(: ,mtg-rx/numeral "/" ,mtg-rx/numeral)))
+
+;;
+
+(defconst mtg-rx/symbolic-char
+  (rx-to-string `(any "/" alpha digit "-!@#$%^∗_+="))
+  "Match a character within an MTG Symbol.")
+
+(defconst mtg-rx/symbol
+  (rx-to-string `(: symbol-start "{" (or (1+ ,mtg-rx/symbolic-char)) "}" symbol-end))
+  "Match an MTG Symbol.")
+
+;; ^ e.g. official mana symbols: {U} {u} {2} {15} {U/G} {UG} {ug} {P/U} {pU} {2/U} {2u}.
+;; ^ e.g. official symbols: {+}, "an Energy Counter"; 
+;; ^ e.g. custom symbols: {U/G/R}, "Temur Mana"; {hU}, "Thran Blue Mana"; {+}, "a +1/+1 Counter".
+;;
+
+;;
+
+(defconst mtg-rx/oracle-words
+  (rx-to-string `(: ,mtg-rx/not-newline))
+  "")
+
+(defconst mtg-rx/oracle-choice
+  (rx-to-string `(: (: bow (: (any "cC") "hoose") eow)
+                    ,mtg-rx/oracle-words
+                    (: ,mtg-rx/dash)))
+  "")
+
+;;
+
+(defconst mtg-rx/cost
+  (rx-to-string `(1+ (or ,mtg-rx/symbol (1+ (not (any ",:" "\n;" control))))))
+  "Match a single MTG Cost.
+
+Includes both Symbolic Costs (e.g. “{1}”, “{T}”),
+and Textual Costs (e.g. “Pay 1 life”, “Remove a +1/+1 counter from ~”).")
+
+(defconst mtg-rx/activation-cost
+  (rx-to-string `(: ,mtg-rx/cost (0+ (: "," (0+ blank) ,mtg-rx/cost))))
+  "Match an MTG Activation Cost (multiple MTG Costs).")
+
+;;----------------------------------------------;;
+
+
+
+
+
+
+
+;;==============================================;;
+;; ‘syntax-propertize-function’:
+
+(defun mtg-mode-syntax-propertize (&optional beg end)
+
+  "‘syntax-propertize-function’ for ‘mtg-mode’.
+
+This function provides context-sensitive syntax-highlighting.
+
+Inputs:
+
+• BEG — a `number-or-marker-p'.
+• END — a `number-or-marker-p'.
+
+See:
+
+• URL ‘http://www.modernemacs.com/post/major-mode-part-1/’"
+
+  (let* ((BEG (point-min))
+         (END (point-max)))
+
+    (let* ((SYNTAX-REGEXP      (rx "x" (group-n 1 "y") "z"))
+           (SYNTAX-DESCRIPTION (string-to-syntax "")))
+
+      (save-excursion
+        (goto-char BEG)
+
+        (while (re-search-forward SYNTAX-REGEXP END t nil)
+          (let ((MATCH-BEG (match-beginning 1))
+                (MATCH-END (match-end       1)))
+
+            (put-text-property MATCH-BEG MATCH-END
+                               'syntax-table SYNTAX-DESCRIPTION)))))))
+
+
+
+
+
+(map-into mtg-mode-abbrev-table 'list)
+
+
+
+
+
+
+
+
+
+;;----------------------------------------------;;
+;;; Pretty-Printing ----------------------------;;
+;;----------------------------------------------;;
+
+(defun mtg-summarize (name)
+
+  "Return a one-line summary of NAME.
+
+Inputs:
+
+• NAME — a ‘stringp’ or ‘symbolp’.
+  A card name and/or edition name.
+
+Output:
+
+• a ‘stringp’."
+
+  ;;TODO  (pcase-let* 
+
+  (let ((CARD (mtg-get-card-by-name name)))
+    (if CARD (mtg-summarize-card CARD)
+
+      (let ((EDITION (mtg-get-edition-by-name name)))
+        (if EDITION (mtg-summarize-edition EDITION)
+
+          ())))))
+;;----------------------------------------------;;
+
+(defun mtg-summarize-card (card)
+
+  "Return a one-line summary of CARD.
+
+Inputs:
+
+• CARD — an ‘mtg-card-p’.
+
+Output:
+
+• a ‘stringp’."
+
+  (with-mtg-card card
+
+    (concat (propertize ()
+                        'face 'italic
+                       'mouse-face 'bold-italic)
+           " "
+           (propertize "bar" 'face 'italic
+                       'mouse-face 'bold-italic))
+    ))
+
+
+
+
+
+
+
+
+(cl-defun mtg-propertize-english-card-name (text)
+
+  "`propertize' TEXT as an English-language Card Name.
+
+Inputs:
+
+• TEXT — a `stringp'.
+
+Output:
+
+• a `stringp'.
+• Modifies TEXT's Text Properties.
+
+Properties:
+
+• Font — Display with the Beleren font (if available).
+
+• Italics — Italicize some prefixes.
+e.g. the “il” in “il-Kor”
+(URL ‘https://scryfall.com/card/tsp/66/looter-il-kor’)."
+
+    (let* ((FACE 'mtg-card-name)
+           (REGEXP (mtg-english-card-name-styled-words))
+
+  (save-match-data
+
+    (let* ((PROPERTIZED-TEXT
+            (propertize text 'face FACE))
+
+           (ITALICIZED-TEXT
+            (replace PROPERTIZED-TEXT ITALICIZER-REGEXP 'face '((:slant italic :inherit mtg-card-name))))
+           )
+
+      ITALICIZED-TEXT)))
+
+;; ^ e.g.
+;;
+;; M-: (mtg-propertize-english-card-name "Merfolk Looter")
+;;   ↪ #("Merfolk Looter" 0 14 (face mtg-card-name))
+;;
+;; M-: (mtg-propertize-english-card-name "Looter il-Kor")
+;;   ↪ #("Looter il-Kor" )
+;;
+;;
+
+;;----------------------------------------------;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+
+
+
+================================================================================
 
 
 

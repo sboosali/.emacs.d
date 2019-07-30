@@ -896,7 +896,7 @@ Related:
 ;; • `describe-vector'
 ;;
 
-;;==============================================;;
+;;----------------------------------------------;;
 
 (use-package view
 
@@ -914,6 +914,17 @@ Related:
   :config ())
 
 ;; TODO `flycheck' warns “reference to free variable” with custom macro.
+
+;;----------------------------------------------;;
+
+(use-package debug
+
+    :commands (debugger-mode)
+
+    :bind (:map debugger-mode-map
+                ("o" . other-window))
+
+    :config ())
 
 ;;==============================================;;
 
@@ -4713,7 +4724,7 @@ Related:
               ("v" . eval-region)                  ; Mnemonic is “e[V]al”.
               ("w" . delete-trailing-whitespace)   ; Mnemonic is “[W]hitespace”.
               ("x" . cua-cut-region)               ; Mnemonic is ‹C-x›.
-           ;; ("y" . )
+              ("y" . yank)                         ; Mnemonic is “[Y]ank”.
            ;; ("z" . undo)
 
               ;; Non-Graphical Characters:

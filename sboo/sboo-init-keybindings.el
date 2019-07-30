@@ -967,8 +967,27 @@ Inputs:
 
 (progn
 
+  (defun sboo-kill-forward-char (&optional count)
+    (interactive "p")
+    (let ((COUNT (or count 1)))
+      (delete-forward-char COUNT t)))
+
+  (defun sboo-kill-backward-char (&optional count)
+    (interactive "p")
+    (let ((COUNT (or count 1)))
+      (delete-backward-char COUNT t)))
+
+  ())
+
+;;----------------------------------------------;;
+
+(progn
+
   (global-set-key (kbd "C-#") #'comment-dwim) ; Mnemonic: “#” is a ubiquitous comment delimiter.
   (global-set-key (kbd "C-3") #'comment-dwim) ; Mnemonic: “<S-3>” and “<#>” are the same key.
+
+  (global-set-key (kbd "C-<delete>")    #'sboo-kill-forward-char)  ; Shadows: ‘kill-word’.
+  (global-set-key (kbd "C-<backspace>") #'sboo-kill-backward-char) ; Shadows: ‘backwards-kill-word’.
 
   ())
 
