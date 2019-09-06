@@ -47,6 +47,20 @@
   (require 'use-package))
 
 ;;----------------------------------------------;;
+;; Functions -----------------------------------;;
+;;----------------------------------------------;;
+
+(defun sboo-ui-configure-terminal ()
+
+  "Configure the UI for a Terminal Emulator (e.g. XTerm).
+
+Effects:
+
+• Enable Mouse-Support."
+
+  (xterm-mouse-mode +1))
+
+;;----------------------------------------------;;
 ;; Configuration -------------------------------;;
 ;;----------------------------------------------;;
 
