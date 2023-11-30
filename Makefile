@@ -101,6 +101,14 @@ emacs-debug:
 
 .PHONY: emacs-debug
 
+#------------------------------------------------#
+
+emacs-mini:
+
+	$(Emacs) --no-init-file --load=minit.el &disown
+
+.PHONY: emacs-debug
+
 #================================================#
 
 emacs-build: build

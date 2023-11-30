@@ -50,18 +50,9 @@
 ;; Configuration -------------------------------;;
 ;;----------------------------------------------;;
 
-(use-package all-the-icons
-  :disabled
-  :load-path "submodules/all-the-icons"
-
-  :config
-
+(defun sboo-graphical-configure ()
+  (interactive)
   ())
-
-;; ^ Links:
-;;
-;;   • URL `https://github.com/domtronn/all-the-icons.el'
-;;
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

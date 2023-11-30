@@ -36,6 +36,35 @@ init:
 
 .PHONY: init
 
+run-init:
+	emacs --no-init-file --load=sboo-init.el  &disown
+
+.PHONY: run-init
+
+#------------------------------------------------#
+
+minit:
+	emacs  --directory=./  -batch  --funcall=batch-byte-compile  sboo-minit.el
+
+.PHONY: minit
+
+run-minit:
+	emacs --no-init-file --load=sboo-minit.el  &disown
+
+.PHONY: run-minit
+
+#------------------------------------------------#
+
+ninit:
+	emacs  --directory=./  -batch  --funcall=batch-byte-compile  sboo-ninit.el
+
+.PHONY: ninit
+
+run-ninit:
+	emacs --no-init-file --load=sboo-ninit.el  &disown
+
+.PHONY: run-ninit
+
 #------------------------------------------------#
 
 color:

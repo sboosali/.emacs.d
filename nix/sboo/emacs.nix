@@ -14,7 +14,7 @@ emacsWithPackages =
 ########################################
 
 defaultEmacsPackages =
- nixpkgs.emacs26WithPackages;
+ nixpkgs.emacs28WithPackages;
 
 ########################################
 
