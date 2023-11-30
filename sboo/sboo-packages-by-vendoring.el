@@ -27,15 +27,15 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn
+(defun sboo-package-vendorables-configure ()
+  (setq package-load-list sboo--all-dependencies))
 
-  (setq package-load-list sboo--all-dependencies)
+;;
 
+(defun sboo-package-vendorables-initialize ()
   (package-initialize)
-  
   ;;(sboo-register-submodule-packages! "helm/")
   (sboo-register-submodule-packages! "real-auto-save/")
-
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

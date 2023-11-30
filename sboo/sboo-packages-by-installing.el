@@ -13,27 +13,36 @@
 ;; Variables ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar sboo-package-dependencies ;;TODO;; (helm . "3.0")
+(defconst sboo-package-list
 
   '(
     (use-package t)
-
-    (helm      t)              
-    (helm-core t)
-    
     (real-auto-save t)
 
-    (yasnippet  t)
+    (async   t)
+    (popup   t)
+    (wfnames t)
+    (s       t)
+    (f       t)
+    (dash    t)
+
+    (helm      t)        ;;TODO;; (helm . "3.0")      
+    (helm-core t)
+    
+    (selected      t)              
+    (expand-region t)
+    (wrap-region   t)
+
+    (magit      t)
     (projectile t)
-    (flycheck   t)
+    ;; (yasnippet  t)
+    ;; (flycheck   t)
 
     (haskell-mode     t)
-    (dante            t)
-    (flycheck-haskell t)
+    (nix-mode         t)
+    ;; (dante            t)
+    ;; (flycheck-haskell t)
 
-    (s    t)
-    (f    t)
-    (dash t)
    )
 
   "Packages which I need to be installed.
@@ -62,15 +71,34 @@ An `alist', where each item's:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn
+(defun sboo-package-installables-configure ()
+  (interactive)
+  (setq package-archives  sboo-package-archives)
+  (setq package-load-list sboo-package-list)
+  sboo-package-list)
 
-  (setq package-archives sboo-package-archives)
+;;
 
-  (setq package-load-list sboo-package-dependencies)
-
+(defun sboo-package-installables-initialize (&optional refresh-p)
+  (interactive "P")
   (package-initialize)
 
-  ())
+  (if refresh-p
+      (package-refresh-contents))
+
+  (package-activate-all)
+
+  (dolist (PKG sboo-package-list)
+    (let ((PACKAGE (if (consp PKG)
+                       (car PKG)
+                     PKG)))
+      (unless (package-installed-p 
+               (package-install PACKAGE)))))
+
+  sboo-package-list)
+
+(sboo-package-installables-configure)
+(sboo-package-installables-initialize)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Notes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

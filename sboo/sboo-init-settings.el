@@ -135,28 +135,6 @@
 
 ;; ^ No region when nothing is highlighted.
 
-(delete-selection-mode +1)
-
-;; ^ Overwrite region when typing/pasting (manually),
-;;   but not `insert'ing (programmatically).
-
-(when (>= emacs-major-version 26)
-  (global-linum-mode +1))
-
-;; ^ show Line-Number Sidebar (`linum-mode' is fast, written in C)/
-
-(global-font-lock-mode +1)
-
-;; ^ Syntax Highlighting, by default.
-
-(auto-compression-mode +1)
-
-;; ^ automatically open Compressed Files.
-
-(show-paren-mode +1)
-
-;; ^ automatically highlight Matching Parentheses.
-
 (ffap-bindings)
 
 ;; ^ « ffap » abbreviates `find-file-at-point'.
@@ -172,6 +150,33 @@
 ;; when deleting a file, you are prompted by `y-or-n-p';
 ;; but when deleting a directory, you are prompted by (the more verbose) `yes-or-no-p'.
 ;;
+
+;;(delete-selection-mode +1)
+
+;; ^ Overwrite region when typing/pasting (manually),
+;;   but not `insert'ing (programmatically).
+;;
+;;TODO Emacs-on-WSL has constant highlighting off arrow keys (as if shift were held down or mark set).
+
+(cond ((>= emacs-major-version 29)
+       (global-display-line-numbers-mode +1))
+      ((>= emacs-major-version 26)
+       (global-linum-mode                +1))
+      )
+
+;; ^ show Line-Number Sidebar (`display-line-numbers-mode' over `linum-mode').
+
+(global-font-lock-mode +1)
+
+;; ^ Syntax Highlighting, by default.
+
+(auto-compression-mode +1)
+
+;; ^ automatically open Compressed Files.
+
+(show-paren-mode +1)
+
+;; ^ automatically highlight Matching Parentheses.
 
 ;; ^ (Why `fset'??)
 

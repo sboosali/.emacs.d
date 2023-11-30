@@ -2,35 +2,39 @@
 
 ;;; Code:
 
-(defun sboo-find-sboo-file (file)
+(defun sboo-find-sboo-path (&optional path)
   "
-M-: (sboo-find-sboo-file \"sboo-init-keybindings\")
-  ; \"/home/sboosali/.emacs.d/sboo/sboo-init-keybindings.el\"
-"
-  (file-truename (concat (file-name-as-directory (concat (or user-emacs-directory "~/.emacs.d/") "sboo")) (concat file ".el"))))
+M-: (sboo-find-sboo-path \"lisp\")
+  ; \"/home/sboosali/.emacs.d/sboo/lisp\""
+  (file-truename (concat (file-name-as-directory (concat (or user-emacs-directory "~/.emacs.d/") "sboo"))
+                         (concat path))))
 
 (defun sboo-load-sboo-file (file)
-  (load (sboo-find-sboo-file file) nil nil t t))
+  (load (sboo-find-sboo-path file) nil nil nil nil))
 
 ;;
 
 (with-demoted-errors "[sboo core] %S"
-  (sboo-load-sboo-file "sboo-utilities")
-  (sboo-load-sboo-file "sboo-macros")
+  (add-to-list 'load-path (sboo-find-sboo-path) nil)
+
+  (sboo-load-sboo-file "sboo-commands")
+  (sboo-load-sboo-file "sboo-keymaps")
+
   (sboo-load-sboo-file "sboo-init-keybindings")
   (sboo-load-sboo-file "sboo-init-settings")
   (sboo-load-sboo-file "sboo-init-aliases")
   (sboo-load-sboo-file "sboo-custom")
-  (sboo-load-sboo-file "sboo-commands")
-  (sboo-load-sboo-file "sboo-dwim")
+
+  ;; (sboo-load-sboo-file "sboo-dwim")
+  ;; (sboo-load-sboo-file "sboo-utilities")
+  ;; (sboo-load-sboo-file "sboo-macros")
   ())
 
 (with-demoted-errors "[sboo modal-configs] %S"
-  (sboo-load-sboo-file "sboo-")
+
   ;; sboo-ui.el
   ;; sboo-ui-graphical.el
   ;; sboo-ui-terminal.el
-
   (when (sboo-load-sboo-file "sboo-ui-graphical")
     (sboo-ui-graphical-configure))
 
@@ -38,7 +42,6 @@ M-: (sboo-find-sboo-file \"sboo-init-keybindings\")
   ;; sboo-os-linux.el
   ;; sboo-os-macos.el
   ;; sboo-os-windows.el
-
   (when (sboo-load-sboo-file "sboo-os-windows")
     (sboo-windows-configure-modifiers))
 
@@ -50,7 +53,6 @@ M-: (sboo-find-sboo-file \"sboo-init-keybindings\")
   ;; sboo-dev-chromebook.el
   ;; sboo-dev-delltouch.el
   ;; sboo-dev-galaxy.el
-
   (when (sboo-load-sboo-file "sboo-dev-galaxy")
     (sboo-galaxy-configure))
 
@@ -131,10 +133,8 @@ M-: (sboo-find-sboo-file \"sboo-init-keybindings\")
  (sboo-load-sboo-file "sboo-fonts")
  (sboo-load-sboo-file "sboo-frames")
  (sboo-load-sboo-file "sboo-html")
- (sboo-load-sboo-file "sboo-icons")
  (sboo-load-sboo-file "sboo-install")
  (sboo-load-sboo-file "sboo-inverse-theme")
- (sboo-load-sboo-file "sboo-keymaps")
  (sboo-load-sboo-file "sboo-kmacro")
  (sboo-load-sboo-file "sboo-lisp")
  (sboo-load-sboo-file "sboo-make")
@@ -156,15 +156,27 @@ M-: (sboo-find-sboo-file \"sboo-init-keybindings\")
  (sboo-load-sboo-file "sboo-toolbar")
  (sboo-load-sboo-file "sboo-unicode")
  (sboo-load-sboo-file "sboo-widgets")
+ (sboo-load-sboo-file "sboo-xah")
 
  ())
 
 (with-demoted-errors "[sboo vendored-packages] %S"
+;;(add-to-list 'load-path (sboo-find-sboo-path "lisp") t)
   (sboo-load-sboo-file "real-auto-save")
+  ())
 
+(with-demoted-errors "[sboo installed-packages] %S"
+  (when (sboo-load-sboo-file "sboo-packages-by-installing")
+    (sboo-package-installables-configure)
+    ;;(sboo-package-installables-initialize)
+    (sboo-package-installables-initialize)
+    ())
   ;; sboo-packages.el
   ;; sboo-packages-by-installing.el
   ;; sboo-packages-by-vendoring.el
   ())
+
+(with-demoted-errors "[sboo] %S"
+  (find-file (sboo-find-sboo-path "sboo-minit.el")))
 
 (provide 'sboo-minit)
