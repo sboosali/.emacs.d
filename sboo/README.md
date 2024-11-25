@@ -187,6 +187,14 @@ Miscellaneous *Vendored Libraries* (which are useful, but used infrequently) inc
 * `desktop-environment.el`
 * `smartscan.el`
 
+## Debugging
+
+`M-x list-load-path-shadows`, e.g.:
+
+```
+/home/sboosali/.emacs.d/sboo/real-auto-save hides /home/sboosali/.emacs.d/elpa/real-auto-save-20200505.1537/real-auto-save
+```
+
 ## Notes
 
 >

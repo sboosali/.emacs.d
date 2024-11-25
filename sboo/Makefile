@@ -31,6 +31,20 @@ build:
 
 #------------------------------------------------#
 
+run:
+	emacs &disown
+
+.PHONY: run
+
+#------------------------------------------------#
+
+debug:
+	emacs  --debug-init
+
+.PHONY: debug
+
+#------------------------------------------------#
+
 init:
 	emacs  --directory=./  -batch  --funcall=batch-byte-compile  sboo-init.el
 
@@ -41,6 +55,11 @@ run-init:
 
 .PHONY: run-init
 
+debug-init:
+	emacs --debug-init --no-init-file --load=sboo-init.el  &disown
+
+.PHONY: debug-init
+
 #------------------------------------------------#
 
 minit:
@@ -49,9 +68,14 @@ minit:
 .PHONY: minit
 
 run-minit:
-	emacs --no-init-file --load=sboo-minit.el  &disown
+	emacs --no-init-file --load=sboo-minit.el --name=Emacs_WSL  &disown
 
 .PHONY: run-minit
+
+try-minit:
+	emacs --debug-init --no-init-file --load=sboo-minit.el
+
+.PHONY: try-minit
 
 #------------------------------------------------#
 
@@ -64,6 +88,11 @@ run-ninit:
 	emacs --no-init-file --load=sboo-ninit.el  &disown
 
 .PHONY: run-ninit
+
+try-ninit:
+	emacs --debug-init --no-init-file --load=sboo-ninit.el
+
+.PHONY: try-ninit
 
 #------------------------------------------------#
 

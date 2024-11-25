@@ -8,44 +8,26 @@
 ;; Setup ---------------------------------------;;
 ;;----------------------------------------------;;
 
+(setq debug-on-error t)
+
 (setq load-prefer-newer t)
 
 ;; ^ never accidentally `load' outdated (byte-compiled) files.
 
 ;;----------------------------------------------;;
-
-(progn
-  (package-initialize)
-  (setq package-enable-at-startup nil))
-
-;; ^ `package'.el
-
-;;----------------------------------------------;;
-
-;;(setq debug-on-error t);;TODO environment-variable
-
-;;----------------------------------------------;;
-
-;;(when (boundp 'user-init-file) (find-file user-init-file))
-;; ^ for Debugging
-
-;;----------------------------------------------;;
 ;; Configuration -------------------------------;;
 ;;----------------------------------------------;;
 
-(let* ((EmacsDirectory (or user-emacs-directory
-			   "~/.emacs.d/"))
-       (SbooDirectory  (file-name-as-directory (concat EmacsDirectory
-						       "sboo/")))
-       (SbooCustom     (file-truename (concat SbooDirectory
-					      "sboo-custom.el")))
-       (SbooFile       (file-truename (concat SbooDirectory
-					      "sboo-init.el"))))   ;;TODO EnvironmentVars
+(setq custom-file "~/.emacs.d/sboo/sboo-custom.el")
 
-  (progn
-    (setq custom-file SbooCustom)       ; redirect custom file early.
-    (with-demoted-errors "[Warning] %s" (find-file SbooFile))
-    (load SbooFile nil nil t t)))
+;; ^ redirect custom file early (for `customize') .
+
+(progn
+  (setq sboo-init-file "~/.emacs.d/sboo/sboo-init.el")
+  (load sboo-init-file nil nil t t)
+  )
+
+;;(call-interactively #'server-start)
 
 ;;----------------------------------------------;;
 ;; Teardown ------------------------------------;;
@@ -58,5 +40,3 @@
 ;;----------------------------------------------;;
 ;; Customization -------------------------------;;
 ;;----------------------------------------------;;
-(put 'scroll-left 'disabled nil)
-(put 'dired-find-alternate-file 'disabled nil)
