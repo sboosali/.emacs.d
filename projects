@@ -1,0 +1,4 @@
+;;; -*- lisp-data -*-
+(("~/.emacs.d/")
+ ("~/el/mtg/")
+ ("~/configuration/"))

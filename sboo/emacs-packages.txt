@@ -1,0 +1,10 @@
+helm
+
+projectile
+magit
+yasnippet
+
+markdown-mode 
+haskell-mode
+nix-mode
+
