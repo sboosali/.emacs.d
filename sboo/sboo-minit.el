@@ -156,9 +156,15 @@ M-: (sboo-find-sboo-path \"lisp\")
  (sboo-load-sboo-file "sboo-toolbar")
  (sboo-load-sboo-file "sboo-unicode")
  (sboo-load-sboo-file "sboo-widgets")
+ (sboo-load-sboo-file "sboo-window")
  (sboo-load-sboo-file "sboo-xah")
 
  ())
+
+(use-package files
+    :init   (sboo-autosave/auto-save-visited/init!)
+    :config (sboo-autosave/auto-save-visited/config!)
+    )
 
 (with-demoted-errors "[sboo vendored-packages] %S"
 ;;(add-to-list 'load-path (sboo-find-sboo-path "lisp") t)
@@ -168,7 +174,6 @@ M-: (sboo-find-sboo-path \"lisp\")
 (with-demoted-errors "[sboo installed-packages] %S"
   (when (sboo-load-sboo-file "sboo-packages-by-installing")
     (sboo-package-installables-configure)
-    ;;(sboo-package-installables-initialize)
     (sboo-package-installables-initialize)
     ())
   ;; sboo-packages.el

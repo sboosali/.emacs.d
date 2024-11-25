@@ -20,28 +20,33 @@
     (real-auto-save t)
 
     (async   t)
+    (compat  t)
     (popup   t)
+    (seq t)
     (wfnames t)
     (s       t)
     (f       t)
     (dash    t)
 
-    (helm      t)        ;;TODO;; (helm . "3.0")      
+    (helm      t)
     (helm-core t)
     
     (selected      t)              
-    (expand-region t)
     (wrap-region   t)
+    (expand-region t)
 
-    (magit      t)
+    (company    t)
+    (flycheck   t)
+    (yasnippet  t)
     (projectile t)
-    ;; (yasnippet  t)
-    ;; (flycheck   t)
+    (magit      t)
+    (magit-section t)
 
     (haskell-mode     t)
-    (nix-mode         t)
     ;; (dante            t)
     ;; (flycheck-haskell t)
+
+    (nix-mode         t)
 
    )
 
@@ -59,8 +64,9 @@ An `alist', where each item's:
 (defvar sboo-package-archives
 
   '(
-    ("melpa"        . "https://melpa.org/packages/")
     ("melpa-stable" . "https://stable.melpa.org/packages/")
+    ("melpa"        . "https://melpa.org/packages/")
+    ("elpa"         . "https://elpa.gnu.org/packages/")
    )
 
   "Override `package-archives':

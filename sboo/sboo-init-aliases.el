@@ -79,6 +79,22 @@
 
 ;;----------------------------------------------;;
 
+(defalias '/dr   #'desktop-read)
+
+(if (require 'sboo-desktop nil :noerror)
+    (defalias '/ds! #'sboo-desktop-save)
+  (defalias '/ds! #'desktop-save))
+
+;;----------------------------------------------;;
+
+(defalias '/rb!  #'revert-buffer)
+
+;;----------------------------------------------;;
+
+(defalias '/pi #'package-install)
+
+;;----------------------------------------------;;
+
 (defalias '/t #'dabbrev-expand)
 ;; ^ « t » for "tab-complete".
 
@@ -133,16 +149,6 @@
 (defalias '/er   #'eval-region)
 (defalias '/ed   #'eval-defun)          ; `eval-defun' resets `defvar's (unlike `eval-buffer' or `eval-region')
 (defalias '/el   #'eval-last-sexp)
-
-(defalias '/rb!  #'revert-buffer)
-
-;;----------------------------------------------;;
-
-(defalias '/dr   #'desktop-read)
-
-(if (require 'sboo-desktop nil :noerror)
-    (defalias '/ds! #'sboo-desktop-save)
-  (defalias '/ds! #'desktop-save))
 
 ;;----------------------------------------------;;
 
@@ -204,9 +210,9 @@
 ;; External Packages ---------------------------;;
 ;;----------------------------------------------;;
 
-(defalias '/pg #'projectile-grep)
-(defalias '/pf #'projectile-find-file)
-(defalias '/pc #'projectile-compile-project)
+;; (defalias '/pg #'projectile-grep)
+;; (defalias '/pf #'projectile-find-file)
+;; (defalias '/pc #'projectile-compile-project)
 
 ;;----------------------------------------------;;
 

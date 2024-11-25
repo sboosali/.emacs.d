@@ -1254,7 +1254,7 @@ Related:
 • `'"
 
   (let* ((SUPERLIST-COPY (copy-sequence superlist))
-         (SUBLIST-COPY   (remove-duplicates sublist :test test))
+         (SUBLIST-COPY   (cl-remove-duplicates sublist :test test))
 
          (COMPARE        (lambda (x y)
 

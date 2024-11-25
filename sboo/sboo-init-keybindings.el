@@ -451,40 +451,40 @@ Related:
 
 ;;==============================================;;
 
-(defun sboo-page-backward (&optional count)
+;; (defun sboo-page-backward (&optional count)
 
-  "Move to the prior Page-Break (i.e. « ^L »).
+;;   "Move to the prior Page-Break (i.e. « ^L »).
 
-Related:
+;; Related:
 
-• `forward-page'"
+;; • `forward-page'"
 
-  (interactive "p")
+;;   (interactive "p")
 
-  (let* ((COUNT (* -1 count))
-         )
+;;   (let* ((COUNT (* -1 count))
+;;          )
 
-    (forward-page COUNT)))
+;;     (forward-page COUNT)))
 
-;; ^ NOTE « (interactive "p") »:
-;;
-;;  • is the Numeric-Prefix-Argument — i.e. the `prefix-numeric-value' of `current-prefix-arg'.
+;; ;; ^ NOTE « (interactive "p") »:
+;; ;;
+;; ;;  • is the Numeric-Prefix-Argument — i.e. the `prefix-numeric-value' of `current-prefix-arg'.
 
-;;----------------------------------------------;;
+;; ;;----------------------------------------------;;
 
-(defun sboo-page-forward (&optional count)
+;; (defun sboo-page-forward (&optional count)
 
-  "Move to the next Page-Break (i.e. « ^L »).
+;;   "Move to the next Page-Break (i.e. « ^L »).
 
-Related:
+;; Related:
 
-• `forward-page'"
+;; • `forward-page'"
 
-  (interactive "p")
+;;   (interactive "p")
 
-  (forward-page count))
+;;   (forward-page count))
 
-;;TODO or next comment-section. 
+;; ;;TODO or next comment-section. 
 
 ;;==============================================;;
 
@@ -785,42 +785,107 @@ Inputs:
   ())
 
 ;;==============================================;;
+;;;; Single-Key Keybindings (‘TAB’, ‘ESC’, ‘<F*>’, ‘<XF86*>’, etc):
+;;----------------------------------------------;;
 
-;;; Single-Character Keybindings (‘TAB’, ‘RET’, ‘<XF86*>’, etc)...
+(global-set-key (kbd "TAB")   #'dabbrev-expand)       ; Shadows `indent-according-to-mode'.
+;;(global-set-key (kbd "S-TAB") #'dabbrev-?)
 
-;;==============================================;;
+(global-set-key (kbd "<kp-multiply>") #'company-complete)  ; Mnemonic: it's a rightmost key on my keyboard, where tab is a leftmost key.
 
-(progn ; Completion/Expansion:
+;;TODO below hangs with company-mode?
+;; (define-key text-mode-map (kbd "S-TAB") #'dabbrev-completion)
+;; (define-key prog-mode-map (kbd "S-TAB") #'completion-at-point)  ; n.b. completion-at-point can already autorun by idling (via company?).
+;; (global-set-key (kbd "<kp-multiply>") #'completion-at-point)    ; Mnemonic: it's a rightmost key on my keyboard, where tab is a leftmost key.
 
-  (global-set-key (kbd "TAB")   #'dabbrev-expand)      ; Shadows `indent-according-to-mode'.
-  (global-set-key (kbd "S-TAB") #'completion-at-point) ; 
+;; « TAB » are and « ESC » are the “Completion Keys”.
+;;
+;; n.b.:
+;;
+;; • `TAB' ≡ `<tab>'
+;; • `<backtab>' ≡ `<S-iso-lefttab>' (≡ `S-TAB'?)
+;;
+;; `dabbrev-completion':
+;;
+;; • is like `dabbrev-expand', but prompts with a menu,
+;;   instead of inserting the first candidate.
+;;
+;; `completion-at-point':
+;;
+;; • bound to ‘M-<TAB>’ (a.k.a. ‘C-M-i’) in `prog-mode's.
+;;  `<M-TAB>' (a.k.a. “Alt-Tab” is already a global shortcut).
+;;
+;; alternatives:
+;;   * #'dabbrev-expand
+;;   * #'dabbrev-completion
+;;   * #'
 
-  ;; ^ `<tab>':
-  ;;
-  ;; • `TAB' ≡ `<tab>'
-  ;;
+;;n.b. ESC binds `esc-map' (for `meta-prefix-key').
+;;(global-set-key (kbd "")       #'dabbrev-completion)
+;;(global-set-key (kbd "S-")     #'completion-at-point)
 
-  ;; ^ `<backtab>':
-  ;;
-  ;; • `<backtab>' ≡ `<S-iso-lefttab>' (≡ `S-TAB'?)
-  ;;
+;;----------------------------------------------;;
 
-  (define-key text-mode-map (kbd "S-TAB") #'dabbrev-completion)  ; 
-  (define-key prog-mode-map (kbd "S-TAB") #'completion-at-point)
+(global-set-key (kbd "<f1>")      #'ignore)                          ; n.b. reserved for toggling Dragon NaturallySpeaking's microphone, launching the Dictation Box.
 
-  ;; ^ `dabbrev-completion':
-  ;;
-  ;; • is like `dabbrev-expand', but prompts with a menu,
-  ;;   instead of inserting the first candidate.
-  ;;
+(global-set-key (kbd "<f2>")      #'isearch-forward-symbol-at-point) ; c.f. « C-s ».
+(global-set-key (kbd "S-<f2>")    #'isearch-query-replace-regexp)
 
-  ;; ^ `completion-at-point':
-  ;;
-  ;; • bound to ‘M-<TAB>’ (a.k.a. ‘C-M-i’) in `prog-mode's.
-  ;;  `<M-TAB>' (a.k.a. “Alt-Tab” is already a global shortcut).
-  ;;
+;; « F2 » is the “Search Key”.
+;;
+;; alternatives:
+;;   * `isearch-forward-regexp'
+;;   * `occur'?
+;;   * `helm-swoop'
+;;   * `isearch-forward-symbol-at-point'
+;;   * `sboo-search'
 
-  ())
+;; <f3> = `kmacro-start-macro-or-insert-counter'
+;; <f4> = `kmacro-start-macro-or-insert-counter'
+
+(global-set-key (kbd "<f5>")      #'keyboard-quit)                   ; a.k.a. « C-g ».
+(global-set-key (kbd "<f6>")      #'universal-argument)              ; a.k.a. « C-u ».
+
+;;^ « F-F » are the “ Keys”.
+
+(global-set-key (kbd "<f7>")      #'sboo-buffers-list)               ; a.k.a. « C-x b ».
+(global-set-key (kbd "<f8>")      #'find-file)                       ; a.k.a. « C-x f ».
+
+;; « F8 » is the “File Key”.
+;;
+;; alternatives:
+;;   * `find-file'
+;;   * `recentf'
+
+;;^ « F-F » are the “ Keys”.
+
+(global-set-key (kbd "<f9>")     #'cua-set-mark)                    ; a.k.a. « C-SPC ».
+(global-set-key (kbd "<f10>")    #'er/expand-region)                ; 
+
+;;^ « F-F » are the “ Keys”.
+
+(global-set-key (kbd "<f11>")     #'eval-dwim)                     ; a.k.a. « C-x C-e ».
+(global-set-key (kbd "<f12>")     #'execute-extended-command)      ; a.k.a. « M-x ».
+(global-set-key (kbd "S-<f12>")   #'pp-eval-expression)            ; a.k.a. « M-: ».
+
+;;^ « F12 » is the (Emacs) “Run Key”.
+
+;;^ « F11 » is the (contextual) “Eval Key”.
+;;
+;; alternatives:
+;;   * `eval-dwim'
+;;   * `sboo-eval'
+
+;;----------------------------------------------;;
+
+;; (if (fboundp #'helm-swoop)
+;;   (global-set-key (kbd "<f2>") #'helm-swoop))
+
+(if (fboundp #'helm-recentf)
+    (global-set-key (kbd "<f6>") #'helm-recentf))
+
+(if (fboundp #'helm-M-x)
+  (global-set-key (kbd "<f12>") #'helm-M-x))
 
 ;;==============================================;;
 
@@ -862,46 +927,6 @@ Inputs:
 
 ;;==============================================;;
 
-;;; Function-Key Keybindings (`<f_>')...
-
-;;==============================================;;
-
-(unless (eq #'dabbrev-completion (global-key-binding (kbd "<f1>")))
-  (global-set-key (kbd "<f1>") #'dabbrev-completion))     ; « F1 » is the “Complete Key”. Overriden by « (use-package ??? ...) ».
-
-(unless (eq #'helm-swoop (global-key-binding (kbd "<f2>")))
-  (global-set-key (kbd "<f2>") #'isearch-forward-regexp)) ; « F2 » is the “Search Key”. Overriden by « (use-package helm-swoop ...) ».
-
-;; <f3> is 'kmacro-start-macro-or-insert-counter
-;; <f4> is 'kmacro-start-macro-or-insert-counter
-
-;; ^ Alternatives:
-;;
-;;   * #'isearch-forward-regexp
-;;   * #'sboo-search
-;;   * #'helm-swoop
-
-;;----------------------------------------------;;
-
-(global-set-key (kbd "<f5>") #'cua-set-mark) ; a.k.a. « C-a ».
-(global-set-key (kbd "<f6>") #'helm-recentf) ;
-(global-set-key (kbd "<f7>") #'list-buffers) ; a.k.a. « C-x b ».
-(global-set-key (kbd "<f8>") #'find-file)    ; a.k.a. « C-x f ».
-
-;;----------------------------------------------;;
-
-;;(global-set-key (kbd "<f9>")  #')                           ; Reserved for ‘helm-command-prefix-key’.
-;;(global-set-key (kbd "<f10>") #')                           ; Reserved for ‘keyboard-quit’.
-(global-set-key (kbd "<f11>")           #'pp-eval-expression)       ;
-(global-set-key (kbd "<f12>")           #'execute-extended-command) ;
-
-;;----------------------------------------------;;
-
-;;(global-set-key (kbd "<f9>")  #')                           ; Reserved for ‘helm-command-prefix-key’.
-;;(global-set-key (kbd "<f10>") #')                          ; Reserved for ‘keyboard-quit’.
-
-;;==============================================;;
-
 ;;; Meta Keybindings (`M-*')...
 
 ;;==============================================;;
@@ -934,6 +959,17 @@ Inputs:
 ;;(global-set-key (kbd "M-x") #')
 ;;(global-set-key (kbd "M-y") #')
 ;;(global-set-key (kbd "M-z") #')
+
+  (global-set-key (kbd "M-1") #'delete-other-windows)
+  (global-set-key (kbd "M-2") #'kill-buffer)
+  (global-set-key (kbd "M-3") #'split-window-right)
+  ;; (global-set-key (kbd "M-4") #')
+  ;; (global-set-key (kbd "M-5") #')
+  ;; (global-set-key (kbd "M-6") #')
+  ;; (global-set-key (kbd "M-7") #')
+  ;; (global-set-key (kbd "M-8") #')
+  ;; (global-set-key (kbd "M-9") #')
+  ;; (global-set-key (kbd "M-0") #')
 
   ())
 
@@ -1025,7 +1061,7 @@ Inputs:
 (progn
 
   (global-set-key (kbd "C-;") #'comment-dwim)
-  (global-set-key (kbd "C-:") #'comment-dwim)
+  (global-set-key (kbd "C-:") #'indent-dwim)
 
   ())
 
@@ -1099,11 +1135,23 @@ Inputs:
 
 (progn
   (global-set-key (kbd "<kp-left>")  #'previous-buffer)
-  (global-set-key (kbd "<kp-right>") #'next-buffer))
+  (global-set-key (kbd "<kp-right>") #'next-buffer)
+  )
+
+;;^ either:
+;; `previous-buffer' / `next-buffer'
+;; `' / `'
 
 (progn
-  (global-set-key (kbd "<kp-up>")    #'sboo-page-backward)
-  (global-set-key (kbd "<kp-down>")  #'sboo-page-forward))
+  (global-set-key (kbd "<kp-up>")      #'backward-paragraph)
+  (global-set-key (kbd "<kp-down>")    #'forward-paragraph)
+  ;; (global-set-key (kbd "S-<kp-up>")    #'sboo-page-backward)
+  ;; (global-set-key (kbd "S-<kp-down>")  #'sboo-page-forward)
+  )
+
+;;^ either:
+;; `forward-paragraph' / `backward-paragraph'
+;; `sboo-page-forward' / `sboo-page-backward'
 
 (progn
   (global-set-key (kbd "<kp-home>")  #'set-mark-command)
@@ -1395,15 +1443,15 @@ Inputs:
 
 (progn
 
-  (global-set-key (kbd "s-<up>")
-                  (or (and (fboundp #'sboo-backward-defun) #'sboo-backward-defun)
-                      (and (fboundp #'backward-defun)      #'backward-defun)
-                      #'backward-paragraph))
+  ;; (global-set-key (kbd "s-<up>")
+  ;;                 (or (and (fboundp #'sboo-backward-defun) #'sboo-backward-defun)
+  ;;                     (and (fboundp #'backward-defun)      #'backward-defun)
+  ;;                     #'backward-paragraph))
 
-  (global-set-key (kbd "s-<down>")
-                  (or (and (fboundp #'sboo-forward-defun) #'sboo-forward-defun)
-                      (and (fboundp #'forward-defun)      #'forward-defun)
-                      #'forward-paragraph))
+  ;; (global-set-key (kbd "s-<down>")
+  ;;                 (or (and (fboundp #'sboo-forward-defun) #'sboo-forward-defun)
+  ;;                     (and (fboundp #'forward-defun)      #'forward-defun)
+  ;;                     #'forward-paragraph))
 
   ;;(global-set-key (kbd "s-`")           #')
   (global-set-key (kbd "s--")           #'text-scale-decrease)
@@ -1411,15 +1459,15 @@ Inputs:
   ;;(global-set-key (kbd "s-<backspace>") #')
   ;;(global-set-key (kbd "s-TAB")         #'dabbrev-completion)
 
-  (global-set-key (kbd "s-[")     ; Mnemonic: « C-x [ » is the default keybinding.
-                  (if (fboundp #'sboo-backward-page-or-header)
-                      #'sboo-backward-page-or-header
-                    #'backward-page))
+  ;; (global-set-key (kbd "s-[")     ; Mnemonic: « C-x [ » is the default keybinding.
+  ;;                 (if (fboundp #'sboo-backward-page-or-header)
+  ;;                     #'sboo-backward-page-or-header
+  ;;                   #'backward-page))
 
-  (global-set-key (kbd "s-]")     ; Mnemonic: « C-x ] » is the default keybinding.
-                  (if (fboundp #'sboo-forward-page-or-header)
-                      #'sboo-forward-page-or-header
-                    #'forward-page))
+  ;; (global-set-key (kbd "s-]")     ; Mnemonic: « C-x ] » is the default keybinding.
+  ;;                 (if (fboundp #'sboo-forward-page-or-header)
+  ;;                     #'sboo-forward-page-or-header
+  ;;                   #'forward-page))
 
   ;;(global-set-key (kbd "s-\\")          #')
   ;;(global-set-key (kbd "s-;")           #')
@@ -1518,12 +1566,12 @@ Inputs:
 
 ;;; `minibuffer-local-map'
 
-(let ((*MAP* minibuffer-local-map))
+;; (let ((*MAP* minibuffer-local-map))
 
-  (define-key *MAP* (kbd "<tab>")   #'dabbrev-expand)
-  (define-key *MAP* (kbd "TAB")     #'dabbrev-expand)
+;;   (define-key *MAP* (kbd "<tab>")   #'dabbrev-expand)
+;;   (define-key *MAP* (kbd "TAB")     #'dabbrev-expand)
 
-  ())
+;;   ())
 
 ;; `minibuffer-local-map':
 ;;
@@ -1535,7 +1583,8 @@ Inputs:
 
 (let ((*MAP* isearch-mode-map))
 
-;  (define-key *MAP* (kbd "<f2>")    #'sboo-isearch)
+  (if t
+      (define-key *MAP* (kbd "<f2>") #'isearch-repeat-forward))
 
   (define-key *MAP* (kbd "<up>")    #'isearch-ring-retreat)
   (define-key *MAP* (kbd "<down>")  #'isearch-ring-advance)

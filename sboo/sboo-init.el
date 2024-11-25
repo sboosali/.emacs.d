@@ -1,4 +1,4 @@
-;;; sboo-init.el --- sboosali's ‘init.el’ -*- coding: utf-8; lexical-binding: t -*-
+;;; sboo-init.el --- sboosali's ‘init.el’ -*- coding: utf-8; lexical-binding: t; -*-
 
 ;; Copyright © 2019 Spiros Boosalis
 
@@ -40,9 +40,9 @@
 
 ;;; Code:
 
-;;----------------------------------------------;;
-;; Imports -------------------------------------;;
-;;----------------------------------------------;;
+;;==============================================;;
+;; Imports: ====================================;;
+;;==============================================;;
 
 ;; Builtins:
 
@@ -56,7 +56,302 @@
 (progn
   (require 'seq))
 
-;;; BOOTSTRAPPING ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;==============================================;;
+;;;; UI Settings: ==============================;;
+;;==============================================;;
+
+(setq use-package-enable-imenu-support t)  ; "must be set before loading ‘use-package’."
+
+(require 'use-package)
+
+;;==============================================;;
+;;; TODO =======================================;;
+;;==============================================;;
+
+"
+> python --version
+Python 3.10.11
+"
+
+;;----------------------------------------------;;
+;;;;; Context-Menu: ----------------------------;;
+;;----------------------------------------------;;
+
+(use-package mouse
+  :demand t
+ 
+  ;; :custom
+  ;; (context-menu-functions '())
+
+  ;; :hook
+
+  :config
+  (context-menu-mode +1)
+
+  (add-hook 'context-menu-functions #'sboo-context-menu-online-search 90)
+
+  ()
+  )
+
+;;(setq context-menu-functions '(context-menu-region context-menu-ffap prog-context-menu occur-context-menu context-menu-middle-separator context-menu-local context-menu-minor))
+
+;; TODO
+;; (setq context-menu-functions '(context-menu-region context-menu-middle-separator context-menu-local context-menu-minor))
+
+;; ^ 
+;;
+;;n.b.:
+;; mouse-1 (Left-button click)
+;; mouse-2 (Middle-button click / Wheel click)
+;; mouse-3 (Right-button click / "Long-Touch")
+;; mouse-4 (Wheel scroll-up)
+;; mouse-5 (Wheel scroll-down)
+;;
+;; default `context-menu-functions' = (context-menu-undo context-menu-region context-menu-middle-separator context-menu-local context-menu-minor)
+;;
+;; TODO rebind ‘mouse-3’ (“right-click”/“long-touch”) from ‘mouse-save-then-kill’
+;;      to ‘context-menu-?’ (bound only to ‘S-F10’ by default).
+;;
+
+;;----------------------------------------------;;
+;;;;; Tool-Bar: --------------------------------;;
+;;----------------------------------------------;;
+
+(use-package tool-bar
+  :demand t
+
+  :custom
+  (tool-bar-position 'left)
+  (tool-bar-style    'both
+      "each Icon of the Tool Bar has both Image (above) and Label (below).")
+      ;; ^ set `tool-bar-style' early (to prevent interface resizing/thrasing during Emacs).
+  (tool-bar-button-margin 4)  ; default 4
+  (tool-bar-button-relief 1)  ; default 1
+  (tool-bar-border        0)  ; default ‘internal-border-width’
+
+  :config
+  (tool-bar-mode +1)
+
+  ;; add buttons for: displaying headings, if outline-mode is enabled; …
+
+  ;;(tool-bar-add-item "paste" #'paste-from-history 'paste-from-history :help "Paste from History")
+
+  ;; add CUA buttons for special-modes (like `help-mode'):
+
+  ()
+
+  ;; must manually refresh:
+  (force-mode-line-update)
+
+;;n.b. (tool-bar-add-item ICON DEFINITION KEY &rest PROPS)
+;;n.b. (keymap-set-after KEYMAP KEY DEFINITION &optional AFTER)
+
+;;(defun tool-bar--image-expression (icon)
+;;  "Return an expression to evaluate an image spec for ICON."
+;;  (let ((xpm-spec (list :type 'xpm :file (concat icon ".xpm")))
+;;        (png-spec (list :type 'png :file (concat icon ".png")))
+;;        (svg-spec (list :type 'svg :file (concat icon ".svg"))))
+;;    `(find-image ',(list svg-spec png-spec xpm-spec))))
+
+  )
+
+;;----------------------------------------------;;
+;;;;; Menu-Bar ---------------------------------;;
+;;----------------------------------------------;;
+
+(use-package menu-bar
+  :demand t
+
+;;:custom ()
+
+  :config
+  (menu-bar-mode +1)
+
+  ;; add “Tools” submenus:
+
+  ;; (easy-menu-add-item global-map '(menu-bar tools)
+  ;;   [ "Find File…"
+  ;;     find-name-dired
+  ;;     :help "Search DIR recursively for files matching the globbing PATTERN, and run Dired on those files."
+  ;;     ]
+  ;;   "Shell Commands")
+
+  ;; (easy-menu-add-item global-map '(menu-bar tools)
+  ;;   [ "Magit Status"
+  ;;     magit-status
+  ;;     :visible (vc-responsible-backend default-directory t)
+  ;;     :help "Show the status of the current Git repository in a buffer"
+  ;;     ]
+  ;;   "Version Control")
+
+  ;; (easy-menu-add-item global-map '(menu-bar tools)
+  ;;                   ["*Shell*"
+  ;;                    shell
+  ;;                    :help "Create a inferior(?) shell buffer."
+  ;;                    ]
+  ;;                   "?")
+
+  ;; (easy-menu-add-item global-map '(menu-bar tools)
+  ;;                   ["*Term*"
+  ;;                    term
+  ;;                    :help "Create a terminal-emulator buffer."
+  ;;                    ]
+  ;;                   "?")
+
+  ;; (keymap-set-after (lookup-key global-map [menu-bar tools])
+  ;;   "<separator-re>"
+  ;;   '(menu-item "--")
+  ;;   'RE-Builder)
+
+  ;; ;; add “…” submenus:
+
+  ;; (easy-menu-add-item global-map '(menu-bar …)
+  ;;   [ "…"
+  ;;     …
+  ;;     :help "…"
+  ;;     ]
+  ;;   "…")
+
+  ;; ;; add “…” submenus:
+
+  ;; (easy-menu-add-item global-map '(menu-bar …)
+  ;;   [ "…"
+  ;;     …
+  ;;     :help "…"
+  ;;     ]
+  ;;   "…")
+
+  ;; ;; add “…” submenus:
+  ;;
+  ;;(easy-menu-add-item global-map '(menu-bar …)
+  ;;    [ "…"
+  ;;      …
+  ;;      :help "…"
+  ;;      ]
+  ;;    "…")
+
+  ;; remove “File” submenus: 
+
+  (cl-loop for ID in '()
+        do (define-key global-map (vector 'menu-bar 'file ID) nil t))
+
+  ;; remove “Edit” submenus: 
+
+  (cl-loop for ID in '(bookmark)
+        do (define-key global-map (vector 'menu-bar 'edit ID) nil t))
+
+  ;; remove “Options” submenus: 
+
+  (cl-loop for ID in '()
+        do (define-key global-map (vector 'menu-bar 'Options ID) nil t))
+
+  ;; remove “Buffers” submenus: 
+
+  (cl-loop for ID in '()
+        do (define-key global-map (vector 'menu-bar 'buffers ID) nil t))
+
+  ;; remove “Tools” submenus: 
+
+  (cl-loop for ID in '(ede semantic gdb gnus rmail compose-mail browse-web separator-net encryption-decryption separator-encryption-decryption Table games )
+        do (define-key global-map (vector 'menu-bar 'tools ID) nil t))
+
+  ;; remove “Help” submenus: 
+
+  (cl-loop for ID in '(emacs-tutorial emacs-tutorial-language-specific )
+        do (define-key global-map (vector 'menu-bar 'help-menu ID) nil t))
+
+  ;; remove “…” submenus: 
+
+  ;; (cl-loop for ID in '()
+  ;;       do (define-key global-map (vector 'menu-bar ' ID) nil t))
+
+  ;; remove “” submenus: 
+
+  (cl-loop for NAME in '("Center Line" "Center Region" "Center Paragraph" "Paragraph Indent" "---")
+        do (easy-menu-remove-item text-mode-menu nil NAME))
+
+  ())
+
+;;n.b. (easy-menu-add-item MAP PATH ITEM &optional BEFORE)
+;;n.b. (keymap-set-after KEYMAP KEY DEFINITION &optional AFTER)
+
+;;----------------------------------------------;;
+;;;;; Tab-Bar ----------------------------------;;
+;;----------------------------------------------;;
+
+(use-package tab-bar
+  :demand t
+
+;;:custom ()
+
+  :config
+  ;(tab-bar-mode +1)
+  )
+
+;;----------------------------------------------;;
+;;;;; Tab-Line ---------------------------------;;
+;;----------------------------------------------;;
+
+(use-package tab-line
+  :demand t
+
+;;:custom ()
+
+  :config
+  (global-tab-line-mode +1)
+  )
+
+;;==============================================;;
+;;;; 101 Settings: =============================;;
+;;==============================================;;
+
+"
+> python --version
+Python 3.10.11
+"
+
+;;==============================================;;
+;;;; Settings: =================================;;
+;;==============================================;;
+
+(require 'desktop)
+(desktop-read)
+
+;;(desktop-save-mode t)
+
+;;----------------------------------------------;;
+;;;;; IMenu: -----------------------------------;;
+;;----------------------------------------------;;
+
+(use-package imenu
+
+  :commands (imenu imenu-add-menubar-index)
+
+  :custom
+  ()
+
+  :hook
+  (prog-mode     . imenu-add-menubar-index)
+  (markdown-mode . imenu-add-menubar-index)
+
+  :config
+
+  (setq-default imenu-auto-rescan t)
+
+    ;;^ n.b. ‘imenu-auto-rescan’ respects ‘imenu-auto-rescan-maxout’ and ‘imenu-max-index-time’.
+    ;;
+    ;;   n.b. ‘imenu-sort-function’ defaults to ‘imenu--sort-by-position’ (respecting the written ordering), but is settable to ‘imenu--sort-by-name’.
+
+  (add-hook 'prog-mode-hook (lambda ()
+      (if (or (not (bound-and-true-p imenu-sort-function))  ;TODO necessary? only if prog-mode-hook runs before, say, haskell-mode-hook?
+              (eq imenu-sort-function 'imenu--sort-by-position))
+        (setq-local imenu-sort-function #'imenu--sort-by-name))))
+
+  ())
+
+;;==============================================;;
+;;;; BOOTSTRAPPING ==============================;;
+;;==============================================;;
 
 ;;----------------------------------------------;;
 ;; Settings: Bootstrapping ---------------------;;
@@ -147,10 +442,6 @@ URL `http://ergoemacs.org/emacs/elisp_relative_path.html'")
    '(enable-local-variables :safe :eager nil "set only Safe Variables (don't query for unsafe ones).")
 
    ;; ^ Set `enable-local-variables' early (to prevent Confirmation Prompts like « _ may not be safe. Enable it? y, n, !. »).
-
-   '(tool-bar-style 'both :eager nil "each Icon of the Tool Bar has both Image (above) and Label (below).")
-
-   ;; ^ Set `tool-bar-style' early (to prevent interface resizing/thrasing during Emacs).
 
    ))
 
@@ -351,24 +642,22 @@ Related:
 ;;----------------------------------------------;;
 ;; Import `defmacro's:
 
-(eval-when-compile
+(require 'use-package)
 
-  ;; this expression uses only Emacs Builtins.
-
-  (let* ((USE-PACKAGE-DYNAMIC (getenv "SBOO_EMACS_USEPACKAGE"))
-         (USE-PACKAGE-STATIC  "~/.emacs.d/submodules/use-package/")
-         (USE-PACKAGE         (file-name-directory
-                               (expand-file-name
-                                (if (not (null USE-PACKAGE-DYNAMIC))
-                                    USE-PACKAGE-DYNAMIC
-                                  USE-PACKAGE-STATIC))))
-         )
-
-  (add-to-list 'load-path USE-PACKAGE)
-  (require 'use-package (concat USE-PACKAGE "use-package.el"))
-  (setq use-package-verbose t)
-
-  ()))
+;; (eval-when-compile
+;;   ;; this expression uses only Emacs Builtins.
+;;   (let* ((USE-PACKAGE-DYNAMIC (getenv "SBOO_EMACS_USEPACKAGE"))
+;;          (USE-PACKAGE-STATIC  "~/.emacs.d/submodules/use-package/")
+;;          (USE-PACKAGE         (file-truename
+;; 			       (file-name-directory
+;; 				(expand-file-name
+;; 				 (if (not (null USE-PACKAGE-DYNAMIC))
+;; 				     USE-PACKAGE-DYNAMIC
+;; 				   USE-PACKAGE-STATIC))))))
+;;   (add-to-list 'load-path USE-PACKAGE)
+;;   (require 'use-package (concat USE-PACKAGE "use-package.el"))
+;;   (setq use-package-verbose t)
+;;   ()))
 
 ;;(sboo-use-package-init)
 
@@ -592,7 +881,10 @@ Related:
 
   ())
 
-;;; INTERNAL PACKAGES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;==============================================;;
+;;; INTERNAL PACKAGES ==========================;;
+;;==============================================;;
 
 ;;==============================================;;
 ;;; Builtin Packages:
@@ -693,6 +985,11 @@ Related:
 ;;; Feature: Sessions:
 ;;----------------------------------------------;;
 
+(require 'desktop)
+(add-hook 'emacs-startup-hook #'desktop-read)
+
+;;
+
 (when (require 'sboo-desktop nil :no-error)
 
   (sboo-desktop-init!)
@@ -736,8 +1033,11 @@ Related:
 ;;; Feature: Server (for ‘emacsclient’)
 ;;----------------------------------------------;;
 
-(when (require 'sboo-server nil :no-error)
-  (add-startup-hook! #'server-start-unless-running))
+(require 'server)
+(add-hook 'emacs-startup-hook #'server-start)
+
+;; (when (require 'sboo-server nil :no-error)
+;;   (add-startup-hook! #'server-start-unless-running))
 
 ;;==============================================;;
 ;;; Builtin Packages: Widgets (Menubar/Toolbar):
@@ -750,6 +1050,151 @@ Related:
 
 (when (require 'sboo-menubar nil :no-error)
   (sboo-menubar-setup))
+
+;;----------------------------------------------;;
+
+;; (use-package tab-bar
+;;   :hook (after-init . tab-bar-mode)
+
+;;   :custom
+;;   (tab-bar-mode t)
+;; ;;(tab-bar-position                 'below)
+;;   (tab-bar-tab-hints              t)  ; uniquely-number tabs.
+;;   (tab-bar-close-button-show      'selected)
+;;   (tab-bar-tab-show               1)  ; unless ≤1 open tabs.
+;;   (tab-bar-tab-name-ellipsis      "…")
+;;   (tab-bar-tab-name-truncated-max 20)
+;;   (tab-bar-new-tab-choice         'window)
+;;   (tab-bar-new-tab-group           nil)
+
+;;   :config
+;;   ()
+;;   )
+
+;; ;;----------------------------------------------;;
+
+;; (use-package tab-line
+;;   :hook (after-init . global-tab-line-mode)
+
+;;   :config
+;;   ()
+;;   )
+
+;;----------------------------------------------;;
+
+;; (use-package window
+
+;;   :custom
+;;   (switch-to-buffer-obey-display-actions t)
+
+;;   :keybindings 
+;;   ("C-x s" #'window-toggle-side-windows
+;;    "C-x q" #'bury-buffer
+;;    "C-x Q" #'unbury-buffer)
+
+;;   :config
+;;   ())
+
+;; ;; ^ (manually) ‘switch-to-buffer’ing must obey ‘buffer-display-action-alist’, like (programmatically) ‘display-buffer’ing obeys it.
+
+;; (add-to-list 'display-buffer-alist
+;;   '("\\*Help\\*"
+;;      (display-buffer-reuse-window display-buffer-pop-up-window)))
+
+;; (defconst sboo-prog-mode/display-buffer-alist
+;;   (let ((WIN-PARAMS
+;;           '(window-parameters . ((no-other-window         . t)
+;;                                  (no-delete-other-windows . t)))))
+
+;;     `((,(rx "*" (or "Buffer List") "*")
+;;         display-buffer-in-side-window
+;;         (side . top)
+;;         (slot . 0)
+;;         (window-height . ,#'fit-window-to-buffer)
+;;         (preserve-size . (nil . t))  ; keep ‘window-height’ same / don't vertically-resize.
+;;         ,WIN-PARAMS)
+
+;;       (,(rx "*" (or "xref" "Tags List") "*")  ; = "\\*\\(?:xref\\|Tags List\\)\\*"
+;;         display-buffer-in-side-window
+;;         (side . right)
+;;         (slot . 0)     ; in-the-middle-of.
+;;         (window-width . ,#'fit-window-to-buffer)
+;;         (preserve-size . (t . nil))  ; keep ‘window-width’ the same / don't horizontally-resize.
+;;         ,WIN-PARAMS)
+
+;;       (,(rx "*" (or "dired") "*")
+;;         display-buffer-in-side-window
+;;         (side . left)
+;;         (slot . 0)
+;;         (window-width . ,#'fit-window-to-buffer)
+;;         (preserve-size . (t . nil))
+;;         ,WIN-PARAMS)
+
+;;       (,(rx "*" (or "Completions" "help" "Info" "grep") "*")
+;;         display-buffer-in-side-window
+;;         (side . bottom)
+;;         (slot . -1)  ; above-or-left-of.
+;;         (preserve-size . (nil . t))
+;;         ,WIN-PARAMS)
+
+;;       (,(rx "*" (or "shell" "eshell" "term" "vc" "compilation") "*")
+;;         display-buffer-in-side-window
+;;         (side . bottom)
+;;         (slot . +1)  ; below-or-right-of.
+;;         (preserve-size . (nil . t))
+;;         ,WIN-PARAMS)
+
+;;        (,(rx (or (bol "test" (char ?_ ?-))
+;;                  ((or "Test" "Tests") eol)))
+;;         display-buffer-in-direction
+;;         (direction . right)))
+
+;;     )
+;;   "A ‘display-buffer-alist’ for “IDE Panels”:
+
+;; • on the right, an XRef/TAGS buffer;
+;; • on the left, a DirEd/¿Project? buffer;
+;; • at the bottom-left, a Completions/Help/Info/Grep buffer;
+;; • at the bottom-right, a Shell/Term/Compilation/VC buffer;
+;; • at the top, the Buffer-List buffer.")
+;; ;;
+;; ;;  ___________________________________
+;; ;; |    *Buffer List*                  |
+;; ;; |___________________________________|
+;; ;; |     |                       |     |
+;; ;; |  *  |                       |  *  |
+;; ;; |  d  |                       |  T  |
+;; ;; |  i  |                       |  a  |
+;; ;; |  r  |   Main Window Area    |  g  |
+;; ;; |  e  |                       |  s  |
+;; ;; |  d  |                       |  *  |
+;; ;; |  *  |                       |     |
+;; ;; |_____|_______________________|_____|
+;; ;; | *help*/*grep*/  |  *shell*/       |
+;; ;; | *Completions*   |  *compilation*  |
+;; ;; |_________________|_________________|
+;; ;; |             Echo Area             |
+;; ;; |___________________________________|
+;; ;; 
+
+;; (defun sboo-prog-mode-ui (&optional disable-p)
+;;   "Enable “IDE Panels”."
+;;   (interactive "P")
+
+;;   (if disable-p
+;;       (prog
+;;         (setq window-sides-slots (list nil nil nil nil))
+;;         (setq display-buffer-alist nil))
+
+;;     (setq fit-window-to-buffer-horizontally t)
+;;     (setq window-resize-pixelwise           t)
+;;     (let ((LEFT   1)
+;;           (TOP    2)
+;;           (RIGHT  1)
+;;           (BOTTOM 2))
+;;       (setq window-sides-slots (list LEFT TOP RIGHT BOTTOM))
+;;     (setq display-buffer-alist sboo-prog-mode/display-buffer-alist)))
+
 
 ;;----------------------------------------------;;
 
@@ -1058,10 +1503,10 @@ Related:
 
   :hook ((emacs-lisp-mode . superword-mode))
 
-  :bind (:map emacs-lisp-mode-map
-              (("<kp-up>"   . sboo-backward-page-or-header)
-               ("<kp-down>" . sboo-forward-page-or-header))
-              )
+  ;; :bind (:map emacs-lisp-mode-map
+  ;;             (("<kp-up>"   . backward-paragraph)
+  ;;              ("<kp-down>" . forward-paragraph))
+  ;;             )
 
   :config
 
@@ -2349,67 +2794,106 @@ Links:
 
   ())
 
-;;; EXTERNAL PACKAGES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;==============================================;;
+;;; EXTERNAL PACKAGES ==========================;;
+;;==============================================;;
 
 ;;----------------------------------------------;;
 ;;; External Packages: Installation ------------;;
 ;;----------------------------------------------;;
 
-(pcase (sboo-get-installation-method)
+(progn
 
-  ('submodules (progn
-                 (sboo-register-submodule-packages! "use-package/")
-                 (sboo-register-submodule-packages! "helm/")
+  (defconst sboo-package-archives
 
-                 (when (< emacs-major-version 26)
-                   (sboo-register-submodule-packages! "real-auto-save/"))))
+    '(
+;;    ("melpa-stable" . "https://stable.melpa.org/packages/")
+      ("melpa"        . "https://melpa.org/packages/")
+      ("elpa"         . "https://elpa.gnu.org/packages/")
+;;      ("nongnu"       . "https://elpa.nongnu.org/nongnu/")
+      )
 
-  ;;--------------------------;;
+    "Override `package-archives' with MELPA & HTTPS")
 
-  ('melpa      (progn
-                 (sboo-load-file! "sboo-packages-by-installing.el")
+  (defconst sboo-package-load-list
 
-                 (when (require 'sboo-packages nil :no-error)
+    '(
+      (use-package t)
+      (real-auto-save t)
 
-                   (dolist (ARCHIVE sboo-package-archives)
-                     (add-to-list 'package-archives ARCHIVE :append))
+      (async                t)
+      (compat               t)
+      (popup                t)
+      (transient            t)
+      (seq                  t)
 
-                   (when (>= emacs-major-version 26)
-                     (async-start #'package-refresh-contents))
-                   (setq package-load-list sboo-all-packages)
+      (helm                 t)
+      (helm-core            t)
+      (helm-config          t)
 
-                   ;;(package-initialize)
-                   ;;NOTE we call `package-initialize' in `init.el'.
+      (selected             t)              
+      (wrap-region          t)
+      (expand-region        t)
 
-                   ())))
-  ;;--------------------------;;
+      ;;
 
-  ('nixpkgs    (progn))
+      (wfnames              t)
+      (s                    t)
+      (f                    t)
+      (dash                 t)
 
-  (_           (progn)))
+      (company              t)
+      ;; (company-anaconda     t)
 
-;; ^ NOTES `async-start':
-;;
-;;     (async-start START-FUNC &optional FINISH-FUNC)
-;;
-;; Execute START-FUNC (often a lambda) in a subordinate Emacs process.
-;; When done, the return value is passed to FINISH-FUNC.  Example:
-;;
+      (flycheck             t)
+      ;; (flycheck-haskell     t)
+
+      (yasnippet            t)
+      (projectile           t)
+      (magit                t)
+      (magit-section        t)
+      (with-editor          t)
+
+      (markdown-mode        t)
+
+      (haskell-mode         t)
+      ;; (dante             t)
+
+      (nix-mode             t)
+      (ahk-mode             t)
+
+      (json-mode            t)
+      (json-snatcher        t)
+
+      )
+
+    "Packages which I need to be installed.
+
+An `alist', where each item's:
+
+* `car' is the package name (a symbol).
+* `cdr' is the package version (or a boolean).
+
+`package-load-list' accepts this `alist'.")
+
+  (setq package-archives  sboo-package-archives)
+  (setq package-load-list sboo-package-load-list)
+
+  (package-initialize)
+  (unless package-archive-contents
+    (package-refresh-contents))
+  (package-activate-all)
+
+  ;;(async-start #'package-refresh-contents))
+
+  ())
 
 ;;----------------------------------------------;;
 ;;; External Packages: Prioritized Packages ----;;
 ;;----------------------------------------------;;
 
-;;(sboo-load-file! "sboo-init-use-package.el")
 
-;; ^ Links:
-;;
-;;   • URL `https://github.com/jwiegley/use-package'
-;;
-
-;;----------------------------------------------;;
-
-;;(sboo-load-file! "sboo-init-helm.el")
 
 ;;----------------------------------------------;;
 ;; External Packages: Libraries ----------------;;
@@ -2451,12 +2935,6 @@ Links:
 
 ;;----------------------------------------------;;
 
-(require 'list-utils nil :no-error)
-
-;; ^ URL `https://github.com/rolandwalker/list-utils'
-
-;;----------------------------------------------;;
-
 (require 'loop nil :no-error)
 
 ;; ^ URL `https://github.com/Wilfred/loop.el'
@@ -2489,59 +2967,33 @@ Links:
 
 ;;----------------------------------------------;;
 
-(use-package helm-config
+(use-package helm
+    :ensure t
     :demand t
 
-    :load-path "vendor/helm"
-    ;; :load-path ("submodules/helm" "submodules/async")
-
-    ;;------------------------;;
-
-    :custom
-
-    (helm-command-prefix-key "<f9>"
-      "the Default (« C-x c ») is too similar to `kill-emacs's keybinding.")
-
-    ;; ^  NOTE `helm-command-prefix-key' becomes immutable once `helm-config' is `load'ed.
-
-    ;;   :bind (:map helm-map
-    ;;               ("<tab>" . helm-execute-persistent-action)
-    ;;               ("C-i"   . helm-execute-persistent-action)
-    ;;               ("C-z"   . helm-select-action)
-    ;;               ("A-v"   . helm-previous-page))
-
-    :config
-
-    ;; Remap keybindings:
-
-    (define-key global-map [remap execute-extended-command] #'helm-M-x)
-    (define-key global-map [remap list-buffers]             #'helm-buffers-list)
-    (define-key global-map [remap find-file]                #'helm-find-files) ; Includes the « `<tool-bar>' `<new-file>' ».
-    (define-key global-map [remap find-file-existing]       #'helm-find-files) ; Includes the « `<tool-bar>' `<open-file>' »?
-    (define-key global-map [remap occur]                    #'helm-occur)
-
-    (define-key global-map [remap menu-find-file-existing]  #'helm-find-files) ; The `toolbar's `<open-file>'.
-
-    ())
-
-;;----------------------------------------------;;
-
-(use-package helm
-    :load-path "vendor/helm"
-
-    :after helm-config
+    :init
+    (setq helm-command-prefix-key "<f9>")
+    
+    ;; ^ "the Default (« C-x c ») is too similar to `kill-emacs's keybinding."
+    ;;   NOTE `helm-command-prefix-key' becomes immutable once `helm-config' is `load'ed.
 
     ;;------------------------;;
 
   :delight (helm-mode " ⎈")
   :custom
 
-  (helm-allow-mouse t "Enable mouse (doesn't enable selection-by-clicking, only marking-by-clicking).")
+  (helm-allow-mouse t
+     "Enable mouse (doesn't enable selection-by-clicking, only marking-by-clicking).")
 
   ;; ^ `helm-allow-mouse'. the mouse is gratuitously disabled by default.
   ;;   this enables, for example, clicking on a helm candidate to activate it,
   ;;   rather than navigating it with several arrow and/or character keypresses.
 
+  (helm-command-prefix-key "<f9>"
+     "the Default (« C-x c ») is too similar to `kill-emacs's keybinding.")
+    ;; ^  NOTE `helm-command-prefix-key' becomes immutable once `helm-config' is `load'ed.
+
+  ;; (helm-boring-buffer-regexp-list )
   ;; ^ `helm-boring-buffer-regexp-list'. by default, it's:
   ;; 
   ;;     '("\\` " "\\`\\*helm" "\\`\\*Echo Area" "\\`\\*Minibuf")
@@ -2562,11 +3014,23 @@ Links:
   (helm-autoresize-min-height 20 "Minimum Height (in lines?) for Helm Windows.")
   (helm-autoresize-max-height 60 "Maximum Height (in lines?) for Helm Windows.")
 
+    ;;   :bind (:map helm-map
+    ;;               ("<tab>" . helm-execute-persistent-action)
+    ;;               ("C-i"   . helm-execute-persistent-action)
+    ;;               ("C-z"   . helm-select-action)
+    ;;               ("A-v"   . helm-previous-page))
+
   :config
 
-  ;; Helm keybindings:
+  ;;TODO: un-remap
+  (define-key global-map [remap execute-extended-command] #'helm-M-x)
+  (define-key global-map [remap list-buffers]             #'helm-buffers-list)
+  (define-key global-map [remap find-file]                #'helm-find-files) ; Includes the « `<tool-bar>' `<new-file>' ».
+  (define-key global-map [remap find-file-existing]       #'helm-find-files) ; Includes the « `<tool-bar>' `<open-file>' »?
+  (define-key global-map [remap occur]                    #'helm-occur)
+  (define-key global-map [remap menu-find-file-existing]  #'helm-find-files) ; The `toolbar's `<open-file>'.
 
-  (define-key helm-map (kbd "<f12>")         #'helm-select-action)
+  (define-key helm-map (kbd "<f12>")          #'helm-select-action)
   (define-key helm-map sboo-key/keyboard-quit #'keyboard-quit) ; (if Overrides the “Run Ninth Helm Action” command.
 
   ;; ^ Mnemonic: 
@@ -2609,7 +3073,6 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package helm-buffers
-  :load-path "vendor/helm"
 
   :commands (helm-buffers-list)
 
@@ -2634,7 +3097,6 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package helm-files
-  :load-path "vendor/helm"
 
   :commands (helm-find-files)
 
@@ -2656,7 +3118,6 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package helm-font
-    :load-path "vendor/helm"
 
     :commands (helm-ucs helm-select-xfont)
 
@@ -2678,7 +3139,6 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package helm-ring
-    :load-path "vendor/helm"
 
     :commands (helm-show-kill-ring helm-all-mark-rings)
 
@@ -2700,7 +3160,6 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package helm-grep
-    :load-path "vendor/helm"
 
     :commands (helm-do-grep-ag)
 
@@ -2716,7 +3175,6 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package helm-find 
-    :load-path "vendor/helm"
 
     :commands (helm-find)
 
@@ -2732,7 +3190,6 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package helm-dabbrev
-  :load-path "vendor/helm"
 
   :commands (helm-dabbrev)
 
@@ -2746,7 +3203,6 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package helm-sys
-  :load-path "vendor/helm"
 
   :commands (helm-top)
 
@@ -2764,7 +3220,6 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package helm-descbinds
-    :demand t
 
     :commands (helm-descbinds-mode)
 
@@ -2790,12 +3245,12 @@ Links:
 ;;----------------------------------------------;;
 
 (use-package helm-describe-modes
-    :demand t
 
     :commands (helm-describe-modes)
 
     :config
 
+    ;;TODO: un-remap
     (global-set-key [remap describe-mode] #'helm-describe-modes)
 
     ())
@@ -2900,17 +3355,16 @@ Links:
 
 ;;----------------------------------------------;;
 
-(use-package helm-dictionary
-    :demand t
-
-    :commands (helm-dictionary)
-
-    :config
-
-    ;;(setq helm-dictionary-database "")
-
-    ())
-
+;; (use-package helm-dictionary
+;;
+;;     :commands (helm-dictionary)
+;;
+;;     :config
+;;
+;;     ;;(setq helm-dictionary-database "")
+;;
+;;     ())
+ 
 ;; ^ `helm-dictionary':
 ;;
 ;; • is a Helm TUI for Natural-Language Dictionaries, including Translation Dictionaries.
@@ -2962,8 +3416,8 @@ Links:
 
   :commands (helm-swoop helm-multi-swoop)
 
-  :bind (("<f2>"   . helm-swoop)
-         ("S-<f2>" . helm-multi-swoop)
+  :bind (("<f2>"   . isearch-forward)
+         ("S-<f2>" . helm-swoop)
          )
 
   :custom
@@ -3036,7 +3490,6 @@ Links:
   ;;------------------------;;
 
   (use-package company
-    :load-path "vendor/company-mode"
 
     ;;------------------------;;
 
@@ -3057,7 +3510,8 @@ Links:
            (nix-mode        . sboo-company-nix-setup)
            (python-mode     . sboo-company-python-setup)
            (javascript-mode . sboo-company-javascript-setup)
-           (text-mode       . sboo-company-text-setup))
+           (text-mode       . sboo-company-text-setup)
+           )
 
     ;;------------------------;;
 
@@ -3067,8 +3521,11 @@ Links:
 
     :custom
 
+    (company-idle-delay                 2   "minimum Seconds until Idle-Completion.")
+    (company-minimum-prefix-length      2   "minimum Characters for Idle-Completion.")
+    (company-inhibit-inside-symbols     nil "")
+
     (company-show-numbers               t   "")
-    (company-minimum-prefix-length      1   "minimum Prefix Length for Idle Completion.")
     (company-tooltip-align-annotations  t   "")
     (company-dabbrev-downcase           nil "")
 
@@ -3081,6 +3538,7 @@ Links:
 
     ;;------------------------;;
 
+    ;;TODO: un-remap
     (bind-key [remap completion-at-point] #'company-complete company-mode-map)
 
     ;; ^ use Company for Emacs's Builtin Completion.
@@ -3168,12 +3626,371 @@ Links:
 ;;==============================================;;
 
 ;;----------------------------------------------;;
+;; External Packages: Convenience --------------;;
+;;----------------------------------------------;;
+
+(use-package selected
+  :demand t
+
+  :commands (selected-minor-mode selected-global-mode)
+
+  :delight (selected-minor-mode "")
+
+  ;;--------------------------;;
+
+  ;; NOTE! `selected' and `wrap-region':
+  ;;
+  ;;       many punctuation characters (in particular, bracket characters)
+  ;;       are keybindings for `wrap-region' (in most Major Modes).
+  ;;
+
+  :bind (:map selected-keymap
+
+              ;; Symbols:
+
+              ("`" . string-inflection-all-cycle)  ; Mnemonic a contextual abbreviation of « C-c ` ».
+              ("!" . shell-command-on-region)      ; Mnemonic is « M-! ».
+           ;; ("@" . )
+              ("#" . comment-or-uncomment-region)
+           ;; ("$" . )
+              ("%" . query-replace)                ; Mnemonic is « M-% ».
+           ;; ("^" . )
+           ;; ("&" . )
+           ;; ("*" . )
+           ;; ("(" . )
+           ;; (")" . )
+              ("-" . er/contract-region) ; Mnemonic ‹-› is the minus-sign.
+              ("=" . er/expand-region)   ; Mnemonic ‹=› shares a key with the plus-sign.
+           ;; ("[" . )
+           ;; ("]" . )
+              (";" . comment-or-uncomment-region)
+              (":" . comment-or-uncomment-region)
+           ;; (""" . )
+           ;; ("," . )
+           ;; ("." . )
+           ;; ("/" . )
+           ;; ("\\" . )
+
+              ;; Letters:
+
+              ("a" . sboo-register-append-region)
+           ;; ("b" . )
+              ("c" . cua-copy-region)              ; Mnemonic is ‹C-c›.
+              ("C" . capitalize-region)            ; Mnemonic is “[C]apitalize”.
+              ("d" . downcase-region)              ; Mnemonic is “[D]owncase”.
+              ("e" . sboo-edit-indirect-dwim)      ; from `edit-indirect' (via `sboo-commands').
+              ("f" . fill-region)                  ; Mnemonic is “[F]ill”.
+              ("F" . unfill-region)                ; ‹F› inverts ‹f›.
+              ("g" . google-this-region)           ; from `google-this'.
+           ;; ("h" . )
+              ("i" . indent-region)                ; Mnemonic is “[I]ndent”.
+           ;; ("j" . )
+           ;; ("k" . )
+              ("l" . align-regexp)                 ; Mnemonic is “a[L]ign”.
+              ("m" . apply-macro-to-region-lines)  ; Mnemonic is “[M]acro apply”.
+              ("n" . move-text-down)               ; from `move-text'. Mnemonic is “[N]ext line”, and the ‹p› key is on the top row of (of letters).
+           ;; ("o" . )
+              ("p" . move-text-up)                 ; from `move-text'. Mnemonic is “[P]rior line”, and the ‹n› key is on the bottom row (of letters).
+              ("q" . selected-off)                 ; (from `selected' itself.)
+              ("r" . query-replace-regexp)         ; Mnemonic is “[R]eplace”.
+              ("s" . sort-lines)                   ; Mnemonic is “[S]ort”.
+              ("S" . reverse-region)               ; Mnemonic is “rever[S]e”.
+           ;; ("t" . )
+              ("u" . upcase-region)                ; Mnemonic is “[U]pcase”.
+              ("v" . yank)                         ; Mnemonic is ‹C-v›.
+              ("w" . delete-trailing-whitespace)   ; Mnemonic is “[W]hitespace”.
+              ("x" . cua-cut-region)               ; Mnemonic is ‹C-x›.
+              ("y" . eval-region)                  ;
+              ("z" . undo)
+
+              ;; Non-Graphical Characters:
+
+           ;;   ("<left>"  . sboo-extend-selection-leftward)
+           ;;   ("<right>" . sboo-extend-selection-rightward)
+
+           ;; ("<home>"  . )
+           ;; ("<end>"   . )
+              ("<prior>" . move-text-up)           ; from `move-text'.
+              ("<next>"  . move-text-down)         ; from `move-text'.
+
+              )
+
+  ;; [Old]
+  ;;
+  ;;   ("`" . typo-)
+  ;;
+
+  ;;--------------------------;;
+
+  :hook ((prog-mode . sboo-selected-mode)
+         (text-mode . sboo-selected-mode)
+         )
+
+  ;;--------------------------;;
+
+  :preface
+
+  (defun sboo-selected-mode (&optional argument)
+
+    "Conditional `selected-minor-mode'.
+
+Conditions:
+
+• buffer must be Read-Only.
+• buffer must be a File-Buffer.
+
+Inputs:
+
+• ARGUMENT — a `booleanp' or `integerp'.
+  whether to enable `selected-minor-mode' (nil or `positivep')
+  or to disable it (0 or `negativep')."
+
+    (interactive "P")
+
+    (let* ((BUFFER-READ-ONLY-P (and buffer-file-read-only buffer-file-name))
+           )
+
+      (unless BUFFER-READ-ONLY-P
+        (selected-minor-mode argument))))
+
+  ;;--------------------------;;
+
+  :config
+
+  ;; (eval-after-load 'sboo-html
+  ;;   (let ((MAP selected-keymap))
+  ;;     (cl-dolist ((KEYSTRING . COMMAND) '((",ab" . sboo-yas-insert/element-abbrv)))
+  ;;       (define-key MAP (kbd KEYSTRING) COMMAND))))
+  ;; ;; ^ Mnemonic: « , » shares a key with « < », which opens an HTML Element.
+
+  ())
+
+;; ^ When `selected-minor-mode' is active, the keybindings in `selected-keymap'
+;;   are enabled as long as the region is active (`use-region-p').
+;;
+;;   These conditionally-concise keybindings are useful for commands
+;;   that operates on the region.
+;;
+
+;; ^ Links:
+;;
+;;   • URL `https://github.com/Kungsgeten/selected.el'
+;;
+
+;;----------------------------------------------;;
+
+(use-package wrap-region
+
+  :commands (wrap-region-mode)
+
+  :delight (wrap-region-mode " 🎁")
+
+  ;;--------------------------;;
+
+  :hook ((text-mode . wrap-region-mode)
+         (prog-mode . wrap-region-mode)
+         )
+
+  ;;--------------------------;;
+
+  :config
+
+  (dolist (MODE '(magit-status-mode))
+    (add-to-list 'wrap-region-except-modes MODE))
+
+  ;; ^ TUIs
+
+  (require 'sboo-html nil :no-error)
+
+  (let* ((MARKDOWN-MODES (or (bound-and-true-p sboo-markdown-modes-list)
+                             '(markdown-mode gfm-mode)))
+         (HTML-MODES     (or (bound-and-true-p sboo-html-modes-list)
+                             (append '(html-mode mhtml-mode) MARKDOWN-MODES)))
+         (ORG-MODES      '(org-mode))
+         )
+
+    (wrap-region-add-wrappers
+
+     `(
+
+       ;; Ascii Characters...
+
+       ("`" "`" nil ,(append MARKDOWN-MODES '(haskell-mode haddock-mode)))
+
+       ;; ^ Syntax for code blocks (e.g. « `pandoc` »), in Markdown and Haddocks.
+       ;;   Syntax for operators (e.g. « `fmap` »), in Haskell.
+
+       ("‘" "’" "`" (emacs-lisp-mode))
+
+       ;; ^ Syntax for hyperlinks, in Elisp (docstrings).
+       ;;   « `...' » is the ASCII-Analogue of « ‘...’ » .
+
+       ("*" "*" nil ,MARKDOWN-MODES)
+
+       ;; ^ Syntax for emphasis, in Markdown.
+       ;;   i.e. « * » for « <em> », and « ** » for « <strong> ».
+
+       ("__" "__" "_" ,MARKDOWN-MODES)
+       ("__" "__" "-" ,MARKDOWN-MODES)
+
+       ;; ^ Syntax for emphasis, in Markdown.
+       ;;   i.e. « _ » for « <em> », and « __ » for « <strong> ».
+
+       ("__" "__" "_" (haskell-mode haddock-mode))
+
+       ;; ^ Syntax for emphasis, in Haddocks.
+       ;;   i.e. « __ » for « <strong> »
+       ;;   (no single-underscore, i.e. no « _ »).
+
+       ("/" "/" nil (haskell-mode haddock-mode))
+
+       ;; ^ Syntax for for emphasis, in Haddocks.
+
+       ("~" "~" nil ,MARKDOWN-MODES)
+
+       ;; ^ Syntax for strike-through, in Markdown.
+
+       ("<" ">" "<" ,(append MARKDOWN-MODES '(haskell-mode haddock-mode)))
+       ("<" ">" "," ,(append MARKDOWN-MODES '(haskell-mode haddock-mode)))
+
+       ;; ^ Syntax for hyperlinks, in both Markdown and Haddocks.
+       ;;   « , » because it shares a key with « < » (unshifted).
+
+       ("<<" ">>" ">" (haskell-mode haddock-mode))
+
+       ;; ^ Syntax for image hyperlinks, in Haddocks.
+       ;;   « > » (the closing pair) because « < » (the opening pair) is already taken.
+
+       ("@" "@" nil (haskell-mode haddock-mode))
+
+       ;; ^ Syntax for code blocks, in Haddock.
+
+       ("=" "=" nil ,ORG-MODES)
+       ("+" "+" nil ,ORG-MODES)
+       
+       ;; ^ See `org-emphasis-alist':
+       ;;
+       ;;   •  « =verbatim= »
+       ;;   •  « +strike-through+ »s
+       ;;
+
+       ("%" "%" nil (bat-mode))
+
+       ;; ^ Environment-Variable syntax (e.g. « %APPDATA% »), in Batch (a.k.a. « BAT »).
+
+       ("{-" "-}"    ":" (haskell-mode))
+
+       ("/* " " */"  ":" (nix-mode c-mode c++-mode javascript-mode css-mode java-mode))
+
+       ("<!--" "-->" ":" ,HTML-MODES)
+
+       ("#|" "|#"    ":" (scheme-mode))
+
+       ;; ^ Mode-Specific, Multi-Line Comments:
+       ;;
+       ;;   • « ; », i.e. the semicolon-character,
+       ;;     shares a key with the colon-character (unshifted),
+       ;;     is our universal trigger-key for commenting a region;
+       ;;     c.f. « M-; » runs `comment-dwim' across langauges.
+       ;;
+
+       ;; Unicode Characters...
+
+       ("“" "”" "“" ())
+       ("‘" "’" "‘" ())
+       ("«" "»" "«" ())
+       ("‹" "›" "‹" ())
+       ("「" "」" "「" ())
+
+       ("¿" "?" "?" (text-mode))
+       ("¡" "!" "!" (text-mode))
+
+       ;; ^ Spanish-language Inverted Question/Exclamation Marks.
+       ;;   URL `https://en.wikipedia.org/wiki/Inverted_question_and_exclamation_marks'
+
+       ;;SKELETON ("" "" "" ())
+
+       ;; [Old]
+       ;;
+       ;; ("__" "__" "_" ,MARKDOWN-MODES)
+       ;; ("__" "__" "-" ,MARKDOWN-MODES)
+       ;;
+
+       )))
+
+  (when (bound-and-true-p sboo-html-wrap-region-table)
+    (wrap-region-add-wrappers (sboo-html-wrap-region-table)))
+
+  ;;TODO...
+  ;; (when (bound-and-true-p sboo-markdown-wrap-region-table)
+  ;;   (wrap-region-add-wrappers (sboo-markdown-wrap-region-table)))
+
+  (turn-on-wrap-region-mode)
+
+  ;; ^ `wrap-region-global-mode' is a `define-globalized-minor-mode'.
+
+  ())
+
+;; ^ Links
+;;
+;;   • URL `https://github.com/rejeep/wrap-region.el'
+;;   • URL `http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/'
+;;   • URL `https://www.youtube.com/watch?v=9SWAKPF0fHE'
+;;   • URL `https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'
+;;   • URL `https://www.haskell.org/haddock/doc/html/ch03s08.html' 
+;;   • URL `https://orgmode.org/manual/Markup.html' 
+;;
+
+;; ^ Notes about `wrap-region'...
+;;
+;; • `wrap-region-table', by default, holds ① quotation characters, and ② matching bracket characters:
+;;
+;;       '(("\"" "\"")
+;;         ("'"  "'")
+;;         ("("  ")")
+;;         ("{"  "}")
+;;         ("["  "]")
+;;         ("<"  ">"))
+;;
+;;    and can be inspected with:
+;;
+;;        M-: (hash-table-keys wrap-region-table)
+;;          ⇒ '(";" "`" "%" "\"" "'" "(" "{" "[" "<")
+;;
+
+;;----------------------------------------------;;
+
+(use-package expand-region
+
+    ;;-------------------------;;
+
+    :commands (er/expand-region er/contract-region)
+
+    :bind (:map text-mode-map
+                ("<f10>"         . er/expand-region)
+                ("<kp-subtract>" . er/contract-region)
+                ("<kp-add>"      . er/expand-region))
+    :bind (:map prog-mode-map
+                ("<f10>"         . er/expand-region)
+                ("<kp-subtract>" . er/contract-region)
+                ("<kp-add>"      . er/expand-region))
+
+    :config ())
+
+;; ^ Links:
+;;
+;;   • URL ‘https://github.com/magnars/expand-region.el’
+;;   • URL ‘https://endlessparentheses.com/where-do-you-bind-expand-region.html’
+;;   • URL ‘’
+;;
+;;
+
+;;----------------------------------------------;;
 ;; External Packages: Templates ----------------;;
 ;;----------------------------------------------;;
 
 (use-package yasnippet
-
-    :demand
+    :demand nil
 
     :commands (snippet-mode yas-insert-snippet yas-next-field-or-maybe-expand)
 
@@ -3284,18 +4101,6 @@ $0")
 ;;   • URL `https://github.com/haskell/haskell-snippets'
 ;;
 
-;;==============================================;;
-
-;;; Secondary Company Packages...
-
-;;----------------------------------------------;;
-
-;;==============================================;;
-
-;;; Tertiary Company Packages...
-
-;;----------------------------------------------;;
-
 ;;----------------------------------------------;;
 ;; External Packages: Programming --------------;;
 ;;----------------------------------------------;;
@@ -3359,43 +4164,43 @@ $0")
 
 ;;----------------------------------------------;;
 
-(when (require 'sboo-projectile nil :no-error)
+;; (when (require 'sboo-projectile nil :no-error)
 
-  (use-package projectile
+;;   (use-package projectile
 
-    :commands (projectile-mode)
+;;     :commands (projectile-mode)
 
-    :delight '(:eval (concat " " (projectile-project-name)))
+;;     :delight '(:eval (concat " " (projectile-project-name)))
 
-    ;; ^ ❶ Hide the mode name for projectile-mode.
-    ;;   ❷ Show the project name instead.
+;;     ;; ^ ❶ Hide the mode name for projectile-mode.
+;;     ;;   ❷ Show the project name instead.
 
-    :bind-keymap ("C-c p" . projectile-command-map)
+;;     :bind-keymap ("C-c p" . projectile-command-map)
 
-    :preface
+;;     :preface
 
-    (defun sboo-projectile-invalidate-cache (&rest _)
-      "(`projectile-invalidate-cache' which ignores the args to `magit-checkout'.)"
-      (projectile-invalidate-cache nil))
+;;     (defun sboo-projectile-invalidate-cache (&rest _)
+;;       "(`projectile-invalidate-cache' which ignores the args to `magit-checkout'.)"
+;;       (projectile-invalidate-cache nil))
 
-    :config
+;;     :config
 
-    (sboo-append-to-list! projectile-globally-ignored-directories
-                          sboo-projectile-excluded-directories)
+;;     (sboo-append-to-list! projectile-globally-ignored-directories
+;;                           sboo-projectile-excluded-directories)
 
-    (sboo-append-to-list! projectile-globally-ignored-files
-                          sboo-projectile-excluded-file-names)
+;;     (sboo-append-to-list! projectile-globally-ignored-files
+;;                           sboo-projectile-excluded-file-names)
 
-    (sboo-append-to-list! projectile-globally-ignored-file-suffixes
-                          sboo-projectile-excluded-file-extensions)
+;;     (sboo-append-to-list! projectile-globally-ignored-file-suffixes
+;;                           sboo-projectile-excluded-file-extensions)
 
-    (with-eval-after-load 'magit-branch
-      (advice-add 'magit-checkout
-                  :after #'sboo-projectile-invalidate-cache)
-      (advice-add 'magit-branch-and-checkout
-                  :after #'sboo-projectile-invalidate-cache))
+;;     (with-eval-after-load 'magit-branch
+;;       (advice-add 'magit-checkout
+;;                   :after #'sboo-projectile-invalidate-cache)
+;;       (advice-add 'magit-branch-and-checkout
+;;                   :after #'sboo-projectile-invalidate-cache))
 
-    ()))
+;;     ()))
 
 ;;----------------------------------------------;;
 ;;; `magit': "eMAcs GIT".
@@ -3405,9 +4210,6 @@ $0")
   ;;--------------------------;;
 
   (use-package magit
-
- ;; :load-path ("vendored/magit")
-    :load-path ("submodules/magit/lisp")
 
     :commands (magit-status)
 
@@ -3566,7 +4368,7 @@ $0")
 ;;----------------------------------------------;;
 
 (use-package flycheck-package
-  :demand t
+  :demand nil
 
   :config
 
@@ -3599,7 +4401,6 @@ $0")
 
   (use-package haskell
     :demand t
-    :load-path "submodules/haskell-mode"
 
     :commands (haskell-mode)
 
@@ -3746,8 +4547,6 @@ $0")
   (use-package dante
     :after (haskell)
 
-    :load-path "submodules/dante"
-
     :commands (dante-mode dante-restart)
 
     :bind (:map haskell-mode-map
@@ -3809,10 +4608,6 @@ $0")
 
   (use-package nix-mode
 
-    :load-path ("vendor/nix-mode")
-    ;; :load-path ("vendor/nix-mode")
-    ;; :load-path ("submodules/nix-mode")
-
     :interpreter (("nix"       . nix-mode)
                   ("nix-build" . nix-mode)
                   ("nix-shell" . nix-mode)
@@ -3832,9 +4627,8 @@ $0")
   ;;------------------------;;
 
   (use-package nix-repl
-
-    :load-path ("vendor/nix-mode")
- 
+    :disabled
+  
     :config ())
 
   ;;------------------------;;
@@ -4011,6 +4805,7 @@ $0")
 ;;----------------------------------------------;;
 
 (use-package markdown-mode
+;;  :ensure t
 
   :commands (markdown-mode gfm-mode markdown-edit-code-block)
 
@@ -4107,6 +4902,7 @@ $0")
 ;;----------------------------------------------;;
 
 (use-package json-mode
+   ;; :ensure t
 
   ;; :disabled
 
@@ -4206,10 +5002,6 @@ $0")
 ;;----------------------------------------------;;
 
 (use-package bnf-mode
-
-  :load-path "~/.emacs.d/submodules/bnf-mode"
-
-;;  :load-path (sboo-submodule-directory "bnf-mode")
 
   :commands (bnf-mode)
 
@@ -4508,6 +5300,7 @@ $0")
 ;;----------------------------------------------;;
 
 (use-package string-inflection
+  ;; :after (haskell-mode python-mode javascript-mode)
 
   ;;--------------------------;;
 
@@ -4520,14 +5313,12 @@ $0")
 
   :bind (:map sboo-edit-keymap
               ("`" . string-inflection-all-cycle)
-         :map java-mode-map
-              ("C-c `" . string-inflection-java-style-cycle)
-         :map python-mode-map
-              ("C-c `" . string-inflection-python-style-cycle)
-         :map ruby-mode-map
-              ("C-c `" . string-inflection-ruby-style-cycle)
-         :map haskell-mode-map
-              ("C-c `" . sboo-string-inflection-haskell-style-cycle)
+         ;; :map haskell-mode-map
+         ;;      ("C-c `" . sboo-string-inflection-haskell-style-cycle)
+         ;; :map python-mode-map
+         ;;      ("C-c `" . string-inflection-python-style-cycle)
+         ;; :map javascript-mode-map
+         ;;      ("C-c `" . string-inflection-javascript-style-cycle)
         )
 
   ;;--------------------------;;
@@ -4651,364 +5442,6 @@ Related:
 ;; ^ Links:
 ;;
 ;;   • URL `https://github.com/dajva/rg.el'
-;;
-
-;;----------------------------------------------;;
-
-(use-package selected
-  :demand t
-
-  :commands (selected-minor-mode selected-global-mode)
-
-  :delight (selected-minor-mode "")
-
-  ;;--------------------------;;
-
-  ;; NOTE! `selected' and `wrap-region':
-  ;;
-  ;;       many punctuation characters (in particular, bracket characters)
-  ;;       are keybindings for `wrap-region' (in most Major Modes).
-  ;;
-
-  :bind (:map selected-keymap
-
-              ;; Symbols:
-
-              ("`" . string-inflection-all-cycle)  ; Mnemonic a contextual abbreviation of « C-c ` ».
-              ("!" . shell-command-on-region)      ; Mnemonic is « M-! ».
-           ;; ("@" . )
-              ("#" . comment-or-uncomment-region)
-           ;; ("$" . )
-              ("%" . query-replace)                ; Mnemonic is « M-% ».
-           ;; ("^" . )
-           ;; ("&" . )
-           ;; ("*" . )
-           ;; ("(" . )
-           ;; (")" . )
-              ("-" . er/contract-region) ; Mnemonic ‹-› is the minus-sign.
-              ("=" . er/expand-region)   ; Mnemonic ‹=› shares a key with the plus-sign.
-           ;; ("[" . )
-           ;; ("]" . )
-              (":" . comment-or-uncomment-region)
-           ;; (""" . )
-           ;; ("," . )
-           ;; ("." . )
-           ;; ("/" . )
-           ;; ("\\" . )
-
-              ;; Letters:
-
-              ("a" . sboo-register-append-region)
-           ;; ("b" . )
-              ("c" . capitalize-region)
-              ("d" . downcase-region)              ; Mnemonic is “[D]owncase”.
-              ("e" . sboo-edit-indirect-dwim)      ; from `edit-indirect' (via `sboo-commands').
-              ("f" . fill-region)                  ; Mnemonic is “[F]ill”.
-              ("F" . unfill-region)                ; ‹F› inverts ‹f›.
-              ("g" . google-this-region)           ; from `google-this'.
-           ;; ("h" . )
-              ("i" . indent-region)                ; Mnemonic is “[I]ndent”.
-           ;; ("j" . )
-           ;; ("k" . )
-              ("l" . align-regexp)                 ; Mnemonic is “a[L]ign”.
-              ("m" . apply-macro-to-region-lines)  ; Mnemonic is “[M]acro apply”.
-              ("n" . move-text-down)               ; from `move-text'. Mnemonic is “[N]ext line”, and the ‹p› key is on the top row of (of letters).
-           ;; ("o" . )
-              ("p" . move-text-up)                 ; from `move-text'. Mnemonic is “[P]rior line”, and the ‹n› key is on the bottom row (of letters).
-              ("q" . selected-off)                 ; (from `selected' itself.)
-              ("r" . query-replace-regexp)         ; Mnemonic is “[R]eplace”.
-              ("s" . sort-lines)                   ; Mnemonic is “[S]ort”.
-              ("S" . reverse-region)               ; Mnemonic is “rever[S]e”.
-           ;; ("t" . )
-              ("u" . upcase-region)                ; Mnemonic is “[U]pcase”.
-              ("v" . eval-region)                  ; Mnemonic is “e[V]al”.
-              ("w" . delete-trailing-whitespace)   ; Mnemonic is “[W]hitespace”.
-              ("x" . cua-cut-region)               ; Mnemonic is ‹C-x›.
-              ("y" . yank)                         ; Mnemonic is “[Y]ank”.
-           ;; ("z" . undo)
-
-              ;; Non-Graphical Characters:
-
-           ;;   ("<left>"  . sboo-extend-selection-leftward)
-           ;;   ("<right>" . sboo-extend-selection-rightward)
-
-           ;; ("<home>"  . )
-           ;; ("<end>"   . )
-              ("<prior>" . move-text-up)           ; from `move-text'.
-              ("<next>"  . move-text-down)         ; from `move-text'.
-
-              )
-
-  ;; [Old]
-  ;;
-  ;;   ("`" . typo-)
-  ;;
-
-  ;;--------------------------;;
-
-  :hook ((prog-mode . sboo-selected-mode)
-         (text-mode . sboo-selected-mode)
-         )
-
-  ;;--------------------------;;
-
-  :preface
-
-  (defun sboo-selected-mode (&optional argument)
-
-    "Conditional `selected-minor-mode'.
-
-Conditions:
-
-• buffer must be Read-Only.
-• buffer must be a File-Buffer.
-
-Inputs:
-
-• ARGUMENT — a `booleanp' or `integerp'.
-  whether to enable `selected-minor-mode' (nil or `positivep')
-  or to disable it (0 or `negativep')."
-
-    (interactive "P")
-
-    (let* ((BUFFER-READ-ONLY-P (and buffer-file-read-only buffer-file-name))
-           )
-
-      (unless BUFFER-READ-ONLY-P
-        (selected-minor-mode argument))))
-
-  ;;--------------------------;;
-
-  :config
-
-  ;; (eval-after-load 'sboo-html
-  ;;   (let ((MAP selected-keymap))
-  ;;     (cl-dolist ((KEYSTRING . COMMAND) '((",ab" . sboo-yas-insert/element-abbrv)))
-  ;;       (define-key MAP (kbd KEYSTRING) COMMAND))))
-  ;; ;; ^ Mnemonic: « , » shares a key with « < », which opens an HTML Element.
-
-  ())
-
-;; ^ When `selected-minor-mode' is active, the keybindings in `selected-keymap'
-;;   are enabled as long as the region is active (`use-region-p').
-;;
-;;   These conditionally-concise keybindings are useful for commands
-;;   that operates on the region.
-;;
-
-;; ^ Links:
-;;
-;;   • URL `https://github.com/Kungsgeten/selected.el'
-;;
-
-;;----------------------------------------------;;
-
-(use-package wrap-region
-
-  :commands (wrap-region-mode)
-
-  :delight (wrap-region-mode " 🎁")
-
-  ;;--------------------------;;
-
-  :hook ((text-mode . wrap-region-mode)
-         (prog-mode . wrap-region-mode)
-         )
-
-  ;;--------------------------;;
-
-  :config
-
-  (dolist (MODE '(magit-status-mode))
-    (add-to-list 'wrap-region-except-modes MODE))
-
-  ;; ^ TUIs
-
-  (require 'sboo-html nil :no-error)
-
-  (let* ((MARKDOWN-MODES (or (bound-and-true-p sboo-markdown-modes-list)
-                             '(markdown-mode gfm-mode)))
-         (HTML-MODES     (or (bound-and-true-p sboo-html-modes-list)
-                             (append '(html-mode mhtml-mode) MARKDOWN-MODES)))
-         (ORG-MODES      '(org-mode))
-         )
-
-    (wrap-region-add-wrappers
-
-     `(
-
-       ;; Ascii Characters...
-
-       ("`" "`" nil ,(append MARKDOWN-MODES '(haskell-mode haddock-mode)))
-
-       ;; ^ Syntax for code blocks (e.g. « `pandoc` »), in Markdown and Haddocks.
-       ;;   Syntax for operators (e.g. « `fmap` »), in Haskell.
-
-       ("‘" "’" "`" (emacs-lisp-mode))
-
-       ;; ^ Syntax for hyperlinks, in Elisp (docstrings).
-       ;;   « `...' » is the ASCII-Analogue of « ‘...’ » .
-
-       ("*" "*" nil ,MARKDOWN-MODES)
-
-       ;; ^ Syntax for emphasis, in Markdown.
-       ;;   i.e. « * » for « <em> », and « ** » for « <strong> ».
-
-       ("__" "__" "_" ,MARKDOWN-MODES)
-       ("__" "__" "-" ,MARKDOWN-MODES)
-
-       ;; ^ Syntax for emphasis, in Markdown.
-       ;;   i.e. « _ » for « <em> », and « __ » for « <strong> ».
-
-       ("__" "__" "_" (haskell-mode haddock-mode))
-
-       ;; ^ Syntax for emphasis, in Haddocks.
-       ;;   i.e. « __ » for « <strong> »
-       ;;   (no single-underscore, i.e. no « _ »).
-
-       ("/" "/" nil (haskell-mode haddock-mode))
-
-       ;; ^ Syntax for for emphasis, in Haddocks.
-
-       ("~" "~" nil ,MARKDOWN-MODES)
-
-       ;; ^ Syntax for strike-through, in Markdown.
-
-       ("<" ">" "<" ,(append MARKDOWN-MODES '(haskell-mode haddock-mode)))
-       ("<" ">" "," ,(append MARKDOWN-MODES '(haskell-mode haddock-mode)))
-
-       ;; ^ Syntax for hyperlinks, in both Markdown and Haddocks.
-       ;;   « , » because it shares a key with « < » (unshifted).
-
-       ("<<" ">>" ">" (haskell-mode haddock-mode))
-
-       ;; ^ Syntax for image hyperlinks, in Haddocks.
-       ;;   « > » (the closing pair) because « < » (the opening pair) is already taken.
-
-       ("@" "@" nil (haskell-mode haddock-mode))
-
-       ;; ^ Syntax for code blocks, in Haddock.
-
-       ("=" "=" nil ,ORG-MODES)
-       ("+" "+" nil ,ORG-MODES)
-       
-       ;; ^ See `org-emphasis-alist':
-       ;;
-       ;;   •  « =verbatim= »
-       ;;   •  « +strike-through+ »s
-       ;;
-
-       ("%" "%" nil (bat-mode))
-
-       ;; ^ Environment-Variable syntax (e.g. « %APPDATA% »), in Batch (a.k.a. « BAT »).
-
-       ("{-" "-}"    ":" (haskell-mode))
-
-       ("/* " " */"  ":" (nix-mode c-mode c++-mode javascript-mode css-mode java-mode))
-
-       ("<!--" "-->" ":" ,HTML-MODES)
-
-       ("#|" "|#"    ":" (scheme-mode))
-
-       ;; ^ Mode-Specific, Multi-Line Comments:
-       ;;
-       ;;   • « ; », i.e. the semicolon-character,
-       ;;     shares a key with the colon-character (unshifted),
-       ;;     is our universal trigger-key for commenting a region;
-       ;;     c.f. « M-; » runs `comment-dwim' across langauges.
-       ;;
-
-       ;; Unicode Characters...
-
-       ("“" "”" "“" ())
-       ("‘" "’" "‘" ())
-       ("«" "»" "«" ())
-       ("‹" "›" "‹" ())
-       ("「" "」" "「" ())
-
-       ("¿" "?" "?" (text-mode))
-       ("¡" "!" "!" (text-mode))
-
-       ;; ^ Spanish-language Inverted Question/Exclamation Marks.
-       ;;   URL `https://en.wikipedia.org/wiki/Inverted_question_and_exclamation_marks'
-
-       ;;SKELETON ("" "" "" ())
-
-       ;; [Old]
-       ;;
-       ;; ("__" "__" "_" ,MARKDOWN-MODES)
-       ;; ("__" "__" "-" ,MARKDOWN-MODES)
-       ;;
-
-       )))
-
-  (when (bound-and-true-p sboo-html-wrap-region-table)
-    (wrap-region-add-wrappers (sboo-html-wrap-region-table)))
-
-  ;;TODO...
-  ;; (when (bound-and-true-p sboo-markdown-wrap-region-table)
-  ;;   (wrap-region-add-wrappers (sboo-markdown-wrap-region-table)))
-
-  (turn-on-wrap-region-mode)
-
-  ;; ^ `wrap-region-global-mode' is a `define-globalized-minor-mode'.
-
-  ())
-
-;; ^ Links
-;;
-;;   • URL `https://github.com/rejeep/wrap-region.el'
-;;   • URL `http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/'
-;;   • URL `https://www.youtube.com/watch?v=9SWAKPF0fHE'
-;;   • URL `https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'
-;;   • URL `https://www.haskell.org/haddock/doc/html/ch03s08.html' 
-;;   • URL `https://orgmode.org/manual/Markup.html' 
-;;
-
-;; ^ Notes about `wrap-region'...
-;;
-;; • `wrap-region-table', by default, holds ① quotation characters, and ② matching bracket characters:
-;;
-;;       '(("\"" "\"")
-;;         ("'"  "'")
-;;         ("("  ")")
-;;         ("{"  "}")
-;;         ("["  "]")
-;;         ("<"  ">"))
-;;
-;;    and can be inspected with:
-;;
-;;        M-: (hash-table-keys wrap-region-table)
-;;          ⇒ '(";" "`" "%" "\"" "'" "(" "{" "[" "<")
-;;
-
-;;----------------------------------------------;;
-
-(use-package expand-region
-
-    :load-path "vendor/expand-region"
-
-    ;;-------------------------;;
-
-    :commands (er/expand-region er/contract-region)
-
-    :bind (:map text-mode-map
-                ("<f10>"         . er/expand-region)
-                ("<kp-subtract>" . er/contract-region)
-                ("<kp-add>"      . er/expand-region))
-    :bind (:map prog-mode-map
-                ("<f10>"         . er/expand-region)
-                ("<kp-subtract>" . er/contract-region)
-                ("<kp-add>"      . er/expand-region))
-
-    :config ())
-
-;; ^ Links:
-;;
-;;   • URL ‘https://github.com/magnars/expand-region.el’
-;;   • URL ‘https://endlessparentheses.com/where-do-you-bind-expand-region.html’
-;;   • URL ‘’
-;;
 ;;
 
 ;;----------------------------------------------;;
@@ -5929,8 +6362,8 @@ search (upwards) for a named Code-Block. For example,
 ;;----------------------------------------------;;
 
 (use-package centaur-tabs
-    :disabled
-l    
+    :disabled t
+    
     :demand t
 
     ;;------------------------;;
@@ -6029,7 +6462,7 @@ l
 ;;----------------------------------------------;;
 
 (use-package awesome-tab
-    ;;:disabled
+    :disabled t
 
     :demand t
 
@@ -6156,103 +6589,6 @@ l
   ())
 
 ;;----------------------------------------------;;
-
-(use-package unicode-fonts
-  :disabled
-  :load-path "submodules/unicode-fonts"
-
-  :config
-
-  (unicode-fonts-setup)
-
-  ())
-
-;; ^ Links:
-;;
-;;   • URL `https://github.com/rolandwalker/unicode-fonts'
-;;
-
-;;----------------------------------------------;;
-
-(use-package all-the-icons
-    :disabled t
-    :load-path "submodules/all-the-icons"
-
-    :config ())
-
-;; Installation:
-;;
-;; M-: (all-the-icons-install-fonts)
-
-;; Usage:
-;;
-;; M-: (insert (all-the-icons-icon-for-file "foo.hs"))
-;; M-: (all-the-icons-insert-icons-for 'faicon 10 0.5)   ; height=10px, delay=500ms.
-;;
-
-;; Troubleshooting:
-;;
-;; URL `https://github.com/domtronn/all-the-icons.el/blob/master/README.md#troubleshooting'
-;;
-;; M-: (set-fontset-font t 'unicode (font-spec :name "Symbola") nil 'append)
-;;
-;; “Symbola is messing with your fontset, since it's a universal fallback font.”
-;;
-;; M-: (insert (all-the-icons-wicon "tornado")
-;;
-;; PROBLEM segfaults.
-;; SOLUTION? (nope)
-;;
-;;     $ ulimit -S -s unlimited; make emacs-run &
-;;
-;;
-;;
-;;
-
-;; Notes:
-;;
-;; e.g. fontsets: 'faicon 'octicon 'alltheicon
-
-;;----------------------------------------------;;
-
-(use-package all-the-icons-dired
-    :disabled t
-    :load-path "submodules/all-the-icons-dired"
-
-    :after (:any all-the-icons icons-in-terminal)
-
-    ;;--------------------------;;
-
-    :commands (all-the-icons-dired-mode)
-
-    :hook (dired-mode . all-the-icons-dired-mode)
-
-    :config
-
-    ())
-
-;; ^ Links:
-;;
-;;   • URL `https://github.com/jtbm37/all-the-icons-dired'
-;;
-
-;;----------------------------------------------;;
-
-(use-package doom-modeline
-  :disabled
-  :load-path "submodules/doom-modeline"
-
-  :hook (after-init . doom-modeline-mode)
-
-  :config
-
-  ())
-
-;; ^ Links:
-;;
-;;   • URL `https://github.com/seagle0128/doom-modeline'
-;;
-
 ;;----------------------------------------------;;
 ;;; External Packages: Clipboard ---------------;;
 ;;----------------------------------------------;;

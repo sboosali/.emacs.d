@@ -240,8 +240,8 @@ its “Prefix Command” is bound to « \\[sboo-navigate-keymap] ».
 ;;(define-key sboo-navigate-keymap (kbd "m") #')
 ;;(define-key sboo-navigate-keymap (kbd "n") #')
 ;;(define-key sboo-navigate-keymap (kbd "o") #')
-  (define-key sboo-navigate-keymap (kbd "p <up>")   #'sboo-page-backward) ; [P]age-Breaks. (c.f.`page-delimiter').
-  (define-key sboo-navigate-keymap (kbd "p <down>") #'sboo-page-forward)  ; [P]age-Breaks. (c.f.`page-delimiter').
+  ;; (define-key sboo-navigate-keymap (kbd "p <up>")   #'sboo-page-backward) ; [P]age-Breaks. (c.f.`page-delimiter').
+  ;; (define-key sboo-navigate-keymap (kbd "p <down>") #'sboo-page-forward)  ; [P]age-Breaks. (c.f.`page-delimiter').
 ;;(define-key sboo-navigate-keymap (kbd "q") #')
 ;;(define-key sboo-navigate-keymap (kbd "r") #')
 ;;(define-key sboo-navigate-keymap (kbd "s") #')

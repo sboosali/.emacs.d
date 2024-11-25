@@ -63,7 +63,64 @@
 
 ;;==============================================;;
 
+;;TODO: nix
+" sboo.nix:
 
+{
+  services.dictd.enable = true;
+}
+
+ = with pkgs; [
+  dict
+  (with dictdDBs; [ 
+    wiktionary 
+    wordnet
+  ])
+];
+
+$ sudo apt-get install dictd dict dict-{wn,vera,jargon,devil,gcide,foldoc}
+$ sudo systemctl enable dictd
+"
+
+(use-package ispell
+
+  )
+
+;;TODO: nix
+
+" sboo.nix:
+
+{
+  services.aseplld.enable = true;
+}
+
+ = with pkgs; [
+  aspell
+  (with aspellDicts; [ 
+    en            # English
+    en-computers  # (jargon)
+    en-science    # (jargon)
+    el            # Greek
+  ])
+];
+
+$ cat << EOF >> ~/.aspell.conf
+
+~~~~
+master en_US
+extra-dicts en-computers.rws
+add-extra-dicts en_US-science.rws
+~~~~
+
+# check:
+
+$ aspell -a
+$ aspell dump config | grep -vE '^(#|$)'
+"
+
+(use-package flyspell
+
+  )
 
 ;;----------------------------------------------;;
 ;; Notes ---------------------------------------;;

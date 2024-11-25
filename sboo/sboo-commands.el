@@ -813,69 +813,69 @@ Defaults to `sboo-default-page-regexp'."
 
 ;;==============================================;;
 
-;;;###autoload
-(cl-defun sboo-forward-page-or-header (&optional (count 1))
+;; ;;;###autoload
+;; (cl-defun sboo-forward-page-or-header (&optional (count 1))
 
-  "Move forward COUNT “Form Feed” pages \(i.e. «  »\) and/or comment headers \(e.g. « ;;; Code: »\).
+;;   "Move forward COUNT “Form Feed” pages \(i.e. «  »\) and/or comment headers \(e.g. « ;;; Code: »\).
 
-Inputs:
+;; Inputs:
 
-• COUNT — an `integerp'.
+;; • COUNT — an `integerp'.
 
-Effects:
+;; Effects:
 
-• Move `point' — to next `sboo-page-regexp-according-to-mode'.
+;; • Move `point' — to next `sboo-page-regexp-according-to-mode'.
 
-Related:
+;; Related:
 
-• ‘page-delimiter’
-• ‘outline-regexp’"
+;; • ‘page-delimiter’
+;; • ‘outline-regexp’"
 
-  (interactive "P")
+;;   (interactive "P")
 
-  (let* ((COUNT  (or count +1))
-         (REGEXP (sboo-page-regexp-beginning-of-line (sboo-page-regexp-according-to-mode)))
-         )
-    (progn
+;;   (let* ((COUNT  (or count +1))
+;;          (REGEXP (sboo-page-regexp-beginning-of-line (sboo-page-regexp-according-to-mode)))
+;;          )
+;;     (progn
 
-      (re-search-forward REGEXP nil :no-error COUNT)
-      (end-of-line)
-      (recenter 0))))
+;;       (re-search-forward REGEXP nil :no-error COUNT)
+;;       (end-of-line)
+;;       (recenter 0))))
 
-;; Notes:
-;;
-;; • ‘re-search-forward’ — for NOERROR argument, « :no-error » ≠ « t ».
+;; ;; Notes:
+;; ;;
+;; ;; • ‘re-search-forward’ — for NOERROR argument, « :no-error » ≠ « t ».
 
-;;----------------------------------------------;;
+;; ;;----------------------------------------------;;
 
-;;;###autoload
-(cl-defun sboo-backward-page-or-header (&optional (count 1))
+;; ;;;###autoload
+;; (cl-defun sboo-backward-page-or-header (&optional (count 1))
 
-  "Move backward COUNT “Form Feed” pages \(i.e. «  »\) and/or comment headers \(e.g. « ;;; Code: »\).
+;;   "Move backward COUNT “Form Feed” pages \(i.e. «  »\) and/or comment headers \(e.g. « ;;; Code: »\).
 
-Inputs:
+;; Inputs:
 
-• COUNT — an `integerp'.
+;; • COUNT — an `integerp'.
 
-Effects:
+;; Effects:
 
-• Move `point' — to prior `sboo-page-regexp-according-to-mode'.
+;; • Move `point' — to prior `sboo-page-regexp-according-to-mode'.
 
-Related:
+;; Related:
 
-• Negates ‘sboo-forward-page-or-header’"
+;; • Negates ‘sboo-forward-page-or-header’"
 
-  (interactive "P")
+;;   (interactive "P")
 
-  (let* ((COUNT  (or count +1))
-         (REGEXP (sboo-page-regexp-beginning-of-line (sboo-page-regexp-according-to-mode)))
-         )
-    (progn
+;;   (let* ((COUNT  (or count +1))
+;;          (REGEXP (sboo-page-regexp-beginning-of-line (sboo-page-regexp-according-to-mode)))
+;;          )
+;;     (progn
 
-      (beginning-of-line)
-      (re-search-backward REGEXP nil :no-error COUNT)
-      (unless (bobp) (end-of-line))
-      (recenter 0))))
+;;       (beginning-of-line)
+;;       (re-search-backward REGEXP nil :no-error COUNT)
+;;       (unless (bobp) (end-of-line))
+;;       (recenter 0))))
 
 ;;==============================================;;
 
@@ -1127,8 +1127,8 @@ Related:
      (interactive "P")
 
      (if (commandp #'helm-buffers-list)
-         (helm-buffers-list PrefixArgument)
-         (ibuffer)))
+         (call-interactively #'helm-buffers-list)
+         (call-interactively #'ibuffer)))
 
 ;;;(defalias sboo-buffers-list helm-buffers-list)
 ;;;(define-graceful-command sboo-buffers-list helm-buffers-list list-buffers)
@@ -3553,6 +3553,35 @@ Related:
 
 ;;----------------------------------------------;;
 ;;; Miscellanea --------------------------------;;
+;;----------------------------------------------;;
+
+(require 'eww)
+
+(defun sboo-mouse-online-search-at-point (e)
+  "Search for word at point or selection."
+  (interactive "e")
+  (let ((query (if (use-region-p)
+                   (buffer-substring (region-beginning)
+                                     (region-end))
+                 (save-excursion
+                   (mouse-set-point e)
+                   (thing-at-point 'symbol)))))
+    (unless query
+      (user-error "Nothing to search for"))
+    (browse-url (concat
+                 eww-search-prefix
+                 (mapconcat #'url-hexify-string (split-string query) "+")))))
+
+(defun sboo-context-menu-online-search (menu click)
+  "Populate MENU with command to search online."
+  (save-excursion
+    (mouse-set-point click)
+    (define-key-after menu [online-search-separator] menu-bar-separator)
+    (define-key-after menu [online-search-at-mouse]
+      '(menu-item "🌐 Online search" sboo-mouse-online-search-at-point
+                  :help "Search for region or word online")))
+  menu)
+
 ;;----------------------------------------------;;
 
 (defun sboo-replace-whole-words (from-string to-string)
