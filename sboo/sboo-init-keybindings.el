@@ -859,7 +859,7 @@ Inputs:
 
 ;;^ « F-F » are the “ Keys”.
 
-(global-set-key (kbd "<f9>")     #'cua-set-mark)                    ; a.k.a. « C-SPC ».
+;;(global-set-key (kbd "<f9>")     #'cua-set-mark)                    ; a.k.a. « C-SPC ».
 (global-set-key (kbd "<f10>")    #'er/expand-region)                ; 
 
 ;;^ « F-F » are the “ Keys”.

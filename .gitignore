@@ -42,6 +42,14 @@ eln-cache/
 *.elc
 .cask/
 
+multisession/
+tutorial/
+
+########################################
+# `tabspaces`?
+
+tabsession.el
+
 ########################################
 # `savehist
 savehist.el

@@ -46,26 +46,36 @@
 
 ;; Builtins:
 
-(eval-when-compile
-  (require 'rx)
-  (require 'pcase)
-  (require 'cl-lib))
+(require 'rx)
+(require 'pcase)
+(require 'cl-lib)
 
-;;----------------------------------------------;;
+(require 'seq)
 
 (progn
-  (require 'seq))
+  (setq use-package-enable-imenu-support t)  ; "must be set before loading ‘use-package’."
+  (require 'use-package))
 
 ;;==============================================;;
-;;;; UI Settings: ==============================;;
+;;;; 101 Settings: =============================;;
 ;;==============================================;;
 
-(setq use-package-enable-imenu-support t)  ; "must be set before loading ‘use-package’."
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/sboo"))
 
-(require 'use-package)
+(ignore-errors
+  (load "sboo-init-settings.el"))
+
+(ignore-errors
+  (load "sboo-commands.el"))
+
+(ignore-errors
+  (load "sboo-init-keybindings.el"))
+
+(ignore-errors
+  (load "sboo-aliases.el"))
 
 ;;==============================================;;
-;;; TODO =======================================;;
+;;;;; TODO: ====================================;;
 ;;==============================================;;
 
 "
@@ -73,6 +83,9 @@
 Python 3.10.11
 "
 
+;;==============================================;;
+;;;; UI Settings: ==============================;;
+;;==============================================;;
 ;;----------------------------------------------;;
 ;;;;; Context-Menu: ----------------------------;;
 ;;----------------------------------------------;;
@@ -300,15 +313,6 @@ Python 3.10.11
   :config
   (global-tab-line-mode +1)
   )
-
-;;==============================================;;
-;;;; 101 Settings: =============================;;
-;;==============================================;;
-
-"
-> python --version
-Python 3.10.11
-"
 
 ;;==============================================;;
 ;;;; Settings: =================================;;
@@ -801,14 +805,11 @@ Related:
 
 ;;----------------------------------------------;;
 
+;;TODO:
+
 (require 'sboo-commands nil :no-error)
-
 ;; ^ My `commandp's.
-
-;;----------------------------------------------;;
-
 (require 'sboo-keymaps nil :no-error)
-
 ;; ^ My `keymapp's.
 
 ;;----------------------------------------------;;
@@ -851,24 +852,57 @@ Related:
 
 ;; Register Themes (c.f. `provide-theme'):
 
-(with-demoted-errors "[Warning] %s"
+(progn
+  (add-to-theme-path! sboo-theme-directory)
+  (add-to-load-path!  sboo-theme-directory)
+  (add-to-theme-path! (emacs-subdir "themes"))
 
-  (defvar sboo-initital-theme 'solarized
-    "Theme Name to initially load (via `load-theme').
+  ;;(load-theme 'solarized-light t)
+  ;;(load-theme 'solarized-dark t)
+  ;;TODO theme-choose-variant -> "Theme ‘solarized-light’ does not have any known variants"
+ )
 
-  a `symbolp'.")
+;;TODO rem:
+;; (use-package solarized-theme
+;;   :demand t
+;;   :ensure t
+;; ;;:load 'solarized
+;;
+;;   :config
+;;   (load-theme 'solarized-light t)
+;;   ;; (load-theme 'solarized-dark t)
+;;   )
 
-  (when (>= emacs-major-version 24)
+;; ;; ^ URL `https://github.com/bbatsov/solarized-emacs'
+;;
+;; M-x `theme-choose-variant'
+;;
+;; >Some themes have variants (most often just two: light and dark). You can switch to another variant using M-x theme-choose-variant. If the currently active theme has only one other variant, it will be selected; if there are more variants, the command will prompt you which one to switch to. Note that theme-choose-variant only works if a single theme is active.
+;;
+;; C-h v `custom-enabled-themes'
+;;
+;; M-x `customize-themes'
+;;
 
-    (add-to-theme-path! sboo-theme-directory)
-    (add-to-theme-path! (emacs-subdir "themes"))
-
-    (progn
-      (sboo-register-submodule-packages! "solarized")
-      (sboo-register-submodule-themes!   "solarized")
-      (load-theme sboo-initital-theme :no-confirm))
-
-    ()))
+;;TODO rem:
+;; (with-demoted-errors "[Warning] %s"
+;;
+;;   (defvar sboo-initital-theme 'solarized
+;;     "Theme Name to initially load (via `load-theme').
+;;
+;;   a `symbolp'.")
+;;
+;;   (when (>= emacs-major-version 24)
+;;
+;;     (add-to-theme-path! sboo-theme-directory)
+;;     (add-to-theme-path! (emacs-subdir "themes"))
+;;
+;;     (progn
+;;       (sboo-register-submodule-packages! "solarized")
+;;       (sboo-register-submodule-themes!   "solarized")
+;;       (load-theme sboo-initital-theme :no-confirm))
+;;
+;;     ()))
 
 ;;----------------------------------------------;;
 
@@ -2819,8 +2853,9 @@ Links:
   (defconst sboo-package-load-list
 
     '(
-      (use-package t)
-      (real-auto-save t)
+      (use-package          t)
+      (real-auto-save       t)
+      (solarized-theme      t)
 
       (async                t)
       (compat               t)
@@ -2842,18 +2877,44 @@ Links:
       (s                    t)
       (f                    t)
       (dash                 t)
+      (pfuture              t)
+      (ht                   t)
+      (lv                   t)
+      (cfrs                 t)
+
+      ;;
 
       (company              t)
       ;; (company-anaconda     t)
 
+      (yasnippet            t)
+
+      (embark               t)
+      ;; (embark-     t)
+
+      (marginalia           t)
+
+      (consult              t)
+      ;; (consult-     t)
+
       (flycheck             t)
       ;; (flycheck-haskell     t)
 
-      (yasnippet            t)
       (projectile           t)
+
+      (treemacs             t)
+      (hydra                t)
+      (avy                  t)
+      (ace-window           t)
+      (posframe             t)
+
+      (tabspaces            t)
+
       (magit                t)
       (magit-section        t)
       (with-editor          t)
+
+      ;;
 
       (markdown-mode        t)
 
@@ -2880,7 +2941,13 @@ An `alist', where each item's:
   (setq package-archives  sboo-package-archives)
   (setq package-load-list sboo-package-load-list)
 
-  (package-initialize)
+  (cl-loop for (PACKAGE . _) in sboo-package-load-list
+        do (ignore-errors
+             (unless (package-installed-p PACKAGE)
+               (package-install PACKAGE)
+             )))
+
+;;(package-initialize)  ; "warning unnecessary"
   (unless package-archive-contents
     (package-refresh-contents))
   (package-activate-all)
@@ -2971,11 +3038,11 @@ An `alist', where each item's:
     :ensure t
     :demand t
 
-    :init
-    (setq helm-command-prefix-key "<f9>")
-    
-    ;; ^ "the Default (« C-x c ») is too similar to `kill-emacs's keybinding."
-    ;;   NOTE `helm-command-prefix-key' becomes immutable once `helm-config' is `load'ed.
+    ;;REM:
+    ;; :init
+    ;; (setq helm-command-prefix-key "<f9>")
+    ;; ;; ^ "the Default (« C-x c ») is too similar to `kill-emacs's keybinding."
+    ;; ;;   NOTE `helm-command-prefix-key' becomes immutable once `helm-config' is `load'ed.
 
     ;;------------------------;;
 
@@ -2989,9 +3056,10 @@ An `alist', where each item's:
   ;;   this enables, for example, clicking on a helm candidate to activate it,
   ;;   rather than navigating it with several arrow and/or character keypresses.
 
-  (helm-command-prefix-key "<f9>"
-     "the Default (« C-x c ») is too similar to `kill-emacs's keybinding.")
-    ;; ^  NOTE `helm-command-prefix-key' becomes immutable once `helm-config' is `load'ed.
+    ;;REM:
+  ;; (helm-command-prefix-key "<f9>"
+  ;;    "the Default (« C-x c ») is too similar to `kill-emacs's keybinding.")
+  ;;   ;; ^  NOTE `helm-command-prefix-key' becomes immutable once `helm-config' is `load'ed.
 
   ;; (helm-boring-buffer-regexp-list )
   ;; ^ `helm-boring-buffer-regexp-list'. by default, it's:
@@ -3022,13 +3090,16 @@ An `alist', where each item's:
 
   :config
 
-  ;;TODO: un-remap
   (define-key global-map [remap execute-extended-command] #'helm-M-x)
   (define-key global-map [remap list-buffers]             #'helm-buffers-list)
-  (define-key global-map [remap find-file]                #'helm-find-files) ; Includes the « `<tool-bar>' `<new-file>' ».
-  (define-key global-map [remap find-file-existing]       #'helm-find-files) ; Includes the « `<tool-bar>' `<open-file>' »?
   (define-key global-map [remap occur]                    #'helm-occur)
-  (define-key global-map [remap menu-find-file-existing]  #'helm-find-files) ; The `toolbar's `<open-file>'.
+  ;;
+  ;; ;;TODO: un-remap
+  ;; (define-key global-map [remap find-file]                #'helm-find-files) ; Includes the « `<tool-bar>' `<new-file>' ».
+  ;; ;;TODO: un-remap
+  ;; (define-key global-map [remap find-file-existing]       #'helm-find-files) ; Includes the « `<tool-bar>' `<open-file>' »?
+  ;; ;; (define-key global-map [remap toolbar open-file]  nil) ; The `toolbar's `<open-file>'.
+  ;; ;; (define-key global-map [remap menu-find-file-existing]  nil) ; The `toolbar's `<open-file>'?
 
   (define-key helm-map (kbd "<f12>")          #'helm-select-action)
   (define-key helm-map sboo-key/keyboard-quit #'keyboard-quit) ; (if Overrides the “Run Ninth Helm Action” command.
@@ -3479,154 +3550,8 @@ An `alist', where each item's:
 ;; URL `https://github.com/pronobis/helm-flyspell'
 ;;
 
-;;----------------------------------------------;;
-;;; External Packages: Completion (Company) ----;;
-;;----------------------------------------------;;
-
-;; Primary Company Packages...
-
-(when (require 'sboo-company nil :no-error)
-
-  ;;------------------------;;
-
-  (use-package company
-
-    ;;------------------------;;
-
-    :commands (company-complete-common-or-cycle
-               company-diag
-               company-mode)
-
-    ;;------------------------;;
-
-    :bind (("<backtab>" . company-complete-common-or-cycle)
-           )
-
-    ;;------------------------;;
-
-    :hook ((prog-mode       . sboo-company-prog-setup)
-           (emacs-lisp-mode . sboo-company-elisp-setup)
-           (haskell-mode    . sboo-company-haskell-setup)
-           (nix-mode        . sboo-company-nix-setup)
-           (python-mode     . sboo-company-python-setup)
-           (javascript-mode . sboo-company-javascript-setup)
-           (text-mode       . sboo-company-text-setup)
-           )
-
-    ;;------------------------;;
-
-    :delight (company-mode " ©")
-
-    ;;------------------------;;
-
-    :custom
-
-    (company-idle-delay                 2   "minimum Seconds until Idle-Completion.")
-    (company-minimum-prefix-length      2   "minimum Characters for Idle-Completion.")
-    (company-inhibit-inside-symbols     nil "")
-
-    (company-show-numbers               t   "")
-    (company-tooltip-align-annotations  t   "")
-    (company-dabbrev-downcase           nil "")
-
-    ;;------------------------;;
-
-    :config
-
-    (sboo-company-register-backends)
-    (sboo-company-register-frontends)
-
-    ;;------------------------;;
-
-    ;;TODO: un-remap
-    (bind-key [remap completion-at-point] #'company-complete company-mode-map)
-
-    ;; ^ use Company for Emacs's Builtin Completion.
-
-    ;; ^ NOTE why not `:bind'?
-    ;;   Because `:bind''s syntax is « (`kbd' ...) » only, no « [`remap' ...] ».
-
-    ;;------------------------;;
-
-    ;; `company-active-map':
-
-    (define-key company-active-map (kbd "TAB")       #'company-complete-common-or-cycle)
-    (define-key company-active-map (kbd "<backtab>") #'sboo-company-complete-common-or-previous-cycle)
-
-    (bind-keys :map company-active-map
-
-               ("!"           . sboo-company-complete-1)
-               ("<kp-1>"      . sboo-company-complete-1)
-               ("<kp-end>"    . sboo-company-complete-1)
-
-               ("@"           . sboo-company-complete-2)
-               ("<kp-2>"      . sboo-company-complete-2)
-               ("<kp-down>"   . sboo-company-complete-2)
-
-               ("#"           . sboo-company-complete-3)
-               ("<kp-3>"      . sboo-company-complete-3)
-               ("<kp-next>"   . sboo-company-complete-3)
-
-               ("$"           . sboo-company-complete-4)
-               ("<kp-4>"      . sboo-company-complete-4)
-               ("<kp-left>"   . sboo-company-complete-4)
-
-               ("%"           . sboo-company-complete-5)
-               ("<kp-5>"      . sboo-company-complete-5)
-               ("<kp-begin>"  . sboo-company-complete-5)
-
-               ("^"           . sboo-company-complete-6)
-               ("<kp-6>"      . sboo-company-complete-6)
-               ("<kp-right>"  . sboo-company-complete-6)
-
-               ("&"           . sboo-company-complete-7)
-               ("<kp-7>"      . sboo-company-complete-7)
-               ("<kp-home>"   . sboo-company-complete-7)
-
-               ("*"           . sboo-company-complete-8)
-               ("<kp-8>"      . sboo-company-complete-8)
-               ("<kp-up>"     . sboo-company-complete-8)
-
-               ("("           . sboo-company-complete-9)
-               ("<kp-9>"      . sboo-company-complete-9)
-               ("<kp-prior>"  . sboo-company-complete-9)
-
-               (")"           . sboo-company-complete-10)
-               ("<kp-0>"      . sboo-company-complete-10)
-               ("<kp-insert>" . sboo-company-complete-10)
-
-               )
-
-    ;; ^ FYI candidate selection via `M-{number}'
-    ;;  (i.e. `M-1', `M-2', ..., `M-9').
-
-    ;;------------------------;;
-
-    (global-company-mode +1)))
-
-;;----------------------------------------------;;
-
-(use-package company-ispell
-
-  :custom
-
-  (company-ispell-dictionary (sboo-data-file "english-words.txt"))
-
-  :config
-
-  ())
-
-;; ^ ‘company-ispell-dictionary’ defaults to ‘ispell-complete-word-dict’.
-
-;; ^ Links:
-;;
-;;   • URL `http://blog.binchen.org/posts/emacs-auto-completion-for-non-programmers.html'
-;;   • URL `http://blog.binchen.org/posts/how-to-spell-check-functionvariable-in-emacs.html' 
-
 ;;==============================================;;
-
-;;----------------------------------------------;;
-;; External Packages: Convenience --------------;;
+;;;;; External Packages: DWIM/Completion/etc ---;;
 ;;----------------------------------------------;;
 
 (use-package selected
@@ -3986,7 +3911,230 @@ Inputs:
 ;;
 
 ;;----------------------------------------------;;
-;; External Packages: Templates ----------------;;
+
+(use-package embark
+    :bind (:map global-map
+                ("<f9>" . embark-act)
+                )
+  )
+
+;; ^ URL `https://github.com/oantolin/embark/?tab=readme-ov-file'
+;;
+;; `embark-act' can, by default, cycle through these actions given this target:
+;;
+;; >For files, you get offered actions like: deleting, copying, renaming, visiting in another window, running a shell command on the file, etc.
+;;
+;; >For buffers: the actions include switching to or killing the buffer.
+;;
+;; >For package names, the actions include; installing, removing or visiting the homepage.
+;;
+;; >For Emacs Lisp symbols, the actions include: finding the definition, looking up documentation, evaluating (which for a variable immediately shows the value, but for a function lets you pass it some arguments first). There are some actions specific to variables, such as setting the value directly or though the customize system, and some actions specific to commands, such as binding it to a key.
+;;
+;; `embark-indicators', by default:
+;;
+;; >When you use embark-act if you don't immediately select an action, after a short delay Embark will pop up a buffer showing a list of actions and their corresponding key bindings. If you are using embark-act outside the minibuffer, Embark will also highlight the current target.
+;;
+;;
+;; `embark-keymap-alist' associates actable-types with action-keymaps, by default:
+;;
+;; >For example, the type `file' is associated with the symbol `embark-file-map'. That symbol names a keymap with single-letter key bindings for common Emacs file commands, for instance "c" is bound to `copy-file'.
+;;
+;; >These action keymaps are very convenient but not strictly necessary when using embark-act: you can use any command that reads from the minibuffer as an action and the target of the action will be inserted at the first minibuffer prompt. After running embark-act all of your key bindings and even execute-extended-command can be used to run a command. For example, if you want to replace all occurrences of the symbol at point, just use M-% as the action, there is no need;;
+;; URL `https://github.com/oantolin/embark/wiki/Default-Actions'
+;;
+
+;;----------------------------------------------;;
+
+(use-package marginalia
+  :demand t
+
+  :init
+  (marginalia-mode)
+  )
+
+;; ^ URL `https://github.com/minad/marginalia?tab=readme-ov-file'
+;;
+;; `marginalia-annotator-registry' associates completables with annotations.
+;;
+;; >The annotations are added based on the completion category. For example, find-file reports the 'file category and M-x reports the 'command category. And the annotations for Elisp symbols include their symbol class - 'v for variable, 'f for function, 'c for command, etc.
+;;
+
+;;----------------------------------------------;;
+
+
+
+;;----------------------------------------------;;
+
+
+
+;;==============================================;;
+;;;;; External Packages: Completion (Company) --;;
+;;----------------------------------------------;;
+
+;; Primary Company Packages...
+
+(when (require 'sboo-company nil :no-error)
+
+  ;;------------------------;;
+
+  (use-package company
+
+    ;;------------------------;;
+
+    :commands (company-complete-common-or-cycle
+               company-diag
+               company-mode)
+
+    ;;------------------------;;
+
+    :bind (("<backtab>" . company-complete-common-or-cycle)
+           )
+
+    ;;------------------------;;
+
+    :hook ((prog-mode       . sboo-company-prog-setup)
+           (emacs-lisp-mode . sboo-company-elisp-setup)
+           (haskell-mode    . sboo-company-haskell-setup)
+           (nix-mode        . sboo-company-nix-setup)
+           (python-mode     . sboo-company-python-setup)
+           (javascript-mode . sboo-company-javascript-setup)
+           (text-mode       . sboo-company-text-setup)
+           )
+
+    ;;------------------------;;
+
+    :delight (company-mode " ©")
+
+    ;;------------------------;;
+
+    :custom
+
+    (company-idle-delay                 2   "minimum Seconds until Idle-Completion.")
+    (company-minimum-prefix-length      2   "minimum Characters for Idle-Completion.")
+    (company-inhibit-inside-symbols     nil "")
+
+    (company-show-numbers               t   "")
+    (company-tooltip-align-annotations  t   "")
+    (company-dabbrev-downcase           nil "")
+
+    ;;------------------------;;
+
+    :config
+
+    (sboo-company-register-backends)
+    (sboo-company-register-frontends)
+
+    ;;------------------------;;
+
+    ;;TODO: un-remap
+    (bind-key [remap completion-at-point] #'company-complete company-mode-map)
+
+    ;; ^ use Company for Emacs's Builtin Completion.
+
+    ;; ^ NOTE why not `:bind'?
+    ;;   Because `:bind''s syntax is « (`kbd' ...) » only, no « [`remap' ...] ».
+
+    ;;------------------------;;
+
+    ;; `company-active-map':
+
+    (define-key company-active-map (kbd "TAB")       #'company-complete-common-or-cycle)
+    (define-key company-active-map (kbd "<backtab>") #'sboo-company-complete-common-or-previous-cycle)
+
+    (bind-keys :map company-active-map
+
+               ("!"           . sboo-company-complete-1)
+               ("<kp-1>"      . sboo-company-complete-1)
+               ("<kp-end>"    . sboo-company-complete-1)
+
+               ("@"           . sboo-company-complete-2)
+               ("<kp-2>"      . sboo-company-complete-2)
+               ("<kp-down>"   . sboo-company-complete-2)
+
+               ("#"           . sboo-company-complete-3)
+               ("<kp-3>"      . sboo-company-complete-3)
+               ("<kp-next>"   . sboo-company-complete-3)
+
+               ("$"           . sboo-company-complete-4)
+               ("<kp-4>"      . sboo-company-complete-4)
+               ("<kp-left>"   . sboo-company-complete-4)
+
+               ("%"           . sboo-company-complete-5)
+               ("<kp-5>"      . sboo-company-complete-5)
+               ("<kp-begin>"  . sboo-company-complete-5)
+
+               ("^"           . sboo-company-complete-6)
+               ("<kp-6>"      . sboo-company-complete-6)
+               ("<kp-right>"  . sboo-company-complete-6)
+
+               ("&"           . sboo-company-complete-7)
+               ("<kp-7>"      . sboo-company-complete-7)
+               ("<kp-home>"   . sboo-company-complete-7)
+
+               ("*"           . sboo-company-complete-8)
+               ("<kp-8>"      . sboo-company-complete-8)
+               ("<kp-up>"     . sboo-company-complete-8)
+
+               ("("           . sboo-company-complete-9)
+               ("<kp-9>"      . sboo-company-complete-9)
+               ("<kp-prior>"  . sboo-company-complete-9)
+
+               (")"           . sboo-company-complete-10)
+               ("<kp-0>"      . sboo-company-complete-10)
+               ("<kp-insert>" . sboo-company-complete-10)
+
+               )
+
+    ;; ^ FYI candidate selection via `M-{number}'
+    ;;  (i.e. `M-1', `M-2', ..., `M-9').
+
+    ;;------------------------;;
+
+    (global-company-mode +1)))
+
+;;----------------------------------------------;;
+
+(use-package company-ispell
+
+  :custom
+
+  (company-ispell-dictionary (sboo-data-file "english-words.txt"))
+
+  :config
+
+  ())
+
+;; ^ ‘company-ispell-dictionary’ defaults to ‘ispell-complete-word-dict’.
+
+;; ^ Links:
+;;
+;;   • URL `http://blog.binchen.org/posts/emacs-auto-completion-for-non-programmers.html'
+;;   • URL `http://blog.binchen.org/posts/how-to-spell-check-functionvariable-in-emacs.html' 
+
+;;==============================================;;
+;;;; External Packages: GUI --------------------;;
+;;----------------------------------------------;;
+
+(use-package tabspaces
+
+  :bind (:map global-map
+              ("C-x t t" . tabspaces-mode)                                 ; "toggle".
+              ("C-x t p" . tabspaces-open-or-create-project-and-workspace) ; `p' for "project".
+              )
+  )
+
+;;----------------------------------------------;;
+
+(use-package treemacs
+
+  :bind (:map global-map
+              ("C-x T T" . treemacs)                           ; "toggle".
+              ("C-x T p" . treemacs-add-project-to-workspace)  ; `p' for "project".
+              )
+  )
+
+;;==============================================;;
+;;;; External Packages: Templates --------------;;
 ;;----------------------------------------------;;
 
 (use-package yasnippet
@@ -5852,6 +6000,8 @@ search (upwards) for a named Code-Block. For example,
               )
 
   :custom
+
+  (imenu-auto-rescan                 nil)
 
   (imenu-list-position               'left
                                      "where the ‘imenu-list-major-mode’ window opens; either ‘left’ or ‘right’ maximize vertical space.")
