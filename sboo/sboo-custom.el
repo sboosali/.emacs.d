@@ -8,10 +8,9 @@
  '(column-number-mode t nil nil "show Column Numbers in the Modeline (by default, only Row Numbers are shown).")
  '(cua-keep-region-after-copy t nil nil "standard Windows behavior.")
  '(custom-safe-themes
-   '("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" default))
+   '("c32fbcb7c68d9a3cddf5e213e58afc9c29c55ff3835d10562280e4a690292590" default))
  '(custom-theme-directory "/home/sboosali/.emacs.d/sboo/themes/" nil nil "Personal themes.")
  '(echo-keystrokes 1 nil nil "Wait this many seconds, then echo the currently-pressed key sub-sequence.")
- '(ediff-window-setup-function 'ediff-setup-windows-plain t nil "“Plain” means “no multiframe ediff”.")
  '(enable-local-variables :safe nil nil "set only Safe Variables (don't query for unsafe ones).")
  '(enable-recursive-minibuffers t nil nil "so you can: ① press « M-x » within a « M-x »; ② search through (via a second « C-s ») the minibuffer of a search command for the (non-mini) buffer (having pressed the first « C-s »).")
  '(eshell-destroy-buffer-when-process-dies t t nil "“To get rid of those lingering buffers.”")
@@ -42,7 +41,7 @@
  '(mouse-yank-at-point t nil nil "don't move `point' when pasting with the mouse.")
  '(next-screen-context-lines 0 nil nil "")
  '(package-selected-packages
-   '(cfrs ht lv hydra pfuture avy solarized solarized-theme ace-window treemacs consult helm-config yasnippet wrap-region tabspaces selected real-auto-save projectile nix-mode markdown-mode marginalia magit json-mode helm haskell-mode flycheck f expand-region embark company ahk-mode))
+   '(helm-config yasnippet wrap-region treemacs tabspaces solarized-theme selected real-auto-save projectile nix-mode markdown-mode marginalia magit json-mode helm haskell-mode flycheck f expand-region embark consult company ahk-mode))
  '(print-length nil t nil "‘nil’ means print arbitrarily-long expressions.")
  '(print-level nil t nil "‘nil’ means print arbitrarily-deep expressions.")
  '(print-quoted t t nil "‘t’ means print « (quote foo) » as « 'foo » and « (function foo) » as « #'foo ».")

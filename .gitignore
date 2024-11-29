@@ -17,6 +17,12 @@ sboo/scryfall-default-cards.*
 #TODO# too large
 
 ########################################
+# Windows
+########################################
+
+*:Zone.Identifier
+
+########################################
 # nix
 ########################################
 
@@ -49,6 +55,7 @@ tutorial/
 # `tabspaces`?
 
 tabsession.el
+*-tabspaces-session.el
 
 ########################################
 # `savehist

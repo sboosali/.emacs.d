@@ -857,6 +857,8 @@ Related:
   (add-to-load-path!  sboo-theme-directory)
   (add-to-theme-path! (emacs-subdir "themes"))
 
+  (load-theme 'solarized-light t)
+
   ;;(load-theme 'solarized-light t)
   ;;(load-theme 'solarized-dark t)
   ;;TODO theme-choose-variant -> "Theme ‘solarized-light’ does not have any known variants"
@@ -914,6 +916,23 @@ Related:
   (add-to-icon-path! (emacs-subdir "icons"))
 
   ())
+
+;;==============================================;;
+;;; VOICE ======================================;;
+;;==============================================;;
+
+(defconst sboo-natlink-dir
+  "/mnt/c/Users/sboosali/Documents/Natlink/")
+
+(defun sboo-natlink-dired ()
+  (interactive)
+  (dired sboo-natlink-dir))
+
+;;----------------------------------------------;;
+
+
+
+;;----------------------------------------------;;
 
 ;;
 ;;==============================================;;
