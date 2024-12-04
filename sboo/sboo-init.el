@@ -1,25 +1,6 @@
-;;; sboo-init.el --- sboosali's ‘init.el’ -*- coding: utf-8; lexical-binding: t; -*-
+;;; sboo-init.el --- @sboosali's ‘init.el’ -*- coding: utf-8; lexical-binding: t; -*-
 
-;; Copyright © 2019 Spiros Boosalis
-
-;; This file is not part of GNU Emacs.
-;;
-;; This file is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 3, or (at your option)
-;; any later version.
-;;
-;; This file is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-;;; Commentary:
-
-;; Personal initialization (for me, “sboosali”.)
+;; Personal initialization.
 ;;
 ;; This file consolidates all my personal configurations.
 ;; Mostly via:
@@ -36,29 +17,146 @@
 ;; • « sboo-init-* » — execute effects, should be `load'ed.
 ;; • « sboo-* » — only define functions/variables, should be `require'd.
 ;;
-;; 
+;; URL `https://github.com/sboosali/.emacs.d/blob/master/sboo/sboo-init.el'
+;;
 
 ;;; Code:
 
 ;;==============================================;;
-;; Imports: ====================================;;
-;;==============================================;;
-
-;; Builtins:
+;;;; Imports: ==================================;;
+;;----------------------------------------------;;
 
 (require 'rx)
 (require 'pcase)
 (require 'cl-lib)
-
 (require 'seq)
+
+;;
 
 (progn
   (setq use-package-enable-imenu-support t)  ; "must be set before loading ‘use-package’."
-  (require 'use-package))
+  (require 'use-package)
+  (require 'bind-key))
 
 ;;==============================================;;
-;;;; 101 Settings: =============================;;
-;;==============================================;;
+;;;; Settings: =================================;;
+;;----------------------------------------------;;
+
+(when init-file-debug
+  (setq use-package-verbose t
+        use-package-expand-minimally nil
+        use-package-compute-statistics t
+        debug-on-error t))
+;;^ `emacs --debug-init' sets `init-file-debug'.
+
+;;----------------------------------------------;;
+
+(setopt gc-cons-threshold       (eval-when-compile (* 100 1024 1024)))  ; 100mb (not 8kb).
+(setopt read-process-output-max (eval-when-compile (* 1   1024 1024)))  ; 1mb, for LSP.
+
+;;----------------------------------------------;;
+
+(set-charset-priority     'unicode)
+(prefer-coding-system     'utf-8)
+(set-language-environment "UTF-8")
+;;(set-buffer-file-coding-system 'utf-8)
+
+;;----------------------------------------------;;
+
+()
+
+;;----------------------------------------------;;
+
+(setopt
+
+  executable-prefix-env t
+  ;;^ e.g. insert "#!/usr/bin/env python", not just "#!/usr/bin/python".
+
+  
+
+ )
+
+;;
+
+(setq-default indent-tabs-mode nil)
+
+;;
+
+;; (setq
+;;  ;; No need to see GNU agitprop.
+;;  inhibit-startup-screen t
+;;  ;; No need to remind me what a scratch buffer is.
+;;  initial-scratch-message nil
+;;  ;; Double-spaces after periods is morally wrong.
+;;  sentence-end-double-space nil
+;;  ;; Never ding at me, ever.
+;;  ring-bell-function 'ignore
+;;  ;; Save existing clipboard text into the kill ring before replacing it.
+;;  save-interprogram-paste-before-kill t
+;;  ;; Prompts should go in the minibuffer, not in a GUI.
+;;  use-dialog-box nil
+;;  ;; Fix undo in commands affecting the mark.
+;;  mark-even-if-inactive nil
+;;  ;; Let C-k delete the whole line.
+;;  kill-whole-line t
+;;  ;; search should be case-sensitive by default
+;;  case-fold-search nil
+;;  ;; no need to prompt for the read command _every_ time
+;;  compilation-read-command nil
+;;  ;; scroll to first error
+;;  compilation-scroll-output 'first-error
+;;  ;; accept 'y' or 'n' instead of yes/no
+;;  ;; the documentation advises against setting this variable
+;;  ;; the documentation can get bent imo
+;;  use-short-answers t
+;;  ;; my source directory
+;;  default-directory "~/src/"
+;;  ;; eke out a little more scrolling performance
+;;  fast-but-imprecise-scrolling t
+;;  ;; prefer newer elisp files
+;;  load-prefer-newer t
+;;  ;; when I say to quit, I mean quit
+;;  confirm-kill-processes nil
+;;  ;; if native-comp is having trouble, there's not very much I can do
+;;  native-comp-async-report-warnings-errors 'silent
+;;  ;; unicode ellipses are better
+;;  truncate-string-ellipsis ""
+;;  make-backup-files nil
+;;  auto-save-default nil
+;;  create-lockfiles nil
+;;  )
+
+;;----------------------------------------------;;
+
+;; disable these commands:
+
+(cl-loop for KEY in '(
+    "C-x C-f"        ; `find-file-read-only'
+    "C-x C-d"        ; list-directory
+    "C-z"            ; `suspend-frame'
+    "C-x C-z"        ; `suspend-frame'
+    "M-o"            ; facemenu-mode
+    "<mouse-2>"      ; (pasting with mouse-wheel click)
+    "<C-wheel-down>" ; `text-scale-adjust'
+    "<C-wheel-up>"   ; `text-scale-adjust'
+    "s-n"            ; `make-frame'
+  )
+  do (unbind-key KEY))
+
+;;----------------------------------------------;;
+
+;; enable these commands:
+
+(cl-loop for COMMAND in '(
+    dired-find-file-other-buffer        ; 
+  )
+  do (put COMMAND 'disabled nil))
+
+;;----------------------------------------------;;
+
+
+
+;;----------------------------------------------;;
 
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/sboo"))
 
@@ -74,9 +172,92 @@
 (ignore-errors
   (load "sboo-aliases.el"))
 
+
+;;----------------------------------------------;;
+
+()
+
+;;^ n.b. `emacs-startup-hook` runs later than `after-init-hook`.
+
 ;;==============================================;;
-;;;;; TODO: ====================================;;
+;;;; Commands: =================================;;
+;;----------------------------------------------;;
+
+(defun sboo-kill-this-buffer ()
+  "Kill the current buffer."
+  (interactive)
+  (kill-buffer nil))
+
+(bind-key "C-x k" #'sboo-kill-this-buffer)
+(bind-key "C-x K" #'kill-buffer)
+;;^Completion systems make `kill-buffer' prompt for a list of possible results.
+
+;;
+
+(defun sboo-kill-all-buffers ()
+  "Close all buffers."
+  (interactive)
+  (let ((lsp-restart                 'ignore)
+        (kill-buffer-query-functions '())
+        )
+    ;; (maybe-unset-buffer-modified)
+    (delete-other-windows)
+    (save-some-buffers)
+    (mapc #'kill-buffer (buffer-list))))
+
+(bind-key "C-c K" #'sboo-kill-all-buffers)
+
+;; 
+
+
+
+;;----------------------------------------------;;
+
+
+
 ;;==============================================;;
+;;;; Keybindings: ==============================;;
+;;----------------------------------------------;;
+
+;; (bind-key "M-g" #'abort-recursive-edit)
+
+;;^ `keyboard-quit' doesnt exit the minibuffer, so bind `abort-recursive-edit' which does.
+
+;;----------------------------------------------;;
+
+
+
+;;==============================================;;
+;;;; Aliases ==============================;;
+;;----------------------------------------------;;
+
+;; `/s'
+
+(defalias '/si  #'imenu)
+(defalias '/so  #'occur)
+
+(defalias '/sx  #'xref)
+(defalias '/sg  #'grep)
+(defalias '/som #'multi-occur)
+
+;;TODO how to best jump around? 
+;;
+;;imenu 
+;;xref
+;;
+;;search
+;;occur
+;;grep
+;;
+;;
+
+;;----------------------------------------------;;
+
+
+
+;;==============================================;;
+;;;; TODO: =====================================;;
+;;----------------------------------------------;;
 
 "
 > python --version
@@ -922,11 +1103,11 @@ Related:
 ;;==============================================;;
 
 (defconst sboo-natlink-dir
-  "/mnt/c/Users/sboosali/Documents/Natlink/")
+  "/mnt/c/Users/sboosali/Documents/Natlink")
 
 (defun sboo-natlink-dired ()
   (interactive)
-  (dired sboo-natlink-dir))
+  (dired sboo-natlink-dir "-lR"))
 
 ;;----------------------------------------------;;
 
@@ -936,11 +1117,11 @@ Related:
 
 ;;
 ;;==============================================;;
-;;; INTERNAL PACKAGES ==========================;;
+;;;; INTERNAL PACKAGES =========================;;
 ;;==============================================;;
 
 ;;==============================================;;
-;;; Builtin Packages:
+;;;;; Builtin: etc: ============================;;
 ;;----------------------------------------------;;
 
 (use-package emacs
@@ -1255,8 +1436,105 @@ Related:
 ;;;  (sboo-minibuffer-config))
 ;;;  (sboo-config-fonts))
 
+;;==============================================;;
+;;;;; Builtin Packages: Help/etc: --------------;;
 ;;----------------------------------------------;;
-;;; Builtin Packages: Text Modes ---------------;;
+
+(use-package eldoc
+  :demand t
+
+  :delight (eldoc-mode " 👇")
+
+  :commands (eldoc-mode eldoc-print-current-symbol-info)
+
+  ;;:hook ((prog-mode) . eldoc-mode)
+
+  :custom
+
+  (eldoc-documentation-strategy #'eldoc-documentation-default)
+
+  :config
+
+  (global-eldoc-mode +1)
+  )
+
+;;----------------------------------------------;;
+
+(use-package help
+
+  ;; :hook
+  ;; ((help-mode . (superword-mode))
+  ;;  )
+
+  :bind (:map help-map
+              ("C-v" . find-variable)
+              ("C-k" . find-function-on-key)
+              ("C-f" . find-function)
+              ("C-l" . find-library)
+         :map help-mode-map
+              ("/" . isearch-forward)
+              ("g" . sboo-revert-buffer-never-confirm)
+         )
+
+  :preface
+
+  (defun sboo-revert-buffer-never-confirm (&optional ignore-auto)
+    "`revert-buffer' without asking."
+    (interactive (list (not current-prefix-arg)))
+    (revert-buffer ignore-auto t nil))
+
+  :config ())
+
+;; describe-*:
+;;
+;; • `describe-bindings'
+;; • `describe-categories'
+;; • `describe-char'
+;; • `describe-char-eldoc'
+;; • `describe-character-set'
+;; • `describe-coding-system'
+;; • `describe-current-display-table'
+;; • `describe-display-table'
+;; • `describe-distribution'
+;; • `describe-face'
+;; • `describe-font'
+;; • `describe-fontset'
+;; • `describe-function'
+;; • `describe-input-method'
+;; • `describe-key'
+;; • `describe-key-briefly'
+;; • `describe-minor-mode'
+;; • `describe-mode'
+;; • `describe-package'
+;; • `describe-symbol'
+;; • `describe-syntax'
+;; • `describe-text-properties'
+;; • `describe-theme'
+;; • `describe-variable'
+;; • `describe-vector'
+;;
+
+;;----------------------------------------------;;
+
+(use-package view
+
+  :bind (:map view-mode-map
+              ("/" . isearch-forward)
+              ("n" . sboo-narrow-dwim) ; “[N]arrow”.
+              ("N" . widen)            ; Mnemonic: “N” (upper-case) inverts “n” (lower-case).
+         )
+
+  :preface
+
+  (when (fboundp #'defun-dwim)
+    (defun-dwim sboo-narrow-dwim narrow-to-region narrow-to-defun))
+
+  :config ())
+
+;; TODO `flycheck' warns “reference to free variable” with custom macro.
+
+;;----------------------------------------------;;
+;;;;; Builtin Packages: Text Modes -------------;;
 ;;----------------------------------------------;;
 
 (progn
@@ -1341,77 +1619,6 @@ Related:
 ;;
 ;; (add-to-list 'auto-mode-alist ("rc\\'" . #'conf-mode))
 ;; (add-to-list 'auto-mode-alist ("rc\\'" . #'sh-mode))
-
-;;==============================================;;
-
-(use-package help
-
-  :bind (:map help-map
-              ("C-v" . find-variable)
-              ("C-k" . find-function-on-key)
-              ("C-f" . find-function)
-              ("C-l" . find-library)
-         :map help-mode-map
-              ("/" . isearch-forward)
-              ("g" . sboo-revert-buffer-never-confirm)
-         )
-
-  :preface
-
-  (defun sboo-revert-buffer-never-confirm (&optional ignore-auto)
-    "`revert-buffer' without asking."
-    (interactive (list (not current-prefix-arg)))
-    (revert-buffer ignore-auto t nil))
-
-  :config ())
-
-;; describe-*:
-;;
-;; • `describe-bindings'
-;; • `describe-categories'
-;; • `describe-char'
-;; • `describe-char-eldoc'
-;; • `describe-character-set'
-;; • `describe-coding-system'
-;; • `describe-current-display-table'
-;; • `describe-display-table'
-;; • `describe-distribution'
-;; • `describe-face'
-;; • `describe-font'
-;; • `describe-fontset'
-;; • `describe-function'
-;; • `describe-input-method'
-;; • `describe-key'
-;; • `describe-key-briefly'
-;; • `describe-minor-mode'
-;; • `describe-mode'
-;; • `describe-package'
-;; • `describe-symbol'
-;; • `describe-syntax'
-;; • `describe-text-properties'
-;; • `describe-theme'
-;; • `describe-variable'
-;; • `describe-vector'
-;;
-
-;;----------------------------------------------;;
-
-(use-package view
-
-  :bind (:map view-mode-map
-              ("/" . isearch-forward)
-              ("n" . sboo-narrow-dwim) ; “[N]arrow”.
-              ("N" . widen)            ; Mnemonic: “N” (upper-case) inverts “n” (lower-case).
-         )
-
-  :preface
-
-  (when (fboundp #'defun-dwim)
-    (defun-dwim sboo-narrow-dwim narrow-to-region narrow-to-defun))
-
-  :config ())
-
-;; TODO `flycheck' warns “reference to free variable” with custom macro.
 
 ;;----------------------------------------------;;
 
@@ -1546,6 +1753,8 @@ Related:
 
 (use-package elisp-mode
 
+  :commands (emacs-lisp-mode)
+
   :delight (emacs-lisp-mode "Elisp")
 
   ;; ^ Shorten « Emacs-Lisp » to « elisp ».
@@ -1554,8 +1763,19 @@ Related:
   ;;      starts the Modeline, and thus shouldn't have leading whitespace.
   ;;
 
-  :hook ((emacs-lisp-mode . superword-mode))
+  :init
 
+  (defun sboo-elisp-mode-init ()
+    (setq-local eldoc-documentation-functions
+                '(elisp-eldoc-var-docstring-with-value
+                  elisp-eldoc-funcall
+                  t)))
+
+  :hook
+  ((emacs-lisp-mode . (sboo-elisp-mode-init superword-mode))
+   )
+
+  ;;TODO del:
   ;; :bind (:map emacs-lisp-mode-map
   ;;             (("<kp-up>"   . backward-paragraph)
   ;;              ("<kp-down>" . forward-paragraph))
@@ -1563,8 +1783,8 @@ Related:
 
   :config
 
-  (when (require 'sboo-prog nil :no-error)
-    ())
+  ;; (when (require 'sboo-prog nil :no-error)
+  ;;   ())
 
   ())
 
@@ -2755,22 +2975,6 @@ Links:
 
 ;;----------------------------------------------;;
 
-(use-package eldoc
-
-  :commands (eldoc-mode)
-
-  :delight (eldoc-mode " 👇")
-
-  :hook ((c-mode-common emacs-lisp-mode) . eldoc-mode)
-
-;;:custom
-
-  :config
-
-  ())
-
-;;----------------------------------------------;;
-
 (use-package sql
 
   :commands (sql-postgres)
@@ -2974,6 +3178,54 @@ An `alist', where each item's:
   ;;(async-start #'package-refresh-contents))
 
   ())
+
+;;
+
+;; TODO for installation, use `package-selected-packages' (and `package-install-selected-packages'), not `package-load-list' (to not activate dependencies).
+;; TODO use `customize-set-variable' (not `add-to-list')?
+
+;; (progn
+  
+;;   (package-initialize)
+;;   (unless package-archive-contents
+;;     (package-refresh-contents))
+;;   ;;(package-autoremove)
+
+;;   ;; `package-selected-packages' (for `package-install-selected-packages'):
+
+;;   (defconst sboo-package-selected-packages
+;;     '())
+
+;;   (cl-loop for PACKAGE in sboo-package-selected-packages
+;;         do (add-to-list 'package-selected-packages PACKAGE)
+;;         initially do (setq package-selected-packages nil)
+;;         finally do (package-install-selected-packages 'no-confirm))
+
+;;   ;; `package-vc-selected-packages' (for `package-vc-install-selected-packages').
+;;   ;;
+;;   ;; i.e. '(:url "https://USER@github.com/REPO.git" :branch "main" :lisp-dir "lisp" :main-file "PACKAGE.el" :vc-backend SYMBOL :doc "doc/PACKAGE.org")
+;;   ;;
+
+;;   (defconst sboo-package-vc-selected-packages
+;;     '(
+;;       ;;( :url "" :branch "")
+;;       ))
+
+;;   (cl-loop for PACKAGE in sboo-package-vc-selected-packages
+;;         do (add-to-list 'package-vc-selected-packages PACKAGE)
+;;         initially do (setq package-vc-selected-packages nil)
+;;         finally do (package-vc-install-selected-packages 'no-confirm))
+
+;;   ;;
+
+;;   ;;(package-vc-install
+;;   ;;  '(bbdb :url "https://git.savannah.nongnu.org/git/bbdb.git"
+;;   ;;         :lisp-dir "lisp"
+;;   ;;         :doc "doc/bbdb.texi"))
+
+;;   ;; >Emacs "activates" ALL installed packages BEFORE reading the user-init-file unless you've set package-enable-at-startup to nil in the early init file. If you want to restrict exactly which installed packages are activated at startup you can customize the package-load-list, but you have to do it in your early init file (unless you delay package activation as per above).
+
+;;   )
 
 ;;----------------------------------------------;;
 ;;; External Packages: Prioritized Packages ----;;
@@ -4454,7 +4706,7 @@ $0")
 
    :config
 
-   (global-magit-file-mode +1)
+   ;;(global-magit-file-mode +1)
 
    ())
 
@@ -7425,7 +7677,8 @@ search (upwards) for a named Code-Block. For example,
 ;; EOF -----------------------------------------;;
 ;;----------------------------------------------;;
 
-;;; sboo-init.el ends here
+;; (provide 'init)
+;;; init.el ends here
 
 ;; Local Variables:
 ;; End:

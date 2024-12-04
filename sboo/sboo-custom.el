@@ -7,8 +7,6 @@
  '(auto-resize-tool-bars t t nil "do grow the Tool Bar when enough Menu Items are added.")
  '(column-number-mode t nil nil "show Column Numbers in the Modeline (by default, only Row Numbers are shown).")
  '(cua-keep-region-after-copy t nil nil "standard Windows behavior.")
- '(custom-safe-themes
-   '("c32fbcb7c68d9a3cddf5e213e58afc9c29c55ff3835d10562280e4a690292590" default))
  '(custom-theme-directory "/home/sboosali/.emacs.d/sboo/themes/" nil nil "Personal themes.")
  '(echo-keystrokes 1 nil nil "Wait this many seconds, then echo the currently-pressed key sub-sequence.")
  '(enable-local-variables :safe nil nil "set only Safe Variables (don't query for unsafe ones).")
