@@ -63,7 +63,11 @@
 
 ;;----------------------------------------------;;
 
-()
+(cl-loop for DIR in '("~/.nix-profile/bin" "~/bin")
+   do (add-to-list 'exec-path DIR))
+
+(cl-loop for DIR in '()
+   do (add-to-list 'load-path DIR))
 
 ;;----------------------------------------------;;
 
